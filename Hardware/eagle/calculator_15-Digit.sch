@@ -39496,7 +39496,7 @@ Philips Semiconductor</description>
 <text x="238.76" y="7.62" size="2.54" layer="91" ratio="12">0.7</text>
 <text x="5.08" y="10.16" size="2.1844" layer="91" ratio="10">Calculator 15-Digit with ATmega1284P by Jens Grabner is licensed under</text>
 <text x="5.08" y="15.24" size="3.81" layer="91" ratio="12">CC BY-SA 4.0</text>
-<text x="5.08" y="5.08" size="2.1844" layer="91" ratio="10">a Creative Commons Attribution-ShareAlike 4.0 International License.</text>
+<text x="5.08" y="5.08" size="2.1844" layer="91" ratio="10">the CERN OHL v.1.2 or later. (http://ohwr.org/cernohl)</text>
 </plain>
 <instances>
 <instance part="C1" gate="G$1" x="200.66" y="58.42" smashed="yes">
@@ -40477,7 +40477,7 @@ Philips Semiconductor</description>
 <text x="238.76" y="7.62" size="2.54" layer="91" ratio="12">0.7</text>
 <text x="5.08" y="10.16" size="2.1844" layer="91" ratio="10">Calculator 15-Digit with ATmega1284P by Jens Grabner is licensed under</text>
 <text x="5.08" y="15.24" size="3.81" layer="91" ratio="12">CC BY-SA 4.0</text>
-<text x="5.08" y="5.08" size="2.1844" layer="91" ratio="10">a Creative Commons Attribution-ShareAlike 4.0 International License.</text>
+<text x="5.08" y="5.08" size="2.1844" layer="91" ratio="10">the CERN OHL v.1.2 or later. (http://ohwr.org/cernohl)</text>
 </plain>
 <instances>
 <instance part="FRAME2" gate="G$1" x="0" y="0"/>
@@ -41289,7 +41289,7 @@ Philips Semiconductor</description>
 <text x="30.48" y="35.56" size="2.54" layer="91" ratio="12">0.7</text>
 <text x="-203.2" y="38.1" size="2.1844" layer="91" ratio="10">Calculator 15-Digit with ATmega1284P by Jens Grabner is licensed under</text>
 <text x="-203.2" y="43.18" size="3.81" layer="91" ratio="12">CC BY-SA 4.0</text>
-<text x="-203.2" y="33.02" size="2.1844" layer="91" ratio="10">a Creative Commons Attribution-ShareAlike 4.0 International License.</text>
+<text x="-203.2" y="33.02" size="2.1844" layer="91" ratio="10">the CERN OHL v.1.2 or later. (http://ohwr.org/cernohl)</text>
 </plain>
 <instances>
 <instance part="FRAME3" gate="G$1" x="-208.28" y="27.94"/>

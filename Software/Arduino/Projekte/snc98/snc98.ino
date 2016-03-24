@@ -1,15 +1,25 @@
 /********************************************************************** 
 
-   Project:   snc98 - Slash Number Calculato
+   Project:   snc98 - Slash Number Calculator
 
    Developer: Jens Grabner
    Email:     jens@grabner-online.org
    Date:      March 2016
 
-   Copyright Notice: Free use of this software is permitted under the
-   guidelines and in accordance with the most current version of the
-   Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0)
-   http://creativecommons.org/licenses/by-sa/3.0/
+   Copyright CERN 2013.
+   This documentation describes Open Hardware and is licensed 
+   under the CERN OHL v. 1.2 or later.
+
+   You may redistribute and modify this documentation under
+   the terms of the CERN Open Hardware Licence v.1.2. 
+   (http://ohwr.org/cernohl). 
+   
+   This documentation is distributed
+   WITHOUT ANY EXPRESS OR IMPLIED WARRANTY, INCLUDING OF
+   MERCHANTABILITY, SATISFACTORY QUALITY AND FITNESS FOR A
+   PARTICULAR PURPOSE.
+  
+   Please see the CERN OHL v.1.2 for applicable conditions.
 
 **********************************************************************/ 
 
@@ -2533,14 +2543,14 @@ void loop() {
 
         case 170:                //    x^3
           if ( Debug_Level == 5 ) {
-            Serial.println("x^3");
+            Serial.println("INT");
           }
           Beep_on = true;
           break;
 
         case 171:                //    cbrt()
           if ( Debug_Level == 5 ) {
-            Serial.println("cbrt()");
+            Serial.println("FRC");
           }
           Beep_on = true;
           break;
@@ -3240,11 +3250,11 @@ void loop() {
           break;
 
         case 131074:   //     "FN" +  "3"         two Switch pressed
-          Switch_Code = 170;  //                  x^3
+          Switch_Code = 170;  //                  INT
           break;
 
-        case 131078:    //     "FN" +  "=" + "3"   three Switch pressed
-          Switch_Code = 171;  //                  cbrt()
+        case 131078:    //    "FN" +  "=" + "3"   three Switch pressed
+          Switch_Code = 171;  //                  FRC
           break;
 
         case 262146:   //     "FN" +  "4"         two Switch pressed
