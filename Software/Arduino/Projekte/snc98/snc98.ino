@@ -59,11 +59,11 @@
 #include <stdint.h>
 #include <inttypes.h>
 #include <TimerOne.h>
-// #include <DigitalIO.h>
 
+// #include <DigitalIO.h>
 // #define Standard1284GpioPinMap_h
 
-#define Debug_Level  0 //  0 - not Debug
+#define Debug_Level 12 //  0 - not Debug
                        //  1 - Test intern 1ms - Task by 100 ms
                        //  2 - Test intern 1ms - Task by 1000 ms
                        //  3 - Test Switch "=" up / down (analog)
@@ -80,9 +80,9 @@
 #define operation_test_max 4     //  0 .. 3  Stacktiefe
                                  //                     74HCF4053 (1 kOhm)
 #define Switch_down_start  1020  //  1020  ... 1020  100  %   ... 1020  <<--
-#define Switch_up_b         840  //   870             70  %   ...  838
-#define Switch_down_b       600  //   540             30  %   ...  595
-#define Switch_up_start     360  //   360  ...  420    0  %   ...  413  <<--
+#define Switch_up_b         756  //   750  ..   870   70  %   ...  838
+#define Switch_down_b       580  //   570  ..   540   30  %   ...  595
+#define Switch_up_start     374  //   360  ...  420    0  %   ...  413  <<--
                                  //                  -10  %   ...  352
 #define Average               4  //     5
 	
@@ -113,7 +113,7 @@
 #define ascii_count   27
 
 uint16_t taste[Switch_Count] = {
-  Switch_down_start
+  Switch_down_start 
 };
 
 // ... up to 32 Switch possible - per bit a switch
@@ -241,7 +241,9 @@ uint64_t a0 = 1;
 int64_t gcd_temp_64        = 1;
 
 int64_t calc_temp_64_a     = 1;
+int64_t calc_temp_64_a_abs = 1;
 int64_t calc_temp_64_b     = 1;
+int64_t calc_temp_64_b_abs = 1;
 int64_t calc_temp_64_c     = 1;
 int64_t calc_temp_64_d     = 1;
 
@@ -2007,8 +2009,10 @@ void loop() {
             expo_temp_16_diff_abs = abs(expo_temp_16_diff); 
             calc_temp_64_a = mem_extra_stack[ 0 ].num;
             calc_temp_64_a *= mem_extra_stack[ mem_extra_test ].denom;
+            calc_temp_64_a_abs = abs(calc_temp_64_a);
             calc_temp_64_b = mem_extra_stack[ mem_extra_test ].num;
             calc_temp_64_b *= mem_extra_stack[ 0 ].denom;
+            calc_temp_64_b_abs = abs(calc_temp_64_b);
             calc_temp_64_c = mem_extra_stack[ 0 ].denom;
             calc_temp_64_c *= mem_extra_stack[ mem_extra_test ].denom;
             expo_temp_16 = expo_temp_16_a; 
@@ -2033,10 +2037,12 @@ void loop() {
                 break;
               }
               if ( expo_temp_16_diff_abs < 10 ) {
-              	calc_temp_64_b /= expo_10[expo_temp_16_diff_abs];
+              	calc_temp_64_b_abs += (expo_10[expo_temp_16_diff_abs] / 2);
+              	calc_temp_64_b_abs /= expo_10[expo_temp_16_diff_abs];
               }
               else {
-                calc_temp_64_b /= expo_10_[expo_temp_16_diff_abs - 10];
+                calc_temp_64_b_abs += (expo_10_[expo_temp_16_diff_abs - 10] / 2);
+                calc_temp_64_b_abs /= expo_10_[expo_temp_16_diff_abs - 10];
               }
             }
             if ( expo_temp_16_diff < 0 ) {
@@ -2052,11 +2058,27 @@ void loop() {
                 break;
               }
               if ( expo_temp_16_diff_abs < 10 ) {
-              	calc_temp_64_a /= expo_10[expo_temp_16_diff_abs];
+              	calc_temp_64_a_abs += (expo_10[expo_temp_16_diff_abs] / 2);
+              	calc_temp_64_a_abs /= expo_10[expo_temp_16_diff_abs];
               }
               else {
-                calc_temp_64_a /= expo_10_[expo_temp_16_diff_abs - 10];
+                calc_temp_64_a_abs += (expo_10_[expo_temp_16_diff_abs - 10] / 2);
+                calc_temp_64_a_abs /= expo_10_[expo_temp_16_diff_abs - 10];
               }
+            }
+            if ( calc_temp_64_a > 0 ) {
+              calc_temp_64_a = calc_temp_64_a_abs;
+            }
+            else {
+              calc_temp_64_a = calc_temp_64_a_abs;
+              calc_temp_64_a *= -1;            	
+            }
+            if ( calc_temp_64_b > 0 ) {
+              calc_temp_64_b = calc_temp_64_b_abs;
+            }
+            else {
+              calc_temp_64_b = calc_temp_64_b_abs;
+              calc_temp_64_b *= -1;            	
             }
             calc_temp_64_d = calc_temp_64_a;
             calc_temp_64_d += calc_temp_64_b;
@@ -2075,7 +2097,7 @@ void loop() {
             ++calc_temp_u64_0;
 
             num_temp_u64 = abs(calc_temp_64_d);  // max:  9223372036854775807
-            denom_temp_u64 = calc_temp_64_c;
+            denom_temp_u64 = abs(calc_temp_64_c);
 
             if ( num_temp_u64 <= expo_test_9 ) {
               num_temp_u64 *= expo_10[9];
