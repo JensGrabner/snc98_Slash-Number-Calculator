@@ -1,4 +1,4 @@
-/********************************************************************** 
+/**********************************************************************
 
    Project:   snc98 - Slash Number Calculator
 
@@ -7,21 +7,21 @@
    Date:      March 2016
 
    Copyright CERN 2013.
-   This documentation describes Open Hardware and is licensed 
+   This documentation describes Open Hardware and is licensed
    under the CERN OHL v. 1.2 or later.
 
    You may redistribute and modify this documentation under
-   the terms of the CERN Open Hardware Licence v.1.2. 
-   (http://ohwr.org/cernohl). 
-   
+   the terms of the CERN Open Hardware Licence v.1.2.
+   (http://ohwr.org/cernohl).
+
    This documentation is distributed
    WITHOUT ANY EXPRESS OR IMPLIED WARRANTY, INCLUDING OF
    MERCHANTABILITY, SATISFACTORY QUALITY AND FITNESS FOR A
    PARTICULAR PURPOSE.
-  
+
    Please see the CERN OHL v.1.2 for applicable conditions.
 
-**********************************************************************/ 
+**********************************************************************/
 
 /*													HEADER
 
@@ -63,7 +63,7 @@
 // #include <DigitalIO.h>
 // #define Standard1284GpioPinMap_h
 
-#define Debug_Level 12 //  0 - not Debug
+#define Debug_Level 10 //  0 - not Debug
                        //  1 - Test intern 1ms - Task by 100 ms
                        //  2 - Test intern 1ms - Task by 1000 ms
                        //  3 - Test Switch "=" up / down (analog)
@@ -71,12 +71,12 @@
                        //  5 - Monitor Switch_Code (Text) 110 - Functions
                        //  6 - Test Pendulum Time - Sinus 0.5 Hz
                        //  7 - get_Expo
-                       //  8 - get mem_stack "=" Get_Mantisse(); 
+                       //  8 - get mem_stack "=" Get_Mantisse();
                        //  9 - Display_Number();
                        // 10 - x^2 Test;
                        // 11 - Error_Test;
                        // 12 - Memory_Plus Test;
-                       
+
 #define operation_test_max 4     //  0 .. 3  Stacktiefe
                                  //                     74HCF4053 (1 kOhm)
 #define Switch_down_start  1020  //  1020  ... 1020  100  %   ... 1020  <<--
@@ -85,7 +85,7 @@
 #define Switch_up_start     374  //   360  ...  420    0  %   ...  413  <<--
                                  //                  -10  %   ...  352
 #define Average               4  //     5
-	
+
 #define Beep A0        //     Pin A7
                        //     Sanguino  Pin 13 --> Pin 5 (PD5)
 #define PWM 13         //     Sanguino  Pin 12 --> Pin 4 (PD4)
@@ -113,7 +113,7 @@
 #define ascii_count   27
 
 uint16_t taste[Switch_Count] = {
-  Switch_down_start 
+  Switch_down_start
 };
 
 // ... up to 32 Switch possible - per bit a switch
@@ -130,24 +130,24 @@ uint32_t time          = 0;
 uint32_t time_down     = 0;
 uint32_t time_old      = 0;
 
-#define expo_max_input  99  
-#define expo_min_input -99  
+#define expo_max_input  99
+#define expo_min_input -99
 
-#define expo_max_in_3   33  
-#define expo_min_in_3  -33  
+#define expo_max_in_3   33
+#define expo_min_in_3  -33
 
-#define expo_max       102  
-#define expo_min       -99  
+#define expo_max       102
+#define expo_min       -99
 
-#define _PI_        36   
-#define _e_         44  
+#define _PI_        36
+#define _e_         44
 
-#define Min_0      160 
-#define M_xch_0    178 
-#define RM_0        77 
+#define Min_0      160
+#define M_xch_0    178
+#define RM_0        77
 #define FIX_0       93
 #define M_plus_0   102
-#define Mem_0      128 
+#define Mem_0      128
 
 /*
  * rational number "numerator / denominator"
@@ -170,7 +170,7 @@ struct AVRational{  //     0.3 ... 3 x 10^expo
 #define expo_10_9    0x3B9ACA00UL   // 1000000000
 
 const uint32_t expo_10[10] = {
-  expo_10_0, expo_10_1, expo_10_2, expo_10_3, expo_10_4, 
+  expo_10_0, expo_10_1, expo_10_2, expo_10_3, expo_10_4,
   expo_10_5, expo_10_6, expo_10_7, expo_10_8, expo_10_9 };
 
 #define expo_10_10           0x2540BE400ULL   // 10000000000
@@ -184,19 +184,18 @@ const uint32_t expo_10[10] = {
 #define expo_10_18     0xDE0B6B3A7640000ULL   // 1000000000000000000
 
 const uint64_t expo_10_[9] = {
-  expo_10_10, expo_10_11, expo_10_12, expo_10_13, expo_10_14, 
+  expo_10_10, expo_10_11, expo_10_12, expo_10_13, expo_10_14,
   expo_10_15, expo_10_16, expo_10_17, expo_10_18 };
                                               // 9223372036854775807
 #define expo_test_9          0x10D615E8AULL   //          4519452298 x 0.00000000049
 #define expo_test_6        0x41C44594B4AULL   //       4519452298058 x 0.00000049
-#define expo_test_3a     0x639D5E4A38327ULL   //    1752440687002407 x 0.00019
 #define expo_test_3     0x100E6AFCCE1C58ULL   //    4519452298058840 x 0.00049
 #define expo_test_2a    0x3E425AEE631F8AULL   //   17524406870024074 x 0.0019
 #define expo_test_2     0xA0902DE00D1B71ULL   //   45194522980588401 x 0.0049
 #define expo_test_1a   0x26E978D4FDF3B64ULL   //  175244068700240740 x 0.019
 #define expo_test_1    0x645A1CAC083126EULL   //  451945229805884014 x 0.049                                                  913113831648622805
 
-#define int32_max  0x7FFFFFFFUL     // 2147483647
+#define int32_max    2147483647
 #define int32_2_max       46341     // sqrt(int32_max)
 #define int15_max         32767
 
@@ -210,35 +209,24 @@ const uint64_t expo_10_[9] = {
 #define Tau_num         723691735;
 #define Tau_denom      1151791169;  // Fehler .. -1,04e-18
 
-// ---  Pi_Konstante  --- 
+// ---  Pi_Konstante  ---
 #define Pi_expo                 0;
-#define Pi_num         1068966896;
-#define Pi_denom        340262731;  // Fehler .. -3.07e-18
+#define Pi_num         1480524883;
+#define Pi_denom        471265707;  // Fehler ..  3,17e-18
 
-// ---  e_Konstante  --- 
+// ---  e_Konstante  ---
 #define e_expo                  0;
 #define e_num           848456353;
 #define e_denom         312129649;  // Fehler .. -6.03e-19
 
-// ---  _180_Pi_Konstante  --- 
+// ---  _180_Pi_Konstante  ---
 #define _180_Pi_expo            2;
 #define _180_Pi_num     853380389;
 #define _180_Pi_denom  1489429756;  // Fehler ..  5.75e-20
 
 char    expo_temp_str[]    = "#00";
 int8_t  expo_temp_8        =  1;
-/*
-  union
-  {
-    uint64_t n64;
-    struct
-    {
- 	    uint32_t denom_temp_u64_low;
- 	    uint32_t denom_temp_u64_high;
-      //  uint32_t a[2];  // 0 = LOW byte  1 = HIGH byte of the uint64_t
-    }
-  } nn;
-*/
+
 char    Expo_string_temp[] = "###" ;
 int16_t expo_temp_16       = 0;
 int16_t expo_temp_16_a     = 0;
@@ -252,24 +240,13 @@ uint64_t num_temp_u64      = 1;
 uint64_t num_temp_u64_0    = 1;
 uint64_t denom_temp_u64    = 1;
 uint64_t denom_temp_u64_0  = 1;
-uint64_t a0_num = 0;
-uint64_t a1_num = 1;
+uint64_t a0_num =   0;
+uint64_t a1_num =   1;
 uint64_t a0_denum = 1;
 uint64_t a1_denum = 0;
+uint64_t a0_x_64 =  1;
 
-typedef union {
-    uint64_t all_x_64;
-    struct
-    {
-       uint32_t low_x_32;   // lower 32 bits
-       uint32_t high_x_32;  // upper 32 bits
-    };
-
-} split_64;
-
-split_64 a0_x_64;
-
-uint32_t a0_x_32 = 1;
+uint32_t a0_x_32 =  1;
 int64_t gcd_temp_64        = 1;
 
 int64_t calc_temp_64_a     = 1;
@@ -333,7 +310,7 @@ const char mem_str_0[]     = "#1234567890123456789";
 
 uint8_t mem_extra_pointer  =  0;   // mem_extra  RM 0 .. RM 9
 uint8_t mem_extra_test     =  0;   // mem_extra  RM 0 .. RM 9
-#define mem_extra_max        10    // mem_extra  SM 0 .. SM 9            
+#define mem_extra_max        10    // mem_extra  SM 0 .. SM 9
 struct  AVRational
         mem_extra_stack[mem_extra_max] = {
   { 0, int32_max, int32_max },
@@ -480,7 +457,7 @@ boolean Display_change = false;
 uint8_t Cursor_pos = 2;       //
 uint8_t Point_pos = 0;        //
 uint8_t Null_count = 0;       //
-uint8_t Number_count_temp = 0;    
+uint8_t Number_count_temp = 0;
 uint8_t Number_count = 0;     //   Anzahl der Ziffern  --  maximal 8
 uint8_t Zero_count = 0;       //   Anzahl der Nullen   --  maximal 8
 uint8_t Zero_after_Point = 0; //   Anzahl der Ziffern  --  maximal 7
@@ -554,7 +531,7 @@ void Memory_to_Input_Mantisse() {
       Start_input = Input_Mantisse;
       Display_Number();
       if ( display_digit == 8 ) {
-        display_string[Cursor_pos] = '.'; 
+        display_string[Cursor_pos] = '.';
       }
       else {
         display_string[Cursor_pos] = '_';
@@ -590,15 +567,15 @@ void Test_pwm() {
     test_pwm = led_bright[led_bright_index];    // duty cycle goes from 0 to 1023
   }
   else {
-    test_pwm = led_bright_plus[led_bright_index];    // duty cycle goes from 0 to 1023      	
+    test_pwm = led_bright_plus[led_bright_index];    // duty cycle goes from 0 to 1023
   }
 }
 
 int32_t gcd_iter_32(int32_t u_0, int32_t v_0) {
   int32_t t_0;
   while (v_0 != 0) {
-    t_0 = u_0; 
-    u_0 = v_0; 
+    t_0 = u_0;
+    u_0 = v_0;
     v_0 = t_0 % v_0;
   }                     // return u < 0 ? -u : u; /* abs(u) */
   return abs(u_0);
@@ -607,8 +584,8 @@ int32_t gcd_iter_32(int32_t u_0, int32_t v_0) {
 int64_t gcd_iter_64(int64_t u_1, int64_t v_1) {
   int64_t t_1;
   while (v_1 != 0) {
-    t_1 = u_1; 
-    u_1 = v_1; 
+    t_1 = u_1;
+    u_1 = v_1;
     v_1 = t_1 % v_1;
   }                     // return u < 0 ? -u : u; /* abs(u) */
   return abs(u_1);
@@ -637,7 +614,7 @@ void Clear_String() {   // String loeschen -- Eingabe Mantisse
   if ( Rad_in_out == true ) {
     display_string[Rad_point] = '.';
   }
- 
+
   if ( Deg_in_out == true ) {
     display_string[Deg_point] = '.';
   }
@@ -655,7 +632,7 @@ void Clear_String() {   // String loeschen -- Eingabe Mantisse
   Mantisse_change = false;
   Expo_change = false;
   Start_input = Input_Mantisse;
-  
+
   mem_stack[mem_pointer].expo = 0;
   mem_stack[mem_pointer].num = int32_max;
   mem_stack[mem_pointer].denom = int32_max;
@@ -663,7 +640,7 @@ void Clear_String() {   // String loeschen -- Eingabe Mantisse
 
 int16_t Get_Expo() {
 	Expo_string_temp[0] = display_string[Plus_Minus_Expo];
-	Expo_string_temp[1] = display_string[Expo_1];	
+	Expo_string_temp[1] = display_string[Expo_1];
 	Expo_string_temp[2] = display_string[Expo_0];
 
 	if ( Expo_string_temp[0] == '#' ) {
@@ -692,19 +669,19 @@ void Put_Expo() {
   if ( Expo_string_temp[1] < ' ' ) {
   	display_string[Plus_Minus_Expo] = '#';
   	display_string[Expo_1] = '0';
-    display_string[Expo_0] = Expo_string_temp[0];   
+    display_string[Expo_0] = Expo_string_temp[0];
   }
   else {
     if ( Expo_string_temp[2] < ' ' ) {
     	if ( Expo_string_temp[0] == '-' ) {
         display_string[Plus_Minus_Expo] = '-';
         display_string[Expo_1] = '0';
-        display_string[Expo_0] = Expo_string_temp[1];   
+        display_string[Expo_0] = Expo_string_temp[1];
       }
       else {
         display_string[Plus_Minus_Expo] = '#';
         display_string[Expo_1] = Expo_string_temp[0];
-        display_string[Expo_0] = Expo_string_temp[1];   
+        display_string[Expo_0] = Expo_string_temp[1];
       }
     }
     else {
@@ -712,7 +689,7 @@ void Put_Expo() {
         display_string[Plus_Minus_Expo] = '-';
         display_string[Expo_1] = Expo_string_temp[1];
         display_string[Expo_0] = Expo_string_temp[2];
-      }     	
+      }
     }
   }
   Display_new = true;
@@ -805,7 +782,7 @@ void Get_Mantisse() {          // " -1.2345678#- 1 5# 1 9."
     }
     First_char = display_string[Zero_index];
     Zero_index_a = 0;
-    char_test = display_string[Zero_index];              
+    char_test = display_string[Zero_index];
     while ( char_test != ' ' ) {
       Temp_char[Zero_index_a] =  display_string[Zero_index];
       ++Zero_index;
@@ -829,21 +806,21 @@ void Get_Mantisse() {          // " -1.2345678#- 1 5# 1 9."
       }
       else {
         if ( Zero_index_a >= Point_pos ) {
-          Temp_char[Zero_index_a - 2] = display_string[Zero_index_a + 1];	
+          Temp_char[Zero_index_a - 2] = display_string[Zero_index_a + 1];
         }
         else {
-          Temp_char[Zero_index_a - 2] = display_string[Zero_index_a]; 
+          Temp_char[Zero_index_a - 2] = display_string[Zero_index_a];
         }
       }
-      Temp_char[Zero_index_a - 1] = ' '; 
+      Temp_char[Zero_index_a - 1] = ' ';
       ++Zero_index_a;
     }
   }
   expo_temp_16 = Get_Expo();
   mem_stack[mem_pointer].expo = expo_temp_16;
- 
+
   switch (Point_pos) {
-  	
+
     case 0:
       mem_stack[mem_pointer].expo = mem_stack[mem_pointer].expo + Number_count;
       break;
@@ -854,7 +831,7 @@ void Get_Mantisse() {          // " -1.2345678#- 1 5# 1 9."
     case 2:
       mem_stack[mem_pointer].expo = mem_stack[mem_pointer].expo - Zero_after_Point;
       break;
-  	
+
     default:
       mem_stack[mem_pointer].expo = mem_stack[mem_pointer].expo + Point_pos - 2;
       break;
@@ -868,20 +845,20 @@ void Get_Mantisse() {          // " -1.2345678#- 1 5# 1 9."
     num_temp_u32 *= expo_10[1];
     --mem_stack[mem_pointer].expo;
   }
-  
+
   gcd_temp_32 = gcd_iter_32(num_temp_u32, denom_temp_u32);
   num_temp_u32 /= gcd_temp_32;
   denom_temp_u32 /= gcd_temp_32;
 
   Expand_Number();
-  
+
   mem_stack[mem_pointer].num = num_temp_u32;
   if (display_string[1] == '-') {
     mem_stack[mem_pointer].num *= -1;
   }
   mem_stack[mem_pointer].denom = denom_temp_u32;
 
-  Error_Test();  
+  Error_Test();
 
   if ( Debug_Level == 8 ) {
     Serial.print("= ");
@@ -903,77 +880,78 @@ void Reduce_Number() {
     num_temp_u64 = denom_temp_u64;
     denom_temp_u64 = calc_temp_u64_0;
   }
-              
+
   // https://hg.python.org/cpython/file/3.5/Lib/fractions.py#l252
-  // https://hg.python.org/cpython/file/3.1/Lib/fractions.py#l167
   // https://ffmpeg.org/doxygen/2.8/rational_8c_source.html#l00035
-              
+  // http://link.springer.com/article/10.1007%2Fs00607-008-0013-8
+  // https://math.boku.ac.at/udt/vol05/no2/3zhabitsk10-2.pdf  Page_5
+
   num_temp_u64_0 = num_temp_u64;
   denom_temp_u64_0 = denom_temp_u64;
   a0_num = 0;    // p0
-  a0_denum = 1;  // q0
   a1_num = 1;    // p1
+  a0_denum = 1;  // q0
   a1_denum = 0;  // q1
-  while ( a1_num < int32_max ) {
-    a0_x_64.all_x_64 = num_temp_u64_0 / denom_temp_u64_0;
+  a0_x_64 = 0;
+
+  while ( denom_temp_u64_0 ) {
+    a0_x_64 = num_temp_u64_0 / denom_temp_u64_0;
+  //  ++a0_x_64;     // new
 
     old_num_u64_0 = a0_num;
     a0_num =  a1_num;
-    a1_num *= a0_x_64.all_x_64;
+    a1_num *= a0_x_64;
     a1_num += old_num_u64_0;
+  //  a1_num -= old_num_u64_0;   // new
 
     old_denum_u64_0 = a0_denum;
     a0_denum =  a1_denum;
-    a1_denum *= a0_x_64.all_x_64;
+    a1_denum *= a0_x_64;
     a1_denum += old_denum_u64_0;
+  //  a1_denum -= old_denum_u64_0;   // new
 
     calc_temp_u64_0 = num_temp_u64_0;
     num_temp_u64_0 = denom_temp_u64_0;
     denom_temp_u64_0 = calc_temp_u64_0;
-    denom_temp_u64_0 -= a0_x_64.all_x_64 * num_temp_u64_0;
-  }
-  /*
-  if ( a0_num > 0 ) {
-    if ( (a1_num - int32_max) > a0_num ) {
-      a0_x_32 = a1_num - int32_max;
-      a0_x_32 = a0_x_32 / a0_num;
-      a0_x_32 += 1;
-    }
-    else {
-      a0_x_32 = 0;
-    }
- 
-    if ( a0_x_32 < 30 ) {
-      if ( test_temp_8 > 0 ) {
-        num_temp_u32 = a1_num - (a0_x_32 * a0_num);
-        denom_temp_u32 = a1_denum - (a0_x_32 * a0_denum);
-      }
+    denom_temp_u64_0 -= a0_x_64 * num_temp_u64_0;
+    
+    if ( a1_num >= int32_max ) {
+    	a0_x_64 = int32_max;
+    	a0_x_64 -= old_num_u64_0;
+    	a0_x_64 /= a0_num;
+    	if ( a0_x_64 > 128 ) {
+    	  a1_num = a0_num;
+    	  a1_num *= a0_x_64;
+    	  a1_num += old_num_u64_0;
+    	  a1_denum = a0_denum;
+    	  a1_denum *= a0_x_64;
+    	  a1_denum += old_denum_u64_0;
+    	}
       else {
-        num_temp_u32 = a1_denum - (a0_x_32 * a0_denum);
-        denom_temp_u32 = a1_num - (a0_x_32 * a0_num);
+      	a1_num = a0_num;
+      	a1_denum = a0_denum;
       }
-    }
-    else {
-  */
-      if ( test_temp_8 > 0 ) {
-        num_temp_u32 = a0_num;
-        denom_temp_u32 = a0_denum;
+      denom_temp_u64_0 = 0;
+
+      a0_x_32 = a0_x_64;
+
+      if ( Debug_Level == 10 ) {
+        Serial.print("__a0_x_32 = ");
+        Serial.println(a0_x_32);
       }
-      else {
-        num_temp_u32 = a0_denum;
-        denom_temp_u32 = a0_num;
-      }
-  /*    
     }
   }
-  */
-//  a0_x_32 = a0_x_64 >> 32;
-  
-              if ( Debug_Level == 12 ) {
-                Serial.print("__a0_x_64.high_x_32 = ");
-                Serial.println(a0_x_64.high_x_32);
-              }  
-  
+
+  if ( test_temp_8 > 0 ) {
+    num_temp_u32 = a1_num;
+    denom_temp_u32 = a1_denum;
+  }
+  else {
+    num_temp_u32 = a1_denum;
+    denom_temp_u32 = a1_num;
+  }
+
+
   Expand_Number();
 }
 
@@ -981,8 +959,8 @@ void Expand_Number() {
   if ( num_temp_u32 > denom_temp_u32 ) {
     mul_temp_u32 = int32_max / num_temp_u32;
   }
-  else { 
-    mul_temp_u32 = int32_max / denom_temp_u32;              
+  else {
+    mul_temp_u32 = int32_max / denom_temp_u32;
   }
   num_temp_u32 *= mul_temp_u32;
   denom_temp_u32 *= mul_temp_u32;
@@ -1020,7 +998,7 @@ void Display_Number() {
   	mem_stack[mem_pointer].denom *= -1;
   }
   display_expo = mem_stack[mem_pointer].expo;
-  if ( abs(mem_stack[mem_pointer].num) != 0 ) {            
+  if ( abs(mem_stack[mem_pointer].num) != 0 ) {
     display_big = abs(mem_stack[mem_pointer].num);
   }
   else {
@@ -1033,7 +1011,7 @@ void Display_Number() {
   }
   else {
     display_big = expo_10[display_digit] * display_big;
-  }  
+  }
   display_big = display_big + (abs(mem_stack[mem_pointer].denom) / 2) - 1;
   display_number = display_big / mem_stack[mem_pointer].denom;
 
@@ -1060,7 +1038,7 @@ void Display_Number() {
   else {
     display_string[1] = '-';
   }
-   
+
   display_expo_mod = abs(display_expo % 3);
   if (display_expo_mod == 0) {
     display_expo = display_expo - 3;
@@ -1086,7 +1064,7 @@ void Display_Number() {
   if ( display_expo_mod <= 0 ) {
     display_expo_mod = display_expo_mod + 3;
   }
-  
+
   if ( Debug_Level == 9 ) {
 	  Serial.print("'");
 	  Serial.print(display_string);
@@ -1098,31 +1076,31 @@ void Display_Number() {
       display_string[index_a + 1] = display_string[index_a];
     }
     display_string[index_a + 1] = display_string[index_a];
-    display_string[index_a] = '.';   
+    display_string[index_a] = '.';
   }
-  
+
   if ( (display_digit == 2) && (display_expo_mod == 3) ) {
     display_string[4] = '0';
     display_string[5] = '.';
   }
- 
+
   display_string[Memory_1] = mem_str_1[mem_pointer];
   display_string[Memory_0] = mem_str_0[mem_pointer];
 
   if ( Rad_in_out == true ) {
     display_string[Rad_point] = '.';
   }
- 
+
   if ( Deg_in_out == true ) {
     display_string[Deg_point] = '.';
   }
-  
+
   if ( display_string[Plus_Minus_Expo__] == ' ' ) {
     display_string[Plus_Minus_Expo__] = '#';
   }
 
   if ( Start_input >= Input_Operation_0 ) {       // Input / Operation Display
-    if ( Start_input < Display_Error ) {	
+    if ( Start_input < Display_Error ) {
       display_string[Operation] = Input_Operation_char;
     }
   }
@@ -1134,13 +1112,13 @@ void Display_Number() {
   Point_pos = display_expo_mod + 2;
   Number_count = display_digit;
   Cursor_pos = display_digit + 3;
-  
+
   if ( display_string[Cursor_pos] == '.' ) {
   	++Number_count;
     ++Cursor_pos;
   }
 
-  if ( abs(mem_stack[mem_pointer].num) == 0 ) {            
+  if ( abs(mem_stack[mem_pointer].num) == 0 ) {
     display_string[Mantisse_0] = '.';
     display_string[Mantisse_1] = '0';
     Zero_count = display_digit;
@@ -1149,14 +1127,14 @@ void Display_Number() {
 
   Display_new = true;
 
-  if ( abs(mem_stack[mem_pointer].denom) == 0 ) {            
+  if ( abs(mem_stack[mem_pointer].denom) == 0 ) {
     Clear_String();
     Error_String();
     Start_input = Display_Error;
     display_string[2] = '0';
     display_string[13] = '0';
   }
-  
+
   Zero_count = 0;
   Zero_index = 0;
   while (display_string[Zero_index] != '#') {
@@ -1223,7 +1201,7 @@ void setup() {
     digitalWrite(pin, HIGH);
   }
  /*
-  for (pin = 0; pin < Digit_Count; ++pin) { 
+  for (pin = 0; pin < Digit_Count; ++pin) {
     fastPinMode(index_display[pin], OUTPUT);  // fastDigital function
   }
  */
@@ -1258,7 +1236,7 @@ void setup() {
 
   // start serial port at 115200 bps and wait for port to open:
   Serial.begin(115200);
-  
+
   // operation_stack[0] = Mem_0;
 
 }
@@ -1335,12 +1313,12 @@ void loop() {
         }
         Countdown_OFF = Countdown_Start_Off;  // Switch Off  3x Beep
         break;
-        
+
       case 90:                 //    _CE_
       	if ( Start_input == Display_Error ) {
           Beep_on = true;
           mem_pointer = 1;
-          Start_input = Start_Mode;     
+          Start_input = Start_Mode;
         }
         break;
 
@@ -1414,7 +1392,7 @@ void loop() {
             mem_stack[ mem_pointer ].denom = calc_temp_32_0;
             mem_stack[ mem_pointer ].expo *= -1;
 
-            Error_Test();            
+            Error_Test();
             if ( Start_input != Display_Error ) {
               Display_Number();
             }
@@ -1623,11 +1601,11 @@ void loop() {
             }
             else {
               Beep_on = true;
-            }            	
+            }
           }
           if ( Start_input == Input_Expo ) {
             Beep_on = true;
-          }            	
+          }
           break;
 
         case 47:                 //    _/_
@@ -1658,6 +1636,9 @@ void loop() {
                     display_string[Cursor_pos] = '_';
                   }
                   Display_new = true;
+                }
+                if ( Number_count == 0 ) {
+                  Put_input_Point();
                 }
               }
             }
@@ -1793,7 +1774,7 @@ void loop() {
           if ( Start_input < Input_Operation_0 ) {      // Input Number
             Get_Number();
           }
-          if ( Start_input != Display_Result ) {      
+          if ( Start_input != Display_Result ) {
             if ( Start_input != Display_Error ) {
               Start_input = Display_Result;
               mem_pointer = 0;
@@ -2070,7 +2051,7 @@ void loop() {
           }
           mem_pointer = 0;                           // Display Number
           Beep_on = true;
-          display_digit = mem_extra_test; 
+          display_digit = mem_extra_test;
           Display_Number();
           break;
 
@@ -2109,9 +2090,9 @@ void loop() {
             mem_stack[ mem_pointer ].num = mem_extra_stack[ 0 ].num;
             mem_stack[ mem_pointer ].denom = mem_extra_stack[ 0 ].denom;
             expo_temp_16_a = mem_extra_stack[ 0 ].expo;
-            expo_temp_16_b = mem_extra_stack[ mem_extra_test ].expo;         
+            expo_temp_16_b = mem_extra_stack[ mem_extra_test ].expo;
             expo_temp_16_diff = expo_temp_16_a - expo_temp_16_b;
-            expo_temp_16_diff_abs = abs(expo_temp_16_diff); 
+            expo_temp_16_diff_abs = abs(expo_temp_16_diff);
             calc_temp_64_a = mem_extra_stack[ 0 ].num;
             calc_temp_64_a *= mem_extra_stack[ mem_extra_test ].denom;
             calc_temp_64_a_abs = abs(calc_temp_64_a);
@@ -2121,7 +2102,7 @@ void loop() {
             calc_temp_64_c = mem_extra_stack[ 0 ].denom;
             calc_temp_64_c *= mem_extra_stack[ mem_extra_test ].denom;
             calc_temp_64_c_abs = abs(calc_temp_64_c);
-            expo_temp_16 = expo_temp_16_a; 
+            expo_temp_16 = expo_temp_16_a;
 
             if ( expo_temp_16_diff > 0 ) {
               expo_temp_16 = expo_temp_16_a;
@@ -2144,7 +2125,7 @@ void loop() {
               }
             }
             if ( expo_temp_16_diff < 0 ) {
-              expo_temp_16 = expo_temp_16_b;              
+              expo_temp_16 = expo_temp_16_b;
               if ( expo_temp_16_diff_abs > 18 ) {
                 mem_stack[ mem_pointer ].expo = mem_extra_stack[ mem_extra_test ].expo;
                 mem_stack[ mem_pointer ].num = mem_extra_stack[ mem_extra_test ].num;
@@ -2168,14 +2149,14 @@ void loop() {
             }
             else {
               calc_temp_64_a = calc_temp_64_a_abs;
-              calc_temp_64_a *= -1;            	
+              calc_temp_64_a *= -1;
             }
             if ( calc_temp_64_b > 0 ) {
               calc_temp_64_b = calc_temp_64_b_abs;
             }
             else {
               calc_temp_64_b = calc_temp_64_b_abs;
-              calc_temp_64_b *= -1;            	
+              calc_temp_64_b *= -1;
             }
             calc_temp_64_d = calc_temp_64_a;
             calc_temp_64_d += calc_temp_64_b;
@@ -2217,11 +2198,6 @@ void loop() {
               expo_temp_16 -= 1;
             }
 
-            if ( denom_temp_u64 <= expo_test_3a ) {
-              denom_temp_u64 *= expo_10[3];
-              expo_temp_16 += 3;
-            }
-
             if ( denom_temp_u64 <= expo_test_2a ) {
               denom_temp_u64 *= expo_10[2];
               expo_temp_16 += 2;
@@ -2247,7 +2223,7 @@ void loop() {
            	    num_temp_u64 *= 5;
            	    denom_temp_u64 /= 2;
            	    expo_temp_16 -= 1;
-           	  } 
+           	  }
            	}
 
            	if ( num_temp_u64 > denom_temp_u64 ) {
@@ -2282,12 +2258,12 @@ void loop() {
             }
 
             Reduce_Number();
-                        
+
             mem_stack[ mem_pointer ].num = num_temp_u32;
             mem_stack[ mem_pointer ].num *= test_signum_8;
             mem_stack[ mem_pointer ].denom = denom_temp_u32;
-            
-            Error_Test();            
+
+            Error_Test();
             if ( Start_input != Display_Error ) {
               mem_extra_stack[ mem_extra_test ].expo = mem_stack[ mem_pointer ].expo;
               mem_extra_stack[ mem_extra_test ].num = mem_stack[ mem_pointer ].num;
@@ -2298,9 +2274,9 @@ void loop() {
             else {
               mem_pointer = 1;
             }
-            
+
             Beep_on = true;
-            
+
               if ( Debug_Level == 12 ) {
                 Serial.print("= ___M+ 64bit___ ");
                 Serial.print(mem_extra_stack[ mem_extra_test ].num);
@@ -2402,7 +2378,7 @@ void loop() {
             	denom_temp_u32 =  mem_stack[mem_pointer].denom;
             	denom_temp_u32 *= mem_stack[mem_pointer].denom;
             	denom_temp_u32 *= 2;
-            	
+
             	if ( num_temp_u32 > denom_temp_u32 ) {
             	  calc_temp_16_0 = num_temp_u32 / denom_temp_u32;
             	  if ( calc_temp_16_0 > 2 ) {
@@ -2418,23 +2394,23 @@ void loop() {
             	    num_temp_u32 *= 5;
             	    denom_temp_u32 /= 2;
             	    --expo_temp_16;
-            	  } 
+            	  }
             	}
-            	
+
               Expand_Number();
-            	
+
               if ( Debug_Level == 10 ) {
                 Serial.print("= ");
                 Serial.print(num_temp_u32);
                 Serial.print(" / ");
                 Serial.print(denom_temp_u32);
                 Serial.print(" x 10^ ");
-                Serial.println(expo_temp_16);    
+                Serial.println(expo_temp_16);
               }
-  
+
               mem_stack[ mem_pointer ].num = num_temp_u32;
               mem_stack[ mem_pointer ].denom = denom_temp_u32;
-  
+
             } else {
             	num_temp_u64 =  mem_stack[mem_pointer].num;
             	num_temp_u64 *= mem_stack[mem_pointer].num;
@@ -2442,7 +2418,7 @@ void loop() {
             	denom_temp_u64 =  mem_stack[mem_pointer].denom;
             	denom_temp_u64 *= mem_stack[mem_pointer].denom;
             	denom_temp_u64 *= 2;
-              
+
             	if ( num_temp_u64 > denom_temp_u64 ) {
             	  calc_temp_32_0 = num_temp_u64 / denom_temp_u64;
             	  if ( calc_temp_32_0 > 2 ) {
@@ -2458,7 +2434,7 @@ void loop() {
             	    num_temp_u64 *= 5;
             	    denom_temp_u64 /= 2;
             	    --expo_temp_16;
-            	  } 
+            	  }
             	}
 
             	if ( num_temp_u64 > denom_temp_u64 ) {
@@ -2480,7 +2456,7 @@ void loop() {
               }
 
               Reduce_Number();
-              
+
               if ( Debug_Level == 10 ) {
                 Serial.print("= ____ ");
                 Serial.print(num_temp_u32);
@@ -2489,7 +2465,7 @@ void loop() {
                 Serial.print(" x 10^ ");
                 Serial.println(expo_temp_16);
               }
-              
+
               mem_stack[ mem_pointer ].num = num_temp_u32;
               mem_stack[ mem_pointer ].denom = denom_temp_u32;
             }
@@ -2501,7 +2477,7 @@ void loop() {
             if ( expo_temp_16 <= -115 ) {
             	mem_stack[ mem_pointer ].expo = -115;
             }
-            Error_Test();            
+            Error_Test();
             if ( Start_input != Display_Error ) {
               Display_Number();
             }
@@ -3332,7 +3308,7 @@ void loop() {
           }
           if (Switch_down == 3) {
             Switch_Code = 62;   //            new   _hyp_on_
-          }        
+          }
           break;
 
       	case 2:
@@ -3373,7 +3349,7 @@ void loop() {
       	case 128:
       	case 16:
       		if ( Display_rotate == true ) {
-          	if (Switch_down == 5) {      			
+          	if (Switch_down == 5) {
               Display_rotate = false;
               Switch_Code = 177;   //             Dis_Cha_Dir_off
             }
@@ -3612,7 +3588,7 @@ void loop() {
           break;
 
         case 32771:    //     "EE" + "FN" + "1"   three Switch pressed
-          Switch_Code = 78;  //              new  RM(1)  
+          Switch_Code = 78;  //              new  RM(1)
           break;
 
         case 65539:    //     "EE" + "FN" + "2"   three Switch pressed
@@ -3688,75 +3664,75 @@ void loop() {
           break;
 
         case 32772:    //     "=" + M_plus(1)     two Switch pressed
-          Switch_Code = 103;  //             new  
+          Switch_Code = 103;  //             new
           break;
 
         case 65540:    //     "=" + M_plus(2)     two Switch pressed
-          Switch_Code = 104;  //             new  
+          Switch_Code = 104;  //             new
           break;
 
         case 131076:   //     "=" + M_plus(3)     two Switch pressed
-          Switch_Code = 105;  //             new  
+          Switch_Code = 105;  //             new
           break;
 
         case 262148:   //     "=" + M_plus(4)     two Switch pressed
-          Switch_Code = 106;  //             new  
+          Switch_Code = 106;  //             new
           break;
 
         case 524292:   //     "=" + M_plus(5)     two Switch pressed
-          Switch_Code = 107;  //             new  
+          Switch_Code = 107;  //             new
           break;
 
         case 1048580:  //     "=" + M_plus(6)     two Switch pressed
-          Switch_Code = 108;  //             new  
+          Switch_Code = 108;  //             new
           break;
 
         case 2097156:  //     "=" + M_plus(7)     two Switch pressed
-          Switch_Code = 109;  //             new  
+          Switch_Code = 109;  //             new
           break;
 
         case 4194308:  //     "=" + M_plus(8)     two Switch pressed
-          Switch_Code = 110;  //             new  
+          Switch_Code = 110;  //             new
           break;
 
         case 8388612:  //     "=" + M_plus(9)     two Switch pressed
-          Switch_Code = 111;  //             new  
+          Switch_Code = 111;  //             new
           break;
 
         case 40960:    //     "." + M_xch(1)     two Switch pressed
-          Switch_Code = 179;  //             new  
+          Switch_Code = 179;  //             new
           break;
 
         case 73728:    //     "." + M_xch(2)     two Switch pressed
-          Switch_Code = 180;  //             new  
+          Switch_Code = 180;  //             new
           break;
 
         case 139264:   //     "." + M_xch(3)     two Switch pressed
-          Switch_Code = 181;  //             new  
+          Switch_Code = 181;  //             new
           break;
 
         case 270336:   //     "." + M_xch(4)     two Switch pressed
-          Switch_Code = 182;  //             new  
+          Switch_Code = 182;  //             new
           break;
 
         case 532480:   //     "." + M_xch(5)     two Switch pressed
-          Switch_Code = 183;  //             new  
+          Switch_Code = 183;  //             new
           break;
 
         case 1056768:  //     "." + M_xch(6)     two Switch pressed
-          Switch_Code = 184;  //             new  
+          Switch_Code = 184;  //             new
           break;
 
         case 2105344:  //     "." + M_xch(7)     two Switch pressed
-          Switch_Code = 185;  //             new  
+          Switch_Code = 185;  //             new
           break;
 
         case 4202496:  //     "." + M_xch(8)     two Switch pressed
-          Switch_Code = 186;  //             new  
+          Switch_Code = 186;  //             new
           break;
 
         case 8396800:  //     "." + M_xch(9)     two Switch pressed
-          Switch_Code = 187;  //             new  
+          Switch_Code = 187;  //             new
           break;
 
         case 16389:    //     "EE" + "=" + "+/-"  three Switch pressed
@@ -3802,10 +3778,10 @@ void loop() {
         case 11:       //    "pi()"               defect
         case 19:       //    "pi()"               defect
         case 27:       //    "EE" + "FN" + "1/x"  defect
-        case 67:       //    "<"                  defect          
-        case 72:       //    "<--"                defect          
-        case 131:      //    "<"                  defect          
-        case 194:      //    "<"                  defect          
+        case 67:       //    "<"                  defect
+        case 72:       //    "<--"                defect
+        case 131:      //    "<"                  defect
+        case 194:      //    "<"                  defect
         case 585:      //    "e()"                defect
         case 515:      //    "CE"                 defect
         case 576:      //    "CE"                 defect
