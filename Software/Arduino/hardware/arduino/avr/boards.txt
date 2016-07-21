@@ -1,7 +1,10 @@
 # See: http://code.google.com/p/arduino/wiki/Platforms
 
 menu.cpu=Processor
-
+menu.clock=Clock
+menu.BOD=B.O.D
+menu.pinout=Pinout
+menu.variant=Variant
 ##############################################################
 
 yun.name=Arduino Yún
@@ -841,30 +844,35 @@ gemma.upload.tool=avrdude
 gemma.upload.maximum_size=5310
 
 ############################################################
+# make atmega1284p AVR_FREQ=12000000L BAUD_RATE=115200 UART=0 LED=B0 LED_START_FLASHES=2 -BIGBOOT
 
-max_opt_12.build.board=AVR_goldilocks
 max_opt_12.name=ATmega1284P 12MHz using Optiboot 3.3V
 max_opt_12.upload.tool=avrdude
 max_opt_12.upload.protocol=arduino
-max_opt_12.upload.maximum_size=128512
+max_opt_12.upload.maximum_size=130048
 max_opt_12.upload.maximum_data_size=16384
+
+max_opt_12.bootloader.tool=avrdude
+max_opt_12.bootloader.unlock_bits=0x3F
+max_opt_12.bootloader.lock_bits=0x0F
+
+max_opt_12.build.core=arduino
+max_opt_12.build.board=AVR_goldilocks
+
+max_opt_12.build.board=AVR_ATmega1284
+
 max_opt_12.upload.speed=115200
 max_opt_12.build.mcu=ATmega1284P
 
 max_opt_12.bootloader.low_fuses=0xff
 max_opt_12.bootloader.high_fuses=0xde
 max_opt_12.bootloader.extended_fuses=0xfe
+max_opt_12.bootloader.file=optiboot/optiboot_flash_atmega1284p_115200_12MHz.hex
 
-max_opt_12.bootloader.file=optiboot/optiboot_platino1284p_12MHz.hex
 max_opt_12.upload.using=arduinoisp
-max_opt_12.bootloader.tool=avrdude
-
-max_opt_12.bootloader.unlock_bits=0x3F
-max_opt_12.bootloader.lock_bits=0x0F
 
 max_opt_12.build.mcu=atmega1284p
 max_opt_12.build.f_cpu=12000000L
-max_opt_12.build.core=arduino
 max_opt_12.build.variant=goldilocks
 
 
