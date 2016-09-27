@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="yes"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="5" unitdist="mil" unit="mil" style="dots" multiple="1" display="yes" altdistance="0.005" altunitdist="inch" altunit="inch"/>
+<grid distance="5" unitdist="mil" unit="mil" style="lines" multiple="1" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -156,16 +156,16 @@
 </layers>
 <board>
 <plain>
-<wire x1="0" y1="83.185" x2="0" y2="0" width="0" layer="20"/>
-<wire x1="0" y1="0" x2="56.388" y2="0" width="0" layer="20"/>
+<wire x1="0" y1="2.54" x2="0" y2="80.645" width="0" layer="20"/>
+<wire x1="2.54" y1="83.185" x2="53.848" y2="83.185" width="0" layer="20"/>
+<wire x1="56.388" y1="80.645" x2="56.388" y2="2.54" width="0" layer="20"/>
+<wire x1="2.54" y1="0" x2="53.848" y2="0" width="0" layer="20"/>
 <text x="7.874" y="42.164" size="1.27" layer="22" ratio="16" rot="MR180">snc98 3x4 Switch-block Rev. 0.3</text>
 <text x="37.846" y="42.545" size="1.27" layer="22" ratio="16" rot="MR0">CERN OHL    v.1.2 or later</text>
 <text x="39.878" y="45.466" size="1.27" layer="22" ratio="16" rot="MR0">http://ohwr  .org/cernohl</text>
 <text x="2.159" y="16.129" size="1.27" layer="22" ratio="16" rot="MR270" align="center">open</text>
 <text x="2.159" y="23.114" size="1.27" layer="22" ratio="16" rot="MR270" align="center">source</text>
 <text x="27.94" y="1.397" size="1.27" layer="22" ratio="16" rot="MR0" align="center">https://oshpark.com/profiles/Jens_G</text>
-<wire x1="0" y1="83.185" x2="56.388" y2="83.185" width="0" layer="20"/>
-<wire x1="56.388" y1="83.185" x2="56.388" y2="0" width="0" layer="20"/>
 <wire x1="27.3685" y1="19.1135" x2="27.3685" y2="18.2245" width="0.127" layer="21"/>
 <wire x1="27.3685" y1="18.2245" x2="27.7495" y2="18.669" width="0.127" layer="21"/>
 <wire x1="27.7495" y1="18.669" x2="27.3685" y2="19.1135" width="0.127" layer="21"/>
@@ -225,6 +225,10 @@
 <dimension x1="3.302" y1="3.302" x2="53.086" y2="3.302" x3="28.194" y3="-13.97" textsize="1.778" textratio="15" layer="47"/>
 <dimension x1="53.086" y1="3.302" x2="53.086" y2="41.529" x3="60.96" y3="22.4155" textsize="1.778" textratio="15" layer="47"/>
 <dimension x1="53.086" y1="3.302" x2="53.086" y2="79.756" x3="66.294" y3="41.529" textsize="1.778" textratio="15" layer="47"/>
+<wire x1="2.54" y1="83.185" x2="0" y2="80.645" width="0" layer="20" curve="90"/>
+<wire x1="56.388" y1="80.645" x2="53.848" y2="83.185" width="0" layer="20" curve="90"/>
+<wire x1="0" y1="2.54" x2="2.54" y2="0" width="0" layer="20" curve="90"/>
+<wire x1="53.848" y1="0" x2="56.388" y2="2.54" width="0" layer="20" curve="90"/>
 </plain>
 <libraries>
 <library name="ohw-logo">

@@ -4,7 +4,7 @@
 
    Developer: Jens Grabner
    Email:     jens@grabner-online.org
-   Date:      Juni 2016
+   Date:      Sept 2016
 
    Copyright CERN 2013.
    This documentation describes Open Hardware and is licensed
@@ -60,12 +60,12 @@
 #include <inttypes.h>
 #include <TimerOne.h>
 
-#define Debug_Level 13 //  0 - not Debug
+#define Debug_Level  0 //  0 - not Debug
                        //  1 - Test intern 1ms - Task by 100 ms
                        //  2 - Test intern 1ms - Task by 1000 ms
                        //  3 - Test Switch "=" up / down (analog)
                        //  4 - Test Switchnumber down (digital)
-                       //  5 - Monitor Switch_Code (Text) 110 - Functions
+                       //  5 - Monitor Switch_Code (Text) 108 - Functions
                        //  6 - Test Pendulum Time - Sinus 0.5 Hz
                        //  7 - get_Expo
                        //  8 - get mem_stack "=" Get_Mantisse();
@@ -78,11 +78,11 @@
 #define operation_test_max    4  //  0 .. 3  Stacktiefe
                                  //                     74HCF4053 (1 kOhm)
 #define Switch_down_start  1020  //  1020  ... 1020  100  %   ... 1020  <<--
-#define Switch_up_b         756  //   750  ..   870   70  %   ...  838
-#define Switch_down_b       580  //   570  ..   540   30  %   ...  595
-#define Switch_up_start     374  //   360  ...  420    0  %   ...  413  <<--
-                                 //                  -10  %   ...  352
-#define Average               4  //     5
+#define Switch_up_b         840  //   750  ..   870   70  %   ...  840
+#define Switch_down_b       600  //   570  ..   540   30  %   ...  600
+#define Switch_up_start     360  //   360  ...  420    0  %   ...  420  <<--
+                                 //                  -10  %   ...  360
+#define Average               5  //     5
 
 #define Beep A0        //     Pin A7
                        //     Sanguino  Pin 13 --> Pin 5 (PD5)
@@ -205,7 +205,7 @@ const uint64_t expo_10_[9] = {
 // ---  Tau_Konstante (2_Pi) ---
 #define Tau_expo                1;
 #define Tau_num        1135249722;
-#define Tau_denom      1806806049;  // Fehler ..  1,34e-18
+#define Tau_denom      1806806049;  // Fehler ..  1,34e-17
 
 // ---  Pi_Konstante  ---
 #define Pi_expo                 0;
@@ -259,7 +259,7 @@ uint64_t b3_denum = 0;
 uint64_t x0_b_64 =  1;
 uint32_t x0_b_32 =  1;
 
-#define tuning_fraction  150
+#define tuning_fraction  220
 boolean exact_value = false;
 
 int64_t gcd_temp_64        = 1;
@@ -449,7 +449,7 @@ const char string_start[ ascii_count ] = "  _########## # # # # #   " ;
 
 char char_test;               // 0.. 127
 
-uint8_t     index_mem = 255;  // 1..9  ... for CMs (Clear Memory's)
+uint8_t     index_mem = 255;  // 1..9  ... for MCs (Memory Clear's)
 
 boolean     time_10ms = false;
 uint8_t    index_10ms = 255;  // 0..13
@@ -1169,7 +1169,7 @@ void Reduce_Number() {
       num_temp_u64_b = old_num_u64_0;
 
       x0_a_64 = num_temp_u64_a;
-      x0_a_64 /= denom_temp_u64_a;;
+      x0_a_64 /= denom_temp_u64_a;
 
       x0_b_64 = num_temp_u64_b;
       --x0_b_64;
@@ -1199,6 +1199,7 @@ void Reduce_Number() {
       }
 
       if ( b3_num >= int32_max ) {
+      	
         x0_b_64 = int32_max;
         x0_b_64 -= b1_num;
         x0_b_64 /= b2_num;
@@ -1213,7 +1214,7 @@ void Reduce_Number() {
             b3_denum = b1_denum;
             b3_denum += b2_denum * x0_b_64;
           }
-		  exact_value = false; 
+          exact_value = false; 
         }
         else {
           exact_value = true;    //   denom_temp_u64_b == 0
@@ -1239,10 +1240,11 @@ void Reduce_Number() {
 
       if ( old_num_u64_0 > 0 ) {
         if ( a3_num >= int32_max ) {
+          
           x0_a_64 = int32_max;
           x0_a_64 -= a1_num;
           x0_a_64 /= a2_num;
-
+          
           a3_num = a2_num;
           a3_denum = a2_denum;
 
@@ -1253,7 +1255,7 @@ void Reduce_Number() {
               a3_denum = a1_denum;
               a3_denum += a2_denum * x0_a_64;
             }
-		    exact_value = false; 
+		        exact_value = false; 
           }
           else {
             exact_value = true;    //   denom_temp_u64_a == 0
@@ -1793,14 +1795,14 @@ void loop() {
           Print_Statepoint_after();
           break;
 
-        case 34:                 //    lg2
+        case 34:                 //    lb
           if ( Debug_Level == 13 ) {
-            Serial.print("(lg2)");
+            Serial.print("(lb(x))");
             Serial.print("\t");
             Print_Statepoint();
           }
           if ( Debug_Level == 5 ) {
-            Serial.println("lg2");
+            Serial.println("lb(x)");
           }
           Beep_on = true;
           Print_Statepoint_after();
@@ -2607,7 +2609,7 @@ void loop() {
             Print_Statepoint();
           }
           if ( Debug_Level == 5 ) {
-            Serial.println("CE");
+            Serial.println("_CE_");
           }
           if ( Start_input < Input_Operation_0 ) {    // Input Number
             if ( (Number_count > 0) || (Point_pos > 0) || display_string[Plus_Minus] == '-') {
@@ -3320,14 +3322,14 @@ void loop() {
           Print_Statepoint_after();
           break;
 
-        case 160:                 //   SM(CMs)
+        case 160:                 //   SM(MCs)
           if ( Debug_Level == 13 ) {
-            Serial.print("(CMs)");
+            Serial.print("(MCs)");
             Serial.print("\t");
             Print_Statepoint();
           }
           if ( Debug_Level == 5 ) {
-            Serial.println("CMs");
+            Serial.println("MCs");
           }
           Beep_on = true;
           for (index_mem = 1; index_mem < 10; ++index_mem) {
@@ -3574,6 +3576,20 @@ void loop() {
           }
           Print_Statepoint_after();
           break;
+
+        case 190:                //    rnd(x)
+          if ( Debug_Level == 13 ) {
+            Serial.print("(rnd(x))");
+            Serial.print("\t");
+            Print_Statepoint();
+          }
+          if ( Debug_Level == 5 ) {
+            Serial.println("rnd(x)");
+          }
+          Beep_on = true;
+          Print_Statepoint_after();
+          break;
+
       }
     }
 
@@ -4180,7 +4196,15 @@ void loop() {
       	case 1024:
       	case 128:
       	case 16:
-      		if ( Display_rotate == true ) {
+     	  if ( Display_rotate == true ) {
+          	if (Switch_down == 1) {
+              Display_rotate = false;
+              Switch_Code = 177;   //             Dis_Cha_Dir_off
+            }
+          	if (Switch_down == 4) {
+              Display_rotate = false;
+              Switch_Code = 177;   //             Dis_Cha_Dir_off
+            }
           	if (Switch_down == 5) {
               Display_rotate = false;
               Switch_Code = 177;   //             Dis_Cha_Dir_off
@@ -4254,11 +4278,11 @@ void loop() {
           break;
 
         case 513:      //     "EE" +  "CE"        two Switch pressed
-          Switch_Code = 34;   //             new  lg2
+          Switch_Code = 114;  //                  _2^x_
           break;
 
-        case 514:      //     "FN" +  "CE"   new  two Switch pressed
-          Switch_Code = 114;  //                  _2^x_
+        case 514:      //     "FN" +  "CE"        two Switch pressed
+          Switch_Code = 34;   //                  lb
           break;
 
         case 259:      //     "EE" +  "FN" + "/"  three Switch pressed
@@ -4345,9 +4369,9 @@ void loop() {
           Switch_Code = 94;   //            new   _/p/_  Phytagoras
           break;
 
-        case 132:      //     =  + _*_            two Switch pressed
         case 20:       //     =  + _+_            two Switch pressed
         case 1029:     //     EE +  =  + _(_      three Switch pressed
+        case 132:      //     =  + _*_            two Switch pressed
         case 129:      //     EE + _*_            two Switch pressed
         case 133:      //     EE +  =  + _*_      three Switch pressed
         case 21:       //     EE +  =  + _+_      three Switch pressed
@@ -4356,14 +4380,14 @@ void loop() {
           break;
 
         case 130:      //     FN - _*_            two Switch pressed
-          Switch_Code = 124;   //           new   _AGM_
+          Switch_Code = 124;   //                 _AGM_
           break;
 
         case 258:      //     FN - _/_            two Switch pressed
           Switch_Code = 93;   //            new   Light down
           break;
 
-        case 3078:     //    "FN" + "=" +  "("    three Switch pressed
+        case 1030:     //    "FN" + "=" +  "("    three Switch pressed
           Switch_Code = 127;  //            new   -->
           break;
 
@@ -4372,22 +4396,23 @@ void loop() {
           break;
 
         case 1026:     //    "FN" + "("           two Switch pressed
-          Switch_Code = 113;  //            new   e^x
+          Switch_Code = 112;  //                  ln(x)
           break;
 
         case 1025:      //   "EE" + "("           three Switch pressed
-          Switch_Code = 112;    //          new   ln(x)
+          Switch_Code = 113;  //                  e^x
           break;
 
         case 2050:     //    "FN" + ")"           two Switch pressed
-          Switch_Code = 116;  //            new   10^x
+          Switch_Code = 115;  //                  log(x)
           break;
 
         case 2049:     //    "EE" + ")"           two Switch pressed
-          Switch_Code = 115;  //            new   log(x)
+          Switch_Code = 116;  //                  10^x
           break;
 
         case 1540:     //    "=" + "CE"  +  "("   three Switch pressed
+        case 1542:     //    "=" + "CE"  +  "("   three Switch pressed
           Switch_Code = 148;  //            new   <<-->>
           break;
 
@@ -4395,8 +4420,12 @@ void loop() {
           Switch_Code = 91;   //            new   Light up
           break;
 
+        case 4097:     //    "EE" +  "0"          two Switch pressed
+          Switch_Code = 190;  //                  RND
+          break;
+
         case 4098:     //     FN  +  "0"          two Switch pressed
-          Switch_Code = 119;  //             new  x!
+          Switch_Code = 119;  //                  x!
           break;
 
         case 8194:     //     FN - "."            two Switch pressed
@@ -4568,7 +4597,7 @@ void loop() {
           break;
 
         case 16389:    //     "EE" + "=" + "+/-"  three Switch pressed
-          Switch_Code = 160;  //             new  CMs
+          Switch_Code = 160;  //                  MCs
           break;
 
         case 32774:    //     "FN" + "=" +  "1"   three Switch pressed
@@ -4618,7 +4647,6 @@ void loop() {
         case 515:      //    "CE"                 defect
         case 576:      //    "CE"                 defect
         case 1027:     //    "("                  defect
-        case 1030:     //    "FN" + "=" +  "("    defect
         case 1537:     //    "("                  defect
         case 1538:     //    "("                  defect
         case 2054:     //    "FN" + "=" +  "("    defect
