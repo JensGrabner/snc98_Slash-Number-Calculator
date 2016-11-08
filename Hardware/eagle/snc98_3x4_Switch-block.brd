@@ -32,12 +32,12 @@
 <layer number="22" name="bPlace" color="14" fill="1" visible="yes" active="yes"/>
 <layer number="23" name="tOrigins" color="15" fill="1" visible="yes" active="yes"/>
 <layer number="24" name="bOrigins" color="15" fill="1" visible="yes" active="yes"/>
-<layer number="25" name="tNames" color="7" fill="1" visible="no" active="yes"/>
-<layer number="26" name="bNames" color="7" fill="1" visible="no" active="yes"/>
+<layer number="25" name="tNames" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="26" name="bNames" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="27" name="tValues" color="7" fill="1" visible="no" active="yes"/>
 <layer number="28" name="bValues" color="7" fill="1" visible="no" active="yes"/>
-<layer number="29" name="tStop" color="7" fill="3" visible="no" active="yes"/>
-<layer number="30" name="bStop" color="7" fill="6" visible="no" active="yes"/>
+<layer number="29" name="tStop" color="7" fill="3" visible="yes" active="yes"/>
+<layer number="30" name="bStop" color="7" fill="6" visible="yes" active="yes"/>
 <layer number="31" name="tCream" color="7" fill="4" visible="no" active="yes"/>
 <layer number="32" name="bCream" color="7" fill="5" visible="no" active="yes"/>
 <layer number="33" name="tFinish" color="6" fill="3" visible="no" active="yes"/>
@@ -51,15 +51,15 @@
 <layer number="41" name="tRestrict" color="4" fill="10" visible="no" active="yes"/>
 <layer number="42" name="bRestrict" color="1" fill="10" visible="no" active="yes"/>
 <layer number="43" name="vRestrict" color="2" fill="10" visible="no" active="yes"/>
-<layer number="44" name="Drills" color="7" fill="1" visible="no" active="yes"/>
+<layer number="44" name="Drills" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="45" name="Holes" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="46" name="Milling" color="3" fill="1" visible="no" active="yes"/>
 <layer number="47" name="Measures" color="7" fill="1" visible="yes" active="yes"/>
-<layer number="48" name="Document" color="7" fill="1" visible="no" active="yes"/>
+<layer number="48" name="Document" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="49" name="Reference" color="7" fill="1" visible="no" active="yes"/>
 <layer number="50" name="dxf" color="7" fill="1" visible="no" active="yes"/>
 <layer number="51" name="tDocu" color="6" fill="1" visible="yes" active="yes"/>
-<layer number="52" name="bDocu" color="7" fill="1" visible="no" active="yes"/>
+<layer number="52" name="bDocu" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="53" name="tGND_GNDA" color="7" fill="9" visible="no" active="no"/>
 <layer number="54" name="bGND_GNDA" color="1" fill="9" visible="no" active="no"/>
 <layer number="56" name="wert" color="7" fill="1" visible="no" active="yes"/>
@@ -156,10 +156,10 @@
 </layers>
 <board>
 <plain>
-<wire x1="0" y1="2.54" x2="0" y2="80.645" width="0" layer="20"/>
-<wire x1="2.54" y1="83.185" x2="53.848" y2="83.185" width="0" layer="20"/>
-<wire x1="56.388" y1="80.645" x2="56.388" y2="2.54" width="0" layer="20"/>
-<wire x1="2.54" y1="0" x2="53.848" y2="0" width="0" layer="20"/>
+<wire x1="0" y1="3.048" x2="0" y2="80.137" width="0" layer="20"/>
+<wire x1="3.048" y1="83.185" x2="53.34" y2="83.185" width="0" layer="20"/>
+<wire x1="56.388" y1="80.137" x2="56.388" y2="3.048" width="0" layer="20"/>
+<wire x1="3.048" y1="0" x2="53.34" y2="0" width="0" layer="20"/>
 <text x="7.874" y="42.164" size="1.27" layer="22" ratio="16" rot="MR180">snc98 3x4 Switch-block Rev. 0.3</text>
 <text x="37.846" y="42.545" size="1.27" layer="22" ratio="16" rot="MR0">CERN OHL    v.1.2 or later</text>
 <text x="39.878" y="45.466" size="1.27" layer="22" ratio="16" rot="MR0">http://ohwr  .org/cernohl</text>
@@ -225,10 +225,10 @@
 <dimension x1="3.302" y1="3.302" x2="53.086" y2="3.302" x3="28.194" y3="-13.97" textsize="1.778" textratio="15" layer="47"/>
 <dimension x1="53.086" y1="3.302" x2="53.086" y2="41.529" x3="60.96" y3="22.4155" textsize="1.778" textratio="15" layer="47"/>
 <dimension x1="53.086" y1="3.302" x2="53.086" y2="79.756" x3="66.294" y3="41.529" textsize="1.778" textratio="15" layer="47"/>
-<wire x1="2.54" y1="83.185" x2="0" y2="80.645" width="0" layer="20" curve="90"/>
-<wire x1="56.388" y1="80.645" x2="53.848" y2="83.185" width="0" layer="20" curve="90"/>
-<wire x1="0" y1="2.54" x2="2.54" y2="0" width="0" layer="20" curve="90"/>
-<wire x1="53.848" y1="0" x2="56.388" y2="2.54" width="0" layer="20" curve="90"/>
+<wire x1="3.048" y1="83.185" x2="0" y2="80.137" width="0" layer="20" curve="90"/>
+<wire x1="56.388" y1="80.137" x2="53.34" y2="83.185" width="0" layer="20" curve="90"/>
+<wire x1="0" y1="3.048" x2="3.048" y2="0" width="0" layer="20" curve="90"/>
+<wire x1="53.34" y1="0" x2="56.388" y2="3.048" width="0" layer="20" curve="90"/>
 </plain>
 <libraries>
 <library name="ohw-logo">
@@ -4820,6 +4820,7 @@ Metric Code Size 3216</description>
 </variantdefs>
 <classes>
 <class number="0" name="default" width="0" drill="0">
+<clearance class="0" value="0.205"/>
 </class>
 </classes>
 <designrules name="OSHPark-8mil-2layer">
