@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="yes"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="dots" multiple="1" display="no" altdistance="0.05" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.05" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -26705,11 +26705,6 @@ LETTER landscape</description>
 <packages>
 <package name="SOT-23">
 <description>&lt;b&gt;Small Outline Transistor&lt;/b&gt;</description>
-<smd name="1" x="0.9398" y="1.016" dx="1.143" dy="1.651" layer="1" roundness="30"/>
-<smd name="2" x="-0.9398" y="1.016" dx="1.143" dy="1.651" layer="1" roundness="30"/>
-<smd name="3" x="0.0254" y="-1.016" dx="1.143" dy="1.651" layer="1" roundness="30"/>
-<text x="-1.397" y="1.778" size="1.27" layer="27" ratio="10">&gt;VALUE</text>
-<text x="-1.397" y="3.302" size="1.27" layer="25" ratio="10">&gt;NAME</text>
 <wire x1="-1.4224" y1="-0.6604" x2="-1.4224" y2="0.6604" width="0.1524" layer="51"/>
 <wire x1="-1.4224" y1="0.6604" x2="1.4224" y2="0.6604" width="0.1524" layer="51"/>
 <wire x1="1.4224" y1="0.6604" x2="1.4224" y2="-0.6604" width="0.1524" layer="51"/>
@@ -26721,6 +26716,11 @@ LETTER landscape</description>
 <rectangle x1="-0.2286" y1="-1.2954" x2="0.2286" y2="-0.7112" layer="51" rot="R180"/>
 <rectangle x1="-1.1684" y1="0.7112" x2="-0.7112" y2="1.2954" layer="51" rot="R180"/>
 <rectangle x1="0.7112" y1="0.7112" x2="1.1684" y2="1.2954" layer="51" rot="R180"/>
+<smd name="1" x="0.9525" y="1.016" dx="1.143" dy="1.651" layer="1" roundness="30"/>
+<smd name="2" x="-0.9525" y="1.016" dx="1.143" dy="1.651" layer="1" roundness="30"/>
+<smd name="3" x="0" y="-1.016" dx="1.143" dy="1.651" layer="1" roundness="30"/>
+<text x="-1.397" y="1.778" size="1.27" layer="27" ratio="10">&gt;VALUE</text>
+<text x="-1.397" y="3.302" size="1.27" layer="25" ratio="10">&gt;NAME</text>
 </package>
 </packages>
 <symbols>
@@ -30509,15 +30509,18 @@ DDEController.pdf</description>
 <wire x1="-0.635" y1="1.27" x2="-1.27" y2="0.635" width="0.1524" layer="21"/>
 <wire x1="-1.27" y1="-0.635" x2="-0.635" y2="-1.27" width="0.1524" layer="21"/>
 <wire x1="0.635" y1="-1.27" x2="-0.635" y2="-1.27" width="0.1524" layer="21"/>
-<rectangle x1="-0.254" y1="-0.254" x2="0.254" y2="0.254" layer="51"/>
 <pad name="1" x="0" y="0" drill="1.016" diameter="1.9304" shape="octagon"/>
 <text x="-1.3462" y="1.8288" size="1.27" layer="25" ratio="10">&gt;NAME</text>
 <text x="-1.27" y="-3.175" size="1.27" layer="27">&gt;VALUE</text>
+<rectangle x1="-0.254" y1="-0.254" x2="0.254" y2="0.254" layer="51"/>
 </package>
 <package name="1X01-CLEANBIG">
 <pad name="1" x="0" y="0" drill="1.016" diameter="1.778"/>
 <text x="-1.3462" y="1.8288" size="1.27" layer="25" ratio="10">&gt;NAME</text>
 <text x="-1.27" y="-3.175" size="1.27" layer="27">&gt;VALUE</text>
+</package>
+<package name="1X1-BIGPOGO">
+<pad name="P$1" x="0" y="0" drill="1.4" diameter="2.54" shape="long"/>
 </package>
 </packages>
 <symbols>
@@ -30526,9 +30529,9 @@ DDEController.pdf</description>
 <wire x1="1.27" y1="-2.54" x2="1.27" y2="2.54" width="0.4064" layer="94"/>
 <wire x1="1.27" y1="2.54" x2="-6.35" y2="2.54" width="0.4064" layer="94"/>
 <wire x1="-6.35" y1="2.54" x2="-6.35" y2="-2.54" width="0.4064" layer="94"/>
-<pin name="1" x="-2.54" y="0" visible="pad" length="short" direction="pas" function="dot"/>
 <text x="-6.35" y="3.175" size="1.778" layer="95">&gt;NAME</text>
 <text x="-6.35" y="-5.08" size="1.778" layer="96">&gt;VALUE</text>
+<pin name="1" x="-2.54" y="0" visible="pad" length="short" direction="pas" function="dot"/>
 </symbol>
 </symbols>
 <devicesets>
@@ -30551,6 +30554,14 @@ With round pins</description>
 <device name="CB" package="1X01-CLEANBIG">
 <connects>
 <connect gate="G$1" pin="1" pad="1"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="-BIGPOGO" package="1X1-BIGPOGO">
+<connects>
+<connect gate="G$1" pin="1" pad="P$1"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -30883,15 +30894,15 @@ With round pins</description>
 <part name="R59" library="rcl" deviceset="R-EU_" device="0204/5" value="3k3"/>
 <part name="X2" library="Con-amp-micromatch" deviceset="MICROMATCH-14" device=""/>
 <part name="X4" library="Con-amp-micromatch" deviceset="MICROMATCH-14" device=""/>
-<part name="JP1" library="adafruit" deviceset="PINHD-1X1" device=""/>
 <part name="JP2" library="adafruit" deviceset="PINHD-1X1" device=""/>
+<part name="JP1" library="adafruit" deviceset="PINHD-1X1" device=""/>
 </parts>
 <sheets>
 <sheet>
 <plain>
 <text x="149.86" y="30.48" size="3.81" layer="91" ratio="12">Calculator 15-Digit with 1284P</text>
 <text x="149.86" y="25.4" size="2.54" layer="91" ratio="12">by Jens Grabner</text>
-<text x="238.76" y="7.62" size="2.54" layer="91" ratio="12">0.8</text>
+<text x="238.76" y="7.62" size="2.54" layer="91" ratio="12">1.0</text>
 <text x="5.08" y="10.16" size="2.1844" layer="91" ratio="10">Calculator 15-Digit with ATmega1284P by Jens Grabner is licensed under</text>
 <text x="5.08" y="15.24" size="3.81" layer="91" ratio="12">Copyright CERN 2013</text>
 <text x="5.08" y="5.08" size="2.1844" layer="91" ratio="10">the CERN OHL v.1.2 or later. (http://ohwr.org/cernohl)</text>
@@ -31418,7 +31429,6 @@ With round pins</description>
 <label x="102.87" y="166.37" size="1.778" layer="95"/>
 <pinref part="X2" gate="-4" pin="S"/>
 <wire x1="93.98" y1="167.64" x2="101.6" y2="167.64" width="0.1524" layer="91"/>
-<junction x="93.98" y="167.64"/>
 </segment>
 </net>
 <net name="D14_A" class="0">
@@ -31434,7 +31444,7 @@ With round pins</description>
 <plain>
 <text x="-58.42" y="58.42" size="3.81" layer="91" ratio="12">Calculator 15-Digit with 1284P</text>
 <text x="-58.42" y="53.34" size="2.54" layer="91" ratio="12">by Jens Grabner</text>
-<text x="30.48" y="35.56" size="2.54" layer="91" ratio="12">0.8</text>
+<text x="30.48" y="35.56" size="2.54" layer="91" ratio="12">1.0</text>
 <text x="-203.2" y="38.1" size="2.1844" layer="91" ratio="10">Calculator 15-Digit with ATmega1284P by Jens Grabner is licensed under</text>
 <text x="-203.2" y="43.18" size="3.81" layer="91" ratio="12">Copyright CERN 2013</text>
 <text x="-203.2" y="33.02" size="2.1844" layer="91" ratio="10">the CERN OHL v.1.2 or later. (http://ohwr.org/cernohl)</text>
@@ -31502,8 +31512,8 @@ With round pins</description>
 <instance part="D25" gate="G$1" x="-3.81" y="194.31"/>
 <instance part="D26" gate="G$1" x="-3.81" y="168.91"/>
 <instance part="D27" gate="G$1" x="-3.81" y="143.51"/>
-<instance part="JP1" gate="G$1" x="2.54" y="132.08" rot="R180"/>
 <instance part="JP2" gate="G$1" x="17.78" y="137.16" rot="R180"/>
+<instance part="JP1" gate="G$1" x="2.54" y="132.08" rot="R180"/>
 </instances>
 <busses>
 </busses>
@@ -32841,15 +32851,14 @@ With round pins</description>
 <approved hash="106,1,22.86,153.67,NC1,,,,,"/>
 <approved hash="106,1,38.1,153.67,NC2,,,,,"/>
 <approved hash="106,1,52.07,161.29,NC3,,,,,"/>
-<approved hash="108,1,104.14,96.52,CA_LED,,,,,"/>
 <approved hash="113,2,7.38293,73.5288,JP7,,,,,"/>
 <approved hash="113,2,7.38293,82.4188,JP8,,,,,"/>
 <approved hash="113,2,6.11293,111.629,JP9,,,,,"/>
 <approved hash="113,2,6.11293,102.739,JP10,,,,,"/>
 <approved hash="113,2,7.38293,91.3088,JP11,,,,,"/>
 <approved hash="113,2,6.11293,121.789,JP12,,,,,"/>
-<approved hash="113,2,4.84293,130.679,JP1,,,,,"/>
 <approved hash="113,2,20.0829,135.759,JP2,,,,,"/>
+<approved hash="113,2,4.84293,130.679,JP1,,,,,"/>
 </errors>
 </schematic>
 </drawing>

@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="yes"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="50" unitdist="mil" unit="mil" style="lines" multiple="1" display="no" altdistance="0.05" altunitdist="inch" altunit="inch"/>
+<grid distance="0.05" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.05" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -38962,6 +38962,7 @@ With round pins</description>
 <part name="JP14" library="pinhead" deviceset="PINHD-2X7" device=""/>
 <part name="D1" library="BaseApp" deviceset="DIODE" device="SMA" value="SD103CW"/>
 <part name="GND7" library="SparkFun" deviceset="GND" device=""/>
+<part name="D6" library="BaseApp" deviceset="DIODE" device="SMA" value="SD103CW"/>
 </parts>
 <sheets>
 <sheet>
@@ -39131,6 +39132,7 @@ With round pins</description>
 <instance part="GND7" gate="1" x="22.86" y="24.13" smashed="yes">
 <attribute name="VALUE" x="20.32" y="21.59" size="1.778" layer="96"/>
 </instance>
+<instance part="D6" gate="G$1" x="33.02" y="76.2" rot="R90"/>
 </instances>
 <busses>
 </busses>
@@ -39287,6 +39289,11 @@ With round pins</description>
 <pinref part="C18" gate="G$1" pin="1"/>
 <pinref part="R1" gate="G$1" pin="2"/>
 <pinref part="R49" gate="G$1" pin="2"/>
+<wire x1="30.48" y1="66.04" x2="30.48" y2="71.12" width="0.1524" layer="91"/>
+<junction x="30.48" y="66.04"/>
+<wire x1="30.48" y1="71.12" x2="33.02" y2="71.12" width="0.1524" layer="91"/>
+<pinref part="D6" gate="G$1" pin="A"/>
+<wire x1="33.02" y1="71.12" x2="33.02" y2="73.66" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <wire x1="152.4" y1="53.34" x2="147.32" y2="53.34" width="0.1524" layer="91"/>
@@ -39817,8 +39824,13 @@ With round pins</description>
 <segment>
 <pinref part="P+5" gate="1" pin="VCC"/>
 <label x="26.67" y="86.36" size="1.778" layer="95"/>
-<wire x1="25.4" y1="81.28" x2="25.4" y2="88.9" width="0.1524" layer="91"/>
+<wire x1="25.4" y1="81.28" x2="25.4" y2="82.55" width="0.1524" layer="91"/>
 <pinref part="R1" gate="G$1" pin="1"/>
+<pinref part="D6" gate="G$1" pin="C"/>
+<wire x1="25.4" y1="82.55" x2="25.4" y2="88.9" width="0.1524" layer="91"/>
+<wire x1="33.02" y1="78.74" x2="33.02" y2="82.55" width="0.1524" layer="91"/>
+<wire x1="33.02" y1="82.55" x2="25.4" y2="82.55" width="0.1524" layer="91"/>
+<junction x="25.4" y="82.55"/>
 </segment>
 <segment>
 <pinref part="U3" gate="A" pin="VCC"/>
