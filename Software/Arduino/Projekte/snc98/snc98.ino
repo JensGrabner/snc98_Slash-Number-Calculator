@@ -145,8 +145,8 @@ uint32_t time          = 0;
 uint32_t time_down     = 0;
 uint32_t time_old      = 0;
 
-#define expo_max_input  99
-#define expo_min_input -99
+#define expo_max_input  90
+#define expo_min_input -90
 
 #define expo_max_in_3   33
 #define expo_min_in_3  -33
@@ -412,18 +412,18 @@ AVRational_32 mem_stack[mem_stack_max] = {
   { 0, int32_max, int32_max  }
 };
 const AVRational_32 to_xx[14] = {
-  {  0, 2144800000, 1577497719  },   //  0  ..  to PS
-  {  0, 1191813600, 2145264480  },   //  1  ..  to °C  5 / 9
-  {  0,  565007021, 1245627260  },   //  2  ..  1 lbs = (1 / 2,2046226218488) kg
-  {  1,  473176473, 1250000000  },   //  3  ..  1 gallon [US] = 3,785411784 Liter  
-  { -2, 2145264442,  844592300  },   //  4  ..  to mm
-  {  0, 1577497719, 2144800000  },   //  5  ..  1 hp(I) = 0,73549875 kW
-  {  2,  844592300, 2145264442  },   //  6  ..  to mil
-  { -1, 1250000000,  473176473  },   //  7  ..  1 Liter = (1 / 3,785411784) US-gal
-  {  0, 1245627260,  565007021  },   //  8  ..  1 kg = 2,2046226218488 lbs
-  {  0, 2145264480, 1191813600  },   //  9  ..  to °F  1,8
-  {  1, 2145264480,  670395150  },   // 10  ..        32
-  {  1,-2145264480, 1206711270  },   // 11  ..     -160 / 9
+  { -1, 1250000000,  473176473  },   // 0  7  ..  1 Liter = (1 / 3,785411784) US-gal
+  {  1,  473176473, 1250000000  },   // 1  3  ..  1 gallon [US] = 3,785411784 Liter  
+  {  0,  565007021, 1245627260  },   // 2  2  ..  1 lb = (1 / 2,2046226218488) kg
+  {  0, 1245627260,  565007021  },   // 3  8  ..  1 kg = 2,2046226218488 lbs
+  {  0, 2147468400, 1334375000  },   // 4  5  ..  1 Miles = 1,609344 km
+  { -2, 2145264442,  844592300  },   // 5  4  ..  to mm
+  {  2,  844592300, 2145264442  },   // 6  6  ..  to mil
+  {  0, 1334375000, 2147468400  },   // 7  0  ..  to Miles
+  {  0, 1191813600, 2145264480  },   // 8  1  ..  to °C  5 / 9
+  {  0, 2145264480, 1191813600  },   // 9  9  ..  to °F  9 / 5
+  {  1,-2145264480,  670395150  },   // 10  ..       -32
+  {  1, 2145264480, 1206711270  },   // 11  ..     +160 / 9
   {  2,  853380389, 1489429756  },   // 12  ..     to deg
   { -2, 1489429756,  853380389  }    // 13  ..     to rad
 };
@@ -438,7 +438,6 @@ uint8_t to_extra_test      =  0;   // mem_extra  to_0 .. to_9
 boolean to_extra           = false;
 boolean mem_exchange       = false;
 boolean mem_save           = false;
-boolean mem_finished       = false;
 
 AVRational_32 mem_extra_stack[mem_extra_max] = {
   { 0, int32_max, int32_max },   // MR 0
@@ -602,7 +601,7 @@ auto bit_0 = toBitRef( Display_Status_new, 0 );  // ( "0" ) Create a bit referen
 auto bit_1 = toBitRef( Display_Status_new, 1 );  // ( "." ) 
 auto bit_2 = toBitRef( Display_Status_new, 2 );  // ( "+/-" )
 auto bit_3 = toBitRef( Display_Status_new, 3 );  // ( "EE" ) 
-auto bit_4 = toBitRef( Display_Status_new, 4 );  // ( "FN2 )
+auto bit_4 = toBitRef( Display_Status_new, 4 );  // ( "FN" )
 auto bit_5 = toBitRef( Display_Status_new, 5 );  // ( "=" )
 auto bit_6 = toBitRef( Display_Status_new, 6 );  // ("+"; "x"; "(")
 auto bit_7 = toBitRef( Display_Status_new, 7 );  // (")")
@@ -655,95 +654,95 @@ void Print_Statepoint() {         // Debug_Level == 13
    */
   Serial.print("\t");
   
-	switch (Start_input) {
+  switch (Start_input) {
 
-		case First_Display:           //
-			Serial.print("First_Display");
-			break;
-
-		case Start_Mode:              //
-			Serial.print("Start_Mode");
-			break;
-
-		case Input_Mantisse:          //    Input Number
-			Serial.print("Input_Mantisse");
-			break;
-
-		case Input_Expo:              //    Input Number
-			Serial.print("Input_Expo");
-			break;
-
-		case Input_dms:               //    Input Number
-			Serial.print("Input_dms");
-			break;
-
-		case Input_Fraction:          //    Input Number
-			Serial.print("Input_Fraction");
-			break;
-
-		case Input_Memory:            //    Input_Memory 
-		  Serial.print("Input_Memory");
+    case First_Display:           //
+      Serial.print("First_Display");
       break;
 
-		case Input_Operation_0:       //    Input Operation  no Input
-			Serial.print("Input_Operation_0");
-			break;
+    case Start_Mode:              //
+      Serial.print("Start_Mode");
+      break;
 
-		case Input_Operation_1:       //    Input Operation  "+"  "-"
-			Serial.print("Input_Operation_1");
-			break;
+    case Input_Mantisse:          //    Input Number
+      Serial.print("Input_Mantisse");
+      break;
 
-		case Input_Operation_2:       //    Input Operation  "*"  "/"
-			Serial.print("Input_Operation_2");
-			break;
+    case Input_Expo:              //    Input Number
+      Serial.print("Input_Expo");
+      break;
 
-		case Input_Operation_3:       //    Input Operation  "//"  "/p/"
-			Serial.print("Input_Operation_3");
-			break;
+    case Input_dms:               //    Input Number
+      Serial.print("Input_dms");
+      break;
 
-		case Input_Operation_4:       //    Input Operation  "sqrt(x,y)"  "x^y"  "AGM"
-			Serial.print("Input_Operation_4");
-			break;
+    case Input_Fraction:          //    Input Number
+      Serial.print("Input_Fraction");
+      break;
 
-		case Input_Operation_5:       //    Input Operation  "("  ")"
-			Serial.print("Input_Operation_5");
-			break;
+    case Input_Memory:            //    Input_Memory 
+      Serial.print("Input_Memory");
+      break;
 
-		case Display_Input_Error:     //    Display Number
-			Serial.print("Display_Input_Error");
-			break;
+    case Input_Operation_0:       //    Input Operation  no Input
+      Serial.print("Input_Operation_0");
+      break;
 
-		case Display_Error:           //    Display Number
-			Serial.print("Display_Error");
-			break;
+    case Input_Operation_1:       //    Input Operation  "+"  "-"
+      Serial.print("Input_Operation_1");
+      break;
 
-		case Display_Result:          //    Display Number
-			Serial.print("Display_Result");
-			break;
+    case Input_Operation_2:       //    Input Operation  "*"  "/"
+      Serial.print("Input_Operation_2");
+      break;
 
-		case Display_M_Plus:          //    Display Number
-			Serial.print("Display_M_Plus");
-			break;
+    case Input_Operation_3:       //    Input Operation  "//"  "/p/"
+      Serial.print("Input_Operation_3");
+      break;
 
-		case Display_Fraction_a_b:    //    Display Number
-			Serial.print("Display_Fraction_a_b");
-			break;
+    case Input_Operation_4:       //    Input Operation  "sqrt(x,y)"  "x^y"  "AGM"
+      Serial.print("Input_Operation_4");
+      break;
 
-		case Display_Fraction_a_b_c:  //    Display Number
-			Serial.print("Display_Fraction_a_b_c");
-			break;
+    case Input_Operation_5:       //    Input Operation  "("  ")"
+      Serial.print("Input_Operation_5");
+      break;
 
-		case Display_hms:             //    Display Number
-			Serial.print("Display_hms");
-			break;
+    case Display_Input_Error:     //    Display Number
+      Serial.print("Display_Input_Error");
+      break;
+
+    case Display_Error:           //    Display Number
+      Serial.print("Display_Error");
+      break;
+
+    case Display_Result:          //    Display Number
+      Serial.print("Display_Result");
+      break;
+
+    case Display_M_Plus:          //    Display Number
+      Serial.print("Display_M_Plus");
+      break;
+
+    case Display_Fraction_a_b:    //    Display Number
+      Serial.print("Display_Fraction_a_b");
+      break;
+
+    case Display_Fraction_a_b_c:  //    Display Number
+      Serial.print("Display_Fraction_a_b_c");
+      break;
+
+    case Display_hms:             //    Display Number
+      Serial.print("Display_hms");
+      break;
   
-		case Off_Status:              //    Off Status
-			Serial.print("Off_Status");
-			break;
+    case Off_Status:              //    Off Status
+      Serial.print("Off_Status");
+      break;
   
-		default:
-			Serial.println("__not define__");
-			break;
+    default:
+      Serial.println("__not define__");
+      break;
   }
 }
 
@@ -1071,7 +1070,7 @@ void Get_Number() {
     }
   }
   else {
-    mem_stack[ mem_pointer ].expo = -99;
+    mem_stack[ mem_pointer ].expo = expo_min_input;
     mem_stack[ mem_pointer ].num = int32_max;
     mem_stack[ mem_pointer ].denom = int32_max;
     if (display_string[1] == '-') {
@@ -1206,7 +1205,7 @@ void Reduce_Number() {
   *  http://link.springer.com/article/10.1007%2Fs00607-008-0013-8
   *  https://math.boku.ac.at/udt/vol05/no2/3zhabitsk10-2.pdf  Page_5
   */
- /*************** 
+ /*******
   *  Thill M. - A more precise rounding algorithm for natural numbers. 
   *  .. Computing Jul 2008, Volume 82, Issue 2, pp 189–198
   *  http://link.springer.com/article/10.1007/s00607-008-0006-7
@@ -1472,7 +1471,7 @@ void Reduce_Number() {
   }
 
   if ( denom_temp_u64 == 0 ) {
-    num_temp_u32 = 0;
+    num_temp_u32   = 0;
     denom_temp_u32 = int32_max;
   }
   else {
@@ -2314,6 +2313,11 @@ AVRational_32 mul(AVRational_32 a, AVRational_32 b) {
     temp_32.num = num_temp_u32;
     temp_32.denom = denom_temp_u32;
   }
+
+  if ( temp_32.num == 0 ) {
+  	temp_32.expo = 0;
+  }
+
   temp_32.num *= test_signum_8;
   return temp_32;
 }
@@ -2523,7 +2527,7 @@ void loop() {
 
     switch (Switch_Code) {
 
-      case 91:                 //    FN - Light_up
+      case 91:                 //   "FN"- Light_up
         if ( Debug_Level == 13 ) {
           Serial.print("(Light_up)");
           Print_Statepoint();
@@ -2541,7 +2545,7 @@ void loop() {
         Print_Statepoint_after();
         break;
 
-      case 93:                 //    FN - Light_down
+      case 93:                 //   "FN"- Light_down
         if ( Debug_Level == 13 ) {
           Serial.print("(Light_down)");
           Print_Statepoint();
@@ -3438,8 +3442,10 @@ void loop() {
           temp_expo = mem_extra_stack[ mem_extra_test ].expo;
           mem_pointer = 1;
           Memory_to_Input_Operation();
+          mem_save = true;
           display_string[Memory_1] = 'm';
           display_string[Memory_0] = 48 + mem_extra_test;
+          Beep_on = true;
           Print_Statepoint_after();
           break;
 
@@ -3900,7 +3906,7 @@ void loop() {
           }
           Beep_on = true;
           for (index_mem = 1; index_mem < 10; ++index_mem) {
-            mem_extra_stack[ index_mem ].expo = -99;
+            mem_extra_stack[ index_mem ].expo = expo_min_input;
             mem_extra_stack[ index_mem ].num = int32_max;
             mem_extra_stack[ index_mem ].denom = int32_max;
   	      }
@@ -4158,7 +4164,6 @@ void loop() {
               mem_stack[ mem_pointer ].expo = temp_expo;
               Display_Number();
               mem_exchange = true;
-              mem_finished = false;
               display_string[Memory_1] = 'E';
               display_string[Memory_0] = 48 + mem_extra_test;
               Beep_on = true;
@@ -4233,17 +4238,17 @@ void loop() {
               mem_pointer = 1;
               if ( Start_input != Display_Error ) {
                 mem_pointer = 0;
+                if ( to_extra_test == 9 ) {
+                  mem_stack[ mem_pointer ] = add(mem_stack[ mem_pointer ], to_xx[ 11 ]);
+                }
+                if ( to_extra_test == 8 ) {
+                  mem_stack[ mem_pointer ] = add(mem_stack[ mem_pointer ], to_xx[ 10 ]);
+                }
                 mem_stack[ mem_pointer ] = mul(mem_stack[ mem_pointer ], to_xx[ to_extra_test ]);
                 Error_Test();
                 mem_pointer = 1;
                 if ( Start_input != Display_Error ) {
                   mem_pointer = 0;
-                  if ( to_extra_test == 9 ) {
-                    mem_stack[ mem_pointer ] = add(mem_stack[ mem_pointer ], to_xx[ 10 ]);
-                  }
-                  if ( to_extra_test == 1 ) {
-                    mem_stack[ mem_pointer ] = add(mem_stack[ mem_pointer ], to_xx[ 11 ]);
-                  }
                   Display_Number();
                   display_string[Memory_1] = '-';
                   display_string[Memory_0] = 48 + to_extra_test;
@@ -4811,7 +4816,7 @@ void loop() {
     if ( Switch_old > Switch_down ) {
     	Switch_delta = Switch_old - Switch_down;
 
-      switch (Switch_delta) {
+      switch (Switch_delta) {   // change  -->   Display_Status_new
 
       	case 1:
       		bit_3 = 0;           //     "EE"       Write to the bit.
@@ -4893,31 +4898,305 @@ void loop() {
         case 8388608:    //    9
         case 12582912:
           Display_Status_old = 255;
-          if ( Display_Status_new == 8 ) {      // inv
-            Display_Status_old = Display_Status_new;
-          }
-          if ( Display_Status_new == 16 ) {     // FN
-            Display_Status_old = Display_Status_new;
-          }
-          if ( Display_Status_new == 24 ) {     // MR
-            Display_Status_old = Display_Status_new;
-          }
-          if ( Display_Status_new == 48 ) {     // MS
-            Display_Status_old = Display_Status_new;
+          switch (Display_Status_new) {
+
+            case 0:         // __
+            case 8:         // inv
+            case 16:        // FN
+            case 24:        // MR
+            case 40:        // Display
+            case 48:        // MS
+              Display_Status_old = Display_Status_new;
+              break;
           }
           break;
-
       }
     }
 
     if ( Switch_down > Switch_old ) {
     	Switch_delta = Switch_down - Switch_old;
 
-      switch (Switch_delta) {
+      switch (Switch_down) {    // --->   Switch delta  -->  Zahlen 
+
+        case 1:          //    _EE_
+          Switch_Code = 120;
+          break;
+
+        case 4:          //    _=_
+          Switch_Code = 61;
+          break;
+
+       case 7:        //   "EE" + "FN"    + "="  three Switch pressed
+          Switch_Code = 59;   //                  EE_FN_=
+          break;
+
+        case 17:       //     "EE" +  "+"         two Switch pressed
+          Switch_Code = 64;   //             new  rad
+          break;
+
+        case 33:   //         "EE" + "-"          two Switch pressed
+          Switch_Code = 37;   //             new  grd
+          break;
+
+        case 2051:   //       "EE" + "FN" +  ")"  three Switch pressed
+          Switch_Code = 123;  //             new  Off
+          break;
+
+        case 9:        //     "EE" + "1/x"        two Switch pressed
+          Switch_Code = 44;   //             new  _e_
+          break;
+
+        case 513:      //     "EE" +  "CE"        two Switch pressed
+          Switch_Code = 114;  //                  _2^x_
+          break;
+
+        case 514:      //     "FN" +  "CE"        two Switch pressed
+          Switch_Code = 34;   //                  lb
+          break;
+
+        case 259:      //     "EE" +  "FN" + "/"  three Switch pressed
+          Switch_Code = 38;   //            new   _EE+3_
+          break;
+
+        case 35:       //     "EE" +  "FN" + "-"  three Switch pressed
+          Switch_Code = 39;   //            new   _EE-3_
+          break;
+
+        case 1028:     //     "="  +  "("   new   two Switch pressed
+          Switch_Code = 175;  //                  _EE-1_ ">"
+          break;
+
+        case 516:      //     "="  +  "CE"  new   two Switch pressed
+          Switch_Code = 174;  //                  _EE+1_ "<"
+          break;
+
+        case 66:        //    "FN" +  "<"   new   two Switch pressed
+        	if ( Display_Status_new == 16 ) {	
+            Switch_Code = 171;  //                Frac
+          }
+          break;
+
+        case 65:       //     "EE" +  "<"   new   two Switch pressed
+        	if ( Display_Status_new == 8 ) {	
+            Switch_Code = 170;  //                Int
+          }
+          break;
+
+        case 10:       //    "FN"- 1/x            two Switch pressed
+        	if ( Display_Status_new == 16 ) {	
+            Switch_Code = 36;   //          new   Pi()
+          }
+          break;
+
+        case 18:       //    "FN"- _+_            two Switch pressed
+        	if ( Display_Status_new == 16 ) {	
+            Switch_Code = 92;   //          new   //
+          }
+          break;
+
+        case 34:       //    "FN"- _-_            two Switch pressed
+        	if ( Display_Status_new == 16 ) {	
+            Switch_Code = 94;   //          new   _/p/_  Phytagoras
+          }
+          break;
+
+        case 1029:     //     EE +  =  + _(_      three Switch pressed
+        case 132:      //     =  + _*_            two Switch pressed
+        case 129:      //     EE + _*_            two Switch pressed
+        case 133:      //     EE +  =  + _*_      three Switch pressed
+          Display_rotate = true;
+          Switch_Code = 176;   //           new   _Cha_Dis_Dir_on_
+          break;
+
+        case 130:      //    "FN"- _*_            two Switch pressed
+        	if ( Display_Status_new == 16 ) {	
+            Switch_Code = 124;   //               _AGM_
+          }
+          break;
+
+        case 258:      //    "FN"- _/_            two Switch pressed
+        	if ( Display_Status_new == 16 ) {	
+            Switch_Code = 93;   //          new   Light down
+          }
+          break;
+
+        case 257:      //    "EE" + "/"           two Switch pressed
+        	if ( Display_Status_new == 8 ) {	
+            Switch_Code = 91;   //          new   Light up
+          }
+          break;
+
+        case 1030:     //    "FN" + "=" +  "("    three Switch pressed
+          Switch_Code = 127;  //            new   -->
+          break;
+
+        case 518:      //    "FN" + "=" +  "CE"   three Switch pressed
+          Switch_Code = 30;  //             new   <--
+          break;
+
+        case 1026:     //    "FN" + "("           two Switch pressed
+        	if ( Display_Status_new == 16 ) {	
+            Switch_Code = 112;  //                ln(x)
+          }
+          break;
+
+        case 1025:      //   "EE" + "("           three Switch pressed
+        	if ( Display_Status_new == 8 ) {	
+            Switch_Code = 113;  //                e^x
+          }
+          break;
+
+        case 2050:     //    "FN" + ")"           two Switch pressed
+        	if ( Display_Status_new == 16 ) {	
+            Switch_Code = 115;  //                log(x)
+          }
+          break;
+
+        case 2049:     //    "EE" + ")"           two Switch pressed
+        	if ( Display_Status_new == 8 ) {	
+            Switch_Code = 116;  //                10^x
+          }
+          break;
+
+        case 1540:     //    "=" + "CE"  +  "("   three Switch pressed
+        case 1542:     //    "=" + "CE"  +  "("   three Switch pressed
+          Switch_Code = 148;  //            new   <<-->>
+          break;
+
+        case 4098:     //    "FN" +  "0"          two Switch pressed
+        	if ( Display_Status_new == 16 ) {	
+            Switch_Code = 119;  //                x!
+          }
+          break;
+
+        case 4097:     //    "EE" +  "0"          two Switch pressed
+        	if ( Display_Status_new == 8 ) {	
+            Switch_Code = 190;  //                RND
+          }
+          break;
+
+        case 8194:     //    "FN"- "."            two Switch pressed
+        	if ( Display_Status_new == 16 ) {	
+            Switch_Code = 122; //            new  beep
+          }
+          break;
+
+        case 12288:     //    "0" + "."           two Switch pressed
+          Switch_Code = 150; //              new  "° ' ''" hh:mm:ss  Input
+          break;
+
+        case 16386:    //    "FN"- "+/-"          two Switch pressed
+        	if ( Display_Status_new == 16 ) {	
+            Switch_Code = 121; //            new  clock
+          }
+          break;
+
+        case 24576:     //    "." + "+/-"         two Switch pressed
+          Switch_Code = 149; //              new  Fraction a_b/c     Input
+          break;
+
+        case 4099:     //     "EE" + "FN" + "0"   three Switch pressed
+        	if ( Display_Status_new == 24 ) {	
+            Switch_Code = 77;  //            new  MR(0)
+          }
+          break;
+
+        case 4101:     //     "EE" +  "=" + "0"   three Switch pressed
+          Switch_Code = 32;  //              new  FIX_dms
+          break;
+
+        case 20480:    //     "+/-" + to_xx(0)    two Switch pressed
+          Switch_Code = 191;  //             new
+          break;
+
+        case 16389:    //     "EE" + "=" + "+/-"  three Switch pressed
+          Switch_Code = 160;  //                  MCs
+          break;
+
+        case 11:       //    "pi()"               defect
+        case 19:       //    "pi()"               defect
+        case 27:       //    "EE" + "FN" + "1/x"  defect
+        case 67:       //    "<"                  defect
+        case 72:       //    "<--"                defect
+        case 131:      //    "<"                  defect
+        case 194:      //    "<"                  defect
+        case 585:      //    "e()"                defect
+        case 515:      //    "CE"                 defect
+        case 576:      //    "CE"                 defect
+        case 1027:     //    "("                  defect
+        case 1537:     //    "("                  defect
+        case 1538:     //    "("                  defect
+        case 2054:     //    "FN" + "=" +  "("    defect
+        case 196614:   //    "2" + "3" + "MS_on"  defect
+        case 1572870:  //    "5" + "6" + "MS_on"  defect
+        case 12582918: //    "8" + "9" + "MS_on"  defect
+          break;
+
+        default:
+          switch (Switch_delta) {
+
+            case 8:          //    _1/x_
+            case 24:
+              Switch_Code = 33;
+              break;
+
+            case 16:         //    _+_
+              Switch_Code = 43;
+              break;
+
+            case 32:         //    _-_
+            case 48:
+              Switch_Code = 45;
+              break;
+
+            case 64:         //    <--
+            case 192:
+              Switch_Code = 60;
+              break;
+
+            case 128:        //    _*_
+              Switch_Code = 42;
+              break;
+
+            case 256:        //    _/_
+            case 384:
+              Switch_Code = 47;
+              break;
+
+            case 512:        //    _CE_
+            case 1536:
+              Switch_Code = 90;
+              break;
+
+            case 1024:       //    (
+              Switch_Code = 40;
+              break;
+
+            case 2048:       //    )
+            case 3072:
+              Switch_Code = 41;
+              break;
+
+            case 4096:       //    0
+            case 12288:
+              Switch_Code = 48;
+              break;
+
+            case 8192:       //    _._
+              Switch_Code = 46;
+              break;
+
+            case 16384:      //    +/-
+            case 24576:
+              Switch_Code = 35;
+              break;
+          }
+      }
+
+      switch (Switch_delta) {   // change  -->   Display_Status_new
       	
       	case 1:
       		bit_3 = 1;           //     "EE"       Write to the bit.
-          Switch_Code = 120;
           break;
 
       	case 2:
@@ -4992,588 +5271,390 @@ void loop() {
       		bit_2 = 1;           //     "+/-"       Write to the bit.
           break;
 
-      }      
-
-      switch (Switch_down) {
-
-        case 7:        //   "EE" + "FN"    + "="  three Switch pressed
-          Switch_Code = 59;   //                  EE_FN_=
-          break;
-
-        case 17:       //     "EE" +  "+"         two Switch pressed
-          Switch_Code = 64;   //             new  rad
-          break;
-
-        case 33:   //         "EE" + "-"          two Switch pressed
-          Switch_Code = 37;   //             new  grd
-          break;
-
-        case 2051:   //       "EE" + "FN" +  ")"  three Switch pressed
-          Switch_Code = 123;  //             new  Off
-          break;
-
-        case 262145:   //     "FN" + "="  +  "4"  three Switch pressed
-          Switch_Code = 74;  //              new  asinh(x)
-          break;
-
-        case 524289:   //     "FN" + "="  +  "5"  three Switch pressed
-          Switch_Code = 75;  //              new  acosh(x)
-          break;
-
-        case 1048577:  //     "FN" + "="  +  "6"  three Switch pressed
-          Switch_Code = 76;  //              new  atanh(x)
-          break;
-
-        case 2097153:   //    "FN" + "="  +  "7"  three Switch pressed
-          Switch_Code = 68;  //              new  asin(x)
-          break;
-
-        case 4194305:  //     "FN" + "="  +  "8"  three Switch pressed
-          Switch_Code = 69;  //              new  acos(x)
-          break;
-
-        case 8388609:  //     "FN" + "="  +  "9"  three Switch pressed
-          Switch_Code = 70;  //              new  atan(x)
-          break;
-
-        case 9:        //     "EE" + "1/x"        two Switch pressed
-          Switch_Code = 44;   //             new  _e_
-          break;
-
-        case 513:      //     "EE" +  "CE"        two Switch pressed
-          Switch_Code = 114;  //                  _2^x_
-          break;
-
-        case 514:      //     "FN" +  "CE"        two Switch pressed
-          Switch_Code = 34;   //                  lb
-          break;
-
-        case 259:      //     "EE" +  "FN" + "/"  three Switch pressed
-          Switch_Code = 38;   //            new   _EE+3_
-          break;
-
-        case 35:       //     "EE" +  "FN" + "-"   new   two Switch pressed
-          Switch_Code = 39;   //            new   _EE-3_
-          break;
-
-        case 1028:     //     "="  +  "("   new   two Switch pressed
-          Switch_Code = 175;  //                  _EE-1_ ">"
-          break;
-
-        case 516:      //     "="  +  "CE"  new   two Switch pressed
-          Switch_Code = 174;  //                  _EE+1_ "<"
-          break;
-
-        case 32770:    //     "FN" +  "1"   new   two Switch pressed
-          Switch_Code = 88;   //                  _y_expo_
-          break;
-
-        case 32769:    //     "FN" +  "1"   new   two three Switch pressed
-          Switch_Code = 89;   //                  _y_root_
-          break;
-
-        case 65538:    //     "FN" +  "2"   new   two Switch pressed
-          Switch_Code = 117;  //                  x^2
-          break;
-
-        case 65537:    //     "EE" +  "2"   new   two Switch pressed
-          Switch_Code = 118;  //                  sqrt()
-          break;
-
-        case 131074:   //     "FN" +  "3"   new   two Switch pressed
-          Switch_Code = 172;  //                  x^3
-          break;
-
-        case 131073:   //     "EE" +  "3"   new   two Switch pressed
-          Switch_Code = 173;  //                  cbrt()
-          break;
-
-        case 65:       //     "EE" +  "<"   new   two Switch pressed
-          Switch_Code = 170;  //                  Int
-          break;
-
-        case 66:        //    "FN" +  "<"   new   two Switch pressed
-          Switch_Code = 171;  //                  Frac
-          break;
-
-        case 262146:   //     "FN" +  "4"   new   two Switch pressed
-          Switch_Code = 71;  //                   sinh(x)
-          break;
-
-        case 524290:   //     "FN" +  "5"   new   two Switch pressed
-          Switch_Code = 72;  //                   cosh(x)
-          break;
-
-        case 1048578:  //     "FN" +  "6"   new   two Switch pressed
-          Switch_Code = 73;  //                   tanh(x)
-          break;
-
-        case 2097154:   //    "FN" +  "7"   new   two Switch pressed
-          Switch_Code = 65;  //                   sin(x)
-          break;
-
-        case 4194306:  //     "FN" +  "8"   new   two Switch pressed
-          Switch_Code = 66;  //                   cos(x)
-          break;
-
-        case 8388610:  //     "FN" +  "9"   new   two Switch pressed
-          Switch_Code = 67;  //                   tan(x)
-          break;
-
-        case 10:       //     FN - 1/x            two Switch pressed
-          Switch_Code = 36;   //            new   Pi()
-          break;
-
-        case 18:       //     FN - _+_            two Switch pressed
-          Switch_Code = 92;   //            new   //
-          break;
-
-        case 34:       //     FN - _-_            two Switch pressed
-          Switch_Code = 94;   //            new   _/p/_  Phytagoras
-          break;
-
-        case 1029:     //     EE +  =  + _(_      three Switch pressed
-        case 132:      //     =  + _*_            two Switch pressed
-        case 129:      //     EE + _*_            two Switch pressed
-        case 133:      //     EE +  =  + _*_      three Switch pressed
-          Display_rotate = true;
-          Switch_Code = 176;   //           new   _Cha_Dis_Dir_on_
-          break;
-
-        case 130:      //     FN - _*_            two Switch pressed
-          Switch_Code = 124;   //                 _AGM_
-          break;
-
-        case 258:      //     FN - _/_            two Switch pressed
-          Switch_Code = 93;   //            new   Light down
-          break;
-
-        case 1030:     //    "FN" + "=" +  "("    three Switch pressed
-          Switch_Code = 127;  //            new   -->
-          break;
-
-        case 518:      //    "FN" + "=" +  "CE"    two Switch pressed
-          Switch_Code = 30;  //             new   <--
-          break;
-
-        case 1026:     //    "FN" + "("           two Switch pressed
-          Switch_Code = 112;  //                  ln(x)
-          break;
-
-        case 1025:      //   "EE" + "("           three Switch pressed
-          Switch_Code = 113;  //                  e^x
-          break;
-
-        case 2050:     //    "FN" + ")"           two Switch pressed
-          Switch_Code = 115;  //                  log(x)
-          break;
-
-        case 2049:     //    "EE" + ")"           two Switch pressed
-          Switch_Code = 116;  //                  10^x
-          break;
-
-        case 1540:     //    "=" + "CE"  +  "("   three Switch pressed
-        case 1542:     //    "=" + "CE"  +  "("   three Switch pressed
-          Switch_Code = 148;  //            new   <<-->>
-          break;
-
-        case 257:      //    "EE" + "/"           two Switch pressed
-          Switch_Code = 91;   //            new   Light up
-          break;
-
-        case 4097:     //    "EE" +  "0"          two Switch pressed
-          Switch_Code = 190;  //                  RND
-          break;
-
-        case 4098:     //     FN  +  "0"          two Switch pressed
-          Switch_Code = 119;  //                  x!
-          break;
-
-        case 8194:     //     FN - "."            two Switch pressed
-          Switch_Code = 122; //              new  beep
-          break;
-
-        case 12288:     //    "0" + "."           two Switch pressed
-          Switch_Code = 150; //              new  "° ' ''" hh:mm:ss  Input
-          break;
-
-        case 16386:    //     FN - "+/-"          two Switch pressed
-          Switch_Code = 121; //              new  clock
-          break;
-
-        case 24576:     //    "." + "+/-"         two Switch pressed
-          Switch_Code = 149; //              new  Fraction a_b/c     Input
-          break;
-
-        case 4099:     //     "EE" + "FN" + "0"   three Switch pressed
-          Switch_Code = 77;  //              new  MR(0)
-          break;
-
-        case 32771:    //     "EE" + "FN" + "1"   three Switch pressed
-          Switch_Code = 78;  //              new  MR(1)
-          break;
-
-        case 65539:    //     "EE" + "FN" + "2"   three Switch pressed
-          Switch_Code = 79;  //              new  MR(2)
-          break;
-
-        case 131075:   //     "EE" + "FN" + "3"   three Switch pressed
-          Switch_Code = 80;  //              new  MR(3)
-          break;
-
-        case 262147:   //     "EE" + "FN" + "4"   three Switch pressed
-          Switch_Code = 81;  //              new  MR(4)
-          break;
-
-        case 524291:   //     "EE" + "FN" + "5"   three Switch pressed
-          Switch_Code = 82;  //              new  MR(5)
-          break;
-
-        case 1048579:  //     "EE" + "FN" + "6"   three Switch pressed
-          Switch_Code = 83;  //              new  MR(6)
-          break;
-
-        case 2097155:  //     "EE" + "FN" + "7"   three Switch pressed
-          Switch_Code = 84;  //              new  MR(7)
-          break;
-
-        case 4194307:  //     "EE" + "FN" + "8"   three Switch pressed
-          Switch_Code = 85;  //              new  MR(8)
-          break;
-
-        case 8388611:  //     "EE" + "FN" + "9"   three Switch pressed
-          Switch_Code = 86;  //              new  MR(9)
-          break;
-
-        case 4101:     //     "EE" +  "=" + "0"   three Switch pressed
-          Switch_Code = 32;  //              new  FIX_dms
-          break;
-
-        case 32773:    //     "EE" +  "=" + "1"   three Switch pressed
-          Switch_Code = 87;  //              new  FIX_a_b/c
-          break;
-
-        case 65541:    //     "EE" +  "=" + "2"   three Switch pressed
-          Switch_Code = 95;  //              new  FIX_2
-          break;
-
-        case 131077:    //    "EE" +  "=" + "3"   three Switch pressed
-          Switch_Code = 96;  //              new  FIX_3
-          break;
-
-        case 262149:    //    "EE" +  "=" + "4"   three Switch pressed
-          Switch_Code = 97;  //              new  FIX_4
-          break;
-
-        case 524293:    //    "EE" +  "=" + "5"   three Switch pressed
-          Switch_Code = 98;  //              new  FIX_5
-          break;
-
-        case 1048581:   //    "EE" +  "=" + "6"   three Switch pressed
-          Switch_Code = 99;  //              new  FIX_6
-          break;
-
-        case 2097157:   //    "EE" +  "=" + "7"   three Switch pressed
-          Switch_Code = 100;  //             new  FIX_7
-          break;
-
-        case 4194309:   //    "EE" +  "=" + "8"   three Switch pressed
-          Switch_Code = 101;  //             new  FIX_8
-          break;
-
-        case 8388613:   //    "EE" +  "=" + "9"   three Switch pressed
-          Switch_Code = 102;  //             new  FIX_E24
-          break;
-
-        case 32772:    //     "=" + M_plus(1)     two Switch pressed
-          Switch_Code = 103;  //             new
-          break;
-
-        case 65540:    //     "=" + M_plus(2)     two Switch pressed
-          Switch_Code = 104;  //             new
-          break;
-
-        case 131076:   //     "=" + M_plus(3)     two Switch pressed
-          Switch_Code = 105;  //             new
-          break;
-
-        case 262148:   //     "=" + M_plus(4)     two Switch pressed
-          Switch_Code = 106;  //             new
-          break;
-
-        case 524292:   //     "=" + M_plus(5)     two Switch pressed
-          Switch_Code = 107;  //             new
-          break;
-
-        case 1048580:  //     "=" + M_plus(6)     two Switch pressed
-          Switch_Code = 108;  //             new
-          break;
-
-        case 2097156:  //     "=" + M_plus(7)     two Switch pressed
-          Switch_Code = 109;  //             new
-          break;
-
-        case 4194308:  //     "=" + M_plus(8)     two Switch pressed
-          Switch_Code = 110;  //             new
-          break;
-
-        case 8388612:  //     "=" + M_plus(9)     two Switch pressed
-          Switch_Code = 111;  //             new
-          break;
-
-        case 40960:    //     "." + M_xch(1)     two Switch pressed
-          Switch_Code = 179;  //             new
-          break;
-
-        case 73728:    //     "." + M_xch(2)     two Switch pressed
-          Switch_Code = 180;  //             new
-          break;
-
-        case 139264:   //     "." + M_xch(3)     two Switch pressed
-          Switch_Code = 181;  //             new
-          break;
-
-        case 270336:   //     "." + M_xch(4)     two Switch pressed
-          Switch_Code = 182;  //             new
-          break;
-
-        case 532480:   //     "." + M_xch(5)     two Switch pressed
-          Switch_Code = 183;  //             new
-          break;
-
-        case 1056768:  //     "." + M_xch(6)     two Switch pressed
-          Switch_Code = 184;  //             new
-          break;
-
-        case 2105344:  //     "." + M_xch(7)     two Switch pressed
-          Switch_Code = 185;  //             new
-          break;
-
-        case 4202496:  //     "." + M_xch(8)     two Switch pressed
-          Switch_Code = 186;  //             new
-          break;
-
-        case 8396800:  //     "." + M_xch(9)     two Switch pressed
-          Switch_Code = 187;  //             new
-          break;
-
-        case 20480:    //     "+/-" + to_xx(0)   two Switch pressed
-          Switch_Code = 191;  //             new
-          break;
-
-        case 49152:    //     "+/-" + to_xx(1)   two Switch pressed
-        case 36864:    //     "0" + to_xx(1)     two Switch pressed
-          Switch_Code = 192;  //             new
-          break;
-
-        case 81920:    //     "+/-" + to_xx(2)   two Switch pressed
-        case 69632:    //     "0" + to_xx(2)     two Switch pressed
-          Switch_Code = 193;  //             new
-          break;
-
-        case 147456:   //     "+/-" + to_xx(3)   two Switch pressed
-        case 135168:   //     "0" + to_xx(3)     two Switch pressed
-          Switch_Code = 194;  //             new
-          break;
-
-        case 278528:   //     "+/-" + to_xx(4)   two Switch pressed
-        case 266240:   //     "0" + to_xx(4)     two Switch pressed
-          Switch_Code = 195;  //             new
-          break;
-
-        case 540672:   //     "+/-" + to_xx(5)   two Switch pressed
-        case 528384:   //     "0" + to_xx(5)     two Switch pressed
-          Switch_Code = 196;  //             new
-          break;
-
-        case 1064960:  //     "+/-" + to_xx(6)     two Switch pressed
-        case 1052672:  //     "0" + to_xx(6)     two Switch pressed
-          Switch_Code = 197;  //             new
-          break;
-
-        case 2113536:  //     "+/-" + to_xx(7)   two Switch pressed
-        case 2101248:  //     "0" + to_xx(7)     two Switch pressed
-          Switch_Code = 198;  //             new
-          break;
-
-        case 4210688:  //     "+/-" + to_xx(8)   two Switch pressed
-        case 4198400:  //     "0" + to_xx(8)     two Switch pressed
-          Switch_Code = 199;  //             new
-          break;
-
-        case 8404992:  //     "+/-" + to_xx(9)   two Switch pressed
-        case 8392704:  //     "0" + to_xx(9)     two Switch pressed
-          Switch_Code = 200;  //             new
-          break;
-
-        case 16389:    //     "EE" + "=" + "+/-"  three Switch pressed
-          Switch_Code = 160;  //                  MCs
-          break;
-
-        case 32774:    //     "FN" + "=" +  "1"   three Switch pressed
-          Switch_Code = 161;  //             new  Min(1)
-          break;
-
-        case 65542:    //     "EE" + "FN" + "2"   three Switch pressed
-          Switch_Code = 162;  //             new  Min(2)
-          break;
-
-        case 131078:   //     "EE" + "FN" + "3"   three Switch pressed
-          Switch_Code = 163;  //             new  Min(3)
-          break;
-
-        case 262150:   //     "EE" + "FN" + "4"   three Switch pressed
-          Switch_Code = 164;  //             new  Min(4)
-          break;
-
-        case 524294:   //     "EE" + "FN" + "5"   three Switch pressed
-          Switch_Code = 165;  //             new  Min(5)
-          break;
-
-        case 1048582:  //     "EE" + "FN" + "6"   three Switch pressed
-          Switch_Code = 166;  //             new  Min(6)
-          break;
-
-        case 2097158:  //     "EE" + "FN" + "7"   three Switch pressed
-          Switch_Code = 167;  //             new  Min(7)
-          break;
-
-        case 4194310:  //     "EE" + "FN" + "8"   three Switch pressed
-          Switch_Code = 168;  //             new  Min(8)
-          break;
-
-        case 8388614:    //   "EE" + "FN" + "9"   three Switch pressed
-          Switch_Code = 169;  //             new  Min(9)
-          break;
-
-        case 11:       //    "pi()"               defect
-        case 19:       //    "pi()"               defect
-        case 27:       //    "EE" + "FN" + "1/x"  defect
-        case 67:       //    "<"                  defect
-        case 72:       //    "<--"                defect
-        case 131:      //    "<"                  defect
-        case 194:      //    "<"                  defect
-        case 585:      //    "e()"                defect
-        case 515:      //    "CE"                 defect
-        case 576:      //    "CE"                 defect
-        case 1027:     //    "("                  defect
-        case 1537:     //    "("                  defect
-        case 1538:     //    "("                  defect
-        case 2054:     //    "FN" + "=" +  "("    defect
-        case 196614:   //    "2" + "3" + "MS_on"  defect
-        case 1572870:  //    "5" + "6" + "MS_on"  defect
-        case 12582918: //    "8" + "9" + "MS_on"  defect
-          break;
-
-        default:
-
-          switch (Switch_delta) {
-            case 4:          //    _=_
-            case 6:          //  
-              if ( Display_Status_new == 32 ) {
-                Switch_Code = 61;
-              }
-              break;
-
-            case 8:          //    _1/x_
-            case 24:
-              Switch_Code = 33;
-              break;
-
-            case 16:         //    _+_
-              Switch_Code = 43;
-              break;
-
-            case 32:         //    _-_
-            case 48:
-              Switch_Code = 45;
-              break;
-
-            case 64:         //    <--
-            case 192:
-              Switch_Code = 60;
-              break;
-
-            case 128:        //    _*_
-              Switch_Code = 42;
-              break;
-
-            case 256:        //    _/_
-            case 384:
-              Switch_Code = 47;
-              break;
-
-            case 512:        //    _CE_
-            case 1536:
-              Switch_Code = 90;
-              break;
-
-            case 1024:       //    (
-              Switch_Code = 40;
-              break;
-
-            case 2048:       //    )
-            case 3072:
-              Switch_Code = 41;
-              break;
-
-            case 4096:       //    0
-            case 12288:
-              Switch_Code = 48;
-              break;
-
-            case 8192:       //    _._
-              Switch_Code = 46;
-              break;
-
-            case 16384:      //    +/-
-            case 24576:
-              Switch_Code = 35;
-              break;
-
-            case 32768:      //    1
-            case 98304:
+        case 32768:      //    1
+        case 98304:
+        	switch (Display_Status_new) { 
+ 
+          	case 0:
               Switch_Code = 49;
               break;
 
-            case 65536:      //    2
+          	case 2:
+              Switch_Code = 179;  //            new  M_xch(1)
+              break;
+
+          	case 1:
+          	case 4:
+              Switch_Code = 192;  //            new  to_xx(1)
+              break;
+
+          	case 8:
+              Switch_Code = 89;   //                _y_root_
+              break;
+
+          	case 16:
+              Switch_Code = 88;   //                _y_expo_
+              break;
+
+           	case 24:
+              Switch_Code = 78;  //            new  MR(1)
+              break;
+
+           	case 32:
+              Switch_Code = 103;  //           new  M_plus(1)
+              break;
+
+           	case 40:
+              Switch_Code = 87;  //            new  FIX_a_b/c
+              break;
+
+          	case 48:
+              Switch_Code = 161;  //           new  Min(1)
+              break;
+          }
+          break;
+
+        case 65536:      //    2
+        	switch (Display_Status_new) { 
+ 
+          	case 0:
               Switch_Code = 50;
               break;
 
-            case 131072:     //    3
-            case 196608:
+          	case 1:
+          	case 4:
+              Switch_Code = 193;  //           new  to_xx(2)
+              break;
+
+          	case 2:
+              Switch_Code = 180;  //           new  M_xch(2)
+              break;
+
+          	case 8:
+              Switch_Code = 118;  //                sqrt()
+              break;
+
+          	case 16:
+              Switch_Code = 117;  //                x^2
+              break;
+
+          	case 24:
+              Switch_Code = 79;  //            new  MR(2)
+              break;
+
+           	case 32:
+              Switch_Code = 104;  //           new  M_plus(2)
+              break;
+
+           	case 40:
+              Switch_Code = 95;  //            new  FIX_2
+              break;
+          
+          	case 48:
+              Switch_Code = 162;  //           new  Min(2)
+              break;
+          }
+          break;
+
+        case 131072:     //    3
+        case 196608:
+        	switch (Display_Status_new) { 
+ 
+          	case 0:
               Switch_Code = 51;
               break;
 
-            case 262144:     //    4
-            case 786432:
+          	case 2:
+              Switch_Code = 181;  //           new  M_xch(3)
+              break;
+
+          	case 1:
+          	case 4:
+              Switch_Code = 194;  //           new  to_xx(3)
+              break;
+
+          	case 8:
+              Switch_Code = 173;  //                cbrt()
+              break;
+
+          	case 16:
+              Switch_Code = 172;  //                  x^3
+              break;
+
+          	case 24:
+              Switch_Code = 80;  //            new  MR(3)
+              break;
+
+           	case 32:
+              Switch_Code = 105;  //           new  M_plus(3)
+              break;
+
+           	case 40:
+              Switch_Code = 96;  //            new  FIX_3
+              break;
+          
+          	case 48:
+              Switch_Code = 163;  //           new  Min(3)
+              break;
+          }
+          break;
+
+        case 262144:     //    4
+        case 786432:
+        	switch (Display_Status_new) { 
+ 
+          	case 0:
               Switch_Code = 52;
               break;
 
-            case 524288:     //    5
+          	case 2:
+              Switch_Code = 182;  //           new  M_xch(4)
+              break;
+
+          	case 1:
+          	case 4:
+              Switch_Code = 195;  //           new  to_xx(4)
+              break;
+
+          	case 8:
+              Switch_Code = 74;  //            new  asinh(x)
+              break;
+
+          	case 16:
+              Switch_Code = 71;  //                 sinh(x)
+              break;
+
+          	case 24:
+              Switch_Code = 81;  //            new  MR(4)
+              break;
+
+           	case 32:
+              Switch_Code = 106;  //           new  M_plus(4)
+              break;
+
+           	case 40:
+              Switch_Code = 97;  //            new  FIX_4
+              break;
+          
+          	case 48:
+              Switch_Code = 164;  //           new  Min(4)
+              break;
+          }
+          break;
+
+        case 524288:     //    5
+        	switch (Display_Status_new) { 
+ 
+          	case 0:
               Switch_Code = 53;
               break;
 
-            case 1048576:    //    6
-            case 1572864:
+          	case 2:
+              Switch_Code = 183;  //           new  M_xch(5)
+              break;
+
+          	case 1:
+          	case 4:
+              Switch_Code = 196;  //           new  to_xx(5)
+              break;
+
+          	case 8:
+              Switch_Code = 75;  //            new  acosh(x)
+              break;
+
+          	case 16:
+              Switch_Code = 72;  //                 cosh(x)
+              break;
+
+          	case 24:
+              Switch_Code = 82;  //            new  MR(5)
+              break;
+
+           	case 32:
+              Switch_Code = 107;  //           new  M_plus(5)
+              break;
+
+           	case 40:
+              Switch_Code = 98;  //            new  FIX_5
+              break;
+          
+          	case 48:
+              Switch_Code = 165;  //           new  Min(5)
+              break;
+          }
+          break;
+
+        case 1048576:    //    6
+        case 1572864:
+        	switch (Display_Status_new) { 
+ 
+          	case 0:
               Switch_Code = 54;
               break;
 
-            case 2097152:    //    7
-            case 6291456:
+          	case 2:
+              Switch_Code = 184;  //           new  M_xch(6)
+              break;
+
+          	case 1:
+          	case 4:
+              Switch_Code = 197;  //           new  to_xx(6)
+              break;
+
+          	case 8:
+              Switch_Code = 76;  //            new  atanh(x)
+              break;
+
+          	case 16:
+              Switch_Code = 73;  //                 tanh(x)
+              break;
+
+          	case 24:
+              Switch_Code = 83;  //            new  MR(6)
+              break;
+
+           	case 32:
+              Switch_Code = 108;  //           new  M_plus(6)
+              break;
+
+           	case 40:
+              Switch_Code = 99;  //            new  FIX_6
+              break;
+          
+          	case 48:
+              Switch_Code = 166;  //           new  Min(6)
+              break;
+          }
+          break;
+
+        case 2097152:    //    7
+        case 6291456:
+        	switch (Display_Status_new) { 
+ 
+          	case 0:
               Switch_Code = 55;
               break;
 
-            case 4194304:    //    8
+          	case 2:
+              Switch_Code = 185;  //           new  M_xch(7)
+              break;
+
+          	case 1:
+          	case 4:
+              Switch_Code = 198;  //           new  to_xx(7)
+              break;
+
+          	case 8:
+              Switch_Code = 68;  //            new  asin(x)
+              break;
+
+          	case 16:
+              Switch_Code = 65;  //                 sin(x)
+              break;
+
+          	case 24:
+              Switch_Code = 84;  //            new  MR(7)
+              break;
+
+           	case 32:
+              Switch_Code = 109;  //           new  M_plus(7)
+              break;
+
+           	case 40:
+              Switch_Code = 100;  //           new  FIX_7
+              break;
+          
+          	case 48:
+              Switch_Code = 167;  //           new  Min(7)
+              break;
+          }
+          break;
+
+        case 4194304:    //    8
+        	switch (Display_Status_new) { 
+ 
+          	case 0:
               Switch_Code = 56;
               break;
 
-            case 8388608:    //    9
-            case 12582912:
-              Switch_Code = 57;
+          	case 2:
+              Switch_Code = 186;  //           new  M_xch(8)
+              break;
+
+          	case 1:
+          	case 4:
+              Switch_Code = 199;  //           new  to_xx(8)
+              break;
+
+          	case 8:
+              Switch_Code = 69;  //            new  acos(x)
+              break;
+
+          	case 16:
+              Switch_Code = 66;  //                 cos(x)
+              break;
+
+          	case 24:
+              Switch_Code = 85;  //            new  MR(8)
+              break;
+
+           	case 32:
+              Switch_Code = 110;  //           new  M_plus(8)
+              break;
+
+           	case 40:
+              Switch_Code = 101;  //           new  FIX_8
+              break;
+          
+          	case 48:
+              Switch_Code = 168;  //           new  Min(8)
               break;
           }
-      }
+          break;
+
+        case 8388608:    //    9
+        case 12582912:
+        	switch (Display_Status_new) { 
+ 
+          	case 0:
+              Switch_Code = 57;
+              break;
+
+          	case 2:
+              Switch_Code = 187;  //           new  M_xch(9)
+              break;
+
+          	case 1:
+          	case 4:
+              Switch_Code = 200;  //           new  to_xx(9)
+              break;
+
+          	case 8:
+              Switch_Code = 70;  //            new  atan(x)
+              break;
+
+          	case 16:
+              Switch_Code = 67;  //                 tan(x)
+              break;
+
+          	case 24:
+              Switch_Code = 86;  //            new  MR(9)
+              break;
+
+           	case 32:
+              Switch_Code = 111;  //           new  M_plus(9)
+              break;
+
+           	case 40:
+              Switch_Code = 102;  //           new  FIX_E24
+              break;
+          
+          	case 48:
+              Switch_Code = 169;  //           new  Min(9)
+              break;
+          }
+          break;
+      }      
     }
 
     time_down = millis();
@@ -5610,7 +5691,7 @@ void loop() {
         display_string[Memory_0] = 48 + to_extra_test;
       }
 
-      switch (Display_Status_new) {
+      switch (Display_Status_new) {   // Display -->  Display_Status_new
 
         case 24:       // MR
           if ( (Start_input < Input_Operation_0) || (Display_Error < Start_input) ) {
@@ -5633,6 +5714,10 @@ void loop() {
           if ( Number_count != Zero_count ) {
             display_string[Memory_1] = Display_Memory_1[3];
             display_string[Memory_0] = Display_Memory_0[3];
+          }
+          else {
+            display_string[Memory_1] = '_';
+            display_string[Memory_0] = '_';
           }
           if ( Start_input == Display_M_Plus ) {
             display_string[Memory_0] = 48 + mem_extra_test;
@@ -5756,9 +5841,11 @@ void loop() {
 
         switch (Display_Status_old) {
 
-          case 5:
-          case 4:
-          case 1:
+          case 12:
+          case  9:
+          case  5:
+          case  4:
+          case  1:
             if ( to_extra == true ) {
             	if ( Display_Status_new == 0 ) {
                 to_extra = false;
@@ -5771,44 +5858,38 @@ void loop() {
             	Start_input = Input_Operation_0;
             	if ( Display_Status_new == 0 ) {
                 display_string[Memory_1] = 'E';
-                if ( mem_finished == true ) {
-                  display_string[Memory_1] = Display_Memory_1[3];    // MS
-                  mem_finished = false;
+                if ( mem_exchange == false ) {
+                  display_string[Memory_1] = ' ';    //  
+                  display_string[Memory_0] = ' ';    //  
+                }
+                if ( mem_exchange == true ) {
+                  mem_exchange = false;
                 }
               }
-            }
-            if ( mem_exchange == true ) {
-              mem_exchange = false;
             }
             break;
 
           case  8:   //  MR
-          case 16:   //  MS
+          case 24:   //  MR
+          case 16:   //  MS + MR
           case 32:   //  MS
           case 48:   //  MS
-          	if ( Display_Status_new == 0 ) {
-              mem_finished = true;
-              display_string[Memory_1] = mem_str_1[mem_pointer];
-              display_string[Memory_0] = mem_str_0[mem_pointer];
-            }
             if ( mem_save == true ) {
-              if ( Display_Status_new == 16 ) {
-                display_string[Memory_1] = mem_str_1[mem_pointer];
-                display_string[Memory_0] = mem_str_0[mem_pointer];
-              }
-              if ( Display_Status_new == 32 ) {
-                display_string[Memory_1] = Display_Memory_1[3];      // MS
-                display_string[Memory_0] = 48 + mem_extra_test;
-              }
-            	if ( Display_Status_new == 0 ) {
+              display_string[Memory_1] = 'm';    //  
+              display_string[Memory_0] = 48 + mem_extra_test;
+            }
+            else {
+              display_string[Memory_1] = ' ';    //  
+              display_string[Memory_0] = ' ';    //  
+            }
+
+          	if ( Display_Status_new == 0 ) {
+              if ( mem_save == true ) {
                 mem_save = false;
-              }
+              } 
             }
             break;
 
-          case 25:
-            display_string[Memory_0] = 48 + mem_extra_test;
-            break;
         }
       }
 
@@ -5863,8 +5944,8 @@ void timerIsr() {
       if ( (bitRead(display_a[Digit], index_Display)) == 1 ) {
         digitalWrite(index_display[Digit], HIGH);
       }
-      if (Display_change == true) {
-        display_a[Digit] = display_b[Digit]; 
+      if ( Display_change == true ) {
+        display_a[Digit] = display_b[Digit];
       }
     }
     Display_change = false;
