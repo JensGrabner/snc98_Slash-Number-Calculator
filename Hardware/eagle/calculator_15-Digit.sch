@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="yes"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.05" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.05" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.05" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -38861,15 +38861,15 @@ With round pins</description>
 <part name="U1" library="SparkFun-AnalogIC" deviceset="74HC4051_MUX" device="" value="74HC4051_MUX"/>
 <part name="GND20" library="SparkFun" deviceset="GND" device=""/>
 <part name="GND21" library="SparkFun" deviceset="GND" device=""/>
-<part name="M3" library="IRLML6402" deviceset="IRLML6402" device=""/>
-<part name="M4" library="IRLML6402" deviceset="IRLML6402" device=""/>
-<part name="M5" library="IRLML6402" deviceset="IRLML6402" device=""/>
-<part name="M6" library="IRLML6402" deviceset="IRLML6402" device=""/>
-<part name="M7" library="IRLML6402" deviceset="IRLML6402" device=""/>
-<part name="M8" library="IRLML6402" deviceset="IRLML6402" device=""/>
-<part name="M9" library="IRLML6402" deviceset="IRLML6402" device=""/>
-<part name="M10" library="IRLML6402" deviceset="IRLML6402" device=""/>
-<part name="M11" library="IRLML6402" deviceset="IRLML6402" device=""/>
+<part name="M3" library="IRLML6402" deviceset="IRLML6402" device="" value="IRLML6401"/>
+<part name="M4" library="IRLML6402" deviceset="IRLML6402" device="" value="IRLML6401"/>
+<part name="M5" library="IRLML6402" deviceset="IRLML6402" device="" value="IRLML6401"/>
+<part name="M6" library="IRLML6402" deviceset="IRLML6402" device="" value="IRLML6401"/>
+<part name="M7" library="IRLML6402" deviceset="IRLML6402" device="" value="IRLML6401"/>
+<part name="M8" library="IRLML6402" deviceset="IRLML6402" device="" value="IRLML6401"/>
+<part name="M9" library="IRLML6402" deviceset="IRLML6402" device="" value="IRLML6401"/>
+<part name="M10" library="IRLML6402" deviceset="IRLML6402" device="" value="IRLML6401"/>
+<part name="M11" library="IRLML6402" deviceset="IRLML6402" device="" value="IRLML6401"/>
 <part name="FRAME3" library="frames" deviceset="LETTER_L" device="" value="frame"/>
 <part name="D29" library="BaseApp" deviceset="DIODE" device="SMA" value="SD103CW"/>
 <part name="U$2" library="transistor-power" deviceset="IRLML2502" device=""/>
@@ -38888,10 +38888,9 @@ With round pins</description>
 <part name="C19" library="rcl" deviceset="C-EU" device="025_050-025X075" value="15n"/>
 <part name="U3" library="Atmel_By_element14_Batch_1-00" deviceset="ATMEGA1284P-PU" device=""/>
 <part name="R50" library="rcl" deviceset="R-EU_" device="0204/7" value="6k8"/>
-<part name="R1" library="rcl" deviceset="R-EU_" device="0204/7" value="27k"/>
+<part name="R1" library="rcl" deviceset="R-EU_" device="0204/7" value="68k"/>
 <part name="R4" library="rcl" deviceset="R-EU_" device="0204/7" value="100"/>
-<part name="R49" library="rcl" deviceset="R-EU_" device="0204/7" value="100k"/>
-<part name="R51" library="rcl" deviceset="R-EU_" device="0204/7" value="1k"/>
+<part name="R51" library="rcl" deviceset="R-EU_" device="0204/7" value="3k3"/>
 <part name="R34" library="rcl" deviceset="R-EU_" device="0204/7" value="6k8"/>
 <part name="R48" library="rcl" deviceset="R-EU_" device="0204/7" value="1k"/>
 <part name="R35" library="rcl" deviceset="R-EU_" device="0204/7" value="8k2"/>
@@ -39105,7 +39104,6 @@ With round pins</description>
 <instance part="R50" gate="G$1" x="53.34" y="91.44" rot="R180"/>
 <instance part="R1" gate="G$1" x="25.4" y="76.2" rot="R270"/>
 <instance part="R4" gate="G$1" x="127" y="109.22"/>
-<instance part="R49" gate="G$1" x="13.97" y="55.88" rot="R90"/>
 <instance part="R51" gate="G$1" x="13.97" y="33.02" rot="R90"/>
 <instance part="JP1" gate="G$1" x="238.76" y="113.03"/>
 <instance part="JP2" gate="G$1" x="238.76" y="101.6"/>
@@ -39273,8 +39271,7 @@ With round pins</description>
 <net name="/RESET" class="0">
 <segment>
 <wire x1="30.48" y1="66.04" x2="25.4" y2="66.04" width="0.1524" layer="91"/>
-<wire x1="25.4" y1="66.04" x2="13.97" y2="66.04" width="0.1524" layer="91"/>
-<wire x1="13.97" y1="66.04" x2="5.08" y2="66.04" width="0.1524" layer="91"/>
+<wire x1="25.4" y1="66.04" x2="5.08" y2="66.04" width="0.1524" layer="91"/>
 <wire x1="30.48" y1="66.04" x2="30.48" y2="59.69" width="0.1524" layer="91"/>
 <label x="11.43" y="67.31" size="1.778" layer="95"/>
 <pinref part="S1" gate="1" pin="S1"/>
@@ -39284,11 +39281,8 @@ With round pins</description>
 <wire x1="5.08" y1="66.04" x2="5.08" y2="57.15" width="0.1524" layer="91"/>
 <wire x1="25.4" y1="71.12" x2="25.4" y2="66.04" width="0.1524" layer="91"/>
 <junction x="25.4" y="66.04"/>
-<wire x1="13.97" y1="60.96" x2="13.97" y2="66.04" width="0.1524" layer="91"/>
-<junction x="13.97" y="66.04"/>
 <pinref part="C18" gate="G$1" pin="1"/>
 <pinref part="R1" gate="G$1" pin="2"/>
-<pinref part="R49" gate="G$1" pin="2"/>
 <wire x1="30.48" y1="66.04" x2="30.48" y2="71.12" width="0.1524" layer="91"/>
 <junction x="30.48" y="66.04"/>
 <wire x1="30.48" y1="71.12" x2="33.02" y2="71.12" width="0.1524" layer="91"/>
@@ -39897,7 +39891,6 @@ With round pins</description>
 <segment>
 <wire x1="13.97" y1="38.1" x2="13.97" y2="40.64" width="0.1524" layer="91"/>
 <pinref part="C18" gate="G$1" pin="2"/>
-<wire x1="13.97" y1="40.64" x2="13.97" y2="50.8" width="0.1524" layer="91"/>
 <wire x1="5.08" y1="49.53" x2="5.08" y2="40.64" width="0.1524" layer="91"/>
 <wire x1="5.08" y1="40.64" x2="13.97" y2="40.64" width="0.1524" layer="91"/>
 <junction x="13.97" y="40.64"/>
@@ -39906,7 +39899,6 @@ With round pins</description>
 <wire x1="49.53" y1="66.04" x2="49.53" y2="40.64" width="0.1524" layer="91"/>
 <wire x1="49.53" y1="40.64" x2="22.86" y2="40.64" width="0.1524" layer="91"/>
 <wire x1="13.97" y1="40.64" x2="22.86" y2="40.64" width="0.1524" layer="91"/>
-<pinref part="R49" gate="G$1" pin="1"/>
 <pinref part="R51" gate="G$1" pin="2"/>
 <pinref part="D1" gate="G$1" pin="C"/>
 <wire x1="22.86" y1="40.64" x2="22.86" y2="34.29" width="0.1524" layer="91"/>
