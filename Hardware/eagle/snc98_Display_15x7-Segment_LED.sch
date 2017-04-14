@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="yes"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.05" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.05" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -30841,14 +30841,14 @@ With round pins</description>
 <part name="R17" library="rcl" deviceset="R-EU_" device="R1210" value="22"/>
 <part name="R18" library="rcl" deviceset="R-EU_" device="R1210" value="22"/>
 <part name="R19" library="rcl" deviceset="R-EU_" device="R1210" value="22"/>
-<part name="M4" library="IRLML6402" deviceset="IRLML6402" device=""/>
-<part name="M5" library="IRLML6402" deviceset="IRLML6402" device=""/>
-<part name="M6" library="IRLML6402" deviceset="IRLML6402" device=""/>
-<part name="M7" library="IRLML6402" deviceset="IRLML6402" device=""/>
-<part name="M8" library="IRLML6402" deviceset="IRLML6402" device=""/>
-<part name="M9" library="IRLML6402" deviceset="IRLML6402" device=""/>
-<part name="M10" library="IRLML6402" deviceset="IRLML6402" device=""/>
-<part name="M11" library="IRLML6402" deviceset="IRLML6402" device=""/>
+<part name="M4" library="IRLML6402" deviceset="IRLML6402" device="" value="IRLML2244"/>
+<part name="M5" library="IRLML6402" deviceset="IRLML6402" device="" value="IRLML2244"/>
+<part name="M6" library="IRLML6402" deviceset="IRLML6402" device="" value="IRLML2244"/>
+<part name="M7" library="IRLML6402" deviceset="IRLML6402" device="" value="IRLML2244"/>
+<part name="M8" library="IRLML6402" deviceset="IRLML6402" device="" value="IRLML2244"/>
+<part name="M9" library="IRLML6402" deviceset="IRLML6402" device="" value="IRLML2244"/>
+<part name="M10" library="IRLML6402" deviceset="IRLML6402" device="" value="IRLML2244"/>
+<part name="M11" library="IRLML6402" deviceset="IRLML6402" device="" value="IRLML2244"/>
 <part name="FRAME3" library="frames" deviceset="LETTER_L" device="" value="frame"/>
 <part name="R36" library="rcl" deviceset="R-EU_" device="R1206" value="3k3"/>
 <part name="R37" library="rcl" deviceset="R-EU_" device="R1206" value="3k3"/>

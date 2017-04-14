@@ -4,7 +4,7 @@
 
    Developer: Jens Grabner
    Email:     jens@grabner-online.org
-   Date:      Mrz 2017
+   Date:      Apr 2017
 
    Copyright CERN 2013.
    This documentation describes Open Hardware and is licensed
@@ -60,7 +60,7 @@
 #include <BitBool.h>
 // https://github.com/wizard97/Embedded_RingBuf_CPP
 #include <RingBufCPP.h>
-#include <stdlib.h>         // for itoa(); ltoa(); call
+#include <stdlib.h>         // for itoa(); ltoa();
 #include <string.h>
 #include <stdint.h>
 #include <math.h>           // for sqrtf();
@@ -71,7 +71,7 @@
 #define Debug_Level  0 //  0 - not Debug
                        //  1 - Test intern 1ms - Task by 100 ms
                        //  2 - Test intern 1ms - Task by 1000 ms
-                       //  3 - Test Switch "FN" up / down (analog)
+                       //  3 - Test Switch "2" up / down (analog)
                        //  4 - Test Switchnumber down (digital)
                        //  5 - Monitor Switch_Code (Text) 119 - Functions
                        //  6 - Test Pendulum Time - Sinus 0.5 Hz
@@ -91,39 +91,44 @@
                        // 20 - reduce test 
 
 #define operation_test_max    4  //  0 .. 3  Stacktiefe
-                                 //                     74HCF4053 (1 kOhm)
+                                 //                     74HC4053  (100 Ohm)
 #define Switch_down_start  1020  //  1020  ... 1020  100  %   ... 1020  <<--
-#define Switch_up_b         840  //   750  ..   870   70  %   ...  840
-#define Switch_down_b       600  //   570  ..   540   30  %   ...  600
-#define Switch_up_start     360  //   360  ...  420    0  %   ...  420  <<--
-                                 //                  -10  %   ...  360
+#define Switch_up_b         750  //   750  ..   840   50  %   ...  750
+#define Switch_down_b       615  //   570  ..   600   25  %   ...  615
+#define Switch_up_start     426  //   360  ...  360    0  %   ...  480  <<--
+                                 //                  -10  %   ...  426
 #define Average               6  //     6
 #define Max_Buffer           24  // Count of Switches
 
-#define Beep   A0      //  A0   Pin A7
+#define Beep_p A0      //  A0   Pin A7
+#define Beep_m A4      //  A4   Pin A3
 #define PWM    13      //     Sanguino  Pin 12 --> Pin 4 (PD4)
+#define PWM_s  12      // 
+uint8_t PWM_Pin = PWM;
+
 #define SDA    17      //     Pin 17
 #define SCL    16      //     Pin 16
-#define DCF77  15      //     Pin 7  Goldilocks
+// #define DCF77  15      //     Pin 7  Goldilocks
 
 #define A_0    A7      //  A7   Pin A0
 #define A_1    A6      //  A6   Pin A1
 #define A_2    A5      //  A5   Pin A2
-#define Out_0  A4      //  A4   Pin A3 not used
 
 #define Out_A  A3      //  A3   Pin A4
 #define Out_B  A2      //  A2   Pin A5
 #define Out_C  A1      //  A1   Pin A6
 
 #define On_Off_PIN    18
+boolean Power_on = true;
 
 #define Digit_Count   15
 
 uint8_t index_display[Digit_Count] = {                      //   Standard
-  0, 1, 2, 3, 14, 13, 4, 5, 6, 7, 23, 22, 21, 20, 19
+//  0, 1, 2, 3, 14, 13, 4, 5, 6, 7, 23, 22, 21, 20, 19        //   old Project
+    0, 1, 3, 6, 7, 10, 11, 13, 14, 15, 19, 20, 21, 22, 23        //   
 };
 
-#define Min_Out        0   // D2 and D3 not used
+#define Min_Out        0   // D2 and D4, D5 V-USB not used
 #define Max_Out       23
 
 #define Switch_Count  24
@@ -223,7 +228,7 @@ int32_t temp_denom = int32_max;  // <-- denominator
 #define expo_10_8      0x5F5E100UL   // 100000000
 #define expo_10_9     0x3B9ACA00UL   // 1000000000
 
-const uint32_t expo_10[10] = {
+static const uint32_t expo_10[10] = {
   expo_10_0, expo_10_1, expo_10_2, expo_10_3, expo_10_4,
   expo_10_5, expo_10_6, expo_10_7, expo_10_8, expo_10_9 };
 
@@ -237,7 +242,7 @@ const uint32_t expo_10[10] = {
 #define expo_10_17     0x16345785D8A0000ULL   // 100000000000000000
 #define expo_10_18     0xDE0B6B3A7640000ULL   // 1000000000000000000
 
-const uint64_t expo_10_[9] = {
+static const uint64_t expo_10_[9] = {
   expo_10_10, expo_10_11, expo_10_12, expo_10_13, expo_10_14,
   expo_10_15, expo_10_16, expo_10_17, expo_10_18 };
                                               //  9214364837600034815 = 2^63 - 2^53 - 1
@@ -264,20 +269,20 @@ const uint64_t expo_10_[9] = {
 #define sqrt_10_expo            0
 #define sqrt_10_num    1499219281
 #define sqrt_10_denom   474094764  // Fehler ..  7.03e-19
-const AVRational_32 sqrt_10_plus  = {0, sqrt_10_num, sqrt_10_denom};
-const AVRational_32 sqrt_10_minus = {1, sqrt_10_denom, sqrt_10_num};
+static const AVRational_32 sqrt_10_plus  = {0, sqrt_10_num, sqrt_10_denom};
+static const AVRational_32 sqrt_10_minus = {1, sqrt_10_denom, sqrt_10_num};
 
 // ---  Tau_Konstante (2_Pi) ---
 #define Tau_expo                1
 #define Tau_num        1135249722
 #define Tau_denom      1806806049  // Fehler ..  1,34e-17
-const AVRational_32   Tau = {Tau_expo, Tau_num, Tau_denom};
+static const AVRational_32   Tau = {Tau_expo, Tau_num, Tau_denom};
 
 // ---  Pi_Konstante  ---
 #define Pi_expo                 0
 #define Pi_num         1892082870
 #define Pi_denom        602268683  // Fehler ..  6,69e-18
-const AVRational_32   Pi  = {Pi_expo, Pi_num, Pi_denom};
+static const AVRational_32   Pi  = {Pi_expo, Pi_num, Pi_denom};
 
 // ---  e_Konstante  ---
 #define e_expo                  0
@@ -431,7 +436,7 @@ AVRational_32 mem_stack[mem_stack_max] = {
   { 0, int32_max, int32_max  }
 };
 
-const AVRational_32 to_xx[14] = {
+static const AVRational_32 to_xx[14] = {
   { -1, 1250000000,  473176473  },   // 0  7  ..  1 Liter = (1 / 3,785411784) US-gal
   {  1,  473176473, 1250000000  },   // 1  3  ..  1 gallon [US] = 3,785411784 Liter
   {  0,  565007021, 1245627260  },   // 2  2  ..  1 lb = (1 / 2,2046226218488) kg
@@ -448,8 +453,8 @@ const AVRational_32 to_xx[14] = {
   { -2, 1489429756,  853380389  }    // 13  ..     to rad
 };
 
-const char mem_str_1[]     = "##########1111111111";
-const char mem_str_0[]     = "#1234567890123456789";
+static const char mem_str_1[]     = "##########1111111111";
+static const char mem_str_0[]     = "#1234567890123456789";
 
 uint8_t mem_extra_pointer  =  0;   // mem_extra  MR 0 .. MR 9
 uint8_t mem_extra_test     =  0;   // mem_extra  MR 0 .. MR 9
@@ -488,27 +493,29 @@ AVRational_32 mem_extra_stack[mem_extra_max] = {
                              // 10 - 196 mA    + 31 mA      0 mA
 
 uint8_t led_bright_index = led_bright_start;
-uint16_t test_pwm = 117;
+uint16_t test_pwm = 165;
 
-const uint16_t led_bright_plus[led_bright_max + 2] = {
-  0, 76,  84, 100, 126,  165,  221,  318,  429,  562,  721,  910 };
-  //    8   16   26   39    56    97   111   133   159   189
-  //      8   10   13    17    41    14    22    26    30
-  //        2    3     4    24    -27    8     4     4
+static const uint16_t led_bright_plus[led_bright_max + 3] = {
+  0, 76,  84, 100, 126,  165,  221,  318,  429,  562,  721,  910,  1023 };
+  //    8   16   26   39    56    97   111   133   159   189    113
+  //      8   10   13    17    41    14    22    26    30     34
+  //        2    3     4    24    -27    8     4     4     4
 
-const uint16_t led_bright[led_bright_max + 2] = {             // Number_count == 0
-  0, 30,  42,  59,  83,  117,  165,  243,  339,  461,  613,  799 };
-  //   12   17   24   34    48    78    96   122   152   186
-  //      5    7   10    14    30    18    26    30    34
-  //        2    3     4    16    -12    8     4     4
+static const uint16_t led_bright[led_bright_max + 3] = {             // Number_count == 0
+  0, 30,  42,  59,  83,  117,  165,  243,  339,  461,  613,  799,  1023 };
+  //   12   17   24   34     0     78    96   122   152   186    224
+  //      5    7   10    14    30    18    26    30    34     38
+  //        2    3     4    16    -12    8     4     4     4
 
-#define beep_patt 0x993264C993264C99ULL   // 16.8421 ms -- 1128.125 Hz -- 19x Peak
+#define Beep_patt_p 0x993264C993264C99ULL   // 16.8421 ms -- 1128.125 Hz -- 19x Peak
 //      1001100100110010011001001100100110010011001001100100110010011001 -- binaer
-#define max_Beep_count 64
+#define Beep_patt_m 0x66CD9B366CD9B366ULL   // 16.8421 ms -- 1128.125 Hz -- 19x Peak
+//      0110011011001101100110110011011001101100110110011011001101100110 -- binaer
+#define max_Beep_count 65
 
 uint8_t Countdown_OFF = 0;
 #define Countdown_Start      27   // 27
-#define Countdown_Start_Off  39   // 39
+#define Countdown_Start_Off  45   // 39
 
 uint8_t index_Switch  = 255;      // counter Switch-digit
 uint8_t index_LED = 0;            // counter LED-digit
@@ -531,11 +538,9 @@ int8_t Beep_count = max_Beep_count;
 
 boolean Pendular_on = false;
 
-uint64_t beep_pattern = beep_patt;
-
 uint16_t display_bright = led_bright_max;
 
-const uint8_t led_font[count_ascii] = {
+static const uint8_t led_font[count_ascii] = {
     0,  64,  68,  70,  71, 103, 119, 127, 255, 191, 187, 185, 184, 152, 136, 128,     //  ¦                ¦
     0, 107,  34,   0, 109,  18, 125,   2,  57,  15,  92, 112,  12,  64, 128,  82,     //  ¦ !"#$%&'()*+,-./¦
    63,   6,  91,  79, 102, 109, 124,   7, 127, 103,   4,  20,  88,  72,  76,  83,     //  ¦0123456789:;<=>?¦
@@ -562,7 +567,7 @@ boolean Deg_in_out = true;
 boolean Rad_in_out = false;
 
 char display_string[ ascii_count ]     = " -1.2345678#- 1 2 # # =.  " ;
-const char string_start[ ascii_count ] = "  _########## # # # # #   " ;
+static const char string_start[ ascii_count ] = "  _########## # # # # #   " ;
 // char display_string[]                  = " 8.8.8.8.8.8.8.8.8.8.8.8.8.8.8." ;
 #define Plus_Minus           1
 #define Mantisse_0           2
@@ -618,7 +623,6 @@ char First_char;              //   0.. 127
 char Temp_char[12]     = "           ";
 char Temp_char_expo[5] = "    ";
 
-uint8_t PWM_Pin = PWM;
 
 uint8_t Switch_Code = 0;
 uint8_t Start_mem = 0;
@@ -636,7 +640,7 @@ auto bit_6 = toBitRef( Display_Status_new, 6 );  // ("+"; "x"; "(")
 auto bit_7 = toBitRef( Display_Status_new, 7 );  // (")")
 uint8_t Display_Memory = 0;    // 0 .. 12
 char    Display_Memory_1[] = "  mmE){F mFm-O_";
-char    Display_Memory_0[] = "1 rSx(}n=+Fc)V,";
+char    Display_Memory_0[] = "1 r__(}n=+Fc)V,";
 
 boolean Mantisse_change = false;
 boolean Expo_change = false;
@@ -896,11 +900,10 @@ void Memory_to_Input_Operation() {
       Mantisse_change = false;
       Expo_change = false;
       Init_expo = false;
-      Beep_on = true;
     }
   }
   display_string[Memory_1] = 'm';
-  display_string[Memory_0] = 48 + mem_extra_test;
+  display_string[Memory_0] = '0' + mem_extra_test;
 }
 
 void Result_to_Start_Mode() {
@@ -909,10 +912,12 @@ void Result_to_Start_Mode() {
 }
 
 void Display_on() {     // Segmente einschalten --> Segment "a - f - point"
-  for (Digit = 0; Digit < Digit_Count; ++Digit) {
-    if ( display_a[Digit] > 0 ) {
-      if ( (bitRead(display_a[Digit], index_Display)) == 1 ) {
-        digitalWrite(index_display[Digit], LOW);
+	if ( Power_on = true ) {
+    for (Digit = 0; Digit < Digit_Count; ++Digit) {
+      if ( display_a[Digit] > 0 ) {
+        if ( (bitRead(display_a[Digit], index_Display)) == 1 ) {
+          digitalWrite(index_display[Digit], LOW);
+        }
       }
     }
   }
@@ -957,6 +962,7 @@ void Error_String() {
   display_string[10] = ' ';
   display_string[11] = '#';
   display_string[12] = '-';
+  Display_new = true;
   Beep_on = true;
   Start_input = Display_Error;
 }
@@ -984,7 +990,6 @@ void Clear_String() {   // String loeschen -- Eingabe Mantisse
   Zero_index_a = 0;
   Init_expo = true;
 
-  Display_new = true;
   Mantisse_change = false;
   Expo_change = false;
   Start_input = Input_Mantisse;
@@ -1048,7 +1053,6 @@ void Put_Expo() {
       }
     }
   }
-  Display_new = true;
 }
 
 void Error_Test() {
@@ -2099,8 +2103,6 @@ void Display_Number() {
     display_string[13] = '0';
   }
 
-  Display_new = true;
-
   if ( Debug_Level == 9 ) {
     Serial.print("'");
     Serial.print(display_string);
@@ -2116,7 +2118,7 @@ void Display_Memory_Plus() {
   Start_input = Display_M_Plus;
   display_string[Operation] = ' ';
   display_string[Memory_1] = 'm';
-  display_string[Memory_0] = 48 + mem_extra_test;
+  display_string[Memory_0] = '0' + mem_extra_test;
 }
 
 void Put_input_Point() {
@@ -2125,7 +2127,6 @@ void Put_input_Point() {
   display_string[Cursor_pos] = '.';
   ++Cursor_pos;
   display_string[Cursor_pos] = '_';
-  Display_new = true;
 }
 
 void Display_Off() {
@@ -2680,7 +2681,8 @@ void Test_all_function() {
 
 void Test_Switch_up_down() {
   if ( Switch_old > Switch_down ) {
-      Switch_delta = Switch_old - Switch_down;
+      Switch_delta  = Switch_old;
+      Switch_delta -= Switch_down;
 
       switch (Switch_delta) {   // change  -->   Display_Status_new
 
@@ -2768,6 +2770,7 @@ void Test_Switch_up_down() {
           switch (Display_Status_new) {
 
             case 0:         // __
+            case 4:         // +/-
             case 8:         // inv
             case 16:        // FN
             case 24:        // MR
@@ -2781,7 +2784,8 @@ void Test_Switch_up_down() {
   }
 
   if ( Switch_down > Switch_old ) {
-      Switch_delta = Switch_down - Switch_old;
+      Switch_delta  = Switch_down;
+      Switch_delta -= Switch_old;
 
       switch (Switch_down) {    // --->   Switch delta  -->  Zahlen
 
@@ -2950,7 +2954,7 @@ void Test_Switch_up_down() {
 
         case 8194:     //    "FN"- "."            two Switch pressed
           if ( Display_Status_new == 16 ) {
-            Switch_Code = 122; //            new  beep
+            Switch_Code = 122; //            new  Beep
           }
           break;
 
@@ -3199,12 +3203,12 @@ void Test_Switch_up_down() {
               Switch_Code = 50;
               break;
 
-            case 4:
-              Switch_Code = 193;  //           new  to_xx(2)
-              break;
-
             case 2:
               Switch_Code = 180;  //           new  M_xch(2)
+              break;
+
+            case 4:
+              Switch_Code = 193;  //           new  to_xx(2)
               break;
 
             case 8:
@@ -3527,6 +3531,7 @@ void Test_Switch_up_down() {
           break;
       }
   }
+  Switch_old = Switch_down;
 }
 
 boolean Test_buffer = false;
@@ -3535,10 +3540,10 @@ uint8_t Number_of_buffer = 0;
 RingBufCPP<uint32_t, Max_Buffer> q;
 
 // Define various ADC prescaler
-const unsigned char PS_16  = (1 << ADPS2);
-const unsigned char PS_32  = (1 << ADPS2) |                (1 << ADPS0);
-const unsigned char PS_64  = (1 << ADPS2) | (1 << ADPS1);
-const unsigned char PS_128 = (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);
+static const unsigned char PS_16  = (1 << ADPS2);
+static const unsigned char PS_32  = (1 << ADPS2) |                (1 << ADPS0);
+static const unsigned char PS_64  = (1 << ADPS2) | (1 << ADPS1);
+static const unsigned char PS_128 = (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);
 
 // the setup routine runs once when you press reset:
 void setup() {
@@ -3557,39 +3562,29 @@ void setup() {
   // 12 MHz / 16 = 750.0 KHz, outside the desired 50-200 KHz range.
   ADCSRA |= PS_32;    // set our own prescaler to 32
 
-  pinMode(PWM, OUTPUT);           // Pin 22
-  digitalWrite(PWM, HIGH);
-
-  pinMode(On_Off_PIN, OUTPUT);    // Power "ON"
-  digitalWrite(On_Off_PIN, LOW);
-
   uint8_t pin;
   for (pin = Min_Out; pin <= Max_Out; ++pin) {
     pinMode(pin, OUTPUT);
     digitalWrite(pin, HIGH);
   }
 
-  digitalWrite(On_Off_PIN, HIGH);
-
   pinMode(SDA, INPUT);           // Pin 17
   pinMode(SCL, OUTPUT);          // Pin 16
-  pinMode(DCF77, INPUT_PULLUP);  // Pin 7
+  pinMode(SDA, INPUT_PULLUP);    // Pin 17
 
   pinMode(A_0, INPUT);           // set pin to input
   pinMode(A_1, INPUT);           // set pin to input
   pinMode(A_2, INPUT);           // set pin to input
 
-  pinMode(Out_0, OUTPUT);        // Pin A3 not used
-  digitalWrite(Out_0, LOW);
+  pinMode(Beep_m, INPUT_PULLUP); // Pin A3
+  pinMode(Beep_p, INPUT_PULLUP); // Pin A7      	
+
   pinMode(Out_A, OUTPUT);        // Pin A4
   digitalWrite(Out_A, LOW);
   pinMode(Out_B, OUTPUT);        // Pin A5
   digitalWrite(Out_B, LOW);
   pinMode (Out_C, OUTPUT);       // Pin A6
   digitalWrite(Out_C, LOW);
-
-  pinMode(Beep, OUTPUT);         // Pin A7
-  digitalWrite(Beep, LOW);
 
   analogReference(EXTERNAL);
 
@@ -3599,12 +3594,15 @@ void setup() {
   Timer1.pwm(PWM_Pin, led_bright[led_bright_index]);  // duty cycle goes from 0 to 1023
 
   // start serial port at 115200 bps and wait for port to open:
-  Serial.begin(115200);
-  delay(1);
+  if ( Debug_Level > 0 ) {
+    Serial.begin(115200);
+    delay(1);
+  }
 
   q.add(Switch_down);
   q.pull(&Switch_down);
 
+  digitalWrite(PWM_s, LOW);
 }
 
 // the loop routine runs over and over again forever:
@@ -3779,7 +3777,6 @@ void loop() {
           if ( Debug_Level == 5 ) {
             Serial.println("1/x");
           }
-          Beep_on = true;
           if ( Start_input < Input_Memory ) {      // Input Number
             Get_Number();
           }
@@ -3799,11 +3796,13 @@ void loop() {
             Error_Test();
             if ( Start_input != Display_Error ) {
               Display_Number();
+              Display_new = true;
             }
             else {
               mem_pointer = 1;
             }
           }
+          Beep_on = true;
           Print_Statepoint_after();
           break;
 
@@ -3886,12 +3885,21 @@ void loop() {
           if ( Debug_Level == 5 ) {
             Serial.println("PI()");
           }
-          temp_num = Pi.num;
-          temp_denom = Pi.denom;
-          temp_expo = Pi.expo;
-          mem_extra_test = 10;
-          mem_pointer = 1;
-          Memory_to_Input_Operation();
+          if ( (Start_input < Input_Operation_0) || (Display_Error < Start_input) ) {
+            temp_num = Pi.num;
+            temp_denom = Pi.denom;
+            temp_expo = Pi.expo;
+            mem_extra_test = 10;
+            mem_pointer = 1;
+            Memory_to_Input_Operation();
+            mem_save = true;
+          }
+          else {
+            display_string[Memory_1] = '_';
+            display_string[Memory_0] = '_';              	
+          }
+          Display_new = true;
+          Beep_on = true;
           Print_Statepoint_after();
           break;
 
@@ -3933,6 +3941,7 @@ void loop() {
                 }
               }
             }
+            Display_new = true;
             Beep_on = true;
           }
           Print_Statepoint_after();
@@ -3952,11 +3961,12 @@ void loop() {
               expo_temp_16 = Get_Expo() + 102;
               expo_temp_16 = expo_temp_16 / 3;
               if ( expo_temp_16 < (expo_max_in_3 + 34) ) {
-                Beep_on = true;
                 Expo_change = true;
                 ++expo_temp_16;
                 expo_temp_16 = (expo_temp_16 * 3) - 102;
                 Put_Expo();
+                Display_new = true;
+                Beep_on = true;
               }
             }
           }
@@ -3980,11 +3990,12 @@ void loop() {
               }
               expo_temp_16 = expo_temp_16 / 3;
               if ( expo_temp_16 > (expo_min_in_3 + 34) ) {
-                Beep_on = true;
                 Expo_change = true;
                 --expo_temp_16;
                 expo_temp_16 = (expo_temp_16 * 3) - 102;
                 Put_Expo();
+                Display_new = true;
+                Beep_on = true;
               }
             }
           }
@@ -4047,12 +4058,21 @@ void loop() {
           if ( Debug_Level == 5 ) {
             Serial.println("Tau()");
           }
-          temp_num = Tau.num;
-          temp_denom = Tau.denom;
-          temp_expo = Tau.expo;
-          mem_extra_test = 11;
-          mem_pointer = 1;
-          Memory_to_Input_Operation();
+          if ( (Start_input < Input_Operation_0) || (Display_Error < Start_input) ) {
+            temp_num = Tau.num;
+            temp_denom = Tau.denom;
+            temp_expo = Tau.expo;
+            mem_extra_test = 11;
+            mem_pointer = 1;
+            Memory_to_Input_Operation();
+            mem_save = true;
+          }
+          else {
+            display_string[Memory_1] = '_';
+            display_string[Memory_0] = '_';              	
+          }
+          Display_new = true;
+          Beep_on = true;
           Print_Statepoint_after();
           break;
 
@@ -4094,13 +4114,17 @@ void loop() {
             if ( Point_pos == 0 ) {
               if ( Number_count < 8 ) {
                 Put_input_Point();
+              	Display_new = true;
+                Beep_on = true;
               }
             }
             else {
+            	Display_new = true;
               Beep_on = true;
             }
           }
           if ( Start_input == Input_Expo ) {
+          	Display_new = true;
             Beep_on = true;
           }
           Print_Statepoint_after();
@@ -4132,8 +4156,8 @@ void loop() {
             if ( Number_count < 8 ) {
               if ( Zero_count < 7 ) {
                 if (( Number_count > 0 ) or ( Point_pos > 0 )) {
-                   Beep_on = true;
-                   Mantisse_change = true;
+                  Beep_on = true;
+                  Mantisse_change = true;
                   display_string[Cursor_pos] = Switch_Code;
                   ++Cursor_pos;
                   ++Number_count;
@@ -4144,7 +4168,6 @@ void loop() {
                   else {
                     display_string[Cursor_pos] = '_';
                   }
-                  Display_new = true;
                 }
                 if ( Number_count == 0 ) {
                   Put_input_Point();
@@ -4153,7 +4176,6 @@ void loop() {
             }
           }
           if ( Start_input == Input_Expo ) {
-            Beep_on = true;
             Expo_change = true;
             display_string[Expo_1] = display_string[Expo_0];
             display_string[Expo_0] = Switch_Code;
@@ -4167,6 +4189,8 @@ void loop() {
             Result_to_Start_Mode();
             Put_input_Point();
           }
+          Display_new = true;
+          Beep_on = true;
           Print_Statepoint_after();
           break;
 
@@ -4201,7 +4225,6 @@ void loop() {
           }
           if ( Start_input == Input_Mantisse ) {
             if ( Number_count < 8 ) {
-              Beep_on = true;
               Mantisse_change = true;
               display_string[Cursor_pos] = Switch_Code;
               ++Cursor_pos;
@@ -4213,14 +4236,15 @@ void loop() {
                 display_string[Cursor_pos] = '_';
               }
               Display_new = true;
+              Beep_on = true;
             }
           }
           if ( Start_input == Input_Expo ) {
-            Beep_on = true;
             Expo_change = true;
             display_string[Expo_1] = display_string[Expo_0];
             display_string[Expo_0] = Switch_Code;
             Display_new = true;
+            Beep_on = true;
           }
           Print_Statepoint_after();
           break;
@@ -4308,6 +4332,7 @@ void loop() {
               mem_extra_stack[ 0 ].denom = mem_stack[ 0 ].denom;
               Display_Number();
               mem_extra_test = 0;
+              Display_new = true;
               Beep_on = true;
             }
           }
@@ -4352,6 +4377,7 @@ void loop() {
                 }
               }
             }
+            Display_new = true;
             Beep_on = true;
           }
           Print_Statepoint_after();
@@ -4530,6 +4556,7 @@ void loop() {
             mem_pointer = 1;
             Memory_to_Input_Operation();
             mem_save = true;
+            Display_new = true;
             Beep_on = true;
           }
           Print_Statepoint_after();
@@ -4579,6 +4606,16 @@ void loop() {
           if ( Debug_Level == 5 ) {
             Serial.println("_CE_");
           }
+          if ( Start_input == Off_Status) {
+            Pendular_on = false;
+            Beep_on = true;
+            Beep_on_off = Beep_on_off_temp;
+            mem_pointer = 1;
+            Start_input = Start_Mode;
+            digitalWrite(On_Off_PIN, HIGH);
+            Switch_Code =   0;
+            index_5min  = 255;
+          }
           if ( Start_input < Input_Memory ) {    // Input Number
             if ( (Number_count > 0) || (Point_pos > 0) || display_string[Plus_Minus] == '-') {
               Beep_on = true;
@@ -4603,9 +4640,9 @@ void loop() {
             display_digit = 8;
             Display_Number();
             display_string[Cursor_pos] = '.';
+            Display_new = true;
             Beep_on = true;
             display_digit = display_digit_temp;
-          //  Display_new = true;
           }
           if ( (Start_input == Input_Operation_0) || (Start_input == Input_Memory) ) {
           // --operation_pointer;
@@ -4624,8 +4661,8 @@ void loop() {
               --Zero_count;
               display_string[Cursor_pos] = '_';
             }
+            Display_new = true;
             Beep_on = true;
-            // Display_new = true;
             display_digit = display_digit_temp;
           }
           Print_Statepoint_after();
@@ -4677,11 +4714,12 @@ void loop() {
             Get_Number();
           }
           mem_pointer = 0;                           // Display Number
-          Beep_on = true;
           display_digit = fix_extra_test;
           Display_Number();
           display_string[Memory_1] = Display_Memory_1[5];
           display_string[Memory_0] = Display_Memory_0[5];
+          Display_new = true;
+          Beep_on = true;
           Print_Statepoint_after();
           break;
 
@@ -4743,7 +4781,7 @@ void loop() {
             else {
               mem_pointer = 1;
             }
-
+            Display_new = true;
             Beep_on = true;
 
             if ( Debug_Level == 12 ) {
@@ -4826,7 +4864,6 @@ void loop() {
           if ( Debug_Level == 5 ) {
             Serial.println("x^2");
           }
-          Beep_on = true;
           if ( Start_input < Input_Memory ) {      // Input Number
             Get_Number();
           }
@@ -4858,6 +4895,8 @@ void loop() {
               mem_pointer = 1;
             }
           }
+          Display_new = true;
+          Beep_on = true;
           Print_Statepoint_after();
           break;
 
@@ -4869,7 +4908,6 @@ void loop() {
           if ( Debug_Level == 5 ) {
             Serial.println("sqrt()");
           }
-          Beep_on = true;
           if ( Start_input < Input_Memory ) {      // Input Number
             Get_Number();
           }
@@ -4893,6 +4931,8 @@ void loop() {
               mem_pointer = 1;
             }
           }
+          Display_new = true;
+          Beep_on = true;
           Print_Statepoint_after();
           break;
 
@@ -4916,19 +4956,49 @@ void loop() {
           if ( Debug_Level == 5 ) {
             Serial.println("EE");
           }
-          if ( Number_count != Zero_count ) {
+          if ( Number_count == Zero_count ) {
             if ( Start_input == Input_Mantisse ) {
+              Mantisse_change = true;
+              display_string[Cursor_pos] = '1';
+              ++Cursor_pos;
+              ++Number_count;
+              if ( Point_pos == 0 ) {
+                Put_input_Point();
+              }
+              if ( Number_count == 8 ) {
+                display_string[Cursor_pos] = '.';
+              }
+              else {
+                display_string[Cursor_pos] = '_';
+              }              
               Pointer_memory = display_string[Cursor_pos];
               display_string[Cursor_pos] = '#';
               display_string[Expo_point] = '.';
               Start_input = Input_Expo;
-              Beep_on = true;
               if (Init_expo == true) {
                 Init_expo = false;
                 display_string[Expo_1] = '0';
                 display_string[Expo_0] = '0';
               }
               Display_new = true;
+              Beep_on = true;
+              Print_Statepoint_after();
+              break;
+            }
+          }
+          if ( Number_count != Zero_count ) {
+            if ( Start_input == Input_Mantisse ) {
+              Pointer_memory = display_string[Cursor_pos];
+              display_string[Cursor_pos] = '#';
+              display_string[Expo_point] = '.';
+              Start_input = Input_Expo;
+              if (Init_expo == true) {
+                Init_expo = false;
+                display_string[Expo_1] = '0';
+                display_string[Expo_0] = '0';
+              }
+              Display_new = true;
+              Beep_on = true;
               Print_Statepoint_after();
               break;
             }
@@ -4936,8 +5006,8 @@ void loop() {
               display_string[Cursor_pos] = Pointer_memory;
               display_string[Expo_point] = ' ';
               Start_input = Input_Mantisse;
-              Beep_on = true;
               Display_new = true;
+              Beep_on = true;
               Print_Statepoint_after();
               break;
             }
@@ -5081,7 +5151,8 @@ void loop() {
             Display_Number();
             mem_save = true;
             display_string[Memory_1] = 'm';
-            display_string[Memory_0] = 48 + mem_extra_test;
+            display_string[Memory_0] = '0' + mem_extra_test;
+            Display_new = true;
             Beep_on = true;
           }
           Print_Statepoint_after();
@@ -5273,7 +5344,8 @@ void loop() {
               mem_exchange = true;
               mem_save = false;
               display_string[Memory_1] = 'E';
-              display_string[Memory_0] = 48 + mem_extra_test;
+              display_string[Memory_0] = '0' + mem_extra_test;
+              Display_new = true;
               Beep_on = true;
             }
             Print_Statepoint_after();
@@ -5353,8 +5425,9 @@ void loop() {
                 mem_pointer = 0;
                 Display_Number();
                 display_string[Memory_1] = '-';
-                display_string[Memory_0] = 48 + to_extra_test;
+                display_string[Memory_0] = '0' + to_extra_test;
                 to_extra = true;
+                Display_new = true;
                 Beep_on = true;
               }
             }
@@ -5448,7 +5521,6 @@ void loop() {
   }
 
   if ( Display_new == true ) { // Display refresh
-    Display_new = false;
     index_LED = 0;
     for (index_a = 0; index_a <= Digit_Count; ++index_a) {
       if ( display_string[index_LED] == '.' ) {
@@ -5500,12 +5572,12 @@ void loop() {
                 count_led[index_b - 1] += 3;    // 3
               }
               else {
-                 count_led[7] += 3;              // 3
-               }
+                count_led[7] += 3;              // 3
+              }
               break;
 
             case 10:
-             case 9:
+            case 9:
             case 8:
             case 7:
             case 6:
@@ -5518,7 +5590,7 @@ void loop() {
               break;
 
             case 5:
-             case 4:
+            case 4:
             case 3:
             case 2:
             case 1:
@@ -5527,13 +5599,14 @@ void loop() {
                 count_led[index_b - 1] += 5;    // 5
               }
               else {
-                 count_led[7] += 5;              // 5
-               }
+                count_led[7] += 5;              // 5
+              }
               break;
           }
         }
       }
     }
+    Display_new = false;
     Display_change = true;
   }
 
@@ -5554,11 +5627,12 @@ void loop() {
         case 4:
         case 5:
           digitalWrite(On_Off_PIN, LOW);
+          Power_on = false;
           break;
 
-        case 14:
-        case 25:
-        case 36:
+        case 15:
+        case 27:
+        case 39:
           Beep_on = true;
           break;
       }
@@ -5566,6 +5640,7 @@ void loop() {
 
     if ( Start_input == Start_Mode ) {
       Clear_String();
+      Display_new = true; 
     }
 
     switch (index_10ms) {
@@ -5988,7 +6063,6 @@ void loop() {
           Serial.println(Switch_old);
         }
         Test_Switch_up_down();
-        Switch_old = Switch_down;
       }
     }
 
@@ -5998,13 +6072,12 @@ void loop() {
     if ( Debug_Level == 3 ) {
       Serial.print(time);
       Serial.print("  ");
-      Serial.println(taste[1]);
+      Serial.println(taste[16]);
     }
 
     if ( Display_Status_new != Display_Status_old ) {
       if ( Switch_down == 0 ) {
         Display_Status_new = 0;
-        to_extra = false;         // Error save
         Mr_0_test = false;
       }
 
@@ -6013,7 +6086,7 @@ void loop() {
 
       if ( to_extra == true ) {
         display_string[Memory_1] = '-';
-        display_string[Memory_0] = 48 + to_extra_test;
+        display_string[Memory_0] = '0' + to_extra_test;
       }
 
       if ( Display_Status_new > Display_Status_old ) {
@@ -6079,7 +6152,7 @@ void loop() {
             display_string[Memory_0] = '_';
           }
           if ( mem_exchange == true ) {
-            display_string[Memory_0] = 48 + mem_extra_test;
+            display_string[Memory_0] = '0' + mem_extra_test;
           }
           Beep_on = true;
           break;
@@ -6093,10 +6166,10 @@ void loop() {
         case 8:       // Invers
           display_string[Memory_1] = Display_Memory_1[6];
           display_string[Memory_0] = Display_Memory_0[6];
-          if ( Start_input == Input_Memory ) {
+          if ( (Start_input < Input_Operation_0) || (Display_Error < Start_input) ) {
             if ( mem_save == true ) {
               display_string[Memory_1] = Display_Memory_1[2];    // MR
-              display_string[Memory_0] = 48 + mem_extra_test;
+              display_string[Memory_0] = '0' + mem_extra_test;
             }
           }
           Beep_on = true;
@@ -6105,10 +6178,10 @@ void loop() {
         case 16:      // Fn
           display_string[Memory_1] = Display_Memory_1[7];
           display_string[Memory_0] = Display_Memory_0[7];
-          if ( Start_input == Input_Memory ) {
+          if ( (Start_input < Input_Operation_0) || (Display_Error < Start_input) ) {
             if ( mem_save == true ) {
               display_string[Memory_1] = Display_Memory_1[2];    // MR
-              display_string[Memory_0] = 48 + mem_extra_test;
+              display_string[Memory_0] = '0' + mem_extra_test;
             }
           }
           Beep_on = true;
@@ -6127,7 +6200,7 @@ void loop() {
           }
           if ( Start_input == Display_M_Plus ) {
             display_string[Memory_1] = Display_Memory_1[3];      // MS
-            display_string[Memory_0] = 48 + mem_extra_test;
+            display_string[Memory_0] = '0' + mem_extra_test;
           }
           Beep_on = true;
           break;
@@ -6141,7 +6214,7 @@ void loop() {
           display_string[Memory_1] = Display_Memory_1[12];
           display_string[Memory_0] = Display_Memory_0[12];
           if ( to_extra == true ) {
-            display_string[Memory_0] = 48 + to_extra_test;
+            display_string[Memory_0] = '0' + to_extra_test;
           }
           Beep_on = true;
           break;
@@ -6165,11 +6238,11 @@ void loop() {
           }
           if ( Start_input == Display_M_Plus ) {
             display_string[Memory_1] = Display_Memory_1[3];      // MS
-            display_string[Memory_0] = 48 + mem_extra_test;
+            display_string[Memory_0] = '0' + mem_extra_test;
           }
           if ( Start_input == Input_Memory ) {
             display_string[Memory_1] = Display_Memory_1[2];      // MR
-            display_string[Memory_0] = 48 + mem_extra_test;
+            display_string[Memory_0] = '0' + mem_extra_test;
           }
       }
 
@@ -6189,7 +6262,6 @@ void loop() {
           case 12:
           case  9:
           case  5:
-          case  4:
             if ( to_extra == true ) {
               if ( Display_Status_new == 0 ) {
                 to_extra = false;
@@ -6206,6 +6278,16 @@ void loop() {
                   display_string[Memory_1] = ' ';    //
                   display_string[Memory_0] = ' ';    //
                 }
+              }
+            }
+            break;
+
+          case  4:   // -->]  to ..
+            if ( Display_Status_new == 0 ) {
+              if ( to_extra == true ) {
+                display_string[Memory_1] = '-';
+                display_string[Memory_0] = '0' + to_extra_test; 
+                to_extra = false;
               }
             }
             break;
@@ -6231,7 +6313,7 @@ void loop() {
 
             if ( mem_save == true ) {
               display_string[Memory_1] = 'm';    //
-              display_string[Memory_0] = 48 + mem_extra_test;
+              display_string[Memory_0] = '0' + mem_extra_test;
             }
             else {
               Display_Status_new = 0;
@@ -6241,7 +6323,7 @@ void loop() {
 
             if ( (Start_input == Display_Result) || (Start_input == Display_M_Plus) ) {
               display_string[Memory_1] = 'm';    //
-              display_string[Memory_0] = 48 + mem_extra_test;
+              display_string[Memory_0] = '0' + mem_extra_test;
             }
 
             if ( Start_input < Input_Memory ) {
@@ -6252,17 +6334,21 @@ void loop() {
         }
 
         if ( Start_input == Display_Result ) {
-          display_string[Memory_1] = 'm';
-          display_string[Memory_0] = '0';
+          display_string[Memory_1] = ' ';
+          display_string[Memory_0] = '=';
         }
+      }
+
+      if ( Debug_Level == 17 ) {
+        Serial.print("Display_Status_old =  ");
+        Serial.println(Display_Status_old);
       }
 
       Display_Status_old = Display_Status_new;
       Display_new = true;
 
       if ( Debug_Level == 17 ) {
-        Serial.print("Display_Status =");
-        Serial.print("  ");
+        Serial.print("Display_Status_new =  ");
         Serial.println(Display_Status_new);
       }
     }
@@ -6289,7 +6375,7 @@ uint16_t temp_pwm = test_pwm;
   switch (index_TIME) {
 
     case 2:       // +32
-    case 34:      // +31
+    case 34:      // +32
     case 65:      // +31
       Timer1.setPeriod(Time_HIGH);  // sets timer1 to a period of 264 microseconds
       break;
@@ -6319,11 +6405,17 @@ uint16_t temp_pwm = test_pwm;
       }
     }
     Display_change = false;
-      temp_pwm += count_led[index_Display];
+    temp_pwm += count_led[index_Display];
     if ( index_Display == 6 ) {
       temp_pwm = led_bright[led_bright_index + 2];    // duty cycle goes from 0 to 1023
     }
-    Timer1.pwm(PWM_Pin, temp_pwm);    // duty cycle goes from 0 to 1023
+    if ( Power_on = true ) {
+      Timer1.pwm(PWM_Pin, temp_pwm);    // duty cycle goes from 0 to 1023
+    } 
+    else {
+      Timer1.disablePwm(PWM_Pin);
+      digitalWrite(PWM_Pin, LOW);
+    }
   }
 
   switch (index_Switch) {          //  =  Tastenabfrage - Analog
@@ -6683,21 +6775,27 @@ uint16_t temp_pwm = test_pwm;
   if ( Beep_on == true ) {
     --Beep_count;
     if (Beep_count < 0) {
-      digitalWrite(Beep, LOW);
+      digitalWrite(Beep_m, HIGH);
       if (Beep_count < -76) {
+        pinMode(Beep_m, INPUT_PULLUP); // Pin A3
+        pinMode(Beep_p, INPUT_PULLUP); // Pin A7      	
         Beep_on = false;
         Beep_count = max_Beep_count;
       }
     }
     else {      //  0 .. 63
       if ( Beep_on_off == true ) {
-        digitalWrite( Beep, bitRead(beep_patt, Beep_count) );    // Toggle BEEP
+        if (Beep_count > 63) {
+          pinMode(Beep_m, OUTPUT);     // Pin A3
+          digitalWrite(Beep_m, HIGH);
+          pinMode(Beep_p, OUTPUT);     // Pin A7
+          digitalWrite(Beep_p, HIGH);
+        }
+        else {
+          digitalWrite( Beep_m, bitRead(Beep_patt_m, Beep_count) );    // Toggle Beep
+        }    		
       }
     }
   }
-  else {
-    digitalWrite(Beep, LOW);
-  }
-
 }
 
