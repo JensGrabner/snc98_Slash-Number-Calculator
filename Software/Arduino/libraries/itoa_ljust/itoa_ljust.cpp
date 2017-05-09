@@ -83,25 +83,39 @@
     }
 
     static inline uint8_t digits_8( uint8_t u, uint8_t k, uint8_t &d, char* &p, uint8_t n ) {
-        if (u < k*10) {
+        uint8_t test = k;
+        test *= 10;
+        if (u < test) {
             d = u / k;
             p = out<char>('0'+d, p);
             --n;
+        }
+        if (n > 2) {
+            d = u / test;
+            p = out<char>('0'+d, p);
         }
         return n;
     }
 
     static inline uint8_t digits_16( uint16_t u, uint16_t k, uint16_t &d, char* &p, uint8_t n ) {
-        if (u < k*10) {
+        uint16_t test = k;
+        test *= 10;
+        if (u < test) {
             d = u / k;
             p = out<char>('0'+d, p);
             --n;
+        }
+        if (n > 4) {
+            d = u / test;
+            p = out<char>('0'+d, p);
         }
         return n;
     }
 
     static inline uint8_t digits_32( uint32_t u, uint32_t k, uint32_t &d, char* &p, uint8_t n ) {
-        if (u < k*10) {
+        uint32_t test = k;
+        test *= 10;
+        if (u < test) { 
             d = u / k;
             p = out<char>('0'+d, p);
             --n;
@@ -112,8 +126,7 @@
     static inline char* itoa_8(uint8_t u, char* p, uint8_t d, uint8_t n) {
         switch(n) {
         case  3: u -= d * 100;
-        case  2: d  = u /   1; p = out( dd(d), p );
-        case  1: u -= d *   1;
+        case  2: p = out( dd(u), p );
         }
         *p = '\0';
         return p;
@@ -147,21 +160,27 @@
     char* itoa_(uint8_t u, char* p) {
         uint8_t d = 0;
         uint8_t n;
-             if (u >  99) n = digits_8(u, 100, d, p, 3);
+             if (u >  99) n = digits_8(u,  10, d, p, 3);
         else              n = digits_8(u,   1, d, p, 2);
         return itoa_8( u, p, d, n );
     }
 
     char* itoa_(uint16_t u, char* p) {
+        uint8_t lower = u;
+        if (lower == u) return itoa_(lower, p);
+
         uint16_t d = 0;
         uint8_t n;
-             if (u >  9999) n = digits_16(u, 10000, d, p, 5);
+             if (u >  9999) n = digits_16(u,  1000, d, p, 5);
         else if (u <   100) n = digits_16(u,     1, d, p, 2);
         else                n = digits_16(u,   100, d, p, 4);
         return itoa_16( u, p, d, n );
     }
 
     char* itoa_(uint32_t u, char* p) {
+        uint16_t lower = u;
+        if (lower == u) return itoa_(lower, p);
+
         uint32_t d = 0;
         uint8_t n;
              if (u >  99999999) n = digits_32(u, 100000000, d, p, 10);
@@ -173,12 +192,11 @@
     }
 
     char* itoa_(uint64_t u, char* p) {
+        uint32_t lower = u;
+        if (lower == u) return itoa_(lower, p);
+
         uint64_t d = 0;
         uint64_t upper = 0;
-        uint32_t lower = 0;
-        
-        lower = u;
-        if (lower == u) return itoa_(lower, p);
 
         upper  = u / 1000000000;
         p  = itoa_(upper, p);
@@ -189,7 +207,7 @@
     }
 
     char* itoa_(int8_t i, char* p) {
-        uint8_t u = 0;
+        uint8_t u;
         if (i < 0) {
             *p++ = '-';
             u = -i;
@@ -201,7 +219,7 @@
     }
 
     char* itoa_(int16_t i, char* p) {
-        uint16_t u = 0;
+        uint16_t u;
         if (i < 0) {
             *p++ = '-';
             u = -i;
@@ -213,7 +231,7 @@
     }
 
     char* itoa_(int32_t i, char* p) {
-        uint32_t u = 0;
+        uint32_t u;
         if (i < 0) {
             *p++ = '-';
             u = -i;
@@ -225,7 +243,7 @@
     }
 
     char* itoa_(int64_t i, char* p) {
-        uint64_t u = 0;
+        uint64_t u;
         if (i < 0) {
             *p++ = '-';
             u = -i;
