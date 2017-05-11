@@ -13,7 +13,7 @@
 //    2) Avoids GOTO statements - uses "switch" instead and relies on
 //       compiler constant folding and propagation for high performance
 //    3) Avoids unary minus of signed types - undefined behavior if value
-//       is int32_t_MIN in platforms using two's complement representation
+//       is INT_MIN in platforms using two's complement representation
 //    4) Uses memcpy to store 2 digits at a time - lets the compiler
 //       generate a 2-byte load/store in platforms that support
 //       unaligned access, this is faster (and less code) than explicitly
@@ -31,7 +31,7 @@
 // and license below.
 //===----------------------------------------------------------------------===//
 
-// Protocol Buffers - Google's data int32_terchange format
+// Protocol Buffers - Google's data interchange format
 // Copyright 2008 Google Inc.  All rights reserved.
 // https://developers.google.com/protocol-buffers/
 //
@@ -56,7 +56,7 @@
 // OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
 // SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
 // LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-// DATA, OR PROFITS; OR BUSINESS int32_tERRUPTION) HOWEVER CAUSED AND ON ANY
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
 // THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.

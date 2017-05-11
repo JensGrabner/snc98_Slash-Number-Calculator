@@ -46,7 +46,7 @@ for ( uint16_t ii = 0; ii < 17 ; ii += 1 ) {
   time = time_end - time_start;
   Serial.print("Time: ");
   Serial.print(time);
-  Serial.print("   ");
+  Serial.print(" ms ");
   Serial.println(display_string);
 
   add *= 10;
