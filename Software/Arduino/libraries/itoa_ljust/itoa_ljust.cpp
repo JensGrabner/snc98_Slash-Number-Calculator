@@ -127,9 +127,9 @@
         switch(n) {
         case  3: u -= d * 100;
         case  2: p = out( dd(u), p );
+        default: *p = '\0'; return p;
         }
-        *p = '\0';
-        return p;
+        
     }
 
     static inline char* itoa_16(uint16_t u, char* p, uint16_t d, uint8_t n) {
@@ -138,7 +138,7 @@
         case  4: d  = u /   100; p = out( dd(d), p );
         case  3: u -= d *   100;
         case  2: n = 2 ;
-        case  1: return itoa_8( u, p, d, n );
+        default: return itoa_8( u, p, d, n );
         }
     }
 
@@ -153,7 +153,7 @@
         case  4: n = 4 ;
         case  3: ;
         case  2: ;
-        case  1: return itoa_16( u, p, d, n );
+        default: return itoa_16( u, p, d, n );
         }
     }
 
