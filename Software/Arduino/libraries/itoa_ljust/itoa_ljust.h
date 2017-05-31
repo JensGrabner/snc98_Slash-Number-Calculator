@@ -13,6 +13,10 @@
 //   - NUL terminated
 //   - return value is pointer to NUL terminator
 //
+// Copyright (c) 2017 Jens Grabner
+// jens@grabner-online.org
+// https://github.com/JensGrabner/snc98_Slash-Number-Calculator/tree/master/Software/Arduino/libraries/itoa_ljust
+//
 // Copyright (c) 2016 Arturo Martin-de-Nicolas
 // arturomdn@gmail.com
 // https://github.com/amdn/itoa_ljust/

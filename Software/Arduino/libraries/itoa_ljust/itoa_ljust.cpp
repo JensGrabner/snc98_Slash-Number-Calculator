@@ -78,7 +78,7 @@
 
     template<typename T>
     static inline char* out(T const& obj, char* p) {
-        memcpy(p,reinterpret_cast<const void*>(&obj),sizeof(T));
+        memcpy(p, reinterpret_cast<const void*>(&obj), sizeof(T));
         return p + sizeof(T);
     }
 
@@ -129,7 +129,6 @@
         case  2: p = out( dd(u), p );
         default: *p = '\0'; return p;
         }
-        
     }
 
     static inline char* itoa_16(uint16_t u, char* p, uint16_t d, uint8_t n) {
