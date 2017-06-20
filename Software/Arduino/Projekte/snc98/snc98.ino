@@ -219,6 +219,7 @@ int8_t  temp_expo  = 0;          // <-- expo
 int32_t temp_num   = int32_max;  // <-- numerator
 int32_t temp_denom = int32_max;  // <-- denominator
 uint8_t temp_op    = 0;          // <-- operation
+uint8_t temp_op_   = 0;          // <-- operation
 
 #define expo_10_0            0x1UL   // 1
 #define expo_10_1            0xAUL   // 10
@@ -399,39 +400,37 @@ uint32_t calc_temp_u32   = 1;
   int8_t  test_temp_8    = 0;
   int8_t  test_signum_8  = 0;
 
-// uint8_t operation_pointer    =   1;
-// #define operation_stack_max    100
-// uint8_t operation_stack[operation_stack_max] = {
-//  0
-// };
-
 uint8_t display_digit      =  5;
 uint8_t display_digit_temp =  5;
 
 uint8_t mem_pointer        =  1;   // mem_stack 0 .. 19
 #define mem_stack_max        20    // Variable in calculate
+#define mem_stack_max_       19    // Variable in calculate
+
+volatile uint8_t mem_stack_count    =  1;   // actual - mem_stack 1 .. 19
+volatile uint8_t temp_operation     =  0;
 
 AVRational_32 mem_stack[mem_stack_max] = {
-  { 0, int32_max, int32_max, 0 },
-  { 0, int32_max, int32_max, 0 },
-  { 0, int32_max, int32_max, 0 },
-  { 0, int32_max, int32_max, 0 },
-  { 0, int32_max, int32_max, 0 },
-  { 0, int32_max, int32_max, 0 },
-  { 0, int32_max, int32_max, 0 },
-  { 0, int32_max, int32_max, 0 },
-  { 0, int32_max, int32_max, 0 },
-  { 0, int32_max, int32_max, 0 },
-  { 0, int32_max, int32_max, 0 },
-  { 0, int32_max, int32_max, 0 },
-  { 0, int32_max, int32_max, 0 },
-  { 0, int32_max, int32_max, 0 },
-  { 0, int32_max, int32_max, 0 },
-  { 0, int32_max, int32_max, 0 },
-  { 0, int32_max, int32_max, 0 },
-  { 0, int32_max, int32_max, 0 },
-  { 0, int32_max, int32_max, 0 },
-  { 0, int32_max, int32_max, 0 }
+  { 0, int32_max, int32_max, ' ' },
+  { 0, int32_max, int32_max, ' ' },
+  { 0, int32_max, int32_max, ' ' },
+  { 0, int32_max, int32_max, ' ' },
+  { 0, int32_max, int32_max, ' ' },
+  { 0, int32_max, int32_max, ' ' },
+  { 0, int32_max, int32_max, ' ' },
+  { 0, int32_max, int32_max, ' ' },
+  { 0, int32_max, int32_max, ' ' },
+  { 0, int32_max, int32_max, ' ' },
+  { 0, int32_max, int32_max, ' ' },
+  { 0, int32_max, int32_max, ' ' },
+  { 0, int32_max, int32_max, ' ' },
+  { 0, int32_max, int32_max, ' ' },
+  { 0, int32_max, int32_max, ' ' },
+  { 0, int32_max, int32_max, ' ' },
+  { 0, int32_max, int32_max, ' ' },
+  { 0, int32_max, int32_max, ' ' },
+  { 0, int32_max, int32_max, ' ' },
+  { 0, int32_max, int32_max, ' ' }
 };
 
 static const AVRational_32 to_xx[14] = {
@@ -466,7 +465,7 @@ boolean mem_save           = false;
 boolean Mr_0_test          = false;
 boolean test_index         = true;
 
-AVRational_32 mem_extra_stack[mem_extra_max] = {
+AVRational_32 mem_extra_stack[mem_extra_max + 2] = {
   {-90, int32_max, int32_max, 0 },     // MR 0
   {  0, 2147395599, 2147395599, 0 },   // MR 1
   {  0, 2147395598, 1073697799, 0 },   // MR 2
@@ -476,7 +475,9 @@ AVRational_32 mem_extra_stack[mem_extra_max] = {
   {  1, 1288437357, 2147395595, 0 },   // MR 6
   {  1, 1503176913, 2147395590, 0 },   // MR 7
   {  1, 1717916476, 2147395595, 0 },   // MR 8
-  {  1, 1932656031, 2147395590, 0 }    // MR 9
+  {  1, 1932656031, 2147395590, 0 },   // MR 9
+  {  Pi_expo, Pi_num, Pi_denom, 0 },   // const Pi
+  {  Tau_expo, Tau_num, Tau_denom, 0 } // const Tau
 };
 
 #define led_bright_min    4
@@ -495,16 +496,18 @@ uint8_t led_bright_index = led_bright_start;
 uint16_t test_pwm = 165;
 
 static const uint16_t led_bright_plus[led_bright_max + 3] = {
-  0, 76,  84, 100, 126,  165,  221,  318,  429,  562,  721,  910,  1023 };
-  //    8   16   26   39    56    97   111   133   159   189    113
-  //      8   10   13    17    41    14    22    26    30     34
-  //        2    3     4    24    -27    8     4     4     4
+	//                4     5    (6)    7     8     9     10
+  0, 76,  86, 104, 132,  173,  232,  331,  444,  579,  742,  937,  1023 };
+  //   10    18   28   41   59    99   113   135   163   195    86
+  //      8    10    13   18    40   14    22    28    32  -109
+  //         2     3    5   22   -26     8     6     4  -141
 
 static const uint16_t led_bright[led_bright_max + 3] = {             // Number_count == 0
-  0, 30,  42,  59,  83,  117,  165,  243,  339,  461,  613,  799,  1023 };
-  //   12   17   24   34     0     78    96   122   152   186    224
-  //      5    7   10    14    30    18    26    30    34     38
-  //        2    3     4    16    -12    8     4     4     4
+	//                4     5    (6)    7     8     9     10
+  0, 48,  61, 81, 108,  146,  199,  290,  397,  527,  685,  873,  1023 };
+  //   13   20   27   38    53     91   107   130   158   188    150
+  //      7    7   11    15    38    16    23    28    30     -38
+  //        0    4     4    23    -22    7     5     2     68
 
 #define Beep_patt_p 0x993264C993264C99ULL   // 16.8421 ms -- 1128.125 Hz -- 19x Peak
 //      1001100100110010011001001100100110010011001001100100110010011001 -- binaer
@@ -541,12 +544,12 @@ uint16_t display_bright = led_bright_max;
 
 static const uint8_t led_font[count_ascii] = {
     0,  64,  68,  70,  71, 103, 119, 127, 255, 191, 187, 185, 184, 152, 136, 128,     //  ¦                ¦
-    0, 107,  34,   0, 109,  18, 125,   2,  57,  15,  92, 112,  12,  64, 128,  82,     //  ¦ !"#$%&'()*+,-./¦
+    0, 107,  34,   0, 109,  18, 125,   2,  57,  15,  92,  70,  12,  64, 128,  82,     //  ¦ !"#$%&'()*+,-./¦
    63,   6,  91,  79, 102, 109, 124,   7, 127, 103,   4,  20,  88,  72,  76,  83,     //  ¦0123456789:;<=>?¦
-  123, 119, 127,  57,  15, 121, 113,  61, 118,   6,  30, 122,  56,  85,  55,  99,     //  ¦@ABCDEFGHIJKLMNO¦
+  123, 119, 127,  57,  15, 121, 113,  61, 118,  48,  30, 122,  56,  85,  55,  99,     //  ¦@ABCDEFGHIJKLMNO¦
   115, 103,  49,  45,   7,  28,  34,  60,  73, 110,  27,  57, 100,  15,  35,   8,     //  ¦PQRSTUVWXYZ[\]^_¦
    32,  95, 124,  88,  94, 123, 113, 111, 116,   4,  14, 120,  24,  21,  84,  92,     //  ¦`abcdefghijklmno¦
-  115, 103,  80, 108,  70,  20,  42, 106,  73, 102,  82,  24,  20,   3,   1,  54};    //  ¦pqrstuvwxyz{|}~ ¦
+   83, 103,  80, 108,  70,  20,  42, 106,  73, 102,  82,  24,  20,   3,   1,  54};    //  ¦pqrstuvwxyz{|}~ ¦
 
 uint8_t count_led[8] = {      // 1 .. 7
   0
@@ -580,7 +583,7 @@ static const char string_start[ ascii_count ] = "  _########## # # # # #        
 #define Expo_0              16     // 16
 #define Expo_point          17     // 17
 #define Operation           18     // 18
-#define DCF77_point         19     // 19
+#define Operation_point     19     // 19
 #define Memory_1            20     // 20
 #define Rad_point           21     // 21
 #define Memory_0            22     // 22
@@ -664,7 +667,6 @@ boolean Expo_change = false;
 #define Off_Status              20   //  Off_Status
 
 uint8_t Start_input = First_Display;
-char Input_Operation_char = '_';
 char Pointer_memory = '_';
 
 int16_t display_expo = 0;
@@ -881,19 +883,15 @@ void Memory_to_Input_Operation() {
     Result_to_Start_Mode();
   }
   if ( Start_input < Input_Operation_0 ) {      // Input Number
-    mem_stack[ 0 ].num = temp_num;
-    mem_stack[ 0 ].denom = temp_denom;
-    mem_stack[ 0 ].expo = temp_expo;
-    mem_stack[ 0 ].op = temp_op;
+  	left_right_mem_extra( 0, mem_extra_test );
     Start_input = Input_Memory;
   }
   if ( Start_input == Input_Memory ) {
     if ( mem_pointer > 0 ) {
-      mem_stack[ mem_pointer ].num = temp_num;
-      mem_stack[ mem_pointer ].denom = temp_denom;
-      mem_stack[ mem_pointer ].expo = temp_expo;
-      mem_stack[ mem_pointer ].op = temp_op;
+    	left_right_mem_extra( mem_pointer, mem_extra_test );
       mem_pointer = 0;
+      mem_stack[ mem_pointer ].op  = temp_op_;
+      mem_stack[ mem_pointer ].op += '_'; 
       Display_Number();
       Mantisse_change = false;
       Expo_change = false;
@@ -905,13 +903,15 @@ void Memory_to_Input_Operation() {
 }
 
 void Result_to_Start_Mode() {
-  mem_pointer = 1;
+  mem_stack_count = 1;
+  mem_pointer = mem_stack_count;
   Clear_String();
 }
 
 void Display_on() {     // Segmente einschalten --> Segment "a - f - point"
   if ( Power_on = true ) {
-    for ( Digit = 0; Digit < Digit_Count; Digit += 1 ) {
+    for ( Digit = Digit_Count - 1; Digit >= 0; Digit -= 1 ) {
+  //  for ( Digit = 0; Digit < Digit_Count; Digit += 1 ) {
       if ( display_a[Digit] > 0 ) {
         if ( (bitRead(display_a[Digit], index_Display)) == 1 ) {
           digitalWrite(index_display[Digit], LOW);
@@ -961,13 +961,11 @@ void Error_String() {
   display_string[11] = '#';
   display_string[12] = '-';
   Display_new = true;
-  Beep_on = true;
   Start_input = Display_Error;
 }
 
 void Clear_String() {   // String loeschen -- Eingabe Mantisse
   strcpy( display_string, string_start );
-  // mem_pointer = 1;
   display_string[Memory_1] = mem_str_1[mem_pointer];
   display_string[Memory_0] = mem_str_0[mem_pointer];
 
@@ -995,7 +993,7 @@ void Clear_String() {   // String loeschen -- Eingabe Mantisse
   mem_stack[mem_pointer].num = int32_max;
   mem_stack[mem_pointer].denom = int32_max;
   mem_stack[mem_pointer].expo = 0;
-  mem_stack[mem_pointer].op = temp_op;
+  mem_stack[mem_pointer].op = temp_op_;
 }
 
 int16_t Get_Expo() {
@@ -1091,7 +1089,7 @@ void Error_Test() {
   }
 }
 
-void Get_Number() {
+void Get_Number( uint8_t deep_test ) {
   if ( Number_count != Zero_count ) {
     if ( Mantisse_change == true ) {
       Get_Mantisse();
@@ -1112,8 +1110,9 @@ void Get_Number() {
     }
   }
   if ( Start_input != Display_Error ) {
-  	copy_left_right( 0, mem_pointer );
+    copy_left_right( 0, mem_pointer );
     Start_input = Input_Operation_0;
+    Start_input += deep_test;
   }
 }
 
@@ -1948,13 +1947,16 @@ void Display_Number() {
  *   23.50001 -->  24
  *  -23.50001 --> -24
  */
+ 
+  uint8_t temp_char = display_string[Operation]; 
+ 
   if ( Debug_Level == 9 ) {
     Serial.print("'");
     Serial.print(display_string);
     Serial.println("'");
   }
 
-  if ( temp_op >= 128 ) {
+  if ( temp_op_ >= 128 ) {
     Rad_in_out = true;
     Deg_in_out = false;
   }
@@ -2029,7 +2031,6 @@ void Display_Number() {
     display_string[Plus_Minus_Expo__] = ' ';
   }
   display_string[display_digit + 2] = '.';
-  // display_string[display_digit + 3] = '#';
 
   if ( display_expo_mod <= 0 ) {
     display_expo_mod = display_expo_mod + 3;
@@ -2071,7 +2072,13 @@ void Display_Number() {
 
   if ( Start_input >= Input_Memory ) {       // Input / Operation Display
     if ( Start_input < Display_Error ) {
-      display_string[Operation] = Input_Operation_char;
+    	if ( Display_Status_new != 40 ) {
+        display_string[Operation] = mem_stack[mem_pointer].op;
+        display_string[Operation] -= temp_op_;
+    	}
+      if ( Start_input > Input_Operation_0 ) {
+        display_string[Operation_point] = '.';
+      }
     }
   }
 
@@ -2109,7 +2116,11 @@ void Display_Number() {
     display_string[2] = '0';
     display_string[13] = '0';
   }
-
+  
+  if ( Display_Status_new == 40 ) {
+    display_string[Operation] = temp_char;
+  }
+  
   if ( Debug_Level == 9 ) {
     Serial.print("'");
     Serial.print(display_string);
@@ -2141,17 +2152,17 @@ void Display_Off() {
     display_string[Cursor_pos]  = '.';
   }
   Start_input = Off_Status;
-  display_string[MR_point]    = ' ';
-  display_string[Expo_1]      = ' ';
-  display_string[MS_point]    = ' ';
-  display_string[Expo_0]      = ' ';
-  display_string[Expo_point]  = ' ';
-  display_string[Operation]   = 'o';
-  display_string[DCF77_point] = ' ';
-  display_string[Memory_1]    = 'F';
-  display_string[Rad_point]   = ' ';
-  display_string[Memory_0]    = 'F';
-  display_string[Deg_point]   = ' ';
+  display_string[MR_point]        = ' ';
+  display_string[Expo_1]          = ' ';
+  display_string[MS_point]        = ' ';
+  display_string[Expo_0]          = ' ';
+  display_string[Expo_point]      = ' ';
+  display_string[Operation]       = 'o';
+  display_string[Operation_point] = ' ';
+  display_string[Memory_1]        = 'F';
+  display_string[Rad_point]       = ' ';
+  display_string[Memory_0]        = 'F';
+  display_string[Deg_point]       = ' ';
   Display_new = true;
 }
 
@@ -2579,7 +2590,7 @@ void mem_extra_left_right( uint8_t left, uint8_t right ) {
   mem_extra_stack[ left ].num = mem_stack[ right ].num;
   mem_extra_stack[ left ].denom = mem_stack[ right ].denom;
   mem_extra_stack[ left ].expo = mem_stack[ right ].expo;
-  mem_extra_stack[ left ].op = mem_stack[ right ].op;
+  mem_extra_stack[ left ].op = temp_op_;
 }
 
 void left_right_mem_extra( uint8_t left, uint8_t right ) {
@@ -2588,6 +2599,52 @@ void left_right_mem_extra( uint8_t left, uint8_t right ) {
   mem_stack[ left ].expo = mem_extra_stack[ right ].expo;
   mem_stack[ left ].op = mem_extra_stack[ right ].op;
 }
+
+void add_operation_to_mem( uint8_t deep_step, char op_add ) {
+	if ( mem_stack_count < mem_stack_max_ ) {
+    if ( Start_input < Input_Memory ) {      // Input Number
+      Get_Number( deep_step );
+    }
+    if ( (Start_input == Display_Result) || (Start_input == Display_M_Plus) ) {
+      mem_stack_count = 1;
+      mem_pointer = mem_stack_count;
+      Start_input  = Input_Operation_0;
+      Start_input += deep_step;
+      copy_left_right( mem_pointer, 0 );
+    }
+    if ( Start_input > Input_Fraction ) {
+      if ( Start_input < Display_Input_Error ) {
+        mem_save = false;
+        mem_exchange = false;
+        Error_Test();
+        if ( Start_input != Display_Error ) {
+          if ( display_string[Operation] == op_add ) {
+          	if ( display_string[Expo_point] == ' ' ) {
+              display_string[Expo_point] = '.';
+            }
+            else {
+              display_string[Expo_point] = ' ';
+            }
+            display_string[Memory_1] = mem_str_1[mem_pointer];
+            display_string[Memory_0] = mem_str_0[mem_pointer];
+          }
+          else {
+            mem_stack[ mem_pointer ].op  = temp_op_;
+            mem_stack[ mem_pointer ].op += op_add; 
+            Display_Number();
+            display_string[Operation_point] = '.';
+          }
+          Display_new = true;
+          Beep_on = true;
+        }
+        Start_input  = Input_Operation_0;
+        Start_input += deep_step;
+      }
+    }
+	}
+  Print_Statepoint_after();
+}
+
 void Test_all_function() {
   if ( Debug_Level == 18 ) {
     time_start = millis();
@@ -3061,15 +3118,15 @@ void Test_Switch_up_down() {
               Switch_Code = 88;   //                _y_expo_
               break;
 
-             case 24:
+            case 24:
               Switch_Code = 78;  //            new  MR(1)
               break;
 
-             case 32:
+            case 32:
               Switch_Code = 103;  //           new  M_plus(1)
               break;
 
-             case 40:
+            case 40:
               Switch_Code = 87;  //            new  FIX_a_b/c
               break;
 
@@ -3110,11 +3167,11 @@ void Test_Switch_up_down() {
               Switch_Code = 79;  //            new  MR(2)
               break;
 
-             case 32:
+            case 32:
               Switch_Code = 104;  //           new  M_plus(2)
               break;
 
-             case 40:
+            case 40:
               Switch_Code = 95;  //            new  FIX_2
               break;
 
@@ -3156,11 +3213,11 @@ void Test_Switch_up_down() {
               Switch_Code = 80;  //            new  MR(3)
               break;
 
-             case 32:
+            case 32:
               Switch_Code = 105;  //           new  M_plus(3)
               break;
 
-             case 40:
+            case 40:
               Switch_Code = 96;  //            new  FIX_3
               break;
 
@@ -3202,11 +3259,11 @@ void Test_Switch_up_down() {
               Switch_Code = 81;  //            new  MR(4)
               break;
 
-             case 32:
+            case 32:
               Switch_Code = 106;  //           new  M_plus(4)
               break;
 
-             case 40:
+            case 40:
               Switch_Code = 97;  //            new  FIX_4
               break;
 
@@ -3247,11 +3304,11 @@ void Test_Switch_up_down() {
               Switch_Code = 82;  //            new  MR(5)
               break;
 
-             case 32:
+            case 32:
               Switch_Code = 107;  //           new  M_plus(5)
               break;
 
-             case 40:
+            case 40:
               Switch_Code = 98;  //            new  FIX_5
               break;
 
@@ -3293,11 +3350,11 @@ void Test_Switch_up_down() {
               Switch_Code = 83;  //            new  MR(6)
               break;
 
-             case 32:
+            case 32:
               Switch_Code = 108;  //           new  M_plus(6)
               break;
 
-             case 40:
+            case 40:
               Switch_Code = 99;  //            new  FIX_6
               break;
 
@@ -3339,11 +3396,11 @@ void Test_Switch_up_down() {
               Switch_Code = 84;  //            new  MR(7)
               break;
 
-             case 32:
+            case 32:
               Switch_Code = 109;  //           new  M_plus(7)
               break;
 
-             case 40:
+            case 40:
               Switch_Code = 100;  //           new  FIX_7
               break;
 
@@ -3384,11 +3441,11 @@ void Test_Switch_up_down() {
               Switch_Code = 85;  //            new  MR(8)
               break;
 
-             case 32:
+            case 32:
               Switch_Code = 110;  //           new  M_plus(8)
               break;
 
-             case 40:
+            case 40:
               Switch_Code = 101;  //           new  FIX_8
               break;
 
@@ -3430,7 +3487,7 @@ void Test_Switch_up_down() {
               Switch_Code = 86;  //            new  MR(9)
               break;
 
-             case 32:
+            case 32:
               Switch_Code = 111;  //           new  M_plus(9)
               break;
 
@@ -3763,7 +3820,6 @@ void loop() {
         if ( Debug_Level == 5 ) {
           Serial.println("clock");
         }
-        Beep_on = true;
 
         if (Pendular_on == false) {
           Pendular_on = true;
@@ -3829,7 +3885,7 @@ void loop() {
         }
         if ( (Pendular_on == false) && (Start_input == Display_Error) ) {
           Beep_on = true;
-          mem_pointer = 1;
+          mem_pointer = mem_stack_count;
           Start_input = Start_Mode;
           Switch_Code =   0;
           index_5min  = 255;
@@ -3838,7 +3894,7 @@ void loop() {
           Pendular_on = false;
           Beep_on = true;
           Beep_on_off = Beep_on_off_temp;
-          mem_pointer = 1;
+          mem_pointer = mem_stack_count;
           Start_input = Start_Mode;
           Switch_Code =   0;
           index_5min  = 255;
@@ -3885,10 +3941,11 @@ void loop() {
             Serial.println("1/x");
           }
           if ( Start_input < Input_Memory ) {      // Input Number
-            Get_Number();
+            Get_Number( 0 );
           }
           if ( (Start_input == Display_Result) || (Start_input == Display_M_Plus) ) {
-            mem_pointer = 1;
+          	mem_stack_count = 1;
+            mem_pointer = mem_stack_count;
             copy_left_right( mem_pointer, 0 );
             Start_input = Input_Operation_0;
           }
@@ -3900,13 +3957,21 @@ void loop() {
             mem_stack[ mem_pointer ] = div_x(mem_stack[ mem_pointer ]);
             Error_Test();
             if ( Start_input != Display_Error ) {
+              mem_stack[ mem_pointer ].op  = temp_op_;
+              mem_stack[ mem_pointer ].op += '_'; 
               Display_Number();
-              Display_new = true;
             }
             else {
-              mem_pointer = 1;
+              mem_pointer = mem_stack_count;
             }
           }
+          if ( Start_input > Input_Operation_0 ) {
+            if ( Start_input < Display_Input_Error ) {
+              display_string[Memory_1] = '_';
+              display_string[Memory_0] = '_';
+            }
+          }
+          Display_new = true;
           Beep_on = true;
           Print_Statepoint_after();
           break;
@@ -3923,7 +3988,7 @@ void loop() {
           Print_Statepoint_after();
           break;
 
-        case 35:                 //    +/-
+        case 35:                 //    _+/-_
           if ( Debug_Level == 13 ) {
             Serial.print("(+/-)");
             Print_Statepoint();
@@ -3940,23 +4005,18 @@ void loop() {
             mem_stack[ mem_pointer ].num *= -1;
             Display_Number();
           }
-          if ( Start_input == Display_M_Plus ) {
-            temp_num = mem_extra_stack[ mem_extra_test ].num;
-            temp_denom = mem_extra_stack[ mem_extra_test ].denom;
-            temp_expo = mem_extra_stack[ mem_extra_test ].expo;
-            temp_op = mem_extra_stack[ mem_extra_test ].op;
-            mem_pointer = 1;
-            Memory_to_Input_Operation();
-          }
-          if ( Start_input == Display_Result ) {
-            mem_stack[ 0 ].num *= -1;
-            mem_extra_stack[ 0 ].num *= -1;
-            if ( display_string[Plus_Minus] == '-' ) {
-              display_string[Plus_Minus] = ' ';
-            }
-            else {
-              display_string[Plus_Minus] = '-';
-            }
+          if ( ( Start_input == Display_Result ) || ( Start_input == Display_M_Plus ) ) {
+          	mem_stack_count = 1;
+          	mem_pointer = mem_stack_count;
+          	Start_input = Input_Mantisse;
+          	mem_stack_count = 1;
+          	left_right_mem_extra( mem_pointer, 0 );
+
+            display_digit_temp = display_digit;
+            display_digit = 8;
+            Display_Number();
+            display_string[Cursor_pos] = '.';
+            display_digit = display_digit_temp;
           }
           if ( Start_input == Input_Mantisse ) {
             mem_stack[ mem_pointer ].num *= -1;
@@ -3990,11 +4050,8 @@ void loop() {
             Serial.println("PI()");
           }
           if ( (Start_input < Input_Operation_0) || (Display_Error < Start_input) ) {
-            temp_num = Pi.num;
-            temp_denom = Pi.denom;
-            temp_expo = Pi.expo;
             mem_extra_test = 10;
-            mem_pointer = 1;
+            mem_pointer = mem_stack_count;
             Memory_to_Input_Operation();
             mem_save = true;
           }
@@ -4017,27 +4074,25 @@ void loop() {
           }
           if ( Deg_in_out == false ) {
             if ( Start_input < Input_Memory ) {      // Input Number
-              Get_Number();
+              Get_Number( 0 );
             }
             if ( (Start_input == Display_Result) || (Start_input == Display_M_Plus) ) {
-              mem_pointer = 1;
+            	mem_stack_count = 1;
+              mem_pointer = mem_stack_count;
               copy_left_right( mem_pointer, 0 );
               Start_input = Input_Operation_0;
             }
             if ( (Start_input == Input_Operation_0) || (Start_input == Input_Memory) ) {
               Error_Test();
-              mem_pointer = 1;
+              mem_pointer = mem_stack_count;
               if ( Start_input != Display_Error ) {
-                // Rad_in_out = false;
-                // Deg_in_out = true;
-                Display_new = true;
-                Beep_on = true;
                 mem_pointer = 0;
-                temp_op = 0;
+                temp_op_ = 0;
                 mem_stack[ mem_pointer ] = mul(mem_stack[ mem_pointer ], to_xx[ 12 ]);
-                mem_stack[ mem_pointer ].op = temp_op; 
+                mem_stack[ mem_pointer ].op  = temp_op_;
+                mem_stack[ mem_pointer ].op += '_'; 
                 Error_Test();
-                mem_pointer = 1;
+                mem_pointer = mem_stack_count;
                 if ( Start_input != Display_Error ) {
                   mem_pointer = 0;
                   Display_Number();
@@ -4045,6 +4100,14 @@ void loop() {
               }
             }
           }
+          if ( Start_input > Input_Operation_0 ) {
+            if ( Start_input < Display_Input_Error ) {
+              display_string[Memory_1] = '_';
+              display_string[Memory_0] = '_';
+            }
+          }
+          Display_new = true;
+          Beep_on = true;
           Print_Statepoint_after();
           break;
 
@@ -4135,8 +4198,11 @@ void loop() {
           if ( Debug_Level == 5 ) {
             Serial.println("_*_");
           }
-          Beep_on = true;
-          Print_Statepoint_after();
+          temp_operation = 42;
+          add_operation_to_mem( 2, '*' );
+          if ( display_string[Expo_point] == '.' ) {
+            temp_operation = 213;
+          }
           break;
 
         case 43:                 //    _+_
@@ -4147,8 +4213,11 @@ void loop() {
           if ( Debug_Level == 5 ) {
             Serial.println("_+_");
           }
-          Beep_on = true;
-          Print_Statepoint_after();
+          temp_operation = 43;
+          add_operation_to_mem( 1, '+' );
+          if ( display_string[Expo_point] == '.' ) {
+            temp_operation = 211;
+          }
           break;
 
         case 44:                 //    e()
@@ -4160,11 +4229,8 @@ void loop() {
             Serial.println("Tau()");
           }
           if ( (Start_input < Input_Operation_0) || (Display_Error < Start_input) ) {
-            temp_num = Tau.num;
-            temp_denom = Tau.denom;
-            temp_expo = Tau.expo;
             mem_extra_test = 11;
-            mem_pointer = 1;
+            mem_pointer = mem_stack_count;
             Memory_to_Input_Operation();
             mem_save = true;
           }
@@ -4185,8 +4251,11 @@ void loop() {
           if ( Debug_Level == 5 ) {
             Serial.println("_-_");
           }
-          Beep_on = true;
-          Print_Statepoint_after();
+          temp_operation = 45;
+          add_operation_to_mem( 1, '-' );
+          if ( display_string[Expo_point] == '.' ) {
+            temp_operation = 212;
+          }
           break;
 
         case 46:                 //    _._
@@ -4199,12 +4268,10 @@ void loop() {
           }
           if ( Start_input == Display_M_Plus ) {
             Beep_on = true;
-          //  Result_to_Start_Mode();  -->  MEx
           }
           if ( Start_input == Display_Result ) {
             Start_input = Display_M_Plus;
             Beep_on = true;
-          //  Result_to_Start_Mode();  -->  MEx
           }
           if ( Start_input == Input_Operation_0 ) {
             if ( mem_pointer > 0 ) {
@@ -4239,8 +4306,11 @@ void loop() {
           if ( Debug_Level == 5 ) {
             Serial.println("_/_");
           }
-          Beep_on = true;
-          Print_Statepoint_after();
+          temp_operation = 47;
+          add_operation_to_mem( 2, ',' );
+          if ( display_string[Expo_point] == '.' ) {
+            temp_operation = 214;
+          }
           break;
 
         case 48:                 //    0
@@ -4280,7 +4350,6 @@ void loop() {
             Expo_change = true;
             display_string[Expo_1] = display_string[Expo_0];
             display_string[Expo_0] = Switch_Code;
-            Display_new = true;
           }
           if ( Start_input == Display_M_Plus ) {
             Result_to_Start_Mode();
@@ -4295,15 +4364,15 @@ void loop() {
           Print_Statepoint_after();
           break;
 
-        case 49:                 //    1
-        case 50:                 //    2
-        case 51:                 //    3
-        case 52:                 //    4
-        case 53:                 //    5
-        case 54:                 //    6
-        case 55:                 //    7
-        case 56:                 //    8
-        case 57:                 //    9
+        case 49:                 //    _1_
+        case 50:                 //    _2_
+        case 51:                 //    _3_
+        case 52:                 //    _4_
+        case 53:                 //    _5_
+        case 54:                 //    _6_
+        case 55:                 //    _7_
+        case 56:                 //    _8_
+        case 57:                 //    _9_
           if ( Debug_Level == 13 ) {
             Serial.print("(");
             Serial.print(char(Switch_Code));
@@ -4322,6 +4391,15 @@ void loop() {
           if ( Start_input == Input_Operation_0 ) {
             if ( mem_pointer > 0 ) {
               Clear_String();
+            }
+          }
+          if ( Start_input > Input_Operation_0 ) {
+            if ( Start_input < Display_Input_Error ) {
+              mem_stack_count += 1;
+              mem_stack[ mem_pointer ].op = temp_operation;
+              mem_pointer = mem_stack_count;
+              Clear_String();
+              Start_input = Input_Mantisse;
             }
           }
           if ( Start_input == Input_Mantisse ) {
@@ -4350,7 +4428,7 @@ void loop() {
           Print_Statepoint_after();
           break;
 
-        case 60:                 //    <--
+        case 60:                 //    _<--_
           if ( Debug_Level == 13 ) {
             Serial.print("(<--)");
             Print_Statepoint();
@@ -4381,24 +4459,33 @@ void loop() {
               }
               display_string[Cursor_pos] = '_';
               Display_new = true;
+              Beep_on = true;
             }
           }
           if ( Start_input == Input_Expo ) {
             display_string[Cursor_pos] = Pointer_memory;
             display_string[Expo_point] = ' ';
             Start_input = Input_Mantisse;
-            Beep_on = true;
             Display_new = true;
+            Beep_on = true;
           }
           if ( Start_input > Input_Fraction ) {   // no Number Input
             Mantisse_change = false;
             Init_expo = false;
             mem_pointer = 0;
+
+            if ( Start_input > Input_Operation_0 ) {                
+              mem_stack_count += 1;
+              copy_left_right( mem_stack_count, mem_pointer );
+              mem_stack[ mem_pointer ].op = temp_operation;
+              mem_pointer = mem_stack_count;
+            }
+
             if ( (Start_input == Display_Result) || (Start_input == Display_M_Plus) ) {
-              mem_pointer = 1;
+            	mem_stack_count = 1;
+              mem_pointer = mem_stack_count;
               copy_left_right( mem_pointer, 0 );
             }
-            Beep_on = true;
             Start_input = Input_Mantisse;
             display_digit_temp = display_digit;
             display_digit = 8;
@@ -4406,6 +4493,7 @@ void loop() {
             display_string[Cursor_pos] = '.';
             display_digit = display_digit_temp;
             Display_new = true;
+            Beep_on = true;
           }
           Print_Statepoint_after();
           break;
@@ -4419,7 +4507,7 @@ void loop() {
             Serial.println("_=_");
           }
           if ( Start_input < Input_Memory ) {      // Input Number
-            Get_Number();
+            Get_Number( 0 );
           }
           if ( Start_input != Display_Result ) {
             if ( Start_input != Display_Error ) {
@@ -4446,27 +4534,25 @@ void loop() {
           }
           if ( Rad_in_out == false ) {
             if ( Start_input < Input_Memory ) {      // Input Number
-              Get_Number();
+              Get_Number( 0 );
             }
             if ( (Start_input == Display_Result) || (Start_input == Display_M_Plus) ) {
-              mem_pointer = 1;
+            	mem_stack_count = 1;
+              mem_pointer = mem_stack_count;
               copy_left_right( mem_pointer, 0 );
               Start_input = Input_Operation_0;
             }
             if ( (Start_input == Input_Operation_0) || (Start_input == Input_Memory) ) {
               Error_Test();
-              mem_pointer = 1;
+              mem_pointer = mem_stack_count;
               if ( Start_input != Display_Error ) {
-                // Rad_in_out = true;
-                // Deg_in_out = false;
-                Display_new = true;
-                Beep_on = true;
                 mem_pointer = 0;
-                temp_op = 128;
+                temp_op_ = 128;
                 mem_stack[ mem_pointer ] = mul(mem_stack[ mem_pointer ], to_xx[ 13 ]);
-                mem_stack[ mem_pointer ].op = temp_op; 
+                mem_stack[ mem_pointer ].op = temp_op_; 
+                mem_stack[ mem_pointer ].op += '_'; 
                 Error_Test();
-                mem_pointer = 1;
+                mem_pointer = mem_stack_count;
                 if ( Start_input != Display_Error ) {
                   mem_pointer = 0;
                   Display_Number();
@@ -4474,6 +4560,14 @@ void loop() {
               }
             }
           }
+          if ( Start_input > Input_Operation_0 ) {
+            if ( Start_input < Display_Input_Error ) {
+              display_string[Memory_1] = '_';
+              display_string[Memory_0] = '_';
+            }
+          }
+          Display_new = true;
+          Beep_on = true;
           Print_Statepoint_after();
           break;
 
@@ -4644,11 +4738,7 @@ void loop() {
             Serial.println(")");
           }
           if ( (Start_input < Input_Operation_0) || (Display_Error < Start_input) ) {
-            temp_num = mem_extra_stack[ mem_extra_test ].num;
-            temp_denom = mem_extra_stack[ mem_extra_test ].denom;
-            temp_expo = mem_extra_stack[ mem_extra_test ].expo;
-            temp_op = mem_extra_stack[ mem_extra_test ].op;
-            mem_pointer = 1;
+            mem_pointer = mem_stack_count;
             Memory_to_Input_Operation();
             mem_save = true;
             Display_new = true;
@@ -4677,8 +4767,11 @@ void loop() {
           if ( Debug_Level == 5 ) {
             Serial.println("y_expo");
           }
-          Beep_on = true;
-          Print_Statepoint_after();
+          temp_operation = 88;
+          add_operation_to_mem( 4, '%' );
+          if ( display_string[Expo_point] == '.' ) {
+            temp_operation = 217;
+          }
           break;
 
         case 89:                 //    y_root
@@ -4689,13 +4782,16 @@ void loop() {
           if ( Debug_Level == 5 ) {
             Serial.println("y_root");
           }
-          Beep_on = true;
-          Print_Statepoint_after();
+          temp_operation = 89;
+          add_operation_to_mem( 4, 'R' );
+          if ( display_string[Expo_point] == '.' ) {
+            temp_operation = 218;
+          }
           break;
 
         case 90:                 //    _CE_
           if ( Debug_Level == 13 ) {
-            Serial.print("(_CE_)");
+            Serial.print("(_CE xx_)");
             Print_Statepoint();
           }
           if ( Debug_Level == 5 ) {
@@ -4705,7 +4801,7 @@ void loop() {
             Pendular_on = false;
             Beep_on = true;
             Beep_on_off = Beep_on_off_temp;
-            mem_pointer = 1;
+            mem_pointer = mem_stack_count;
             Start_input = Start_Mode;
             digitalWrite(On_Off_PIN, LOW);
             Switch_Code =   0;
@@ -4723,61 +4819,51 @@ void loop() {
             }
           }
           if ( (Start_input == Display_Result) || (Start_input == Display_M_Plus) ) {
-            // operation_pointer = 1;
+            mem_stack_count = 1;
+            mem_pointer = mem_stack_count;
             Mantisse_change = false;
             Start_input = Input_Mantisse;
             Init_expo = false;
-            mem_pointer = 1;
             copy_left_right( mem_pointer, 0 );
             display_digit_temp = display_digit;
             display_digit = 8;
-            /*
-            if ( mem_stack[ mem_pointer ].op >= 128 ) {
-              Rad_in_out = true;
-              Deg_in_out = false;
-            }
-            else {
-              Rad_in_out = false;
-              Deg_in_out = true;
-            }
-            */
             Display_Number();
             display_string[Cursor_pos] = '.';
             Display_new = true;
             Beep_on = true;
             display_digit = display_digit_temp;
           }
-          if ( (Start_input == Input_Operation_0) || (Start_input == Input_Memory) ) {
-          // --operation_pointer;
-            Mantisse_change = false;
-            Start_input = Input_Mantisse;
-            Init_expo = false;
-            mem_pointer = 1;
-            display_digit_temp = display_digit;
-            display_digit = 8;
-            mem_stack[ mem_pointer ].op = temp_op;
-            /*
-            if ( mem_stack[ mem_pointer ].op >= 128 ) {
-              Rad_in_out = true;
-              Deg_in_out = false;
+          if ( Start_input > Input_Memory ) {
+            if ( Start_input < Display_Input_Error ) {
+              Mantisse_change = false;
+              
+              if ( Start_input > Input_Operation_0 ) {
+              	mem_pointer = mem_stack_count;
+                mem_stack_count += 1;
+                copy_left_right( mem_stack_count, mem_pointer );
+                mem_stack[ mem_pointer ].op = temp_operation;
+              }
+              mem_pointer = mem_stack_count;
+
+              Start_input = Input_Mantisse;
+              Init_expo = false;
+              display_digit_temp = display_digit;
+              display_digit = 8;
+              mem_stack[ mem_pointer ].op = temp_op;
+
+              Display_Number();
+              display_string[Cursor_pos] = '.';
+              while ( display_string[Cursor_pos - 1] == '0' ) {
+                display_string[Cursor_pos] = '#';
+                --Cursor_pos;
+                --Number_count;
+                --Zero_count;
+                display_string[Cursor_pos] = '_';
+              }
+              Display_new = true;
+              Beep_on = true;
+              display_digit = display_digit_temp;
             }
-            else {
-              Rad_in_out = false;
-              Deg_in_out = true;
-            }
-            */
-            Display_Number();
-            display_string[Cursor_pos] = '.';
-            while ( display_string[Cursor_pos - 1] == '0' ) {
-              display_string[Cursor_pos] = '#';
-              --Cursor_pos;
-              --Number_count;
-              --Zero_count;
-              display_string[Cursor_pos] = '_';
-            }
-            Display_new = true;
-            Beep_on = true;
-            display_digit = display_digit_temp;
           }
           Print_Statepoint_after();
           break;
@@ -4790,8 +4876,11 @@ void loop() {
           if ( Debug_Level == 5 ) {
             Serial.println("_//_");
           }
-          Beep_on = true;
-          Print_Statepoint_after();
+          temp_operation = 92;
+          add_operation_to_mem( 3, '|' );
+          if ( display_string[Expo_point] == '.' ) {
+            temp_operation = 215;
+          }
           break;
 
         case 94:                 //    _/p/_  Phytagoras
@@ -4802,8 +4891,11 @@ void loop() {
           if ( Debug_Level == 5 ) {
             Serial.println("_/p/_");
           }
-          Beep_on = true;
-          Print_Statepoint_after();
+          temp_operation = 94;
+          add_operation_to_mem( 3, 'P' );
+          if ( display_string[Expo_point] == '.' ) {
+            temp_operation = 216;
+          }
           break;
 
         case 95:          // FIX_2        10 ..       99 -->  Display
@@ -4825,7 +4917,7 @@ void loop() {
             Serial.println(fix_extra_test);
           }
           if ( Start_input < Input_Memory ) {  // Input Number
-            Get_Number();
+            Get_Number( 0 );
           }
           mem_pointer = 0;                           // Display Number
           display_digit = fix_extra_test;
@@ -4871,7 +4963,8 @@ void loop() {
             Serial.println(")");
           }
           if ( (Start_input == Display_Result) || (Start_input == Display_M_Plus) ) {
-            mem_pointer = 1;
+          	mem_stack_count = 1;
+            mem_pointer = mem_stack_count;
             Start_input = Input_Operation_0;
             left_right_mem_extra( mem_pointer, 0 );
           }
@@ -4887,7 +4980,7 @@ void loop() {
               Display_Memory_Plus();
             }
             else {
-              mem_pointer = 1;
+              mem_pointer = mem_stack_count;
             }
             Display_new = true;
             Beep_on = true;
@@ -4973,10 +5066,11 @@ void loop() {
             Serial.println("x^2");
           }
           if ( Start_input < Input_Memory ) {      // Input Number
-            Get_Number();
+            Get_Number( 0 );
           }
           if ( (Start_input == Display_Result) || (Start_input == Display_M_Plus) ) {
-            mem_pointer = 1;
+          	mem_stack_count = 1;
+            mem_pointer = mem_stack_count;
             copy_left_right( mem_pointer, 0 );
             Start_input = Input_Operation_0;
           }
@@ -4995,10 +5089,18 @@ void loop() {
             }
             Error_Test();
             if ( Start_input != Display_Error ) {
+              mem_stack[ mem_pointer ].op  = temp_op_;
+              mem_stack[ mem_pointer ].op += '_'; 
               Display_Number();
             }
             else {
-              mem_pointer = 1;
+              mem_pointer = mem_stack_count;
+            }
+          }
+          if ( Start_input > Input_Operation_0 ) {
+            if ( Start_input < Display_Input_Error ) {
+              display_string[Memory_1] = '_';
+              display_string[Memory_0] = '_';
             }
           }
           Display_new = true;
@@ -5015,10 +5117,11 @@ void loop() {
             Serial.println("sqrt()");
           }
           if ( Start_input < Input_Memory ) {      // Input Number
-            Get_Number();
+            Get_Number( 0 );
           }
           if ( (Start_input == Display_Result) || (Start_input == Display_M_Plus) ) {
-            mem_pointer = 1;
+          	mem_stack_count = 1;
+            mem_pointer = mem_stack_count;
             copy_left_right( mem_pointer, 0 );
             Start_input = Input_Operation_0;
           }
@@ -5029,10 +5132,18 @@ void loop() {
 
             Error_Test();
             if ( Start_input != Display_Error ) {
+              mem_stack[ mem_pointer ].op  = temp_op_;
+              mem_stack[ mem_pointer ].op += '_'; 
               Display_Number();
             }
             else {
-              mem_pointer = 1;
+              mem_pointer = mem_stack_count;
+            }
+          }
+          if ( Start_input > Input_Operation_0 ) {
+            if ( Start_input < Display_Input_Error ) {
+              display_string[Memory_1] = '_';
+              display_string[Memory_0] = '_';
             }
           }
           Display_new = true;
@@ -5132,8 +5243,11 @@ void loop() {
           if ( Debug_Level == 5 ) {
             Serial.println("AGM");
           }
-          Beep_on = true;
-          Print_Statepoint_after();
+          temp_operation = 124;
+          add_operation_to_mem( 4, 'A' );
+          if ( display_string[Expo_point] == '.' ) {
+            temp_operation = 219;
+          }
           break;
 
         case 127:                 //    -->
@@ -5202,15 +5316,15 @@ void loop() {
           Print_Statepoint_after();
           break;
 
-        case 161:                 //    MS(1)
-        case 162:                 //    MS(2)
-        case 163:                 //    MS(3)
-        case 164:                 //    MS(4)
-        case 165:                 //    MS(5)
-        case 166:                 //    MS(6)
-        case 167:                 //    MS(7)
-        case 168:                 //    MS(8)
-        case 169:                 //    MS(9)
+        case 161:                 //   _MS(1)
+        case 162:                 //   _MS(2)
+        case 163:                 //   _MS(3)
+        case 164:                 //   _MS(4)
+        case 165:                 //   _MS(5)
+        case 166:                 //   _MS(6)
+        case 167:                 //   _MS(7)
+        case 168:                 //   _MS(8)
+        case 169:                 //   _MS(9)
           mem_extra_test = Switch_Code - Min_0;
           if ( Debug_Level == 13 ) {
             Serial.print("(MS(");
@@ -5240,7 +5354,8 @@ void loop() {
             }
           }
           if ( Start_input == Display_Result ) {
-            mem_pointer = 1;
+          	mem_stack_count = 1;
+            mem_pointer = mem_stack_count;
           }
           if ( (Start_input == Input_Operation_0) || (Start_input == Input_Memory) ) {
             mem_pointer = 0;
@@ -5252,13 +5367,21 @@ void loop() {
           }
           if ( (Start_input == Input_Operation_0) || (Start_input == Input_Memory) ) {
           	mem_extra_left_right( mem_extra_test, mem_pointer );
+            mem_stack[ mem_pointer ].op  = temp_op_;
+            mem_stack[ mem_pointer ].op += '_'; 
             Display_Number();
             mem_save = true;
             display_string[Memory_1] = 'm';
             display_string[Memory_0] = '0' + mem_extra_test;
-            Display_new = true;
-            Beep_on = true;
           }
+          if ( Start_input > Input_Operation_0 ) {
+            if ( Start_input < Display_Input_Error ) {
+              display_string[Memory_1] = '_';
+              display_string[Memory_0] = '_';
+            }
+          }
+          Display_new = true;
+          Beep_on = true;
           Print_Statepoint_after();
           break;
 
@@ -5385,15 +5508,15 @@ void loop() {
           Print_Statepoint_after();
           break;
 
-        case 179:                //    M_xch(1)
-        case 180:                //    M_xch(2)
-        case 181:                //    M_xch(3)
-        case 182:                //    M_xch(4)
-        case 183:                //    M_xch(5)
-        case 184:                //    M_xch(6)
-        case 185:                //    M_xch(7)
-        case 186:                //    M_xch(8)
-        case 187:                //    M_xch(9)
+        case 179:                //   _M_xch(1)
+        case 180:                //   _M_xch(2)
+        case 181:                //   _M_xch(3)
+        case 182:                //   _M_xch(4)
+        case 183:                //   _M_xch(5)
+        case 184:                //   _M_xch(6)
+        case 185:                //   _M_xch(7)
+        case 186:                //   _M_xch(8)
+        case 187:                //   _M_xch(9)
           if ( (Number_count != Zero_count) || (mem_save == true) || (mem_exchange == true) ) {
             mem_extra_test = Switch_Code - M_xch_0;
             if ( Debug_Level == 13 ) {
@@ -5410,7 +5533,6 @@ void loop() {
             temp_num = mem_extra_stack[ mem_extra_test ].num;
             temp_denom = mem_extra_stack[ mem_extra_test ].denom;
             temp_expo = mem_extra_stack[ mem_extra_test ].expo;
-            temp_op = mem_extra_stack[ mem_extra_test ].op;
             if ( Start_input < Input_Memory ) {      // Input Number
               if ( Mantisse_change == true ) {
                 Get_Mantisse();
@@ -5426,7 +5548,8 @@ void loop() {
               }
             }
             if ( (Start_input == Display_Result) || (Start_input == Display_M_Plus) ) {
-              mem_pointer = 1;
+            	mem_stack_count = 1;
+              mem_pointer = mem_stack_count;
               left_right_mem_extra( mem_pointer, 0 );
               Start_input = Input_Operation_0;
             }
@@ -5439,7 +5562,8 @@ void loop() {
               mem_stack[ mem_pointer ].num = temp_num;
               mem_stack[ mem_pointer ].denom = temp_denom;
               mem_stack[ mem_pointer ].expo = temp_expo;
-              mem_stack[ mem_pointer ].op = temp_op;
+              mem_stack[ mem_pointer ].op  = temp_op_;
+              mem_stack[ mem_pointer ].op += '_'; 
               Display_Number();
               mem_exchange = true;
               mem_save = false;
@@ -5475,16 +5599,16 @@ void loop() {
           Print_Statepoint_after();
           break;
 
-        case 191:                //    to_xx(0)
-        case 192:                //    to_xx(1)
-        case 193:                //    to_xx(2)
-        case 194:                //    to_xx(3)
-        case 195:                //    to_xx(4)
-        case 196:                //    to_xx(5)
-        case 197:                //    to_xx(6)
-        case 198:                //    to_xx(7)
-        case 199:                //    to_xx(8)
-        case 200:                //    to_xx(9)
+        case 191:                //   _to_xx(0)
+        case 192:                //   _to_xx(1)
+        case 193:                //   _to_xx(2)
+        case 194:                //   _to_xx(3)
+        case 195:                //   _to_xx(4)
+        case 196:                //   _to_xx(5)
+        case 197:                //   _to_xx(6)
+        case 198:                //   _to_xx(7)
+        case 199:                //   _to_xx(8)
+        case 200:                //   _to_xx(9)
           to_extra_test = Switch_Code - to_0;
           if ( Debug_Level == 13 ) {
             Serial.print("to_xx(");
@@ -5497,17 +5621,18 @@ void loop() {
             Serial.println(to_extra_test);
           }
           if ( Start_input < Input_Memory ) {      // Input Number
-            Get_Number();
+            Get_Number( 0 );
           }
           if ( (Start_input == Display_Result) || (Start_input == Display_M_Plus) ) {
-            mem_pointer = 1;
+          	mem_stack_count = 1;
+            mem_pointer = mem_stack_count;
             copy_left_right( mem_pointer, 0 );
             Start_input = Input_Operation_0;
           }
           if ( (Start_input == Input_Operation_0) || (Start_input == Input_Memory) ) {
             Start_input = Input_Operation_0;
             Error_Test();
-            mem_pointer = 1;
+            mem_pointer = mem_stack_count;
             if ( Start_input != Display_Error ) {
               mem_pointer = 0;
               if ( to_extra_test == 9 ) {
@@ -5518,18 +5643,26 @@ void loop() {
               }
               mem_stack[ mem_pointer ] = mul(mem_stack[ mem_pointer ], to_xx[ to_extra_test ]);
               Error_Test();
-              mem_pointer = 1;
+              mem_pointer = mem_stack_count;
               if ( Start_input != Display_Error ) {
                 mem_pointer = 0;
+                mem_stack[ mem_pointer ].op  = temp_op_;
+                mem_stack[ mem_pointer ].op += '_'; 
                 Display_Number();
                 display_string[Memory_1] = '-';
                 display_string[Memory_0] = '0' + to_extra_test;
                 to_extra = true;
-                Display_new = true;
-                Beep_on = true;
               }
             }
           }
+          if ( Start_input > Input_Operation_0 ) {
+            if ( Start_input < Display_Input_Error ) {
+              display_string[Memory_1] = '_';
+              display_string[Memory_0] = '_';
+            }
+          }
+          Display_new = true;
+          Beep_on = true;
           Print_Statepoint_after();
           break;
 
@@ -5629,6 +5762,105 @@ void loop() {
           Print_Statepoint_after();
           break;
 
+        case 211:                 //    _+ +_
+          if ( Debug_Level == 13 ) {
+            Serial.print("(_+ +_)");
+            Print_Statepoint();
+          }
+          if ( Debug_Level == 5 ) {
+            Serial.println("_+ +_");
+          }
+          Print_Statepoint_after();
+          break;
+
+        case 212:                 //    _- -_
+          if ( Debug_Level == 13 ) {
+            Serial.print("(_- -_)");
+            Print_Statepoint();
+          }
+          if ( Debug_Level == 5 ) {
+            Serial.println("_- -_");
+          }
+          Print_Statepoint_after();
+          break;
+
+        case 213:                 //    _* *_
+          if ( Debug_Level == 13 ) {
+            Serial.print("(_* *_)");
+            Print_Statepoint();
+          }
+          if ( Debug_Level == 5 ) {
+            Serial.println("_* *_");
+          }
+          Print_Statepoint_after();
+          break;
+
+        case 214:                 //    _/ /_
+          if ( Debug_Level == 13 ) {
+            Serial.print("(_* *_)");
+            Print_Statepoint();
+          }
+          if ( Debug_Level == 5 ) {
+            Serial.println("_* *_");
+          }
+          Print_Statepoint_after();
+          break;
+
+        case 215:                 //    _// //_
+          if ( Debug_Level == 13 ) {
+            Serial.print("(_// //_)");
+            Print_Statepoint();
+          }
+          if ( Debug_Level == 5 ) {
+            Serial.println("_// //_");
+          }
+          Print_Statepoint_after();
+          break;
+
+        case 216:                 //    _/p/ /p/_
+          if ( Debug_Level == 13 ) {
+            Serial.print("(_/p/ /p/_)");
+            Print_Statepoint();
+          }
+          if ( Debug_Level == 5 ) {
+            Serial.println("_/p/ /p/_");
+          }
+          Print_Statepoint_after();
+          break;
+
+        case 217:                 //    _y_expo y_expo_
+          if ( Debug_Level == 13 ) {
+            Serial.print("(_y_expo y_expo_)");
+            Print_Statepoint();
+          }
+          if ( Debug_Level == 5 ) {
+            Serial.println("_y_expo y_expo_");
+          }
+          Print_Statepoint_after();
+          break;
+
+        case 218:                 //    _y_root y_root_
+          if ( Debug_Level == 13 ) {
+            Serial.print("(_y_root y_root_)");
+            Print_Statepoint();
+          }
+          if ( Debug_Level == 5 ) {
+            Serial.println("_y_root y_root_");
+          }
+          Print_Statepoint_after();
+          break;
+
+        case 219:                 //    _AGM AGM_
+          if ( Debug_Level == 13 ) {
+            Serial.print("(_AGM AGM_)");
+            Print_Statepoint();
+          }
+          if ( Debug_Level == 5 ) {
+            Serial.println("_AGM AGM_");
+          }
+          Print_Statepoint_after();
+          break;
+
       }
     }
 
@@ -5703,7 +5935,7 @@ void loop() {
 
   if ( Display_new == true ) { // Display refresh
     index_LED = 0;
-    for ( index_a = 0; index_a < Digit_Count + 0; index_a += 1 ) { 
+    for ( index_a = 0; index_a < Digit_Count; index_a += 1 ) { 
       if ( display_string[index_LED] == '.' ) {
         --index_a;
         display_b[index_a] = display_b[index_a] + led_font[( display_string[index_LED] - start_ascii )] ;
@@ -5748,34 +5980,19 @@ void loop() {
             case 14:
             case 13:
             case 12:
-            case 11:
-              if ( index_b > 0 ) {
-                count_led[index_b - 1] += 3;    // 3
-              }
-              else {
-                count_led[7] += 3;              // 3
-              }
-              break;
-
-            case 10:
-            case 9:
-            case 8:
-            case 7:
-            case 6:
               if ( index_b > 0 ) {
                 count_led[index_b - 1] += 4;    // 4
               }
               else {
-                 count_led[7] += 4;              // 4
-               }
+                count_led[7] += 4;              // 4
+              }
               break;
 
-            case 5:
-            case 4:
-            case 3:
-            case 2:
-            case 1:
-            case 0:
+            case 11:
+            case 10:
+            case 9:
+            case 8:
+            case 7:
               if ( index_b > 0 ) {
                 count_led[index_b - 1] += 5;    // 5
               }
@@ -5783,6 +6000,28 @@ void loop() {
                 count_led[7] += 5;              // 5
               }
               break;
+
+            case 6:
+            case 5:
+            case 4:
+            case 3:
+              if ( index_b > 0 ) {
+                count_led[index_b - 1] += 6;    // 6
+              }
+              else {
+                count_led[7] += 6;              // 6
+              }
+              break;
+
+            case 2:
+            case 1:
+            case 0:
+              if ( index_b > 0 ) {
+                count_led[index_b - 1] += 8;    // 8
+              }
+              else {
+                count_led[7] += 8;              // 8
+              }
           }
         }
       }
@@ -5828,6 +6067,7 @@ void loop() {
     if ( Start_input == Start_Mode ) {
       Clear_String();
       Display_new = true;
+      Beep_on = true;
     }
 
     switch (index_10ms) {
@@ -6451,6 +6691,18 @@ void loop() {
             display_string[Memory_1] = Display_Memory_1[2];      // MR
             display_string[Memory_0] = '0' + mem_extra_test;
           }
+
+      }
+
+      if ( Start_input > Input_Operation_0 ) {
+        if ( Start_input < Display_Input_Error ) {
+          if  ( (Display_Status_new !=  8)
+             && (Display_Status_new != 16)
+             && (Display_Status_new != 40) ) {   // EE  FN  ][
+            display_string[Memory_1] = '_';
+            display_string[Memory_0] = '_';
+          }
+        }
       }
 
       if ( Start_input == Off_Status ) {
@@ -6482,6 +6734,8 @@ void loop() {
             break;
 
           case 1:    // EE to ..
+            display_string[Memory_1] = mem_str_1[mem_pointer];
+            display_string[Memory_0] = mem_str_0[mem_pointer];
             if ( Display_Status_new == 0 ) {
               if ( expo_exchange == true ) {
                 display_string[Memory_1] = 'x';
@@ -6502,9 +6756,15 @@ void loop() {
                 }
               }
             }
+            else {
+              display_string[Memory_1] = mem_str_1[mem_pointer];
+              display_string[Memory_0] = mem_str_0[mem_pointer];
+            }
             break;
 
           case  4:   // -->]  to ..
+            display_string[Memory_1] = mem_str_1[mem_pointer];
+            display_string[Memory_0] = mem_str_0[mem_pointer];
             if ( Display_Status_new == 0 ) {
               if ( to_extra == true ) {
                 display_string[Memory_1] = '-';
@@ -6515,8 +6775,8 @@ void loop() {
             break;
 
           case  8:   //  MR
-          case 24:   //  MR
           case 16:   //  MS + MR
+          case 24:   //  MR
           case 32:   //  MS
           case 48:   //  MS
             display_string[Memory_1] = mem_str_1[mem_pointer];
@@ -6539,8 +6799,6 @@ void loop() {
             }
             else {
               Display_Status_new = 0;
-              display_string[Memory_1] = ' ';    //
-              display_string[Memory_0] = ' ';    //
             }
 
             if ( (Start_input == Display_Result) || (Start_input == Display_M_Plus) ) {
@@ -6548,10 +6806,6 @@ void loop() {
               display_string[Memory_0] = '0' + mem_extra_test;
             }
 
-            if ( Start_input < Input_Memory ) {
-              display_string[Memory_1] = mem_str_1[mem_pointer];
-              display_string[Memory_0] = mem_str_0[mem_pointer];
-            }
             break;
         }
 
@@ -6568,7 +6822,7 @@ void loop() {
 
       Display_Status_old = Display_Status_new;
       Display_new = true;
-
+      
       if ( Debug_Level == 17 ) {
         Serial.print("Display_Status_new =  ");
         Serial.println(Display_Status_new);
@@ -6593,7 +6847,7 @@ uint16_t temp_pwm = test_pwm;
 
   ++index_Switch;
   ++index_TIME;
-
+  
   switch (index_TIME) {
 
     case 2:       // +32
@@ -6612,11 +6866,12 @@ uint16_t temp_pwm = test_pwm;
       index_TIME = 255;
       break;
   }
-
+  
   index_Display_old = index_Display;
 
   if ( index_Switch % 5 == 0 ) {   // Segmente ausschalten --> Segment "a - f - point"
-    for ( Digit = 0; Digit < Digit_Count; Digit += 1) {
+    for ( Digit = Digit_Count - 1; Digit >= 0; Digit -= 1) {
+  //  for ( Digit = 0; Digit < Digit_Count; Digit += 1) {
       if ( display_a[Digit] > 0 ) {
         if ( (bitRead(display_a[Digit], index_Display)) == 1 ) {
           digitalWrite(index_display[Digit], HIGH);
@@ -6954,7 +7209,7 @@ uint16_t temp_pwm = test_pwm;
   taste[Switch_number] += Switch_read / Average;
 
   if ( bitRead(Switch_new, Switch_number) == 0 ) {
-    if (bitRead(Switch_up, Switch_number) == 0) {    //  Pos. 0
+    if ( bitRead(Switch_up, Switch_number) == 0 ) {  //  Pos. 0
       if (taste[Switch_number] < Switch_up_b) {
         bitWrite(Switch_up, Switch_number, 1);
       }
