@@ -34466,7 +34466,7 @@ Source: AVX .. aphvc.pdf</description>
 <approved hash="101,1,15.24,72.39,H8,MOUNT,,,,"/>
 <approved hash="101,1,15.24,59.69,H9,MOUNT,,,,"/>
 <approved hash="101,1,15.24,46.99,H10,MOUNT,,,,"/>
-<approved hash="113,1,53.7887,160.697,JP1,,,,,"/>
+<approved hash="113,1,28.3887,165.777,JP1,,,,,"/>
 </errors>
 </schematic>
 </drawing>
