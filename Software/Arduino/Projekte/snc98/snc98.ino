@@ -54,6 +54,8 @@
 
 */
 
+#include <avr/wdt.h>
+
 // https://github.com/MCUdude/MightyCore
 #include <pins_arduino.h>  // ..\avr\variants\standard\pins_arduino.h
 // https://github.com/Chris--A/BitBool
@@ -91,6 +93,7 @@
                        // 19 - 5 x sqrt(2)
                        // 20 - reduce test 
                        // 21 - "=" - Output -- mem_stack_calc()
+                       // 22 - reduce test spezial
 
 uint8_t mem_pointer        =  1;   //     mem_stack 0 .. 19
 #define mem_stack_max         2    // 19  Variable in calculate
@@ -186,7 +189,7 @@ uint32_t time_old      = 0;
 #define MR_0        77
 #define FIX_0       93
 #define M_plus_0   102
-#define Mem_0      128
+#define Mem_0      137
 #define to_0       191
 #define to_9       200
 #define EE_0       201   // Beep
@@ -221,6 +224,16 @@ struct AVRational_32_plus{  //     0.3 ... 3 x 10^expo
   int32_t denom;       // <-- denominator
   uint8_t op;          // <-- operation
   uint8_t op_priority; // <-- priority
+};
+
+struct Rational_32{    //     0.3 ... 3
+  uint32_t num;        // <-- numerator
+  uint32_t denom;      // <-- denominator
+};
+
+struct Rational_64{    //     0.3 ... 3
+  uint64_t num;        // <-- numerator
+  uint64_t denom;      // <-- denominator
 };
 
 AVRational_32       calc_32  = {0, int32_max, int32_max, 0};
@@ -326,32 +339,38 @@ uint64_t denom_temp_u64_b  = 1;
 
 uint16_t count_reduce = 0;
 
-uint64_t a0_num =       0;
-uint64_t a1_num =       0;
-uint64_t a2_num =       1;
-uint64_t a3_num =       1;
-uint64_t a_num_avg =    1;
-uint64_t a0_denum =     1;
-uint64_t a1_denum =     1;
-uint64_t a2_denum =     0;
-uint64_t a3_denum =     0;
-uint64_t a_denum_avg =  0;
+  uint64_t b0_num =       0;
+  uint64_t b1_num =       0;
+  uint64_t b2_num =       1;
+  uint64_t b3_num =       1;
+
+  uint64_t b0_denum =     1;
+  uint64_t b1_denum =     1;
+  uint64_t b2_denum =     0;
+  uint64_t b3_denum =     0;
+
+  uint64_t b_num_avg =    1;
+  uint64_t b_denum_avg =  0;
+
+  uint64_t a0_num =       0;
+  uint64_t a1_num =       0;
+  uint64_t a2_num =       1;
+  uint64_t a3_num =       1;
+
+  uint64_t a0_denum =     1;
+  uint64_t a1_denum =     1;
+  uint64_t a2_denum =     0;
+  uint64_t a3_denum =     0;
+
+  uint64_t a_num_avg =    1;
+  uint64_t a_denum_avg =  0;
+
 uint64_t x0_a_64 =      1;
 uint64_t x0_a_64_test = 1;
 uint64_t x0_a_64_corr = 1;
 uint64_t x0_a_64_max  = 1;
 uint32_t x0_a_32 =      1;
 
-uint64_t b0_num =       0;
-uint64_t b1_num =       0;
-uint64_t b2_num =       1;
-uint64_t b3_num =       1;
-uint64_t b_num_avg =    1;
-uint64_t b0_denum =     1;
-uint64_t b1_denum =     1;
-uint64_t b2_denum =     0;
-uint64_t b3_denum =     0;
-uint64_t b_denum_avg =  0;
 uint64_t x0_b_64 =      1;
 uint64_t x0_b_64_test = 1;
 uint64_t x0_b_64_corr = 1;
@@ -384,7 +403,8 @@ uint64_t calc_temp_64_c_abs = 1;
  int64_t calc_temp_64_d     = 1;
 uint64_t calc_temp_64_d_abs = 1;
 
-uint64_t old_num_u64_0   = 1;
+uint64_t old_num_u64_a0  = 1;
+uint64_t old_num_u64_b0  = 1;
 uint64_t old_denum_u64_0 = 1;
 
 uint64_t calc_temp_u64_0 = 1;
@@ -411,7 +431,6 @@ uint32_t calc_temp_u32   = 1;
   int8_t  calc_temp_8_1  = 1;
   int8_t  calc_temp_8_2  = 1;
 
-  int8_t  test_temp_8    = 0;
   int8_t  test_signum_8  = 0;
 
 uint8_t display_digit      =  5;
@@ -519,8 +538,10 @@ static const uint16_t led_bright[led_bright_max + 3] = {
 #define min_Beep_count -25   // -25   Beep off  = 90
 
 uint8_t Countdown_OFF = 0;
-#define Countdown_Start      35   // 32 + 3
-#define Countdown_Start_Off  53   // 48 + 5
+#define Countdown_Off_3 220   // 156   --  Start_Off
+#define Countdown_Off_2 160   // 135   --  Start
+#define Countdown_Off_1 120   // 114
+#define Countdown_Off_0  20   //  15
 
 uint8_t index_Switch  = 255;      // counter Switch-digit
 uint8_t index_LED = 0;            // counter LED-digit
@@ -576,9 +597,10 @@ boolean Digit_Test = false;
 boolean Deg_in_out = true;
 boolean Rad_in_out = false;
 
-char display_string[ ascii_count ]            = " -1.2345678#- 1 2 # # =.       " ;
-static const char string_start[ ascii_count ] = "  _########## # # # # #        " ;
-// char display_string[]                      = " 8.8.8.8.8.8.8.8.8.8.8.8.8.8.8." ;
+char display_string[ ascii_count ]              = " -1.2345678#- 1 2 # # =.       " ;
+static const char string_end[ ascii_count ]     = " ~-_Good  lUc k _ - ~.         " ;
+static const char string_start[ ascii_count ]   = "  _########## # # # # #        " ;
+static const char display_string_888[ ascii_count ] = " 8.8.8.8.8.8.8.8.8.8.8.8.8.8.8." ;
 #define Plus_Minus           1
 #define Mantisse_0           2
 #define Mantisse_1           3
@@ -613,6 +635,8 @@ boolean   time_7500ms = false;
 uint8_t  index_7500ms = 255;  // 0..59
 
 uint8_t    index_5min = 255;  // 0..39
+#define    time_5min    39  // 39  5_min
+#define    pendel_3min  23  // 23  3_min
 
 boolean Init_expo = true;
 boolean Display_new = true;
@@ -684,6 +708,13 @@ int64_t display_big = 1;
 int32_t display_number = 1;
 #define digit_count_max 8
 int16_t display_expo_mod = 0;
+
+void reboot() {
+	MCUSR = 0;
+  wdt_disable();
+  wdt_enable(WDTO_15MS);
+  while (1) {}
+}
 
 void Print_Operation( uint8_t Switch_up) {
     switch (Switch_up) {
@@ -1439,7 +1470,8 @@ void Error_String() {
 }
 
 void Clear_String() {   // String loeschen -- Eingabe Mantisse
-  strcpy( display_string, string_start );
+  strcpy( display_string, string_start );      // normal
+  // strcpy( display_string, display_string_888 );    // On_Off_Test
   display_string[Memory_1] = mem_str_1[mem_pointer];
   display_string[Memory_0] = mem_str_0[mem_pointer];
 
@@ -1690,28 +1722,38 @@ void Get_Mantisse() {          // " -1.2345678#- 1 5# 1 9."
   }
 }
 
-void Reduce_Number() {
+void Reduce_Number() {	
+	
+	Rational_32 a;
+	Rational_32 b;
+	Rational_64 a_64;
+	Rational_64 b_64;
+	int8_t   test_cmp_64 = 0;
+	int8_t   test_cmp_32 = 0;
+  int8_t   test_temp_8 = 0;
 
   if ( num_temp_u64 > denom_temp_u64 ) {
-    test_temp_8 =  1;
+    test_temp_8     =  1;
   }
   else {
-    test_temp_8 = -1;          // num_temp_u64 <--> denom_temp_u64
+    test_temp_8     = -1;          // num_temp_u64 <--> denom_temp_u64
     calc_temp_u64_0 = denom_temp_u64;
     denom_temp_u64  = num_temp_u64;
     num_temp_u64    = calc_temp_u64_0;
   }
 
-  exact_value = false;
-  first_value = false;
+  count_reduce = 0;
+  exact_value  = false;
+  first_value  = false;
 
- /*******
+ /**
   *  https://hg.python.org/cpython/file/3.5/Lib/fractions.py#l252
   *  https://ffmpeg.org/doxygen/2.8/rational_8c_source.html#l00035
   *  http://link.springer.com/article/10.1007%2Fs00607-008-0013-8
   *  https://math.boku.ac.at/udt/vol05/no2/3zhabitsk10-2.pdf  Page_5
   */
- /*******
+
+ /**
   *  Thill M. - A more precise rounding algorithm for natural numbers.
   *  .. Computing Jul 2008, Volume 82, Issue 2, pp 189–198
   *  http://link.springer.com/article/10.1007/s00607-008-0006-7
@@ -1721,161 +1763,35 @@ void Reduce_Number() {
   *  http://link.springer.com/article/10.1007/s00607-008-0013-8
   *  http://link.springer.com/content/pdf/10.1007/s00607-008-0013-8.pdf
   */
-/*
-  x1_ = num_temp_u64;
-  x0_ = denom_temp_u64;
-  p1_ = 0;
-  q1_ = 1;
-  p0_ = 1;
-  q0_ = 0;
-  NoOverflowSoFar = true;
-  count_reduce = 0;
 
-      if ( Debug_Level == 12 ) {
-
-        Serial.print("_32_ = ");
-        calc_temp_u64_0 = num_temp_u64;
-        calc_temp_u64_0 /= int32_max_2;
-        x0_a_32 = calc_temp_u64_0;
-        Serial.print(x0_a_32);
-        Serial.print(" / ");
-        calc_temp_u64_0 = denom_temp_u64;
-        calc_temp_u64_0 /= int32_max_2;
-        x0_a_32 = calc_temp_u64_0;
-        Serial.println(x0_a_32);
-      }
-
-  while ( x0_ > 0 ) {
-    k_ = 0;
-    ++count_reduce;
-    while ( (NoOverflowSoFar == true) && ( x0_ < x1_ ) ) {
-
-      if ( Debug_Level == 12 ) {
-        Serial.print("k_index_a_");
-        Serial.print(k_);
-        Serial.print(" round_");
-        Serial.print(count_reduce);
-        Serial.print(" = ");
-        x0_a_32 = p0_;
-        Serial.print(x0_a_32);
-        Serial.print(" / ");
-        x0_a_32 = q0_;
-        Serial.println(x0_a_32);
-      }
-
-      if ( ( p0_ < int30_max ) || ( q0_ < int30_max ) ) {
-        p0_ *= 2;
-        q0_ *= 2;
-        x0_ *= 2;
-        ++k_;
-      }
-      else {
-        NoOverflowSoFar = false;
-      }
-    }
-    // now look ahead:
-    if ( (NoOverflowSoFar == true) && (((p1_ + p0_) < int32_max) || ((q1_ + q0_) < int32_max)) ) {
-      do {
-
-      if ( Debug_Level == 20 ) {
-        Serial.print("k_index_b_");
-        Serial.print(k_);
-        Serial.print(" round_");
-        Serial.print(count_reduce);
-        Serial.print(" = ");
-        x0_a_32 = p0_;
-        Serial.print(x0_a_32);
-        Serial.print(" / ");
-        x0_a_32 = q0_;
-        Serial.println(x0_a_32);
-      }
-
-        if ( x0_ >= x1_) {
-          if ( ((p1_ + p0_) < int32_max) || ((q1_ + q0_) < int32_max) ) {
-            NoOverflowSoFar = true;
-            p1_ += p0_;
-            q1_ += q0_;
-            x0_ -= x1_;
-          }
-          else {
-            NoOverflowSoFar = false;
-          }
-        }
-        --k_;
-      } while ( k_ < 0 );
-    }
-    else {
-      // recover convergent:
-      while( k_ > 0 ) {
-        p0_ /= 2;
-        q0_ /= 2;
-        --k_;
-      }
-      x0_ = 0;  // to exit “while”
-    }
-    calc_temp_u64_0 = x0_;
-    x0_ = x1_;
-    x1_ = calc_temp_u64_0;
-
-    calc_temp_u64_0 = p0_;
-    p0_ = p1_;
-    p1_ = calc_temp_u64_0;
-
-    calc_temp_u64_0 = q0_;
-    q0_ = q1_;
-    q1_ = calc_temp_u64_0;
-
-    if ( Debug_Level == 20  ) {
-      Serial.print("k_index_");
-      Serial.print(k_);
-      Serial.print("round_");
-      Serial.print(count_reduce);
-      Serial.print(" = ");
-      x0_a_32 = p0_;
-      Serial.print(x0_a_32);
-      Serial.print(" / ");
-      x0_a_32 = q0_;
-      Serial.println(x0_a_32);
-    }
-  }
-
-  if ( test_temp_8 > 0 ) {
-    num_temp_u32 = p0_;
-    denom_temp_u32 = q0_;
-  }
-  else {
-    num_temp_u32 = q0_;
-    denom_temp_u32 = p0_;
-  }
-*/
-
-  num_temp_u64_a = num_temp_u64;
+  num_temp_u64_a   = num_temp_u64;
   denom_temp_u64_a = denom_temp_u64;
-  num_temp_u64_b = num_temp_u64;
+  num_temp_u64_b   = num_temp_u64;
   denom_temp_u64_b = denom_temp_u64;
 
-  a1_num   = 1;  // p1
+  a1_num   = 1;                     // p1
   a2_num   = num_temp_u64_a;
   if ( denom_temp_u64_a > 0 ) {
     a2_num  /= denom_temp_u64_a;    // p2
   }
-  a1_denum = 0;  // q1
-  a2_denum = 1;  // q2
+  a1_denum = 0;                     // q1
+  a2_denum = 1;                     // q2
 
-  b1_num   = 1;    // p1
+  b1_num   = 1;                     // p1
   b2_num   = num_temp_u64_b;
   --b2_num;
   if ( denom_temp_u64_b > 0 ) {
     b2_num  /= denom_temp_u64_b;    // p2
   }
   ++b2_num;
-  b1_denum = 0;  // q1
-  b2_denum = 1;  // q2
+  b1_denum = 0;                     // q1
+  b2_denum = 1;                     // q2
 
-  old_num_u64_0 = num_temp_u64_a;
-  num_temp_u64_a = denom_temp_u64_a;
-  denom_temp_u64_a = old_num_u64_0;
+  old_num_u64_a0    = num_temp_u64_a;
+  num_temp_u64_a    = denom_temp_u64_a;
+  denom_temp_u64_a  = old_num_u64_a0;
   denom_temp_u64_a -= a2_num * num_temp_u64_a;
+
   x0_a_64 = num_temp_u64_a;
   if ( denom_temp_u64_a > 0 ) {
     x0_a_64 /= denom_temp_u64_a;
@@ -1884,13 +1800,14 @@ void Reduce_Number() {
     x0_a_64 = 1;
     first_value = true;
     exact_value = true;    //   denom_temp_u64_a == 0
-    old_num_u64_0 = 0;  // break out
+    old_num_u64_a0 = 0;    // break out
   }
 
-  old_num_u64_0 = num_temp_u64_b;
-  num_temp_u64_b = denom_temp_u64_b;
-  denom_temp_u64_b = b2_num * num_temp_u64_b;
-  denom_temp_u64_b -= old_num_u64_0;
+  old_num_u64_b0    = num_temp_u64_b;
+  num_temp_u64_b    = denom_temp_u64_b;
+  denom_temp_u64_b  = b2_num * num_temp_u64_b;
+  denom_temp_u64_b -= old_num_u64_b0;
+    
   x0_b_64 = num_temp_u64_b;
   --x0_b_64;
   if ( denom_temp_u64_b > 0 ) {
@@ -1901,31 +1818,28 @@ void Reduce_Number() {
   }
   ++x0_b_64;
 
-  a3_num = a1_num;
-  a3_num += a2_num * x0_a_64;
-  a3_denum = a1_denum;
+  a3_num    = a1_num;
+  a3_num   += a2_num * x0_a_64;
+  a3_denum  = a1_denum;
   a3_denum += a2_denum * x0_a_64;
 
-  b3_num = b2_num * x0_b_64;
-  b3_num -= b1_num;
-  b3_denum = b2_denum * x0_b_64;
+  b3_num    = b2_num * x0_b_64;
+  b3_num   -= b1_num;
+  b3_denum  = b2_denum * x0_b_64;
   b3_denum -= b1_denum;
 
-  count_reduce = 1;
+  count_reduce += 1;
 
   if ( Debug_Level == 20 ) {
     x0_a_32 = x0_a_64;
-    x0_a_32 /= 5;
     Serial.print("__x0_a_32_");
     Serial.print(count_reduce);
     Serial.print(" = ");
     Serial.println(x0_a_32);
     x0_a_32 = a3_num;
-    x0_a_32 /= 5;
     Serial.print(x0_a_32);
     Serial.print(" / ");
     x0_a_32 = a3_denum;
-    x0_a_32 /= 5;
     Serial.println(x0_a_32);
   }
 
@@ -1942,14 +1856,12 @@ void Reduce_Number() {
     a3_denum    /= x0_a_64_div;
     --a3_num;
     --a3_denum;
-    if ( test_temp_8 > 0 ) {
-      num_temp_u32 = a3_num;
-      denom_temp_u32 = a3_denum;
-    }
-    else {
-      num_temp_u32 = a3_denum;
-      denom_temp_u32 = a3_num;
-    }
+
+    a.num   = a3_num;
+    a.denom = a3_denum;
+    b.num   = a2_num;
+    b.denom = a2_denum;
+
     if ( Debug_Level == 15 ) {
       x0_a_32 = a3_num;
       Serial.print(x0_a_32);
@@ -1957,7 +1869,7 @@ void Reduce_Number() {
       x0_a_32 = a3_denum;
       Serial.println(x0_a_32);
     }
-    old_num_u64_0 = 0;  // break out
+    old_num_u64_a0 = 0;    // break out
   }
 
   if ( Debug_Level == 20 ) {
@@ -1974,12 +1886,18 @@ void Reduce_Number() {
   }
 
   if ( denom_temp_u64 == 0 ) {
-    num_temp_u32   = 0;
-    denom_temp_u32 = int32_max;
+    a.num   = 0;
+    a.denom = int32_max;
   }
   else {
-    while ( old_num_u64_0 > 0 ) {
+    while ( old_num_u64_a0 > 0 ) {
+    	    	
       ++count_reduce;
+
+    	if ( Debug_Level == 22 ) {
+        Serial.print("count_reduce 0 = ");
+        Serial.println(count_reduce);
+    	}
 
       a0_num = a1_num;
       a1_num = a2_num;
@@ -1995,16 +1913,17 @@ void Reduce_Number() {
       b1_denum = b2_denum;
       b2_denum = b3_denum;
 
-      old_num_u64_0 = denom_temp_u64_a;
-      denom_temp_u64_a = num_temp_u64_a;
-      denom_temp_u64_a -= x0_a_64 * old_num_u64_0;
-      num_temp_u64_a = old_num_u64_0;
+      old_num_u64_a0    = denom_temp_u64_a;
+      denom_temp_u64_a  = num_temp_u64_a;
+      denom_temp_u64_a -= x0_a_64 * old_num_u64_a0;
+      num_temp_u64_a    = old_num_u64_a0;
 
-      old_num_u64_0 = denom_temp_u64_b;
-      denom_temp_u64_b = x0_b_64 * old_num_u64_0;
+      old_num_u64_b0    = denom_temp_u64_b;
+      denom_temp_u64_b  = x0_b_64 * old_num_u64_b0;
       denom_temp_u64_b -= num_temp_u64_b;
-      num_temp_u64_b = old_num_u64_0;
+      num_temp_u64_b    = old_num_u64_b0;
 
+      x0_a_64_test = x0_a_64;
       x0_a_64 = num_temp_u64_a;
       if ( denom_temp_u64_a > 0 ) {
         x0_a_64 /= denom_temp_u64_a;
@@ -2012,7 +1931,7 @@ void Reduce_Number() {
       else {
         x0_a_64 = 1;
         exact_value = true;    //   denom_temp_u64_a == 0
-        old_num_u64_0 = 0;
+        old_num_u64_a0 = 0;    // break out
       }
 
       x0_b_64_test = x0_b_64;
@@ -2023,19 +1942,18 @@ void Reduce_Number() {
       }
       else {
         x0_b_64 = 0;
-        exact_value = true;    //   denom_temp_u64_b == 0
-        old_num_u64_0 = 0;
+        old_num_u64_a0 = 0;    // break out
       }
       ++x0_b_64;
 
-      a3_num = a1_num;
-      a3_num += a2_num * x0_a_64;
-      a3_denum = a1_denum;
+      a3_num    = a1_num;
+      a3_num   += a2_num * x0_a_64;
+      a3_denum  = a1_denum;
       a3_denum += a2_denum * x0_a_64;
 
-      b3_num = b2_num * x0_b_64;
-      b3_num -= b1_num;
-      b3_denum = b2_denum * x0_b_64;
+      b3_num    = b2_num * x0_b_64;
+      b3_num   -= b1_num;
+      b3_denum  = b2_denum * x0_b_64;
       b3_denum -= b1_denum;
 
       if ( Debug_Level == 20 ) {
@@ -2064,25 +1982,17 @@ void Reduce_Number() {
       }
 
       if ( denom_temp_u64_a == 0 ) {
-        if ( test_temp_8 > 0 ) {
-          num_temp_u32 = a2_num;
-          denom_temp_u32 = a2_denum;
-        }
-        else {
-          num_temp_u32 = a2_denum;
-          denom_temp_u32 = a2_num;
-        }
+        a.num   = a2_num;
+        a.denom = a2_denum;
+        b.num   = a1_num;
+        b.denom = a1_denum;
       }
 
       if ( denom_temp_u64_b == 0 ) {
-        if ( test_temp_8 > 0 ) {
-          num_temp_u32 = b2_num;
-          denom_temp_u32 = b2_denum;
-        }
-        else {
-          num_temp_u32 = b2_denum;
-          denom_temp_u32 = b2_num;
-        }
+        a.num   = b2_num;
+        a.denom = b2_denum;
+        b.num   = b1_num;
+        b.denom = b1_denum;
       }
 
       if ( b3_num >= int32_max ) {
@@ -2091,18 +2001,21 @@ void Reduce_Number() {
         x0_b_64 -= b1_num;
         if ( b2_num > 0 ) {
           x0_b_64 /= b2_num;
-          b3_num = b2_num;
+          b3_num   = b2_num;
           b3_denum = b2_denum;
         }
         else {
-          x0_b_64 = tuning_fraction;
-          b2_num = 0;
+          if ( Debug_Level == 20 ) {
+            Serial.println("tuning_fraction");
+          }
+          x0_b_64  = tuning_fraction;
+          b2_num   = 0;
           b2_denum = 0;
         }
 
-        b3_num = b2_num * x0_b_64;
-        b3_num -= b1_num;
-        b3_denum = b2_denum * x0_b_64;
+        b3_num    = b2_num * x0_b_64;
+        b3_num   -= b1_num;
+        b3_denum  = b2_denum * x0_b_64;
         b3_denum -= b1_denum;
 
         if ( denom_temp_u64_b == 0 ) {
@@ -2115,7 +2028,7 @@ void Reduce_Number() {
             x0_b_32 = b2_num;
             Serial.println(x0_b_32);
           }
-          x0_b_64_corr = int32_max;
+          x0_b_64_corr  = int32_max;
           x0_b_64_corr *= x0_b_64_test;
           x0_b_64_corr /= b2_num;
           if ( Debug_Level == 20 ) {
@@ -2128,31 +2041,28 @@ void Reduce_Number() {
             Serial.print("count_reduce = ");
             Serial.println(count_reduce);
           }
+
           if ( x0_b_64_corr > 8 ) {
             if  ( count_reduce > 2 ) {
-              b3_num = b1_num * x0_b_64_corr;
-              b3_num -= b0_num;
-              b3_denum = b1_denum * x0_b_64_corr;
+              b3_num    = b1_num * x0_b_64_corr;
+              b3_num   -= b0_num;
+              b3_denum  = b1_denum * x0_b_64_corr;
               b3_denum -= b0_denum;
             }
             else {
-              b3_num = b1_num;
+              b3_num   = b1_num;
               b3_denum = b1_denum;
             }
           }
           else {
-            b3_num = b2_num;
+            b3_num   = b2_num;
             b3_denum = b2_denum;
           }
 
-          if ( test_temp_8 > 0 ) {
-            num_temp_u32 = b3_num;
-            denom_temp_u32 = b3_denum;
-          }
-          else {
-            num_temp_u32 = b3_denum;
-            denom_temp_u32 = b3_num;
-          }
+          a.num   = b3_num;
+          a.denom = b3_denum;
+          b.num   = b2_num;
+          b.denom = b2_denum;
         }
         else {
           b_num_avg    = b1_num * b2_denum;
@@ -2170,28 +2080,18 @@ void Reduce_Number() {
               Serial.println(x0_b_32);
             }
 
-            if ( test_temp_8 > 0 ) {
-              num_temp_u32 = b1_num;
-              denom_temp_u32 = b1_denum;
-            }
-            else {
-              num_temp_u32 = b1_denum;
-              denom_temp_u32 = b1_num;
-            }
+            a.num = b1_num;
+            a.denom = b1_denum;
+            b.num = b0_num;
+            b.denom = b0_denum;
 
             if ( b2_num < int32_max ) {
               if ( b2_num > b1_num ) {
-                if ( test_temp_8 > 0 ) {
-                  num_temp_u32 = b2_num;
-                  denom_temp_u32 = b2_denum;
-                }
-                else {
-                  num_temp_u32 = b2_denum;
-                  denom_temp_u32 = b2_num;
-                }
+                a.num   = b2_num;
+                a.denom = b2_denum;
+                b.num   = b1_num;
+                b.denom = b1_denum;
               }
-            }
-            else {
             }
           }
           else {
@@ -2201,21 +2101,17 @@ void Reduce_Number() {
               x0_b_32 = x0_b_64;
               Serial.println(x0_b_32);
             }
-            if ( test_temp_8 > 0 ) {
-              num_temp_u32 = b2_num;
-              denom_temp_u32 = b2_denum;
-            }
-            else {
-              num_temp_u32 = b2_denum;
-              denom_temp_u32 = b2_num;
-            }
+            a.num     = b2_num;
+            a.denom   = b2_denum;
+            b.num   = b1_num;
+            b.denom = b1_denum;
           }
         }
 
         if ( Debug_Level == 20 ) {
-          x0_b_32 = x0_b_64;
-          Serial.print("__--x0_b_32 = ");
-          Serial.println(x0_b_32);
+          // x0_b_32 = x0_b_64;
+          // Serial.print("__--x0_b_32 = ");
+          // Serial.println(x0_b_32);
           x0_b_32 = b1_num;
           Serial.print(x0_b_32);
           Serial.print(" b1 / b1 ");
@@ -2224,154 +2120,215 @@ void Reduce_Number() {
           x0_b_32 = b2_num;
           Serial.print(x0_b_32);
           Serial.print(" b2 / b2 ");
-           x0_b_32 = b2_denum;
+          x0_b_32 = b2_denum;
           Serial.println(x0_b_32);
         }
 
-        old_num_u64_0 = 0;
+        old_num_u64_a0 = 0;
       }
 
-      if ( old_num_u64_0 > 0 ) {
-        if ( a3_num >= int32_max ) {
+      if ( a3_num >= int32_max ) {
 
-          x0_a_64 = int32_max;
-          x0_a_64 -= a1_num;
-          if ( a2_num > 0 ) {
-            x0_a_64 /= a2_num;
+        x0_a_64 = int32_max;
+        x0_a_64 -= a1_num;
+        if ( a2_num > 0 ) {
+          x0_a_64 /= a2_num;
+        }
+        else {
+          if ( Debug_Level == 20 ) {
+            Serial.println("tuning_fraction");
           }
-          else {
-            x0_a_64 = tuning_fraction;
-            a2_num = 0;
-            a2_denum = 0;
+          x0_a_64  = tuning_fraction;
+          a2_num   = 0;
+          a2_denum = 0;
+        }
+
+        a3_num    = a1_num;
+        a3_num   += a2_num * x0_a_64;
+        a3_denum  = a1_denum;
+        a3_denum += a2_denum * x0_a_64;
+
+        if ( denom_temp_u64_a == 0 ) {
+          exact_value = true;    //   denom_temp_u64_a == 0
+        }
+
+        if ( x0_a_64 == 0 ) {
+          if ( Debug_Level == 20 ) {
+            Serial.print("-> x0_a_64 == 0 <- a2_num = ");
+            x0_a_32 = a2_num;
+            Serial.println(x0_a_32);
+          }
+          x0_a_64_corr  = int32_max;
+          x0_a_64_corr *= x0_a_64_test;
+          x0_a_64_corr /= a2_num;
+          --x0_a_64_corr;
+          if ( Debug_Level == 20 ) {
+            Serial.print("x0_a_64_corr = ");
+            x0_a_32 = x0_a_64_corr;
+            Serial.println(x0_a_32);
+            Serial.print("a1_num = ");
+            x0_a_32 = a1_num;
+            Serial.println(x0_a_32);
+            Serial.print("count_reduce = ");
+            Serial.println(count_reduce);
           }
 
-          a3_num = a1_num;
-          a3_num += a2_num * x0_a_64;
-          a3_denum = a1_denum;
-          a3_denum += a2_denum * x0_a_64;
-
-          if ( denom_temp_u64_a == 0 ) {
-            exact_value = true;    //   denom_temp_u64_a == 0
-          }
-
-          if ( x0_a_64 == 0 ) {
-            if ( Debug_Level == 20 ) {
-              Serial.print("-> x0_a_64 == 0 <- a2_num = ");
-              x0_a_32 = a2_num;
-              Serial.println(x0_a_32);
-            }
-            x0_a_64_corr = int32_max;
-            x0_a_64_corr *= x0_a_64_test;
-            x0_a_64_corr /= a2_num;
-            --x0_a_64_corr;
-            if ( Debug_Level == 20 ) {
-              Serial.print("x0_a_64_corr = ");
-              x0_a_32 = x0_a_64_corr;
-              Serial.println(x0_a_32);
-              Serial.print("a1_num = ");
-              x0_a_32 = a1_num;
-              Serial.println(x0_a_32);
-              Serial.print("count_reduce = ");
-              Serial.println(count_reduce);
-            }
-            if ( x0_a_64_corr > 8 ) {
-              if ( count_reduce > 2 ) {
-                a3_num = a1_num * x0_a_64_corr;
-                a3_num += a0_num;
-                a3_denum = a1_denum * x0_a_64_corr;
-                a3_denum += a0_denum;
-              }
-              else {
-                a3_num = a1_num;
-                a3_denum = a1_denum;
-              }
+          if ( x0_a_64_corr > 8 ) {
+            if ( count_reduce > 2 ) {
+              a3_num    = a1_num * x0_a_64_corr;
+              a3_num   += a0_num;
+              a3_denum  = a1_denum * x0_a_64_corr;
+              a3_denum += a0_denum;
             }
             else {
-              a3_num = a2_num;
-              a3_denum = a2_denum;
-            }
-
-            if ( test_temp_8 > 0 ) {
-              num_temp_u32 = a3_num;
-              denom_temp_u32 = a3_denum;
-            }
-            else {
-              num_temp_u32 = a3_denum;
-              denom_temp_u32 = a3_num;
+              a3_num   = a1_num;
+              a3_denum = a1_denum;
             }
           }
           else {
-            a_num_avg    = a1_num * a2_denum;
-            a_num_avg   += a1_denum * a2_num;
-            a_denum_avg  = a1_denum * a2_denum;
-            a_denum_avg *= 2;
-            a_num_avg   *= a3_denum;
-            a_denum_avg *= a3_num;
+            a3_num = a2_num;
+            a3_denum = a2_denum;
+          }
 
-            if ( a_num_avg >= a_denum_avg ) {
-              if ( Debug_Level == 20 ) {
-                Serial.println("-> x0_a_64_max > int32_max <-");
-                Serial.print(" x0_a_64 = ");
-                x0_a_32 =  x0_a_64;
-                Serial.println(x0_a_32);
-              }
+          a.num   = a3_num;
+          a.denom = a3_denum;
+          b.num   = a2_num;
+          b.denom = a2_denum;
+        }
+        else {
+          a_num_avg    = a1_num * a2_denum;
+          a_num_avg   += a1_denum * a2_num;
+          a_denum_avg  = a1_denum * a2_denum;
+          a_denum_avg *= 2;
+          a_num_avg   *= a3_denum;
+          a_denum_avg *= a3_num;
 
-              if ( test_temp_8 > 0 ) {
-                num_temp_u32 = a1_num;
-                denom_temp_u32 = a1_denum;
-              }
-              else {
-                num_temp_u32 = a1_denum;
-                denom_temp_u32 = a1_num;
-              }
-
-              if ( a2_num < int32_max ) {
-                if ( a2_num > a1_num ) {
-                  if ( test_temp_8 > 0 ) {
-                    num_temp_u32 = a2_num;
-                    denom_temp_u32 = a2_denum;
-                  }
-                  else {
-                    num_temp_u32 = a2_denum;
-                    denom_temp_u32 = a2_num;
-                  }
-                }
-              }
-              else {
-              }
+          if ( a_num_avg >= a_denum_avg ) {
+            if ( Debug_Level == 20 ) {
+              Serial.println("-> x0_a_64_max > int32_max <-");
+              Serial.print(" x0_a_64 = ");
+              x0_a_32 =  x0_a_64;
+              Serial.println(x0_a_32);
             }
-            else {
-              if ( Debug_Level == 20 ) {
-                Serial.println("-> x0_a_64_max <= int32_max <-");
-                Serial.print("x0_a_64_max = ");
-                x0_a_32 = x0_a_64_max;
-                Serial.println(x0_a_32);
-              }
-              if ( test_temp_8 > 0 ) {
-                num_temp_u32 = a2_num;
-                denom_temp_u32 = a2_denum;
-              }
-              else {
-                num_temp_u32 = a2_denum;
-                denom_temp_u32 = a2_num;
+
+            a.num     = a1_num;
+            a.denom   = a1_denum;
+            b.num   = a0_num;
+            b.denom = a0_denum;
+
+            if ( a2_num < int32_max ) {
+              if ( a2_num > a1_num ) {
+                a.num   = a2_num;
+                a.denom = a2_denum;
+                b.num   = a1_num;
+                b.denom = a1_denum;
               }
             }
           }
-          old_num_u64_0 = 0;
-        } //
+          else {
+            if ( Debug_Level == 20 ) {
+              Serial.println("-> x0_a_64_max <= int32_max <-");
+              Serial.print("x0_a_64_max = ");
+              x0_a_32 = x0_a_64_max;
+              Serial.println(x0_a_32);
+            }
+            if ( old_num_u64_a0 == 0 ) {
+              b.num   = a.num;
+              b.denom = a.denom;
+            }
+            else {
+              b.num   = a1_num;
+              b.denom = a1_denum;
+            }
+            a.num   = a2_num;
+            a.denom = a2_denum;            
+          }
+        }
+
+        if ( Debug_Level == 20 ) {
+          // x0_b_32 = x0_b_64;
+          // Serial.print("__--x0_b_32 = ");
+          // Serial.println(x0_b_32);
+          x0_b_32 = a1_num;
+          Serial.print(x0_b_32);
+          Serial.print(" a1 / a1 ");
+          x0_b_32 = a1_denum;
+          Serial.println(x0_b_32);
+          x0_b_32 = a2_num;
+          Serial.print(x0_b_32);
+          Serial.print(" a2 / a2 ");
+          x0_b_32 = a2_denum;
+          Serial.println(x0_b_32);
+        }
+
+        old_num_u64_a0 = 0;
       }
     }
   }
 
   if ( first_value == true ) {
-    if ( test_temp_8 > 0 ) {
-      num_temp_u32 = a1_num;
-      denom_temp_u32 = a1_denum;
+  	first_value = false;
+    a.num   = b2_num;
+    a.denom = b2_denum;
+    b.num   = b1_num;
+    b.denom = b1_denum;
+  }
+
+  if ( Debug_Level == 22 ) {
+    a_64.num    = expo_10_4;
+    a_64.num   *= a.num;
+    a_64.denom  = expo_10_4;
+    a_64.denom *= a.denom;
+    b_64.num    = expo_10_4;
+    b_64.num   *= b.num;
+    b_64.denom  = expo_10_4;
+    b_64.denom *= b.denom;
+    test_cmp_64 = compare(b_64, a_64);
+  }
+    
+  test_cmp_32 = compare(b, a);
+  
+  if ( Debug_Level == 22 ) {
+    Serial.print(b.num);
+    Serial.print("  _  /  _  ");
+    Serial.print(b.denom);
+    if ( test_cmp_32 == 0 ) {
+    	Serial.print("   =");
     }
-    else {
-      num_temp_u32 = a1_denum;
-      denom_temp_u32 = a1_num;
+    if ( test_cmp_32 < 0 ) {
+    	Serial.print("   <");
     }
+    if ( test_cmp_32 > 0 ) {
+    	Serial.print("   >");
+    }
+    if ( test_cmp_64 == 0 ) {
+    	Serial.println("   =");
+    }
+    if ( test_cmp_64 < 0 ) {
+    	Serial.println("   <");
+    }
+    if ( test_cmp_64 > 0 ) {
+    	Serial.println("   >");
+    }
+    Serial.print(a.num);
+    Serial.print(" a_b / a_b ");
+    Serial.println(a.denom);
+  }
+
+  if ( test_cmp_32 > 0 ) {
+    a = compare_extra(a, b);
+  }
+
+  if ( test_cmp_32 < 0 ) {
+    a = compare_extra(b, a);
+  }
+
+  num_temp_u32   = a.num;
+  denom_temp_u32 = a.denom;
+
+  if ( test_temp_8 < 0 ) {
+  	num_temp_u32   = a.denom;  // Tausch
+    denom_temp_u32 = a.num;    // Tausch
   }
 
   Expand_Number();
@@ -2431,7 +2388,7 @@ void Display_Number() {
     Serial.println("'");
   }
 
-  if ( temp_op_ >= 128 ) {
+  if ( temp_op_ >= Mem_0 ) {
     Rad_in_out = true;
     Deg_in_out = false;
   }
@@ -2852,9 +2809,9 @@ AVRational_32 mul(AVRational_32 a, AVRational_32 b) {
   }
 
   if ( mul_temp_u32 > 0 ) {
-    temp_32.num = num_temp_u64;
-    temp_32.num *= mul_temp_u32;    // expand
-    temp_32.denom = denom_temp_u64;
+    temp_32.num    = num_temp_u64;
+    temp_32.num   *= mul_temp_u32;    // expand
+    temp_32.denom  = denom_temp_u64;
     temp_32.denom *= mul_temp_u32;  // expand
   }
   else {   // num_temp_u64 ,  denom_temp_u64
@@ -3009,6 +2966,161 @@ AVRational_32 min_x(AVRational_32 a) {
     temp_32.denom = a.denom;
   }
   return temp_32;
+}
+
+int8_t compare(Rational_32 a, Rational_32 b) {
+  uint64_t test_a = a.num;
+  uint64_t test_b = b.num;
+  int8_t   comp = 0;
+	
+  test_a *= b.denom;
+  test_b *= a.denom;
+	
+  if ( test_a > test_b ) {
+    comp = 1;
+    return comp;
+  }
+
+  if ( test_a < test_b ) {
+    comp = -1;
+    return comp;
+  }
+	
+  return comp;
+}
+
+int8_t compare(Rational_64 a, Rational_64 b) {
+	  int8_t comp    = 0;
+  uint64_t test_a  = 0;  // Factor
+  uint64_t test_b  = 0;	 // Factor
+  uint32_t test_print = 0;  	
+  
+  while ( comp == 0 ) {
+    test_a  = a.num;  // Factor
+    test_a /= a.denom;
+    test_b  = b.num;	 // Factor
+    test_b /= b.denom;
+
+    if ( test_a > test_b ) {
+      comp = 1;
+      return comp;
+    }
+
+    if ( test_a < test_b ) {
+      comp = -1;
+      return comp;
+    }
+  
+    test_a *= a.denom;
+    a.num  -= test_a;
+  
+    if ( a.num == 0 ) {
+      if ( Debug_Level == 22 ) {
+      	test_print = a.denom;
+     	  Serial.print("  --> a_denom ");
+    	  Serial.print(test_print);
+      	test_print = b.denom;
+     	  Serial.print("  --> b_denom ");
+    	  Serial.println(test_print);
+ 	    }
+
+      if ( a.denom > b.denom ) {
+        comp = 1;
+        return comp;
+      }
+
+      if ( a.denom < b.denom ) {
+        comp = -1;
+        return comp;
+      }
+  
+      return comp;
+    }
+  
+    test_b *= b.denom;
+    b.num  -= test_b;
+
+    test_a  = a.denom;  // Factor
+    test_a /= a.num;
+    test_b  = b.denom;	 // Factor
+    test_b /= b.num;
+
+    if ( test_a > test_b ) {
+      comp = -1;
+      return comp;
+    }
+
+    if ( test_a < test_b ) {
+      comp = 1;
+      return comp;
+    }
+
+    test_a  *= a.num;
+    a.denom -= test_a;
+  
+    if ( a.denom == 0 ) {
+      if ( Debug_Level == 22 ) {
+      	test_print = a.num;
+     	  Serial.print("  --> a_num ");
+    	  Serial.print(test_print);
+      	test_print = b.num;
+     	  Serial.print("  --> b_num ");
+    	  Serial.println(test_print);
+ 	    }
+
+      if ( a.num > b.num ) {
+        comp = -1;
+        return comp;
+      }
+
+      if ( a.num < b.num ) {
+        comp = 1;
+        return comp;
+      }
+
+      return comp;
+    }
+  
+    test_b  *= b.num;
+    b.denom -= test_b;
+  }
+}
+
+Rational_32 compare_extra(Rational_32 a, Rational_32 b) {
+	Rational_64 calc;
+	Rational_64 input;
+	int8_t comp = 0;
+  uint64_t test = 0; 
+	  	
+  input.num   = num_temp_u64;
+  input.denom = denom_temp_u64;
+	
+  calc.num  = a.num;
+  calc.num *= b.denom;
+  test      = b.num;
+  test     *= a.denom;
+  calc.num += test;
+	
+  calc.denom  = a.denom;
+  calc.denom *= b.denom;
+  calc.denom *= 2;
+	
+  comp = compare(calc, input);
+	
+  if ( comp > 0 ) {
+    return a;	
+  }
+	
+  if ( comp < 0 ) {
+    return b;	
+  }
+
+  if ( a.num > b.num ) {
+    return a;
+  }
+  else {
+    return b;
+  }
 }
 
 void calc_stack(uint8_t count_stack) {
@@ -3221,9 +3333,9 @@ void Test_all_function() {
     time_start = millis();
 
     Serial.println(" ");
-    for ( int32_t index = 100; index <= 10000; index += 100 ) {
-      // Serial.print(index);
-      // Serial.print("  ");
+    for ( int32_t index = 100; index <= 10000; index += 1 ) {
+      Serial.print(index);
+      Serial.print("  ");
       calc_32.expo = 0;
       num_temp_u32 = index;
       denom_temp_u32 = 100;
@@ -3247,22 +3359,31 @@ void Test_all_function() {
 
       calc_32.num = num_temp_u32;
       calc_32.denom = denom_temp_u32;
-     /*
+    /*
       Serial.print(calc_32.num);
       Serial.print("  ");
       Serial.print(calc_32.denom);
       Serial.print("  ");
       Serial.print(calc_32.expo);
       Serial.print("  ");
-     */
+    */ 
       test_32 = sqrt(calc_32);
+    /*
+      Serial.print(test_32.num);
+      Serial.print("  ");
+      Serial.print(test_32.denom);
+      Serial.print("  ");
+      Serial.print(test_32.expo);
+      Serial.print(" -> ");
+    */  
+      test_32 = mul(test_32, test_32);
 
       Serial.print(test_32.num);
       Serial.print("  ");
       Serial.print(test_32.denom);
       Serial.print("  ");
       Serial.print(test_32.expo);
-      Serial.println(" ");
+      Serial.println("  ");
 
     }
     test_index = false;
@@ -4406,6 +4527,12 @@ void setup() {
 
 // the loop routine runs over and over again forever:
 void loop() {
+	
+	if ( Countdown_OFF < Countdown_Off_0 ) {
+		if ( Countdown_OFF > 0 ) {
+      digitalWrite(On_Off_PIN, HIGH);
+	  }
+	}
 
   if ( Switch_Code > 0 ) {     // Main Responce about Switch
 
@@ -4469,7 +4596,7 @@ void loop() {
         }
         Display_Status_new = 152;
         Display_Off();
-        Countdown_OFF = Countdown_Start;      // Switch Off  2x Beep
+        Countdown_OFF = Countdown_Off_2;      // Switch Off  2x Beep
         break;
 
       case 125:                //    Off after  5min
@@ -4478,7 +4605,7 @@ void loop() {
         }
         Display_Status_new = 152;
         Display_Off();
-        Countdown_OFF = Countdown_Start_Off;  // Switch Off  3x Beep
+        Countdown_OFF = Countdown_Off_3;  // Switch Off  3x Beep
         break;
 
       case 90:                 //    _CE_
@@ -5196,7 +5323,7 @@ void loop() {
               mem_pointer = mem_stack_count;
               if ( Start_input != Display_Error ) {
                 mem_pointer = 0;
-                temp_op_ = 128;
+                temp_op_ = Mem_0;
                 mem_stack_input[ mem_pointer ] = mul(mem_stack_input[ mem_pointer ], to_xx[ 13 ]);
                 mem_stack_input[ mem_pointer ].op = temp_op_;
                 if ( max_input == false ) {
@@ -6230,14 +6357,14 @@ void loop() {
   if ( time_7500ms == true ) { // here al that will make in 7.5 sec
     time_7500ms = false;
     ++index_5min;              // Switch Off in 5min
-    if ( index_5min == 23 ) {  // 23 - after 3min
+    if ( index_5min == pendel_3min ) {  // 23 - after 3min
       if (Pendular_on == false) {
         Pendular_on = true;
         Start_mem = Start_input;
         Beep_on_off = false;
       }
     }
-    if ( index_5min == 39 ) {  // 39 - after 5min
+    if ( index_5min == time_5min ) {  // 39 - after 5min
       Beep_on_off = true;
       Switch_Code = 125;       // Off 5min
     }
@@ -6395,27 +6522,38 @@ void loop() {
     if ( Countdown_OFF > 0 ) {
       --Countdown_OFF;
 
+
       switch (Countdown_OFF) { // Off
 
-        case 0:
-        case 1:
-          digitalWrite(On_Off_PIN, HIGH);
+        case Countdown_Off_0 - 1:
+          reboot();
           break;
 
-        case 2:
-        case 3:
+        case Countdown_Off_0:
           pinMode(On_Off_PIN, OUTPUT);
           break;
 
-        case 4:
-        case 5:
+        case Countdown_Off_0 + 1:
           pinMode(On_Off_PIN, INPUT_PULLUP);
           Power_on = false;
           break;
 
-        case 16:
-        case 32:
-        case 48:
+        case 25:
+          strcpy( display_string, string_start );
+          display_string[2]  = '#';
+          Display_new = true;
+          break;
+
+        case 35:
+          Beep__on();
+          break;
+
+        case Countdown_Off_1 - 10:
+        	Pendular_on = false;
+          strcpy( display_string, string_end );
+          Display_new = true;
+        case Countdown_Off_2 - 10:
+        case Countdown_Off_3 -  5:
           Beep__on();
           break;
       }
@@ -7257,8 +7395,7 @@ uint16_t temp_pwm = test_pwm;
       Timer1.pwm(PWM_Pin, temp_pwm);    // duty cycle goes from 0 to 1023
     }
     else {
-      Timer1.disablePwm(PWM_Pin);
-      digitalWrite(PWM_Pin, LOW);
+      Timer1.pwm(PWM_Pin, 0);    // duty cycle goes from 0 to 1023
     }
   }
 
