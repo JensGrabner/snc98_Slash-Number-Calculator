@@ -81,7 +81,6 @@
                        //  7 - get_Expo
                        //  8 - get mem_stack "=" Get_Mantisse();
                        //  9 - Display_Number();
-                       // 10 - x^2 Test;
                        // 11 - Error_Test;
                        // 12 - Memory_Plus Test;
                        // 13 - Protokoll Statepoint
@@ -188,7 +187,6 @@ uint32_t time_old      = 0;
 #define MR_0        77
 #define FIX_0       93
 #define M_plus_0   102
-// #define Mem_0      128  // 137
 #define to_0       191
 #define to_9       200
 #define EE_0       201   // Beep
@@ -2965,6 +2963,90 @@ AVRational_32 min_x(AVRational_32 a) {
   return temp_32;
 }
 
+AVRational_32 floor_(AVRational_32 a, int8_t expo_test) {
+// floor_(x) returns the largest integer n such that n <= x
+  denom_temp_u64  = a.denom;
+  temp_32.expo    = a.expo;
+
+  if ( a.expo > expo_test ) {
+    Error_String();
+    display_string[2] = '^';
+    display_string[13] = '^';
+    if ( a.num < 0 ) {
+      display_string[2] = 'U';
+      display_string[13] = 'U';
+    }
+    return a;
+  }
+  if ( a.expo == expo_test ) {
+  	if (abs(a.num) >= abs(a.denom)) {
+      Error_String();
+      display_string[2] = '^';
+      display_string[13] = '^';
+      if ( a.num < 0 ) {
+        display_string[2] = 'U';
+        display_string[13] = 'U';
+      }
+      return a;
+  	}
+  }
+
+  if ( a.num > 0 ) {
+    test_signum_8 = 1;
+    num_temp_u64  = a.num;
+  }
+  else {
+    test_signum_8 = -1;
+    num_temp_u64  = -a.num;
+  }
+
+
+  if ( a.expo == 0 ) {
+    if ( denom_temp_u64 > num_temp_u64) {
+      temp_32.num   = int32_max;
+      temp_32.num  *= test_signum_8;
+      temp_32.denom = int32_max;
+      temp_32.expo  = expo_min_input;
+      return temp_32;
+    }
+  }
+  
+  if ( a.expo < 0 ) {
+    temp_32.num   = int32_max;
+    temp_32.num  *= test_signum_8;
+    temp_32.denom = int32_max;
+    temp_32.expo  = expo_min_input;
+    return temp_32;
+  }
+  
+  num_temp_u64 *= expo_10[temp_32.expo];
+  temp_64.num   = num_temp_u64;
+  temp_64.num  /= denom_temp_u64;
+  
+  temp_32.num   = temp_64.num;
+  temp_32.denom = expo_10[temp_32.expo];
+  
+  num_temp_u32  = int32_max;
+  if ( temp_32.num > temp_32.denom ) {
+    num_temp_u32 /= temp_32.num;
+  }
+  else {
+    num_temp_u32 /= temp_32.denom;
+  }
+  
+  temp_32.num   *= num_temp_u32;     // Expand Number 
+  temp_32.num   *= test_signum_8;
+  temp_32.denom *= num_temp_u32;     // Expand Number 
+
+  return temp_32;
+}
+
+AVRational_32 frac(AVRational_32 a) {
+// returns the fractional part of x
+  temp_32 = add(a, min_x(floor_(a, 8)), 1);
+  return temp_32;
+}
+
 int8_t compare(Rational_32 a, Rational_32 b) {
   uint64_t test_a = a.num;
   uint64_t test_b = b.num;
@@ -3180,11 +3262,11 @@ void calc_stack(uint8_t count_stack) {
           break;
 
         case 94:  //   _/p/_ 
-        	temp_32 = sqrt(add(mul(number_stack[1], number_stack[1]), mul(number_stack[2], number_stack[2]), 1));
+        	temp_32 = sqrt(add(square(number_stack[1]), square(number_stack[2]), 1));
           break;
 
         case 211: //   _/p/ /p/_ 
-        	temp_32 = sqrt(add(mul(number_stack[1], number_stack[1]), min_x(mul(number_stack[2], number_stack[2])), 1));
+        	temp_32 = sqrt(add(square(number_stack[1]), min_x(square(number_stack[2])), 1));
           break;
 
         default:
@@ -3258,6 +3340,11 @@ AVRational_32 sqrt(AVRational_32 a) {
      temp_32.num  *= -1;
   }
 
+  return temp_32;
+}
+
+AVRational_32 square(AVRational_32 a) {
+  temp_32 = mul(a, a);
   return temp_32;
 }
 
@@ -3391,7 +3478,7 @@ void Test_all_function() {
       Serial.print("  ");
       Serial.print(calc_32.expo);
       Serial.print("  ");
-    */ 
+ 
       test_32 = sqrt(calc_32);
       Serial.print(test_32.num);
       Serial.print("  ");
@@ -3399,17 +3486,15 @@ void Test_all_function() {
       Serial.print("  ");
       Serial.print(test_32.expo);
       Serial.println(" -> ");
-    /*
-
-      test_32 = mul(test_32, test_32);
+    */
+      test_32 = square(test_32);
 
       Serial.print(test_32.num);
       Serial.print("  ");
       Serial.print(test_32.denom);
       Serial.print("  ");
       Serial.print(test_32.expo);
-      Serial.println("  ");
-    */  
+      Serial.println("  "); 
 
     }
     test_index = false;
@@ -3441,7 +3526,7 @@ void Test_all_function() {
     }
     Serial.println(" ");
     for ( int32_t index = 1; index <= 5; index += 1 ) {
-      calc_32 = mul(calc_32, calc_32);
+      calc_32 = square(calc_32);
 
       Serial.print(calc_32.num);
       Serial.print(" / ");
@@ -3468,7 +3553,7 @@ void Test_all_function() {
       Serial.print(calc_32.expo);
       Serial.println(" ");
 
-      calc_32 = mul(calc_32, calc_32);
+      calc_32 = square(calc_32);
 
       Serial.print(calc_32.num);
       Serial.print(" / ");
@@ -4485,6 +4570,58 @@ void Function_2_display() {
   Display_Number();
 }
 
+void Function_1_number() {
+  if ( Start_input < Input_Memory ) {      // Input Number
+    Get_Number( 0 );
+  }
+  if ( (Start_input == Display_Result) || (Start_input == Display_M_Plus) ) {
+    mem_stack_count = 1;
+    mem_pointer = mem_stack_count;
+    copy_input_left_right( mem_pointer, 0 );
+    Start_input = Input_Operation_0;
+  }
+  Input_Operation_2_function();
+  if ( (Start_input == Input_Operation_0) || (Start_input == Input_Memory) ) {
+    mem_save = false;
+    mem_exchange = false;
+    Start_input = Input_Operation_0;
+    mem_pointer = 0;
+    
+    switch (Switch_Code) {
+    	
+      case 33:                 //    _1/x_
+      	mem_stack_input[ mem_pointer ] = div_x(mem_stack_input[ mem_pointer ]);
+      	break;
+
+    	case 117:                //    _x^2_
+    	  mem_stack_input[ mem_pointer ] = square(mem_stack_input[ mem_pointer ]);
+    	  break;
+    	  
+    	case 118:                //    _sqrt()_
+    	  mem_stack_input[ mem_pointer ] = sqrt(mem_stack_input[ mem_pointer ]);
+    	  break;
+
+    	case 170:                //    _Int_
+    		mem_stack_input[ mem_pointer ] = floor_(mem_stack_input[ mem_pointer ], 8);
+    		break; 
+    	
+    	case 171:                //    _Frac_
+    		mem_stack_input[ mem_pointer ] = frac(mem_stack_input[ mem_pointer ]);
+    		break; 
+    }
+    
+    Error_Test();
+    if ( Start_input != Display_Error ) {
+      Function_2_display();
+    }
+    else {
+      mem_pointer = mem_stack_count;
+    }
+  }
+  Display_new = true;
+  Beep__on();
+}
+	
 boolean Test_buffer = false;
 uint8_t Number_of_buffer = 0;
 // Create a RingBufCPP object designed to hold a Max_Buffer of Switch_down
@@ -4690,32 +4827,7 @@ void loop() {
           if ( Debug_Level == 5 ) {
             Serial.println("1/x");
           }
-          if ( Start_input < Input_Memory ) {      // Input Number
-            Get_Number( 0 );
-          }
-          if ( (Start_input == Display_Result) || (Start_input == Display_M_Plus) ) {
-            mem_stack_count = 1;
-            mem_pointer = mem_stack_count;
-            copy_input_left_right( mem_pointer, 0 );
-            Start_input = Input_Operation_0;
-          }
-          Input_Operation_2_function();
-          if ( (Start_input == Input_Operation_0) || (Start_input == Input_Memory) ) {
-            mem_save = false;
-            mem_exchange = false;
-            Start_input = Input_Operation_0;
-            mem_pointer = 0;
-            mem_stack_input[ mem_pointer ] = div_x(mem_stack_input[ mem_pointer ]);
-            Error_Test();
-            if ( Start_input != Display_Error ) {
-              Function_2_display();
-            }
-            else {
-              mem_pointer = mem_stack_count;
-            }
-          }
-          Display_new = true;
-          Beep__on();
+          Function_1_number();
           break;
 
         case 34:                 //    lb
@@ -4805,7 +4917,7 @@ void loop() {
           Beep__on();
           break;
 
-        case 37:                 //    _Deg
+        case 37:                 //    _Deg_
           if ( Debug_Level == 5 ) {
             Serial.println("Deg");
           }
@@ -5337,7 +5449,7 @@ void loop() {
           }
           break;
 
-        case 64:                 //    _Rad
+        case 64:                 //    _Rad_
           if ( Debug_Level == 5 ) {
             Serial.println("Rad");
           }
@@ -5755,70 +5867,14 @@ void loop() {
           if ( Debug_Level == 5 ) {
             Serial.println("x^2");
           }
-          if ( Start_input < Input_Memory ) {      // Input Number
-            Get_Number( 0 );
-          }
-          if ( (Start_input == Display_Result) || (Start_input == Display_M_Plus) ) {
-            mem_stack_count = 1;
-            mem_pointer = mem_stack_count;
-            copy_input_left_right( mem_pointer, 0 );
-            Start_input = Input_Operation_0;
-          }
-          Input_Operation_2_function();
-          if ( (Start_input == Input_Operation_0) || (Start_input == Input_Memory) ) {
-            Start_input = Input_Operation_0;
-            mem_pointer = 0;
-            mem_stack_input[ mem_pointer ] = mul(mem_stack_input[ mem_pointer ], mem_stack_input[ mem_pointer ]);
-
-            if ( Debug_Level == 10 ) {
-              Serial.print("= ____ ");
-              Serial.print(mem_stack_input[ mem_pointer ].num);
-              Serial.print(" / ");
-              Serial.print(mem_stack_input[ mem_pointer ].denom);
-              Serial.print(" x 10^ ");
-              Serial.println(mem_stack_input[ mem_pointer ].expo);
-            }
-            Error_Test();
-            if ( Start_input != Display_Error ) {
-              Function_2_display();
-            }
-            else {
-              mem_pointer = mem_stack_count;
-            }
-          }
-          Display_new = true;
-          Beep__on();
+          Function_1_number();
           break;
 
         case 118:                //    _sqrt()_
           if ( Debug_Level == 5 ) {
             Serial.println("sqrt()");
           }
-          if ( Start_input < Input_Memory ) {      // Input Number
-            Get_Number( 0 );
-          }
-          if ( (Start_input == Display_Result) || (Start_input == Display_M_Plus) ) {
-            mem_stack_count = 1;
-            mem_pointer = mem_stack_count;
-            copy_input_left_right( mem_pointer, 0 );
-            Start_input = Input_Operation_0;
-          }
-          Input_Operation_2_function();
-          if ( (Start_input == Input_Operation_0) || (Start_input == Input_Memory) ) {
-            Start_input = Input_Operation_0;
-            mem_pointer = 0;
-            mem_stack_input[ mem_pointer ] = sqrt(mem_stack_input[ mem_pointer ]);
-
-            Error_Test();
-            if ( Start_input != Display_Error ) {
-              Function_2_display();
-            }
-            else {
-              mem_pointer = mem_stack_count;
-            }
-          }
-          Display_new = true;
-          Beep__on();
+          Function_1_number();
           break;
 
         case 119:                //    x!
@@ -6019,18 +6075,18 @@ void loop() {
           Beep__on();
           break;
 
-        case 170:                //    Int
+        case 170:                //    _Int_
           if ( Debug_Level == 5 ) {
             Serial.println("Int");
           }
-          Beep__on();
+          Function_1_number();
           break;
 
-        case 171:                //    Frac
+        case 171:                //    _Frac_
           if ( Debug_Level == 5 ) {
             Serial.println("Frac");
           }
-          Beep__on();
+          Function_1_number();
           break;
 
         case 172:                //    x^3
@@ -7847,5 +7903,4 @@ uint16_t temp_pwm = test_pwm;
       }
     }
   }
-}
-
+} 
