@@ -253,4 +253,120 @@
         return itoa_(u, p);
     }
 
+    char* itoa__(uint8_t u, char* p) {
+        *p++ = ' ';
+        *p++ = ' ';
+        uint8_t d = 0;
+        uint8_t n;
+             if (u >  99) n = digits_8(u,  10, d, p, 3);
+        else              n = digits_8(u,   1, d, p, 2);
+        return itoa_8( u, p, d, n );
+    }
+
+    char* itoa__(uint16_t u, char* p) {
+        uint8_t lower = u;
+        *p++ = ' ';
+        *p++ = ' ';
+        if (lower == u) return itoa_(lower, p);
+
+        uint16_t d = 0;
+        uint8_t n;
+             if (u >  9999) n = digits_16(u,  1000, d, p, 5);
+        else if (u <   100) n = digits_16(u,     1, d, p, 2);
+        else                n = digits_16(u,   100, d, p, 4);
+        return itoa_16( u, p, d, n );
+    }
+
+    char* itoa__(uint32_t u, char* p) {
+        uint16_t lower = u;
+        *p++ = ' ';
+        *p++ = ' ';
+        if (lower == u) return itoa_(lower, p);
+
+        uint32_t d = 0;
+        uint8_t n;
+             if (u >  99999999) n = digits_32(u, 100000000, d, p, 10);
+        else if (u <       100) n = digits_32(u,         1, d, p,  2);
+        else if (u <     10000) n = digits_32(u,       100, d, p,  4);
+        else if (u <   1000000) n = digits_32(u,     10000, d, p,  6);
+        else                    n = digits_32(u,   1000000, d, p,  8);
+        return itoa_32( u, p, d, n );
+    }
+
+    char* itoa__(uint64_t u, char* p) {
+        uint32_t lower = u;
+        *p++ = ' ';
+        *p++ = ' ';
+        if (lower == u) return itoa_(lower, p);
+
+        uint64_t d = 0;
+        uint64_t upper = 0;
+
+        upper  = u / 1000000000;
+        p  = itoa_(upper, p);
+        u -= upper * 1000000000;
+        d  =      u / 100000000;
+        p  = out<char>('0'+d, p);
+        return itoa_32( u, p, d, 9 );
+    }
+
+    char* itoa__(int8_t i, char* p) {
+        uint8_t u;
+        if (i < 0) {
+            *p++ = ' ';
+            *p++ = '-';
+            u = -i;
+        }
+        else {
+            *p++ = ' ';
+            *p++ = ' ';
+            u = i;
+        }
+        return itoa_(u, p);
+    }
+
+    char* itoa__(int16_t i, char* p) {
+        uint16_t u;
+        if (i < 0) {
+            *p++ = ' ';
+            *p++ = '-';
+            u = -i;
+        }
+        else {
+            *p++ = ' ';
+            *p++ = ' ';
+            u = i;
+        }
+        return itoa_(u, p);
+    }
+
+    char* itoa__(int32_t i, char* p) {
+        uint32_t u;
+        if (i < 0) {
+            *p++ = ' ';
+            *p++ = '-';
+            u = -i;
+        }
+        else {
+            *p++ = ' ';
+            *p++ = ' ';
+            u = i;
+        }
+        return itoa_(u, p);
+    }
+
+    char* itoa__(int64_t i, char* p) {
+        uint64_t u;
+        if (i < 0) {
+            *p++ = ' ';
+            *p++ = '-';
+            u = -i;
+        }
+        else {
+            *p++ = ' ';
+            *p++ = ' ';
+            u = i;
+        }
+        return itoa_(u, p);
+    }
 

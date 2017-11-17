@@ -62,6 +62,8 @@
 #include <BitBool.h>
 // https://github.com/wizard97/Embedded_RingBuf_CPP
 #include <RingBufCPP.h>
+// https://github.com/calccrypto/uint128_t
+// #include <uint128_t.h>
 
 #include <stdlib.h>         // for itoa(); ltoa();
 #include <string.h>
@@ -201,6 +203,41 @@ uint32_t time_old      = 0;
 #define int30_max     1018629247     // = int32_max / 2
 #define int15_max          32767     // = 2^15 - 1
 
+struct uint96_t {
+   uint32_t top;
+   uint32_t mid;
+   uint32_t bottom;
+}; 
+
+struct uint96_high {
+   uint64_t top_mid;
+   uint32_t bottom;
+}; 
+
+struct uint96_low {
+   uint32_t top;
+   uint64_t mid_bottom;
+}; 
+
+static union {
+   uint96_t     a_1_1_1;
+   uint96_high  a_2_1;
+   uint96_low   a_1_2;
+};
+
+struct uint64_2 {
+   uint32_t top;
+   uint32_t bottom;
+};
+
+static union {
+   uint64_t     a_2;
+   uint64_2     a_1_1;
+};
+
+uint96_t num_temp_u96;
+uint96_t denom_temp_u96;
+
 /*
  * rational number "numerator / denominator"
  */
@@ -276,6 +313,7 @@ static const uint64_t expo_10_[9] = {
   expo_10_10, expo_10_11, expo_10_12, expo_10_13, expo_10_14,
   expo_10_15, expo_10_16, expo_10_17, expo_10_18 };
                                               //  9214364837600034815 = 2^63 - 2^53 - 1
+#define expo_test_10aaa       0x3097AE14ULL   //            815246868 = expo_test_0a / 2^31
 #define expo_test_9a          0x685A0267ULL   //           1750729319 x 0,00000000019
 #define expo_test_9b          0x9F4603ABULL   //           2672165803 x 0,00000000029
 #define expo_test_9          0x10D1E0632ULL   //           4515038770 x 0,00000000049
@@ -409,6 +447,7 @@ uint64_t old_denum_u64_0 = 1;
 uint64_t calc_temp_u64_0 = 1;
 uint64_t calc_temp_u64_1 = 1;
 uint64_t calc_temp_u64_2 = 1;
+ int64_t gcd_temp_64     = 1;
 
 uint32_t num_temp_u32    = 1;
 uint32_t denom_temp_u32  = 1;
@@ -1462,11 +1501,11 @@ int32_t gcd_iter_32(int32_t u_0, int32_t v_0) {
   return abs(u_0);      // return u < 0 ? -u : u; /* abs(u) */
 }
 
-void Error_String() {
+void Error_String(uint8_t a) {
   Clear_String();
   strcpy( display_string, string_start );
   display_string[1]  = ' ';
-  display_string[2]  = '#';
+  display_string[2]  = a;
   display_string[3]  = '-';
   display_string[4]  = '#';
   display_string[5]  = 'E';
@@ -1477,6 +1516,7 @@ void Error_String() {
   display_string[10] = ' ';
   display_string[11] = '#';
   display_string[12] = '-';
+  display_string[13] = a;
   Display_new = true;
   Start_input = Display_Error;
 }
@@ -1576,30 +1616,22 @@ void Error_Test() {
     Serial.println(mem_stack_input[mem_pointer].expo);
   }
   if ( mem_stack_input[mem_pointer].expo > expo_max ) {
-    Error_String();
-    display_string[2] = '^';
-    display_string[13] = '^';
+    Error_String('^');
   }
   if ( mem_stack_input[mem_pointer].expo == expo_max ) {
     num_temp_u32   = abs(mem_stack_input[mem_pointer].num) / 9;
     denom_temp_u32 = abs(mem_stack_input[mem_pointer].denom) / 10;
     if ( num_temp_u32 > denom_temp_u32 ) {
-      Error_String();
-      display_string[2] = '^';
-      display_string[13] = '^';
+      Error_String('^');
     }
   }
   if ( mem_stack_input[mem_pointer].expo == expo_min ) {
     if ( abs(mem_stack_input[mem_pointer].num) < abs(mem_stack_input[mem_pointer].denom) ) {
-      Error_String();
-      display_string[2] = 'U';
-      display_string[13] = 'U';
+      Error_String('U');
     }
   }
   if ( mem_stack_input[mem_pointer].expo < expo_min ) {
-    Error_String();
-    display_string[2] = 'U';
-    display_string[13] = 'U';
+    Error_String('U');
   }
 }
 
@@ -2539,9 +2571,7 @@ void Display_Number() {
   }
 
   if ( abs(mem_stack_input[mem_pointer].denom) == 0 ) {
-    Error_String();
-    display_string[2] = '0';
-    display_string[13] = '0';
+    Error_String('0');
   }
 
   if ( Display_Status_new == 40 ) {
@@ -2719,7 +2749,16 @@ void Expand_Reduce_add() {
     }
   }
 }
-
+/*
+uint64_t mul_u64_u32_to_u64(uint64_t a, uint32_t b) {
+	uint64_t t0  = (uint32_t)a;
+	         t0 *= b;
+	uint64_t t1  = a>>32;
+	         t1 *= b;
+	         t1 += t0>>32;
+  return t1;
+}
+*/
 AVRational_32 mul(AVRational_32 a, AVRational_32 b) {
   temp_64.expo   = a.expo;
   temp_64.expo  += b.expo;
@@ -2969,23 +3008,21 @@ AVRational_32 floor_(AVRational_32 a, int8_t expo_test) {
   temp_32.expo    = a.expo;
 
   if ( a.expo > expo_test ) {
-    Error_String();
-    display_string[2] = '^';
-    display_string[13] = '^';
     if ( a.num < 0 ) {
-      display_string[2] = 'U';
-      display_string[13] = 'U';
+      Error_String('U');
+    }
+    else {
+      Error_String('^');
     }
     return a;
   }
   if ( a.expo == expo_test ) {
   	if (abs(a.num) >= abs(a.denom)) {
-      Error_String();
-      display_string[2] = '^';
-      display_string[13] = '^';
       if ( a.num < 0 ) {
-        display_string[2] = 'U';
-        display_string[13] = 'U';
+        Error_String('U');
+      }
+      else {
+        Error_String('^');
       }
       return a;
   	}
@@ -3344,8 +3381,13 @@ AVRational_32 sqrt(AVRational_32 a) {
 }
 
 AVRational_32 square(AVRational_32 a) {
-  temp_32 = mul(a, a);
-  return temp_32;
+  temp_32 = mul(a, a);          // 1,83664477 44079e+93  calc
+  return temp_32;               // 1,83664477 30683e+93  exact
+}
+
+AVRational_32 cubic(AVRational_32 a) {
+  temp_32 = mul(a, square(a));  // 299.482631 91683e+48  calc
+  return temp_32;               // 2.99482631 72691e+50  exact
 }
 
 void copy_input_left_right( uint8_t left, uint8_t right ) {
@@ -4608,6 +4650,10 @@ void Function_1_number() {
     	case 171:                //    _Frac_
     		mem_stack_input[ mem_pointer ] = frac(mem_stack_input[ mem_pointer ]);
     		break; 
+
+    	case 172:                //    _x^3_
+    	  mem_stack_input[ mem_pointer ] = cubic(mem_stack_input[ mem_pointer ]);
+    	  break;
     }
     
     Error_Test();
@@ -6089,11 +6135,11 @@ void loop() {
           Function_1_number();
           break;
 
-        case 172:                //    x^3
+        case 172:                //    _x^3_
           if ( Debug_Level == 5 ) {
             Serial.println("x^3");
           }
-          Beep__on();
+          Function_1_number();
           break;
 
         case 173:                //    cbrt()
@@ -6451,12 +6497,12 @@ void loop() {
       Print_Statepoint_after();
     }
 
-    if ( Switch_Code > EE_9 ) {          //    EE(9)
+    if ( Switch_Code > EE_9 ) {         //    EE(9)
       Switch_Code = 0;
     }
     else {
       if (  Switch_Code > 0 ) {
-        if ( temp_operation > EE_9 ) {     //    EE(9)
+        if ( temp_operation > EE_9 ) {  //    EE(9)
           Switch_Code = temp_operation;
         }
         else {
@@ -7886,7 +7932,7 @@ uint16_t temp_pwm = test_pwm;
         pinMode(Beep_p, INPUT_PULLUP); // Pin A7
         Beep_on = false;
         Beep_count = max_Beep_count;
-      }
+      } 
     }
     else {      //  0 .. 63
       if ( Beep_on_off == true ) {
