@@ -134,6 +134,7 @@ static const uint8_t index_display[Digit_Count] = {               //   Standard
 //  0,  1,  2,  3, 14, 13,  4,  5,  6,  7, 23, 22, 21, 20, 19     //   old Project
 //  0,  1,  3,  6,  7, 10, 11, 13, 14, 15, 19, 20, 21, 22, 23     //
    14, 15, 19, 20, 21, 22, 23, 13, 11,  7, 10,  3,  6,  0,  1     // Main_CPU
+// 14, 15, 19, 20, 21, 22, 23, 13,  4,  7,  2,  3,  6,  0,  1     // new Main_CPU
 };
 
 #define Min_Out        0   // D2 and D4, D5 V-USB not used
@@ -6142,7 +6143,7 @@ void loop() {
           Function_1_number();
           break;
 
-        case 173:                //    cbrt()
+        case 173:                //    _cbrt()_
           if ( Debug_Level == 5 ) {
             Serial.println("cbrt()");
           }

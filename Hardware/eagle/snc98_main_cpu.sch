@@ -8,34 +8,34 @@
 </settings>
 <grid distance="50" unitdist="mil" unit="mil" style="lines" multiple="1" display="no" altdistance="0.05" altunitdist="inch" altunit="inch"/>
 <layers>
-<layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
-<layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
-<layer number="3" name="Route3" color="4" fill="3" visible="no" active="no"/>
-<layer number="4" name="Route4" color="1" fill="4" visible="no" active="no"/>
-<layer number="5" name="Route5" color="4" fill="4" visible="no" active="no"/>
-<layer number="6" name="Route6" color="1" fill="8" visible="no" active="no"/>
-<layer number="7" name="Route7" color="4" fill="8" visible="no" active="no"/>
-<layer number="8" name="Route8" color="1" fill="2" visible="no" active="no"/>
-<layer number="9" name="Route9" color="4" fill="2" visible="no" active="no"/>
-<layer number="10" name="Route10" color="1" fill="7" visible="no" active="no"/>
-<layer number="11" name="Route11" color="4" fill="7" visible="no" active="no"/>
-<layer number="12" name="Route12" color="1" fill="5" visible="no" active="no"/>
-<layer number="13" name="Route13" color="4" fill="5" visible="no" active="no"/>
-<layer number="14" name="Route14" color="1" fill="6" visible="no" active="no"/>
-<layer number="15" name="Route15" color="4" fill="6" visible="no" active="no"/>
-<layer number="16" name="Bottom" color="1" fill="1" visible="no" active="no"/>
-<layer number="17" name="Pads" color="2" fill="1" visible="no" active="no"/>
-<layer number="18" name="Vias" color="2" fill="1" visible="no" active="no"/>
-<layer number="19" name="Unrouted" color="6" fill="1" visible="no" active="no"/>
-<layer number="20" name="Dimension" color="15" fill="1" visible="no" active="no"/>
-<layer number="21" name="tPlace" color="16" fill="1" visible="no" active="no"/>
-<layer number="22" name="bPlace" color="14" fill="1" visible="no" active="no"/>
-<layer number="23" name="tOrigins" color="15" fill="1" visible="no" active="no"/>
-<layer number="24" name="bOrigins" color="15" fill="1" visible="no" active="no"/>
-<layer number="25" name="tNames" color="7" fill="1" visible="no" active="no"/>
-<layer number="26" name="bNames" color="7" fill="1" visible="no" active="no"/>
-<layer number="27" name="tValues" color="7" fill="1" visible="no" active="no"/>
-<layer number="28" name="bValues" color="7" fill="1" visible="no" active="no"/>
+<layer number="1" name="Top" color="4" fill="1" visible="yes" active="no"/>
+<layer number="2" name="Route2" color="1" fill="3" visible="yes" active="no"/>
+<layer number="3" name="Route3" color="4" fill="3" visible="yes" active="no"/>
+<layer number="4" name="Route4" color="1" fill="4" visible="yes" active="no"/>
+<layer number="5" name="Route5" color="4" fill="4" visible="yes" active="no"/>
+<layer number="6" name="Route6" color="1" fill="8" visible="yes" active="no"/>
+<layer number="7" name="Route7" color="4" fill="8" visible="yes" active="no"/>
+<layer number="8" name="Route8" color="1" fill="2" visible="yes" active="no"/>
+<layer number="9" name="Route9" color="4" fill="2" visible="yes" active="no"/>
+<layer number="10" name="Route10" color="1" fill="7" visible="yes" active="no"/>
+<layer number="11" name="Route11" color="4" fill="7" visible="yes" active="no"/>
+<layer number="12" name="Route12" color="1" fill="5" visible="yes" active="no"/>
+<layer number="13" name="Route13" color="4" fill="5" visible="yes" active="no"/>
+<layer number="14" name="Route14" color="1" fill="6" visible="yes" active="no"/>
+<layer number="15" name="Route15" color="4" fill="6" visible="yes" active="no"/>
+<layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="no"/>
+<layer number="17" name="Pads" color="2" fill="1" visible="yes" active="no"/>
+<layer number="18" name="Vias" color="2" fill="1" visible="yes" active="no"/>
+<layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="no"/>
+<layer number="20" name="Dimension" color="15" fill="1" visible="yes" active="no"/>
+<layer number="21" name="tPlace" color="16" fill="1" visible="yes" active="no"/>
+<layer number="22" name="bPlace" color="14" fill="1" visible="yes" active="no"/>
+<layer number="23" name="tOrigins" color="15" fill="1" visible="yes" active="no"/>
+<layer number="24" name="bOrigins" color="15" fill="1" visible="yes" active="no"/>
+<layer number="25" name="tNames" color="7" fill="1" visible="yes" active="no"/>
+<layer number="26" name="bNames" color="7" fill="1" visible="yes" active="no"/>
+<layer number="27" name="tValues" color="7" fill="1" visible="yes" active="no"/>
+<layer number="28" name="bValues" color="7" fill="1" visible="yes" active="no"/>
 <layer number="29" name="tStop" color="7" fill="3" visible="no" active="no"/>
 <layer number="30" name="bStop" color="7" fill="6" visible="no" active="no"/>
 <layer number="31" name="tCream" color="7" fill="4" visible="no" active="no"/>
@@ -44,8 +44,8 @@
 <layer number="34" name="bFinish" color="6" fill="6" visible="no" active="no"/>
 <layer number="35" name="tGlue" color="7" fill="4" visible="no" active="no"/>
 <layer number="36" name="bGlue" color="7" fill="5" visible="no" active="no"/>
-<layer number="37" name="tTest" color="7" fill="1" visible="no" active="no"/>
-<layer number="38" name="bTest" color="7" fill="1" visible="no" active="no"/>
+<layer number="37" name="tTest" color="7" fill="1" visible="yes" active="no"/>
+<layer number="38" name="bTest" color="7" fill="1" visible="yes" active="no"/>
 <layer number="39" name="tKeepout" color="4" fill="11" visible="no" active="no"/>
 <layer number="40" name="bKeepout" color="1" fill="11" visible="no" active="no"/>
 <layer number="41" name="tRestrict" color="4" fill="10" visible="no" active="no"/>
@@ -53,19 +53,19 @@
 <layer number="43" name="vRestrict" color="2" fill="10" visible="no" active="no"/>
 <layer number="44" name="Drills" color="7" fill="1" visible="no" active="no"/>
 <layer number="45" name="Holes" color="7" fill="1" visible="no" active="no"/>
-<layer number="46" name="Milling" color="3" fill="1" visible="no" active="no"/>
-<layer number="47" name="Measures" color="7" fill="1" visible="no" active="no"/>
-<layer number="48" name="Document" color="7" fill="1" visible="no" active="no"/>
-<layer number="49" name="Reference" color="7" fill="1" visible="no" active="no"/>
-<layer number="50" name="dxf" color="7" fill="1" visible="no" active="no"/>
-<layer number="51" name="tDocu" color="6" fill="1" visible="no" active="no"/>
-<layer number="52" name="bDocu" color="7" fill="1" visible="no" active="no"/>
-<layer number="53" name="tGND_GNDA" color="7" fill="9" visible="no" active="no"/>
-<layer number="54" name="bGND_GNDA" color="1" fill="9" visible="no" active="no"/>
-<layer number="56" name="wert" color="7" fill="1" visible="no" active="no"/>
-<layer number="57" name="tCAD" color="7" fill="1" visible="no" active="no"/>
-<layer number="59" name="tCarbon" color="7" fill="1" visible="no" active="no"/>
-<layer number="60" name="bCarbon" color="7" fill="1" visible="no" active="no"/>
+<layer number="46" name="Milling" color="3" fill="1" visible="yes" active="no"/>
+<layer number="47" name="Measures" color="7" fill="1" visible="yes" active="no"/>
+<layer number="48" name="Document" color="7" fill="1" visible="yes" active="no"/>
+<layer number="49" name="Reference" color="7" fill="1" visible="yes" active="no"/>
+<layer number="50" name="dxf" color="7" fill="1" visible="yes" active="no"/>
+<layer number="51" name="tDocu" color="6" fill="1" visible="yes" active="no"/>
+<layer number="52" name="bDocu" color="7" fill="1" visible="yes" active="no"/>
+<layer number="53" name="tGND_GNDA" color="7" fill="9" visible="yes" active="no"/>
+<layer number="54" name="bGND_GNDA" color="1" fill="9" visible="yes" active="no"/>
+<layer number="56" name="wert" color="7" fill="1" visible="yes" active="no"/>
+<layer number="57" name="tCAD" color="7" fill="1" visible="yes" active="no"/>
+<layer number="59" name="tCarbon" color="7" fill="1" visible="yes" active="no"/>
+<layer number="60" name="bCarbon" color="7" fill="1" visible="yes" active="no"/>
 <layer number="90" name="Modules" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="91" name="Nets" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="92" name="Busses" color="1" fill="1" visible="yes" active="yes"/>
@@ -94,6 +94,7 @@
 <layer number="115" name="ReferenceISLANDS" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="116" name="Patch_BOT" color="9" fill="4" visible="yes" active="yes"/>
 <layer number="118" name="Rect_Pads" color="7" fill="1" visible="no" active="no"/>
+<layer number="120" name="TOPSILK" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="121" name="_tsilk" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="122" name="_bsilk" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="123" name="tTestmark" color="7" fill="1" visible="yes" active="yes"/>
@@ -103,9 +104,11 @@
 <layer number="127" name="_tValues" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="128" name="_bValues" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="129" name="Mask" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="130" name="COMMENTS_STOP_MASK_BOTTOM_SIDE" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="131" name="tAdjust" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="132" name="bAdjust" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="144" name="Drill_legend" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="147" name="COMMENTS_OUTLINE_AND_DRILLING_PLAN" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="150" name="Notes" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="151" name="HeatSink" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="152" name="_bDocu" color="7" fill="1" visible="yes" active="yes"/>
@@ -2825,12 +2828,12 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <rectangle x1="7.3279" y1="-0.4191" x2="7.9121" y2="0.1651" layer="51"/>
 <rectangle x1="9.8679" y1="-0.4191" x2="10.4521" y2="0.1651" layer="51"/>
 <rectangle x1="12.4079" y1="-0.4191" x2="12.9921" y2="0.1651" layer="51"/>
-<pad name="1" x="0" y="0" drill="1.016"/>
-<pad name="2" x="2.54" y="-0.254" drill="1.016"/>
-<pad name="3" x="5.08" y="0" drill="1.016"/>
-<pad name="4" x="7.62" y="-0.254" drill="1.016"/>
-<pad name="5" x="10.16" y="0" drill="1.016"/>
-<pad name="6" x="12.7" y="-0.254" drill="1.016"/>
+<pad name="1" x="0" y="0" drill="1.016" shape="long" rot="R90"/>
+<pad name="2" x="2.54" y="-0.254" drill="1.016" shape="long" rot="R90"/>
+<pad name="3" x="5.08" y="0" drill="1.016" shape="long" rot="R90"/>
+<pad name="4" x="7.62" y="-0.254" drill="1.016" shape="long" rot="R90"/>
+<pad name="5" x="10.16" y="0" drill="1.016" shape="long" rot="R90"/>
+<pad name="6" x="12.7" y="-0.254" drill="1.016" shape="long" rot="R90"/>
 <text x="-1.27" y="1.778" size="1.27" layer="25" font="vector">&gt;NAME</text>
 <text x="-1.27" y="-3.302" size="1.27" layer="27" font="vector">&gt;VALUE</text>
 <wire x1="-1.27" y1="-1.27" x2="-1.27" y2="-3.81" width="0.127" layer="51"/>
@@ -30557,8 +30560,8 @@ This is the "EZ" version, which has limited top masking for improved ease of ass
 <wire x1="0.9" y1="0.2" x2="1.2" y2="0.2" width="0.127" layer="51"/>
 <wire x1="1.2" y1="0.2" x2="1.2" y2="-0.2" width="0.127" layer="51"/>
 <wire x1="1.2" y1="-0.2" x2="0.9" y2="-0.2" width="0.127" layer="51"/>
-<smd name="A" x="-1" y="0" dx="1" dy="0.8" layer="1"/>
-<smd name="C" x="1" y="0" dx="1" dy="0.8" layer="1"/>
+<smd name="A" x="-1" y="0" dx="1.4224" dy="0.8128" layer="1" roundness="30"/>
+<smd name="C" x="1" y="0" dx="1.4224" dy="0.8128" layer="1" roundness="30"/>
 <text x="-1.8" y="0.9" size="0.8128" layer="25" font="vector">&gt;NAME</text>
 <text x="-2.1" y="-1.7" size="0.8128" layer="27" font="vector">&gt;VALUE</text>
 </package>
@@ -30575,8 +30578,8 @@ This is the "EZ" version, which has limited top masking for improved ease of ass
 <wire x1="1.778" y1="-0.762" x2="-1.778" y2="-0.762" width="0.127" layer="21"/>
 <wire x1="-1.778" y1="-0.762" x2="-1.778" y2="0.762" width="0.127" layer="21"/>
 <rectangle x1="-0.7" y1="-0.7" x2="-0.5" y2="0.7" layer="51"/>
-<smd name="A" x="1.85" y="0" dx="1.2" dy="0.7" layer="1"/>
-<smd name="C" x="-1.85" y="0" dx="1.2" dy="0.7" layer="1"/>
+<smd name="A" x="1.85" y="0" dx="1.2" dy="0.7" layer="1" roundness="50"/>
+<smd name="C" x="-1.85" y="0" dx="1.2" dy="0.7" layer="1" roundness="50"/>
 <text x="-1.1" y="1" size="0.4064" layer="25">&gt;NAME</text>
 <text x="-1.1" y="-1.284" size="0.4064" layer="27">&gt;VALUE</text>
 </package>
@@ -37198,15 +37201,15 @@ at 27/07/2012 14:02:49</description>
 <rectangle x1="-10.414" y1="-0.254" x2="-9.906" y2="0.254" layer="51"/>
 <rectangle x1="7.366" y1="-0.254" x2="7.874" y2="0.254" layer="51"/>
 <rectangle x1="9.906" y1="-0.254" x2="10.414" y2="0.254" layer="51"/>
-<pad name="1" x="-10.16" y="-0.127" drill="1.016" diameter="1.9304" rot="R90"/>
-<pad name="2" x="-7.62" y="0.127" drill="1.016" diameter="1.9304" rot="R90"/>
-<pad name="3" x="-5.08" y="-0.127" drill="1.016" diameter="1.9304" rot="R90"/>
-<pad name="4" x="-2.54" y="0.127" drill="1.016" diameter="1.9304" rot="R90"/>
-<pad name="5" x="0" y="-0.127" drill="1.016" diameter="1.9304" rot="R90"/>
-<pad name="6" x="2.54" y="0.127" drill="1.016" diameter="1.9304" rot="R90"/>
-<pad name="7" x="5.08" y="-0.127" drill="1.016" diameter="1.9304" rot="R90"/>
-<pad name="8" x="7.62" y="0.127" drill="1.016" diameter="1.9304" rot="R90"/>
-<pad name="9" x="10.16" y="-0.127" drill="1.016" diameter="1.9304" rot="R90"/>
+<pad name="1" x="-10.16" y="-0.127" drill="1.016" diameter="1.8796" rot="R90"/>
+<pad name="2" x="-7.62" y="0.127" drill="1.016" diameter="1.8796" rot="R90"/>
+<pad name="3" x="-5.08" y="-0.127" drill="1.016" diameter="1.8796" rot="R90"/>
+<pad name="4" x="-2.54" y="0.127" drill="1.016" diameter="1.8796" rot="R90"/>
+<pad name="5" x="0" y="-0.127" drill="1.016" diameter="1.8796" rot="R90"/>
+<pad name="6" x="2.54" y="0.127" drill="1.016" diameter="1.8796" rot="R90"/>
+<pad name="7" x="5.08" y="-0.127" drill="1.016" diameter="1.8796" rot="R90"/>
+<pad name="8" x="7.62" y="0.127" drill="1.016" diameter="1.8796" rot="R90"/>
+<pad name="9" x="10.16" y="-0.127" drill="1.016" diameter="1.8796" rot="R90"/>
 <text x="-10.2362" y="1.8288" size="1.27" layer="25" ratio="10">&gt;NAME</text>
 <text x="-10.16" y="-3.175" size="1.27" layer="27">&gt;VALUE</text>
 </package>
@@ -38064,6 +38067,19 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/22049b.pdf</description>
 <wire x1="8.255" y1="2.54" x2="8.89" y2="1.905" width="0.1524" layer="21"/>
 <wire x1="8.89" y1="1.905" x2="8.89" y2="-1.905" width="0.1524" layer="21"/>
 <wire x1="6.985" y1="-2.54" x2="8.255" y2="-2.54" width="0.1524" layer="21"/>
+<wire x1="12.7" y1="-4.572" x2="2.159" y2="-4.572" width="0.127" layer="21"/>
+<wire x1="-2.159" y1="-4.572" x2="-12.7" y2="-4.572" width="0.127" layer="21"/>
+<wire x1="-12.7" y1="-4.572" x2="-12.7" y2="4.572" width="0.127" layer="21"/>
+<wire x1="-12.7" y1="4.572" x2="12.7" y2="4.572" width="0.127" layer="21"/>
+<wire x1="-12.192" y1="-4.064" x2="-12.192" y2="4.064" width="0.127" layer="21"/>
+<wire x1="12.192" y1="-4.064" x2="2.159" y2="-4.064" width="0.127" layer="21"/>
+<wire x1="-2.159" y1="-4.064" x2="-12.192" y2="-4.064" width="0.127" layer="21"/>
+<wire x1="12.7" y1="4.572" x2="12.7" y2="-4.572" width="0.127" layer="21"/>
+<wire x1="12.192" y1="4.064" x2="12.192" y2="-4.064" width="0.127" layer="21"/>
+<wire x1="-4.445" y1="-0.254" x2="-4.445" y2="-0.762" width="0.127" layer="21"/>
+<wire x1="-12.192" y1="4.064" x2="12.192" y2="4.064" width="0.127" layer="21"/>
+<wire x1="-2.159" y1="-4.064" x2="-2.159" y2="-4.572" width="0.127" layer="21"/>
+<wire x1="2.159" y1="-4.064" x2="2.159" y2="-4.572" width="0.127" layer="21"/>
 <rectangle x1="-7.874" y1="-1.524" x2="-7.366" y2="-1.016" layer="51"/>
 <rectangle x1="-7.874" y1="1.016" x2="-7.366" y2="1.524" layer="51"/>
 <rectangle x1="-5.334" y1="1.016" x2="-4.826" y2="1.524" layer="51"/>
@@ -38094,21 +38110,6 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/22049b.pdf</description>
 <pad name="14" x="7.62" y="1.397" drill="1.016" diameter="1.8796"/>
 <text x="-8.89" y="5.715" size="1.27" layer="25" ratio="10">&gt;NAME</text>
 <text x="-8.89" y="-6.985" size="1.27" layer="27">&gt;VALUE</text>
-<wire x1="12.7" y1="-4.572" x2="2.159" y2="-4.572" width="0.127" layer="21"/>
-<wire x1="-2.159" y1="-4.572" x2="-12.7" y2="-4.572" width="0.127" layer="21"/>
-<wire x1="-12.7" y1="-4.572" x2="-12.7" y2="4.572" width="0.127" layer="21"/>
-<wire x1="-12.7" y1="4.572" x2="1.651" y2="4.572" width="0.127" layer="21"/>
-<wire x1="1.651" y1="4.572" x2="2.032" y2="4.572" width="0.127" layer="21"/>
-<wire x1="12.7" y1="4.572" x2="2.032" y2="4.572" width="0.127" layer="21"/>
-<wire x1="-12.192" y1="-4.064" x2="-12.192" y2="4.064" width="0.127" layer="21"/>
-<wire x1="12.192" y1="-4.064" x2="2.159" y2="-4.064" width="0.127" layer="21"/>
-<wire x1="-2.159" y1="-4.064" x2="-12.192" y2="-4.064" width="0.127" layer="21"/>
-<wire x1="12.7" y1="4.572" x2="12.7" y2="-4.572" width="0.127" layer="21"/>
-<wire x1="12.192" y1="4.064" x2="12.192" y2="-4.064" width="0.127" layer="21"/>
-<wire x1="-4.445" y1="-0.254" x2="-4.445" y2="-0.762" width="0.127" layer="21"/>
-<wire x1="-12.192" y1="4.064" x2="12.192" y2="4.064" width="0.127" layer="21"/>
-<wire x1="-2.159" y1="-4.064" x2="-2.159" y2="-4.572" width="0.127" layer="21"/>
-<wire x1="2.159" y1="-4.064" x2="2.159" y2="-4.572" width="0.127" layer="21"/>
 </package>
 <package name="2X07/90">
 <description>&lt;b&gt;PIN HEADER&lt;/b&gt;</description>
@@ -38347,6 +38348,91 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/22049b.pdf</description>
 </deviceset>
 </devicesets>
 </library>
+<library name="SparkFun-Sensors">
+<description>&lt;h3&gt;SparkFun Sensors&lt;/h3&gt;
+This library contains sensors- accelerometers, gyros, compasses, magnetometers, light sensors, imagers, temp sensors, etc.
+&lt;br&gt;
+&lt;br&gt;
+We've spent an enormous amount of time creating and checking these footprints and parts, but it is &lt;b&gt; the end user's responsibility&lt;/b&gt; to ensure correctness and suitablity for a given componet or application. 
+&lt;br&gt;
+&lt;br&gt;If you enjoy using this library, please buy one of our products at &lt;a href=" www.sparkfun.com"&gt;SparkFun.com&lt;/a&gt;.
+&lt;br&gt;
+&lt;br&gt;
+&lt;b&gt;Licensing:&lt;/b&gt; Creative Commons ShareAlike 4.0 International - https://creativecommons.org/licenses/by-sa/4.0/ 
+&lt;br&gt;
+&lt;br&gt;
+You are welcome to use this library for commercial purposes. For attribution, we ask that when you begin to sell your device using our footprint, you email us with a link to the product being sold. We want bragging rights that we helped (in a very small part) to create your 8th world wonder. We would like the opportunity to feature your device on our homepage.</description>
+<packages>
+<package name="TO-92-AMMO">
+<description>&lt;h3&gt;TO-92 3-Pin PTH AMMO package&lt;/h3&gt;
+&lt;p&gt;&lt;a href=""&gt;Datasheet&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Specifications:
+&lt;ul&gt;
+&lt;li&gt;Pin Count: 3&lt;/li&gt;
+&lt;li&gt;Dimensions:  3.68 x 4.83 x 4.83 mm&lt;/li&gt;
+&lt;li&gt;Pitch: 2.54 mm&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Devices Using:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;DS18B20&lt;/li&gt;
+&lt;/ul&gt;</description>
+<wire x1="-2.0946" y1="-1.651" x2="-0.7863" y2="2.5485" width="0.2032" layer="21" curve="-111.098957" cap="flat"/>
+<wire x1="0.7863" y1="2.5484" x2="2.0945" y2="-1.651" width="0.2032" layer="21" curve="-111.09954" cap="flat"/>
+<wire x1="-2.0945" y1="-1.651" x2="2.0945" y2="-1.651" width="0.2032" layer="21"/>
+<wire x1="-0.635" y1="2.54" x2="0.635" y2="2.54" width="0.2032" layer="21" curve="-25.057615"/>
+<wire x1="0.635" y1="2.54" x2="1.905" y2="1.905" width="0.2032" layer="21" curve="-28.072487"/>
+<wire x1="-1.905" y1="1.905" x2="0.635" y2="2.54" width="0.2032" layer="21" curve="-53.130102"/>
+<pad name="3" x="2.54" y="0" drill="0.8128" diameter="1.6764"/>
+<pad name="2" x="0" y="0" drill="0.8128" diameter="1.6764"/>
+<pad name="1" x="-2.54" y="0" drill="0.8128" diameter="1.6764"/>
+<text x="0" y="-1.778" size="0.6096" layer="25" font="vector" ratio="20" rot="R180" align="bottom-center">&gt;NAME</text>
+<text x="0" y="2.794" size="0.6096" layer="27" font="vector" ratio="20" rot="R180" align="top-center">&gt;VALUE</text>
+</package>
+</packages>
+<symbols>
+<symbol name="DS18B20">
+<description>&lt;h3&gt;Dallas/Maxim DS18B20 1-Wire Temperature Sensor&lt;/h3&gt;
+&lt;p&gt;The DS18B20 reports degrees C with 9 to 12-bit precision, -55C to 125C (+/-0.5C). Each sensor has a unique 64-Bit Serial number etched into it - allows for a huge number of sensors to be used on one data bus.&lt;/p&gt;</description>
+<wire x1="-7.62" y1="7.62" x2="-7.62" y2="-7.62" width="0.254" layer="94"/>
+<wire x1="-7.62" y1="-7.62" x2="5.08" y2="-7.62" width="0.254" layer="94"/>
+<wire x1="5.08" y1="-7.62" x2="5.08" y2="7.62" width="0.254" layer="94"/>
+<wire x1="5.08" y1="7.62" x2="-7.62" y2="7.62" width="0.254" layer="94"/>
+<pin name="DQ" x="-10.16" y="0" length="short"/>
+<pin name="VDD" x="-10.16" y="5.08" length="short" direction="pwr"/>
+<pin name="GND" x="-10.16" y="-5.08" length="short" direction="pwr"/>
+<text x="-7.62" y="7.874" size="1.778" layer="95" font="vector">&gt;Name</text>
+<text x="-7.62" y="-7.874" size="1.778" layer="96" font="vector" align="top-left">&gt;Value</text>
+</symbol>
+</symbols>
+<devicesets>
+<deviceset name="DS18B20" prefix="U">
+<description>&lt;h3&gt;Dallas/Maxim DS18B20 1-Wire Temperature Sensor&lt;/h3&gt;
+&lt;p&gt;The DS18B20 reports degrees C with 9 to 12-bit precision, -55C to 125C (+/-0.5C). Each sensor has a unique 64-Bit Serial number etched into it - allows for a huge number of sensors to be used on one data bus.&lt;/p&gt;
+&lt;p&gt;&lt;a href="http://datasheets.maximintegrated.com/en/ds/DS18B20.pdf"&gt;Datasheet&lt;/a&gt;&lt;/p&gt;
+&lt;h4&gt;SparkFun Products&lt;/h4&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://www.sparkfun.com/products/245"&gt;One Wire Digital Temperature Sensor - DS18B20&lt;/a&gt; (SEN-00245)&lt;/li&gt;
+&lt;/ul&gt;</description>
+<gates>
+<gate name="G$1" symbol="DS18B20" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="TO-92-AMMO">
+<connects>
+<connect gate="G$1" pin="DQ" pad="2"/>
+<connect gate="G$1" pin="GND" pad="1"/>
+<connect gate="G$1" pin="VDD" pad="3"/>
+</connects>
+<technologies>
+<technology name="">
+<attribute name="STORE_ID" value="SEN-00245" constant="no"/>
+</technology>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
 </libraries>
 <attributes>
 </attributes>
@@ -38479,13 +38565,18 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/22049b.pdf</description>
 <part name="T1" library="digital-transistors" deviceset="BCR135" device=""/>
 <part name="R6" library="rcl" deviceset="R-EU_" device="R1206" value="22k"/>
 <part name="GND-ISO17" library="SparkFun-Aesthetics" deviceset="GND-ISO" device=""/>
+<part name="D1" library="BaseApp" deviceset="DIODE" device="SOD-323" value="SD103CW"/>
+<part name="R7" library="rcl" deviceset="R-EU_" device="R1206" value="6k8"/>
+<part name="GND-ISO15" library="SparkFun-Aesthetics" deviceset="GND-ISO" device=""/>
+<part name="D2" library="BaseApp" deviceset="DIODE" device="SOD-123" value="SD103CW"/>
+<part name="U2" library="SparkFun-Sensors" deviceset="DS18B20" device=""/>
 </parts>
 <sheets>
 <sheet>
 <plain>
 <text x="149.86" y="30.48" size="3.81" layer="91" ratio="12">Calculator 15-Digit with 1284P</text>
 <text x="149.86" y="25.4" size="2.54" layer="91" ratio="12">by Jens Grabner</text>
-<text x="238.76" y="7.62" size="2.54" layer="91" ratio="12">0.91</text>
+<text x="238.76" y="7.62" size="2.54" layer="91" ratio="12">0.95</text>
 <text x="5.08" y="10.16" size="2.1844" layer="91" ratio="10">Calculator 15-Digit with ATmega1284P by Jens Grabner is licensed under</text>
 <text x="5.08" y="15.24" size="3.81" layer="91" ratio="12">Copyright CERN 2013</text>
 <text x="5.08" y="5.08" size="2.1844" layer="91" ratio="10">the CERN OHL v.1.2 or later. (http://ohwr.org/cernohl)</text>
@@ -38540,6 +38631,11 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/22049b.pdf</description>
 <instance part="GND-ISO10" gate="G$1" x="210.82" y="43.18"/>
 <instance part="GND-ISO11" gate="G$1" x="147.32" y="111.76"/>
 <instance part="GND-ISO12" gate="G$1" x="124.46" y="137.16"/>
+<instance part="D1" gate="G$1" x="233.68" y="139.7" rot="R270"/>
+<instance part="R7" gate="G$1" x="233.68" y="152.4" rot="R90"/>
+<instance part="GND-ISO15" gate="G$1" x="223.52" y="91.44"/>
+<instance part="D2" gate="G$1" x="232.41" y="128.27" rot="R90"/>
+<instance part="U2" gate="G$1" x="237.49" y="109.22"/>
 </instances>
 <busses>
 </busses>
@@ -38680,32 +38776,55 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/22049b.pdf</description>
 <label x="171.45" y="124.46" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="D8_" class="0">
+<net name="D8_RX0" class="0">
 <segment>
 <pinref part="U3" gate="A" pin="PD0"/>
 <wire x1="212.09" y1="139.7" x2="217.17" y2="139.7" width="0.1524" layer="91"/>
 <label x="214.63" y="139.7" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="D9_" class="0">
+<net name="D9_TX0" class="0">
 <segment>
 <pinref part="U3" gate="A" pin="PD1"/>
 <wire x1="212.09" y1="137.16" x2="217.17" y2="137.16" width="0.1524" layer="91"/>
 <label x="214.63" y="137.16" size="1.778" layer="95"/>
 </segment>
 </net>
-<net name="D10_" class="0">
+<net name="D10_RX1" class="0">
 <segment>
 <pinref part="U3" gate="A" pin="PD2"/>
-<wire x1="212.09" y1="134.62" x2="217.17" y2="134.62" width="0.1524" layer="91"/>
 <label x="214.63" y="134.62" size="1.778" layer="95"/>
+<wire x1="212.09" y1="134.62" x2="228.6" y2="134.62" width="0.1524" layer="91"/>
+<wire x1="228.6" y1="134.62" x2="228.6" y2="144.78" width="0.1524" layer="91"/>
+<wire x1="228.6" y1="144.78" x2="233.68" y2="144.78" width="0.1524" layer="91"/>
+<pinref part="D1" gate="G$1" pin="A"/>
+<wire x1="233.68" y1="144.78" x2="233.68" y2="142.24" width="0.1524" layer="91"/>
+<pinref part="R7" gate="G$1" pin="1"/>
+<wire x1="233.68" y1="147.32" x2="233.68" y2="144.78" width="0.1524" layer="91"/>
+<junction x="233.68" y="144.78"/>
+<wire x1="233.68" y1="144.78" x2="238.76" y2="144.78" width="0.1524" layer="91"/>
+<wire x1="238.76" y1="144.78" x2="238.76" y2="124.46" width="0.1524" layer="91"/>
+<wire x1="238.76" y1="124.46" x2="232.41" y2="124.46" width="0.1524" layer="91"/>
+<wire x1="232.41" y1="124.46" x2="220.98" y2="124.46" width="0.1524" layer="91"/>
+<wire x1="220.98" y1="124.46" x2="220.98" y2="109.22" width="0.1524" layer="91"/>
+<wire x1="220.98" y1="109.22" x2="227.33" y2="109.22" width="0.1524" layer="91"/>
+<pinref part="D2" gate="G$1" pin="A"/>
+<wire x1="232.41" y1="125.73" x2="232.41" y2="124.46" width="0.1524" layer="91"/>
+<junction x="232.41" y="124.46"/>
+<pinref part="U2" gate="G$1" pin="DQ"/>
 </segment>
 </net>
-<net name="D11_" class="0">
+<net name="D11_TX1" class="0">
 <segment>
 <pinref part="U3" gate="A" pin="PD3"/>
-<wire x1="212.09" y1="132.08" x2="217.17" y2="132.08" width="0.1524" layer="91"/>
 <label x="214.63" y="132.08" size="1.778" layer="95"/>
+<wire x1="212.09" y1="132.08" x2="232.41" y2="132.08" width="0.1524" layer="91"/>
+<wire x1="232.41" y1="132.08" x2="233.68" y2="132.08" width="0.1524" layer="91"/>
+<wire x1="233.68" y1="132.08" x2="233.68" y2="137.16" width="0.1524" layer="91"/>
+<pinref part="D1" gate="G$1" pin="C"/>
+<pinref part="D2" gate="G$1" pin="C"/>
+<wire x1="232.41" y1="130.81" x2="232.41" y2="132.08" width="0.1524" layer="91"/>
+<junction x="232.41" y="132.08"/>
 </segment>
 </net>
 <net name="D12_" class="0">
@@ -38913,6 +39032,19 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/22049b.pdf</description>
 <wire x1="176.53" y1="165.1" x2="168.91" y2="165.1" width="0.1524" layer="91"/>
 <label x="168.91" y="165.1" size="1.778" layer="95"/>
 </segment>
+<segment>
+<pinref part="R7" gate="G$1" pin="2"/>
+<wire x1="233.68" y1="157.48" x2="233.68" y2="160.02" width="0.1524" layer="91"/>
+<label x="233.68" y="163.83" size="1.778" layer="95"/>
+<wire x1="233.68" y1="160.02" x2="233.68" y2="163.83" width="0.1524" layer="91"/>
+<wire x1="227.33" y1="114.3" x2="223.52" y2="114.3" width="0.1524" layer="91"/>
+<wire x1="223.52" y1="114.3" x2="223.52" y2="121.92" width="0.1524" layer="91"/>
+<wire x1="223.52" y1="121.92" x2="241.3" y2="121.92" width="0.1524" layer="91"/>
+<wire x1="241.3" y1="121.92" x2="241.3" y2="160.02" width="0.1524" layer="91"/>
+<wire x1="241.3" y1="160.02" x2="233.68" y2="160.02" width="0.1524" layer="91"/>
+<junction x="233.68" y="160.02"/>
+<pinref part="U2" gate="G$1" pin="VDD"/>
+</segment>
 </net>
 <net name="GND_POWER" class="0">
 <segment>
@@ -39027,6 +39159,12 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/22049b.pdf</description>
 <wire x1="124.46" y1="142.24" x2="124.46" y2="139.7" width="0.1524" layer="91"/>
 <pinref part="GND-ISO12" gate="G$1" pin="GND-ISO"/>
 </segment>
+<segment>
+<wire x1="227.33" y1="104.14" x2="223.52" y2="104.14" width="0.1524" layer="91"/>
+<pinref part="GND-ISO15" gate="G$1" pin="GND-ISO"/>
+<wire x1="223.52" y1="104.14" x2="223.52" y2="93.98" width="0.1524" layer="91"/>
+<pinref part="U2" gate="G$1" pin="GND"/>
+</segment>
 </net>
 </nets>
 </sheet>
@@ -39034,7 +39172,7 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/22049b.pdf</description>
 <plain>
 <text x="149.86" y="30.48" size="3.81" layer="91" ratio="12">Calculator 15-Digit with 1284P</text>
 <text x="149.86" y="25.4" size="2.54" layer="91" ratio="12">by Jens Grabner</text>
-<text x="238.76" y="7.62" size="2.54" layer="91" ratio="12">0.91</text>
+<text x="238.76" y="7.62" size="2.54" layer="91" ratio="12">0.95</text>
 <text x="5.08" y="10.16" size="2.1844" layer="91" ratio="10">Calculator 15-Digit with ATmega1284P by Jens Grabner is licensed under</text>
 <text x="5.08" y="15.24" size="3.81" layer="91" ratio="12">Copyright CERN 2013</text>
 <text x="5.08" y="5.08" size="2.1844" layer="91" ratio="10">the CERN OHL v.1.2 or later. (http://ohwr.org/cernohl)</text>
@@ -39447,20 +39585,6 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/22049b.pdf</description>
 <pinref part="JP13" gate="A" pin="14"/>
 </segment>
 </net>
-<net name="D11_" class="0">
-<segment>
-<wire x1="118.11" y1="165.1" x2="124.46" y2="165.1" width="0.1524" layer="91"/>
-<label x="125.73" y="165.1" size="1.778" layer="95"/>
-<pinref part="JP13" gate="A" pin="8"/>
-</segment>
-</net>
-<net name="D10_" class="0">
-<segment>
-<wire x1="118.11" y1="162.56" x2="124.46" y2="162.56" width="0.1524" layer="91"/>
-<label x="125.73" y="162.56" size="1.778" layer="95"/>
-<pinref part="JP13" gate="A" pin="10"/>
-</segment>
-</net>
 <net name="D7_" class="0">
 <segment>
 <wire x1="110.49" y1="162.56" x2="101.6" y2="162.56" width="0.1524" layer="91"/>
@@ -39532,13 +39656,27 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/22049b.pdf</description>
 <junction x="100.33" y="69.85"/>
 </segment>
 </net>
+<net name="D4_" class="0">
+<segment>
+<wire x1="118.11" y1="165.1" x2="124.46" y2="165.1" width="0.1524" layer="91"/>
+<label x="125.73" y="165.1" size="1.778" layer="95"/>
+<pinref part="JP13" gate="A" pin="8"/>
+</segment>
+</net>
+<net name="D2_" class="0">
+<segment>
+<wire x1="118.11" y1="162.56" x2="124.46" y2="162.56" width="0.1524" layer="91"/>
+<label x="125.73" y="162.56" size="1.778" layer="95"/>
+<pinref part="JP13" gate="A" pin="10"/>
+</segment>
+</net>
 </nets>
 </sheet>
 <sheet>
 <plain>
 <text x="149.86" y="30.48" size="3.81" layer="91" ratio="12">Calculator 15-Digit with 1284P</text>
 <text x="149.86" y="25.4" size="2.54" layer="91" ratio="12">by Jens Grabner</text>
-<text x="238.76" y="7.62" size="2.54" layer="91" ratio="12">0.91</text>
+<text x="238.76" y="7.62" size="2.54" layer="91" ratio="12">0.95</text>
 <text x="5.08" y="10.16" size="2.1844" layer="91" ratio="10">Calculator 15-Digit with ATmega1284P by Jens Grabner is licensed under</text>
 <text x="5.08" y="15.24" size="3.81" layer="91" ratio="12">Copyright CERN 2013</text>
 <text x="5.08" y="5.08" size="2.1844" layer="91" ratio="10">the CERN OHL v.1.2 or later. (http://ohwr.org/cernohl)</text>
@@ -39800,14 +39938,14 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/22049b.pdf</description>
 <pinref part="C12" gate="G$1" pin="1"/>
 </segment>
 </net>
-<net name="D8_" class="0">
+<net name="D8_RX0" class="0">
 <segment>
 <wire x1="106.68" y1="55.88" x2="124.46" y2="55.88" width="0.1524" layer="91"/>
 <label x="125.73" y="55.88" size="1.778" layer="95"/>
 <pinref part="JP6" gate="G$1" pin="4"/>
 </segment>
 </net>
-<net name="D9_" class="0">
+<net name="D9_TX0" class="0">
 <segment>
 <wire x1="106.68" y1="58.42" x2="123.19" y2="58.42" width="0.1524" layer="91"/>
 <label x="124.46" y="58.42" size="1.778" layer="95"/>
@@ -40144,8 +40282,6 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/22049b.pdf</description>
 <approved hash="104,2,38.1,85.09,BH11,+,P3,,,"/>
 <approved hash="104,2,35.56,104.14,BH12,-,P2,,,"/>
 <approved hash="202,3,124.46,149.86,IC1,VI,,,,"/>
-<approved hash="106,1,176.53,121.92,D2_,,,,,"/>
-<approved hash="106,1,176.53,116.84,D4_,,,,,"/>
 <approved hash="113,2,56.1171,167.771,JP3,,,,,"/>
 <approved hash="113,2,56.1171,136.021,JP15,,,,,"/>
 <approved hash="113,2,114.258,166.501,JP13,,,,,"/>
