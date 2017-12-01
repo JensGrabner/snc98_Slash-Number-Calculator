@@ -22,9 +22,10 @@
 // https://github.com/amdn/itoa_ljust/
 //===----------------------------------------------------------------------===//
 
+#include <int96.h>
+// Original:  http://www.naughter.com/int96.html
+// https://github.com/JensGrabner/snc98_Slash-Number-Calculator/tree/master/Software/Arduino/libraries/int96
 #include <stdint.h>
-
-
 
     char* itoa_( uint8_t u, char* buffer);     // with prev..  '' <-->  '-'
     char* itoa_(  int8_t i, char* buffer);     // with prev..  '' <-->  '-'
@@ -34,6 +35,7 @@
     char* itoa_( int32_t i, char* buffer);     // with prev..  '' <-->  '-'
     char* itoa_(uint64_t u, char* buffer);     // with prev..  '' <-->  '-'
     char* itoa_( int64_t i, char* buffer);     // with prev..  '' <-->  '-'
+    char* itoa_( int96_a u, char* buffer);     // with prev..  '' <-->  '-'
 
     char* itoa__( uint8_t u, char* buffer);    // with prev..  '  ' <-->  ' -'
     char* itoa__(  int8_t i, char* buffer);    // with prev..  '  ' <-->  ' -'
@@ -43,6 +45,7 @@
     char* itoa__( int32_t i, char* buffer);    // with prev..  '  ' <-->  ' -'
     char* itoa__(uint64_t u, char* buffer);    // with prev..  '  ' <-->  ' -'
     char* itoa__( int64_t i, char* buffer);    // with prev..  '  ' <-->  ' -'
+   // char* itoa__( int96_a u, char* buffer);    // with prev..  '  ' <-->  ' -'
 
 
 

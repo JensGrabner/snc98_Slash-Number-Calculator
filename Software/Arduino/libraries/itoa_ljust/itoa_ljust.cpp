@@ -156,6 +156,29 @@
         }
     }
 
+    static inline char* itoa_64(uint64_t u, char* p, uint64_t d, uint8_t n) {
+        switch(n) {
+        case 18: d  = u /   10000000000000000; p = out( dd(d), p );
+        case 17: u -= d *   10000000000000000;
+        case 16: d  = u /     100000000000000; p = out( dd(d), p );
+        case 15: u -= d *     100000000000000;
+        case 14: d  = u /       1000000000000; p = out( dd(d), p );
+        case 13: u -= d *       1000000000000;
+        case 12: d  = u /         10000000000; p = out( dd(d), p );
+        case 11: u -= d *         10000000000;
+        case 10: d  = u /           100000000; p = out( dd(d), p );
+        case  9: u -= d *           100000000;
+        case  8: n = 8 ;
+        case  7: ;
+        case  6: ;
+        case  5: ;
+        case  4: ;
+        case  3: ;
+        case  2: ;
+        default: return itoa_32( u, p, d, n );
+        }
+    }
+
     char* itoa_(uint8_t u, char* p) {
         uint8_t d = 0;
         uint8_t n;
@@ -203,6 +226,48 @@
         d  =      u / 100000000;
         p  = out<char>('0'+d, p);
         return itoa_32( u, p, d, 9 );
+    }
+
+    char* itoa_( int96_a u, char* p) {
+        uint32_t test_hi   = u.hi;
+                 test_hi >>= 31;
+
+        uint64_t test;
+
+        if ( test_hi == 1 ) {
+            *p++  = '-';
+            u.Negate();
+        }
+
+        int96_a dec_18;   // 1000000000000000000
+                dec_18.hi  = 0;
+                dec_18.mid = 232830643;
+                dec_18.lo  = 2808348672;
+
+        int96_a     d =  0;
+        int96_a upper =  0;
+        int96_a   mul = -1;
+         
+        if ( u.hi == 0 ) {
+        	  if ( u.mid == 0 ) {
+        	      return itoa_(u.lo, p);
+            }
+        	  else {
+                uint64_t lower   = u.mid;
+                         lower <<= 32;
+                         lower  += u.lo;
+        	      return itoa_(lower, p); 
+        	  }
+        }
+        else {
+        	  upper  = u / dec_18;
+        	  p  = itoa_(upper, p);
+        	  u -= upper * dec_18;
+        	  test   = u.mid;
+        	  test <<= 32;
+        	  test  += u.lo; 
+        	  return itoa_64( test, p, d, 18 );
+        }
     }
 
     char* itoa_(int8_t i, char* p) {
