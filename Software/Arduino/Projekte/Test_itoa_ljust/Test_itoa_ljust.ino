@@ -8,11 +8,13 @@
 #include <inttypes.h>
 
 #include <itoa_ljust.h>
+// https://github.com/JensGrabner/snc98_Slash-Number-Calculator/tree/master/Software/Arduino/libraries/itoa_ljust
 
 // uint64_t my_xx_bit;
 // uint64_t add;
  int96_a my_xx_bit;
  int96_a add;
+ int96_a mul_10 = 10;
  
 char  display_string[33];
 
@@ -59,7 +61,7 @@ for ( uint16_t ii = 0; ii < 27 ; ii += 1 ) {
   Serial.print(" ms ");
   Serial.println(display_string);
   
-  add *= 10;
+  add *= mul_10;
 }  
  
 delay(2000000);

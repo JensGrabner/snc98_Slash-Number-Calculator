@@ -142,7 +142,7 @@
     }
 
     static inline char* itoa_32(uint32_t u, char* p, uint32_t d, uint8_t n) {
-        switch(n) {
+        switch(n) {   // 1000000000
         case 10: d  = u / 100000000; p = out( dd(d), p );
         case  9: u -= d * 100000000;
         case  8: d  = u /   1000000; p = out( dd(d), p );
@@ -157,7 +157,7 @@
     }
 
     static inline char* itoa_64(uint64_t u, char* p, uint64_t d, uint8_t n) {
-        switch(n) {
+        switch(n) {    // 1000000000000000000
         case 18: d  = u /   10000000000000000; p = out( dd(d), p );
         case 17: u -= d *   10000000000000000;
         case 16: d  = u /     100000000000000; p = out( dd(d), p );
@@ -243,10 +243,15 @@
                 dec_18.hi  = 0;
                 dec_18.mid = 232830643;
                 dec_18.lo  = 2808348672;
+                
+        int96_a div95_dec_18;   // 39614081257 = 2^95 / dec_18
+                div95_dec_18.hi  = 0;
+                div95_dec_18.mid = 9;
+                div95_dec_18.lo  = 959375593;
 
-        int96_a     d =  0;
-        int96_a upper =  0;
-        int96_a   mul = -1;
+        uint64_t    d =  0;
+        int96_a   upp =  0;
+        int96_a   low =  0;
          
         if ( u.hi == 0 ) {
         	  if ( u.mid == 0 ) {
@@ -260,12 +265,13 @@
         	  }
         }
         else {
-        	  upper  = u / dec_18;
-        	  p  = itoa_(upper, p);
-        	  u -= upper * dec_18;
-        	  test   = u.mid;
+        	  u.mul_div95(div95_dec_18, upp);  // const u. * div95_dec_18 = upp;
+        	  upp += 1;
+        	  u   -= upp * dec_18;
+        	  p    = itoa_(upp, p);
+        	  test   = low.mid;
         	  test <<= 32;
-        	  test  += u.lo; 
+        	  test  += low.lo; 
         	  return itoa_64( test, p, d, 18 );
         }
     }

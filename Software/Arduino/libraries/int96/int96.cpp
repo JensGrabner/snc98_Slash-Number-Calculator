@@ -546,6 +546,66 @@ int96_a int96_a::operator*(const int96_a& value) const {
   return rVal;
 }
 
+void int96_a::mul_div95(const int96_a& mul, int96_a& rVal) const {
+  int96_a A(*this);
+  int96_a B(mul);
+
+  // Correctly handle negative values
+  BOOL bANegative = FALSE;
+  BOOL bBNegative = FALSE;
+  if ( A.IsNegative())
+  {
+    bANegative = TRUE;
+    A.Negate();
+  }
+  if ( B.IsNegative())
+  {
+    bBNegative = TRUE;
+    B.Negate();
+  }
+  
+  B += B;
+
+  uint64_t sum_hi  = 0;
+  uint64_t sum_mid = 0;
+  uint64_t sum_lo  = 0;
+
+  uint64_t b1  = A.hi;
+           b1 *= B.hi;
+  uint64_t b2  = A.hi;
+           b2 *= B.mid;
+  uint64_t b3  = A.hi;
+           b3 *= B.lo;
+  uint64_t b4  = A.mid;
+           b4 *= B.hi;
+  uint64_t b5  = A.mid;
+           b5 *= B.mid;
+  uint64_t b6  = A.mid;
+           b6 *= B.lo;
+  uint64_t b7  = A.lo;
+           b7 *= B.hi;
+  uint64_t b8  = A.lo;
+           b8 *= B.mid;
+  
+  sum_lo   = b8 >> 32;
+  sum_lo  += b6 >> 32;
+  sum_lo  += b7;
+  sum_lo  += b5;
+  sum_lo  += b3;
+  sum_mid  = b4;
+  sum_mid += b2;
+  sum_hi   = b1;
+  
+  sum_mid += sum_lo >> 32;  // carry
+  sum_hi  += sum_mid >> 32; // carry
+  
+  rVal.lo  = sum_mid;
+  rVal.mid = sum_hi;
+  rVal.hi  = sum_hi >> 32;
+
+  if ( (bANegative && !bBNegative) || (!bANegative && bBNegative)) rVal.Negate();
+}
+
 BOOL int96_a::GetBit(int8_t nIndex) const {
   ASSERT(nIndex >= 0 && nIndex < 96);
 
@@ -660,24 +720,26 @@ void int96_a::Modulus(const int96_a& divisor, int96_a& Quotient, int96_a& Remain
   int96_a tempDivisor(divisor);
   BOOL bDividendNegative = FALSE;
   BOOL bDivisorNegative = FALSE;
-  if ( tempDividend.IsNegative())
-  {
+  if ( tempDividend.IsNegative()) {
     bDividendNegative = TRUE;
     tempDividend.Negate();
   }
-  if ( tempDivisor.IsNegative())
-  {
+  if ( tempDivisor.IsNegative()) {
     bDivisorNegative = TRUE;
     tempDivisor.Negate();
   }
-
+   
   //Handle the special case's
-  if ( tempDivisor.IsZero())
-  {
+  if ( tempDivisor.IsZero() ) {
     //force a Divide by Zero exception
   #ifdef __GNUC__
-   // asm("movl $0, %eax\n\t"
-   //     "div      %eax\n\t");
+    /*
+    _asm
+    {
+      movl $0, %eax
+      div      %eax
+    }
+    */
   #else
     _asm
     {
@@ -686,18 +748,16 @@ void int96_a::Modulus(const int96_a& divisor, int96_a& Quotient, int96_a& Remain
     }
   #endif
   }
-  else if ( tempDividend.IsZero())
-  {
-    Quotient = int96_a(0);
+  else if ( tempDividend.IsZero() ) {
+    Quotient  = int96_a(0);
     Remainder = int96_a(0);
   }
-  else
-  {
+  else {
     Remainder.Zero();
     for (int8_t i=0; i<96; i++)
     {
       Remainder += tempDividend.GetBit(i);
-      BOOL bBit = (Remainder >= tempDivisor);
+      BOOL bBit  = (Remainder >= tempDivisor);
       Quotient.SetBit(i, bBit);
       if ( bBit)
         Remainder -= tempDivisor;
@@ -707,8 +767,7 @@ void int96_a::Modulus(const int96_a& divisor, int96_a& Quotient, int96_a& Remain
     }
   }
 
-  if ( (bDividendNegative && !bDivisorNegative) || (!bDividendNegative && bDivisorNegative))
-  {
+  if ( (bDividendNegative && !bDivisorNegative) || (!bDividendNegative && bDivisorNegative)) {
     //Ensure the following formula applies for negative dividends
     //dividend = divisor * Quotient + Remainder
     Quotient.Negate();

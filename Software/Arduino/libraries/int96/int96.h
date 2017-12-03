@@ -61,7 +61,7 @@ public:
   int96_a(int16_t value);
   int96_a(int32_t value);
   int96_a(const int64_t& value);
-  int96_a(const  int96_a& value);
+  int96_a(const int96_a& value);
 
 //assignment operator
   int96_a& operator=(const  int96_a& value);
@@ -126,7 +126,8 @@ public:
   void Negate();
   BOOL IsNegative() const;
   BOOL IsPositive() const;
-  void Modulus(const  int96_a& divisor,  int96_a& Quotient,  int96_a& Remainder) const;
+  void Modulus(const int96_a& divisor,  int96_a& Quotient,  int96_a& Remainder) const;
+  void mul_div95(const int96_a& mul, int96_a& rVal) const;
 
 //Serialization
 #ifdef _AFX //Nore serialization is MFC specific
