@@ -45,8 +45,5 @@
     char* itoa__( int32_t i, char* buffer);    // with prev..  '  ' <-->  ' -'
     char* itoa__(uint64_t u, char* buffer);    // with prev..  '  ' <-->  ' -'
     char* itoa__( int64_t i, char* buffer);    // with prev..  '  ' <-->  ' -'
-   // char* itoa__( int96_a u, char* buffer);    // with prev..  '  ' <-->  ' -'
-
-
 
 #endif // ITOA_LJUST_H

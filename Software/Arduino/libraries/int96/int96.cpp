@@ -378,7 +378,7 @@ void int96_a::InverseTwosComplement() {
   lo  = ~lo;
 }
 
-int96_a int96_a::operator>>(uint8_t nShift) const {
+int96_a int96_a::operator>>(int8_t nShift) const {
   int96_a rVal;
 
   if ( nShift >= 0)
@@ -432,7 +432,7 @@ int96_a int96_a::operator>>(uint8_t nShift) const {
   return rVal;
 }
 
-int96_a int96_a::operator<<(uint8_t nShift) const {
+int96_a int96_a::operator<<(int8_t nShift) const {
   int96_a rVal;
 
   if ( nShift >= 0)
@@ -486,12 +486,12 @@ int96_a int96_a::operator<<(uint8_t nShift) const {
   return rVal;
 }
 
-int96_a& int96_a::operator>>=(uint8_t nShift) {
+int96_a& int96_a::operator>>=(int8_t nShift) {
   *this = (*this >> nShift);
   return *this;
 }
 
-int96_a& int96_a::operator<<=(uint8_t nShift) {
+int96_a& int96_a::operator<<=(int8_t nShift) {
   *this = (*this << nShift);
   return *this;
 }
@@ -566,9 +566,9 @@ void int96_a::mul_div95(const int96_a& mul, int96_a& rVal) const {
   
   B += B;
 
-  uint64_t sum_hi  = 0;
-  uint64_t sum_mid = 0;
-  uint64_t sum_lo  = 0;
+  uint64_t sum_hi     = 0;
+  uint64_t sum_mid    = 0;
+  uint64_t sum_lo     = 0;
 
   uint64_t b1  = A.hi;
            b1 *= B.hi;
@@ -587,21 +587,28 @@ void int96_a::mul_div95(const int96_a& mul, int96_a& rVal) const {
   uint64_t b8  = A.lo;
            b8 *= B.mid;
   
-  sum_lo   = b8 >> 32;
-  sum_lo  += b6 >> 32;
-  sum_lo  += b7;
-  sum_lo  += b5;
-  sum_lo  += b3;
-  sum_mid  = b4;
-  sum_mid += b2;
-  sum_hi   = b1;
+  sum_lo     = b8 >> 32;
+  sum_lo    += b6 >> 32;
+  sum_lo    += b7 & 0xFFFFFFFF;
+  sum_lo    += b5 & 0xFFFFFFFF;
+  sum_lo    += b3 & 0xFFFFFFFF;
+  sum_mid    = b7 >> 32;
+  sum_mid   += b5 >> 32;
+  sum_mid   += b3 >> 32;  
+  sum_mid   += b4 & 0xFFFFFFFF;
+  sum_mid   += b2 & 0xFFFFFFFF;
+  sum_hi     = b1;
+  sum_hi    += b4 >> 32;  
+  sum_hi    += b2 >> 32; 
   
-  sum_mid += sum_lo >> 32;  // carry
-  sum_hi  += sum_mid >> 32; // carry
+  sum_mid   += sum_lo >> 32;     // carry
+  sum_hi    += sum_mid >> 32;    // carry
   
   rVal.lo  = sum_mid;
   rVal.mid = sum_hi;
   rVal.hi  = sum_hi >> 32;
+
+  rVal    += 1;
 
   if ( (bANegative && !bBNegative) || (!bANegative && bBNegative)) rVal.Negate();
 }

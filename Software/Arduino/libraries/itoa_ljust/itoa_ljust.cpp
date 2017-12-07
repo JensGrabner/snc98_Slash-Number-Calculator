@@ -123,6 +123,17 @@
         return n;
     }
 
+    static inline uint8_t digits_64( uint64_t u, uint64_t k, uint64_t &d, char* &p, uint8_t n ) {
+        uint64_t test = k;
+        test *= 10;
+        if (u < test) { 
+            d = u / k;
+            p = out<char>('0'+d, p);
+            --n;
+        }
+        return n;
+    }
+
     static inline char* itoa_8(uint8_t u, char* p, uint8_t d, uint8_t n) {
         switch(n) {
         case  3: u -= d * 100;
@@ -175,10 +186,10 @@
         case  4: ;
         case  3: ;
         case  2: ;
-        default: return itoa_32( u, p, d, n );
-        }
-    }
-
+        default: return itoa_32( u, p, d, n ); 
+      }
+    } 
+    
     char* itoa_(uint8_t u, char* p) {
         uint8_t d = 0;
         uint8_t n;
@@ -228,11 +239,14 @@
         return itoa_32( u, p, d, 9 );
     }
 
-    char* itoa_( int96_a u, char* p) {
+    char* itoa_(int96_a u, char* p) {
         uint32_t test_hi   = u.hi;
                  test_hi >>= 31;
 
-        uint64_t test;
+        uint64_t     d =  0;
+        uint64_t   upp =  0;
+        uint64_t   low =  0;
+         int96_a upper =  0;
 
         if ( test_hi == 1 ) {
             *p++  = '-';
@@ -247,11 +261,7 @@
         int96_a div95_dec_18;   // 39614081257 = 2^95 / dec_18
                 div95_dec_18.hi  = 0;
                 div95_dec_18.mid = 9;
-                div95_dec_18.lo  = 959375593;
-
-        uint64_t    d =  0;
-        int96_a   upp =  0;
-        int96_a   low =  0;
+                div95_dec_18.lo  = 959375593;  // 959375593
          
         if ( u.hi == 0 ) {
         	  if ( u.mid == 0 ) {
@@ -265,14 +275,27 @@
         	  }
         }
         else {
-        	  u.mul_div95(div95_dec_18, upp);  // const u. * div95_dec_18 = upp;
-        	  upp += 1;
-        	  u   -= upp * dec_18;
-        	  p    = itoa_(upp, p);
-        	  test   = low.mid;
-        	  test <<= 32;
-        	  test  += low.lo; 
-        	  return itoa_64( test, p, d, 18 );
+        	  u.mul_div95(div95_dec_18, upper);  // const u. * div95_dec_18 = upp;
+        	  upper  -= 1;
+        	  upp   = upper.mid;
+        	  upp <<= 32;
+        	  upp  += upper.lo;
+        	  
+        	  upper  *= dec_18;
+        	  u      -= upper;
+        	  
+        	  low   = u.mid;
+        	  low <<= 32;
+        	  low  += u.lo;
+
+        	  if ( low > 999999999999999999 ) {
+        	  	upp  += 1;
+        	  	low  -= 1000000000000000000;
+        	  }
+        	  
+         	  p = itoa_(upp, p);
+        	  
+        	  return itoa_64( low, p, d, 18 );
         }
     }
 

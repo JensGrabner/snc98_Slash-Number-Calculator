@@ -35,7 +35,7 @@ to maintain a single distribution point for the source code.
   #define TRUE               1
   #define FALSE              0
 #else
-  typedef __int64          int64_t;
+  typedef __int64           int64_t;
   typedef unsigned __int64 uint64_t;
 #endif
 
@@ -91,10 +91,12 @@ public:
   int8_t operator<=(const  int96_a& value) const;
 
 //Misc operators
-  int96_a  operator>>(uint8_t nShift) const;
-  int96_a  operator<<(uint8_t nShift) const;
-  int96_a& operator>>=(uint8_t nShift);
-  int96_a& operator<<=(uint8_t nShift);
+
+  int96_a operator>>(int8_t nShift) const;
+  int96_a operator<<(int8_t nShift) const;
+  int96_a& operator>>=(int8_t nShift);
+  int96_a& operator<<=(int8_t nShift);
+
   int96_a  operator^(const  int96_a& value) const;
   int96_a  operator|(const  int96_a& value) const;
   int96_a  operator&(const  int96_a& value) const;
