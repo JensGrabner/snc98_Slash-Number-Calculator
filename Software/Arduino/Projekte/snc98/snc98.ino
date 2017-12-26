@@ -692,9 +692,9 @@ boolean Expo_change = false;
 #define First_Display            0
 #define Start_Mode               1
 #define Input_Mantisse           2   //     Input Number
-#define Input_Expo               3   //     Input Number
-#define Input_dms                4   //     Input Number
-#define Input_Fraction           5   //     Input Number
+#define Input_dms                3   //     Input Number
+#define Input_Fraction           4   //     Input Number
+#define Input_Expo               5   //     Input Number
 #define Input_Memory             6   //     Input Number
 #define Input_Operation_0        7   //    Input Operation  no Input     // op_priority
 #define Input_Operation_1        8   //    Input Operation  "+"  "-"     // op_priority
@@ -1502,6 +1502,7 @@ void Error_String(uint8_t a) {
   display_string[13] = a;
   Display_new = true;
   Start_input = Display_Error;
+  Beep__on(); 
 }
 
 void Clear_String() {   // String loeschen -- Eingabe Mantisse
@@ -1638,6 +1639,7 @@ void Get_Number( uint8_t deep_test ) {
         Get_Expo_change();
       }
     }
+    Error_Test();
   }
   else {
     mem_stack_input[ mem_pointer ].num = int32_max;
@@ -2572,6 +2574,10 @@ void Display_Number() {
 
   if ( Display_Status_new == 40 ) {
     display_string[Operation] = temp_char;
+  }
+
+  if ( Start_input == Input_Memory ) {
+    display_string[Operation] = ' ';
   }
 
   if ( Debug_Level == 9 ) {
@@ -5109,6 +5115,7 @@ void loop() {
           if ( (Start_input == Input_Operation_0) || (Start_input == Input_Memory) ) {
             First_operation = false;
             max_input = false;
+            mem_pointer = mem_stack_count;
             Clear_String();
             Start_input = Start_Mode;          
           }
@@ -5198,18 +5205,6 @@ void loop() {
             Start_input = Display_M_Plus;
             Beep__on();
           }
-          if ( Start_input == Input_Operation_0 ) {
-            if ( mem_pointer > 0 ) {
-              Clear_String();
-            }
-          }
-          if ( Start_input == Input_Memory ) {
-            First_operation = false;
-            max_input = false;
-            mem_pointer = mem_stack_count;
-            Clear_String();
-            Start_input = Input_Mantisse;
-          }
           if ( Start_input > Input_Operation_0 ) {
             if ( Start_input < Display_Input_Error ) {
               First_operation = false;
@@ -5248,6 +5243,9 @@ void loop() {
         case 48:                 //    _0_
           if ( Debug_Level == 5 ) {
             Serial.println(char(Switch_Code));
+          }
+          if ( display_string[Memory_1] == Display_Memory_1[4] ) {   // E
+          	Start_input = Input_Memory;
           }
           if ( Start_input > Input_Operation_0 ) {
             if ( Start_input < Display_Input_Error ) {
@@ -5317,6 +5315,17 @@ void loop() {
           if ( Debug_Level == 5 ) {
             Serial.println(char(Switch_Code));
           }
+          if ( Start_input == Input_Expo ) {
+            Expo_change = true;
+            display_string[Expo_1] = display_string[Expo_0];
+            display_string[Expo_0] = Switch_Code;
+            display_string[Memory_1] = mem_str_1[mem_pointer];
+            display_string[Memory_0] = mem_str_0[mem_pointer];
+            Beep__on();
+          }
+          if ( display_string[Memory_1] == Display_Memory_1[4] ) {   // E
+          	Start_input = Input_Memory;
+          }
           if ( Start_input == Display_M_Plus ) {
             Result_to_Start_Mode();
           }
@@ -5339,7 +5348,7 @@ void loop() {
               Start_input = Input_Mantisse;
             }
           }
-          if ( Start_input == Input_Mantisse ) {
+          if ( Start_input < Input_Expo ) {
             if ( Number_count < 8 ) {
               Mantisse_change = true;
               display_string[Cursor_pos] = Switch_Code;
@@ -5353,14 +5362,6 @@ void loop() {
               }
               Beep__on();
             }
-          }
-          if ( Start_input == Input_Expo ) {
-            Expo_change = true;
-            display_string[Expo_1] = display_string[Expo_0];
-            display_string[Expo_0] = Switch_Code;
-            display_string[Memory_1] = mem_str_1[mem_pointer];
-            display_string[Memory_0] = mem_str_0[mem_pointer];
-            Beep__on();
           }
           break;
 
@@ -5447,102 +5448,97 @@ void loop() {
           if ( mem_stack_count == 2 ) {
             Found_constant = true;
           }
-          if ( Start_input == Input_Operation_0 ) {
-            mem_extra_left_right( 0, mem_pointer );
-          }
           if ( Start_input > Start_Mode ) {
             if ( Start_input < Input_Operation_0 ) {      // Input Number
               if ( Test_to_Result == true ) {
                 Test_to_Result = false;
+                Start_input = Input_Operation_0;
                 Get_Number( 0 );
                 mem_pointer = 0;
-                Start_input = Input_Operation_0;
               }
             }
           }
-          if ( Constant_arithmetic == false ) {
-            Start_input = Input_Operation_0;
-          }
-          else {
-            mem_pointer = 0;
-          }
-          if ( Debug_Level == 21 ) {
-            Serial.print("mem_stack_count =  ");
-            Serial.print(mem_stack_count);
-            Serial.print(" --> ");
-            Serial.println(Start_input);
-          }
-          if ( mem_stack_count > 1 ) {
-            copy_stack_input_2_calc( mem_stack_count, mem_pointer );
-          }
-          else {
-            if ( temp_operation > p_p ) {
-              copy_stack_input_2_calc( 2, mem_pointer );
+          if ( Start_input != Display_Error ) {
+            if ( Constant_arithmetic == false ) {
+              Start_input = Input_Operation_0;
             }
             else {
-              copy_stack_input_2_calc( 1, mem_pointer );
+              mem_pointer = 0;
             }
-          }
-          if ( mem_stack_count > 2 ) {
-            mem_stack_count -= 1;
-          }
-          if ( Constant_arithmetic == true ) {
-            mem_stack_test = mem_stack_count;
-          }          
-          if ( Start_input > Input_Operation_0 ) {
-            Input_Operation_2_function();
-          }
-          mem_stack_calc[mem_stack_count].op = 61;
-          if ( (Start_input == Display_Result) ) {
+            if ( Start_input == Input_Operation_0 ) {
+              mem_extra_left_right( 0, mem_pointer );
+              Error_Test();
+            }
+            if ( mem_stack_count > 1 ) {
+              copy_stack_input_2_calc( mem_stack_count, mem_pointer );
+            }
+            else {
+              if ( temp_operation > p_p ) {
+                copy_stack_input_2_calc( 2, mem_pointer );
+              }
+              else {
+                copy_stack_input_2_calc( 1, mem_pointer );
+              }
+            }
+            if ( mem_stack_count > 2 ) {
+              mem_stack_count -= 1;
+            }
+            if ( Constant_arithmetic == true ) {
+              mem_stack_test = mem_stack_count;
+            }          
+            if ( Start_input > Input_Operation_0 ) {
+              Input_Operation_2_function();
+            }
+            mem_stack_calc[mem_stack_count].op = 61;
+            if ( (Start_input == Display_Result) ) {
+              if ( Debug_Level == 21 ) {
+                Serial.println("--xxxx--");
+              }          	
+              mem_pointer = mem_stack_count;
+              mem_stack_count -= 1;
+              if ( temp_operation > p_p ) {          //    
+                copy_calc_left_right( 2, 0 );
+              }
+              else {
+                copy_calc_left_right( 1, 0 );
+              }
+              mem_pointer = 0;
+              Start_input = Input_Operation_0;
+            }
+            if ( Constant_arithmetic == false ) {
+              mem_stack_test = mem_stack_count;
+            }          
             if ( Debug_Level == 21 ) {
-              Serial.println("--xxxx--");
-            }          	
-            mem_pointer = mem_stack_count;
-            mem_stack_count -= 1;
-            if ( temp_operation > p_p ) {          //    
-              copy_calc_left_right( 2, 0 );
-            }
-            else {
-              copy_calc_left_right( 1, 0 );
-            }
-            mem_pointer = 0;
-            Start_input = Input_Operation_0;
-          }
-          if ( Constant_arithmetic == false ) {
-            mem_stack_test = mem_stack_count;
-          }          
-          if ( Debug_Level == 21 ) {
-            for ( index_i = 1; index_i <= mem_stack_test; index_i += 1 ) {
-              if ( index_i < 10 ) {
-                Serial.print(" ");
-              }
-              Serial.print(index_i);
-              Serial.print(". -> ( ");
-              if ( mem_stack_calc[index_i].num >= 0 ) {
-                Serial.print(" ");
-              }
-              Serial.print(mem_stack_calc[index_i].num);
-              if ( mem_stack_calc[index_i].expo > 0 ) {
-                for ( index_j = 1; index_j <= mem_stack_calc[index_i].expo; index_j += 1 ) {
-                  Serial.print("0");
+              for ( index_i = 1; index_i <= mem_stack_test; index_i += 1 ) {
+                if ( index_i < 10 ) {
+                  Serial.print(" ");
                 }
-              }
-              Serial.print(" / ");
-              Serial.print(mem_stack_calc[index_i].denom);
-              if ( mem_stack_calc[index_i].expo < 0 ) {
-                for ( index_j = -1; index_j >= mem_stack_calc[index_i].expo; index_j -= 1 ) {
-                  Serial.print("0");
+                Serial.print(index_i);
+                Serial.print(". -> ( ");
+                if ( mem_stack_calc[index_i].num >= 0 ) {
+                  Serial.print(" ");
                 }
+                Serial.print(mem_stack_calc[index_i].num);
+                if ( mem_stack_calc[index_i].expo > 0 ) {
+                  for ( index_j = 1; index_j <= mem_stack_calc[index_i].expo; index_j += 1 ) {
+                    Serial.print("0");
+                  }
+                }
+                Serial.print(" / ");
+                Serial.print(mem_stack_calc[index_i].denom);
+                if ( mem_stack_calc[index_i].expo < 0 ) {
+                  for ( index_j = -1; index_j >= mem_stack_calc[index_i].expo; index_j -= 1 ) {
+                    Serial.print("0");
+                  }
+                }
+                Serial.print(" ) ");
+                Print_Operation( mem_stack_calc[index_i].op );
+                Serial.println(" ");
               }
-              Serial.print(" ) ");
-              Print_Operation( mem_stack_calc[index_i].op );
-              Serial.println(" ");
+              Serial.print(mem_stack_calc[1].op);
+              Serial.println(" --------");
             }
-            Serial.print(mem_stack_calc[1].op);
-            Serial.println(" --------");
-          }
-          if ( Start_input != Display_Result ) {
-            if ( Start_input != Display_Error ) {
+            if ( Start_input != Display_Result ) {
               Start_input = Display_Result;
               mem_save = true;
               mem_pointer = 0;
@@ -5552,6 +5548,12 @@ void loop() {
               mem_extra_test = 0;
               max_input = false;
             }
+          }
+          if ( Debug_Level == 21 ) {
+            Serial.print("mem_stack_count =  ");
+            Serial.print(mem_stack_count);
+            Serial.print(" --> ");
+            Serial.println(Start_input);
           }
           break;
 
@@ -6298,7 +6300,7 @@ void loop() {
               mem_stack_count = 1;
               mem_pointer = mem_stack_count;
               left_right_mem_extra( mem_pointer, 0 );
-              Start_input = Input_Operation_0;
+              Start_input = Input_Memory;
             }
             if ( Start_input == Input_Operation_0 ) {
               Start_input = Input_Memory;
