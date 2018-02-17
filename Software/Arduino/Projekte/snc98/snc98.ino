@@ -4,7 +4,7 @@
 
    Developer: Jens Grabner
    Email:     jens@grabner-online.org
-   Date:      Dec 2017
+   Date:      Feb 2018
 
    Copyright CERN 2013.
    This documentation describes Open Hardware and is licensed
@@ -26,7 +26,7 @@
 /*                          HEADER
 
   *********************************************************************
-  * Program for my "Retro Calculator with 15 Digit"  v 0.2            *
+  * Program for my "Retro Calculator with 15 Digit"  v 0.95           *
   * If you do/have/found any updates, modifications, suggestions,     *
   * comments, ideas, bugs, flaws or anything else - contact me        *
   *                                                                   *
@@ -98,6 +98,7 @@
                        // 21 - "=" - Output -- mem_stack_calc()
                        // 22 - reduce test spezial
                        // 23 - On - Off - Test
+                       // 24 - add Test
 
 uint8_t mem_pointer        =  1;   //     mem_stack 0 .. 19
 #define mem_stack_max         2    // 19  Variable in calculate
@@ -138,8 +139,8 @@ boolean switch_Pos_0 = false;
 static const uint8_t index_display[Digit_Count] = {               //   Standard
 //  0,  1,  2,  3, 14, 13,  4,  5,  6,  7, 23, 22, 21, 20, 19     //   old Project
 //  0,  1,  3,  6,  7, 10, 11, 13, 14, 15, 19, 20, 21, 22, 23     //
-// 14, 15, 19, 20, 21, 22, 23, 13, 11,  7, 10,  3,  6,  0,  1     // Main_CPU
-   14, 15, 19, 20, 21, 22, 23, 13,  4,  7,  2,  3,  6,  0,  1     // new Main_CPU
+//  14, 15, 19, 20, 21, 22, 23, 13, 11,  7, 10,  3,  6,  0,  1     // Main_CPU
+    14, 15, 19, 20, 21, 22, 23, 13,  4,  7,  2,  3,  6,  0,  1     // new Main_CPU
 };
 
 #define Min_Out        0   // D2 and D4, D5 V-USB not used
@@ -289,22 +290,22 @@ static const uint64_t expo_10_[9] = {
   expo_10_15, expo_10_16, expo_10_17, expo_10_18 };
                                               //  9214364837600034815 = 2^63 - 2^53 - 1
 #define expo_test_10aaa       0x3097AE14ULL   //            815246868 = expo_test_0a / 2^31
-#define expo_test_9a          0x685A0267ULL   //           1750729319 x 0,00000000019
-#define expo_test_9b          0x9F4603ABULL   //           2672165803 x 0,00000000029
-#define expo_test_9          0x10D1E0632ULL   //           4515038770 x 0,00000000049
-#define expo_test_6a       0x1979F9962E8ULL   //        1750729319144 x 0,00000019
-#define expo_test_6b       0x26E297E5398ULL   //        2672165802904 x 0,00000029
-#define expo_test_6        0x41B3D4834F8ULL   //        4515038770424 x 0,00000049
-#define expo_test_3a     0x638476F2A5A47ULL   //     1750729319144007 x 0,00019
-#define expo_test_3b     0x97E52157689CAULL   //     2672165802904010 x 0,00029
-#define expo_test_3     0x100A67620EE8D1ULL   //     4515038770424017 x 0,00049
-#define expo_test_2a    0x3E32CA57A786C2ULL   //    17507293191440066 x 0,0019
-#define expo_test_2b    0x5EEF34D6A161E5ULL   //    26721658029040101 x 0,0029
-#define expo_test_2     0xA06809D495182AULL   //    45150387704240170 x 0,0049
-#define expo_test_1a   0x26DFBE76C8B4395ULL   //   175072931914400661 x 0,019
-#define expo_test_1b   0x3B55810624DD2F2ULL   //   267216580290401010 x 0,029
-#define expo_test_1    0x64410624DD2F1AAULL   //   451503877042401706 x 0,049                                                  913113831648622805
-#define expo_test_0a  0x184BD70A3D70A3D6ULL   //  1750729319144006614 x 0,19
+#define expo_test_9a          0x6DD80287ULL   //           1842872967 x 0,0000000002
+#define expo_test_9b          0xA4C403CBULL   //           2764309451 x 0,0000000003
+#define expo_test_9          0x1129C0652ULL   //           4607182418 x 0,0000000005
+#define expo_test_6a       0x1AD13C9E160ULL   //        1842872967520 x 0,0000002
+#define expo_test_6b       0x2839DAED210ULL   //        2764309451280 x 0,0000003
+#define expo_test_6        0x430B178B370ULL   //        4607182418800 x 0,0000005
+#define expo_test_3a     0x68C154C985F06ULL   //     1842872967520006 x 0,0002
+#define expo_test_3b     0x9D21FF2E48E8AULL   //     2764309451280010 x 0,0003
+#define expo_test_3     0x105E353F7CED91ULL   //     4607182418800017 x 0,0005
+#define expo_test_2a    0x4178D4FDF3B645ULL   //    18428729675200069 x 0,002
+#define expo_test_2b    0x62353F7CED9168ULL   //    27643094512800104 x 0,003
+#define expo_test_2     0xA3AE147AE147AEULL   //    46071824188000174 x 0,005
+#define expo_test_1a   0x28EB851EB851EB8ULL   //   184287296752000696 x 0,02
+#define expo_test_1b   0x3D6147AE147AE14ULL   //   276430945128001044 x 0,03
+#define expo_test_1    0x664CCCCCCCCCCCCULL   //   460718241880001740 x 0,05                                                  913113831648622805
+#define expo_test_0a  0x1993333333333333ULL   //  1842872967520006963 x 0,2
 #define expo_test_00  0x7FDFFFFFFFFFFFFFULL   //  9214364837600034815 x 1
 #define expo_test_000 0xFFBFFFFFFFFFFFFEULL   // 18428729675200069630 x 2
 
@@ -477,8 +478,8 @@ static const AVRational_32 to_xx[14] = {
   {  0, 1334375000, 2147468400, 0 },   // 7  0  ..  to Miles
   {  0, 1191813600, 2145264480, 0 },   // 8  1  ..  to °C  5 / 9
   {  0, 2145264480, 1191813600, 0 },   // 9  9  ..  to °F  9 / 5
-  {  1,-2145264480,  670395150, 0 },   // 10  ..       -32
-  {  1, 2145264480, 1206711270, 0 },   // 11  ..     +160 / 9
+  {  1,-2145264480, 1206711270, 0 },   // 10  ..     -160 / 9
+  {  1, 2145264480,  670395150, 0 },   // 11  ..        32
   {  2,  853380389, 1489429756, 0 },   // 12  ..     to deg
   { -2, 1489429756,  853380389, 0 }    // 13  ..     to rad
 };
@@ -1047,6 +1048,10 @@ void Print_Operation(uint8_t Switch_up) {
         Serial.print("AGM");
         break;
 
+      case 152:                 //    _mod_
+        Serial.print("mod");
+        break;
+
       case 160:                 //   SM(MCs)
         Serial.print("(MCs)");
         break;
@@ -1202,6 +1207,10 @@ void Print_Operation(uint8_t Switch_up) {
 
       case 222:                 //    _AGM AGM_
         Serial.print("(_AGM AGM_)");
+        break;
+
+      case 223:                 //    _mod mod_
+        Serial.print("(_mod mod_)");
         break;
 
       default:
@@ -1497,7 +1506,6 @@ int32_t gcd_iter_32(int32_t u_0, int32_t v_0) {
   if ( u_0 < 0 ) {
     u_0 *= -1;
   }
-  // return abs(expo_10[0]);  // no GCD Test
 
   while (v_0 != 0) {
     t_0 = u_0;
@@ -2673,9 +2681,9 @@ void Display_wait() {
 }
 
 void Expand_Reduce_add() {
-  calc_temp_64_d = calc_temp_64_a;
+  calc_temp_64_d  = calc_temp_64_a;
   calc_temp_64_d += calc_temp_64_b;
-  if ( calc_temp_64_d > 0 ) {
+  if ( calc_temp_64_d >= 0 ) {
     test_signum_8 =  1;
   }
   else {
@@ -2687,7 +2695,7 @@ void Expand_Reduce_add() {
   denom_test_u64  = denom_temp_u64;
   denom_test_u64 /= 5;
 
-      if ( Debug_Level == 15 ) {
+      if ( Debug_Level == 24 ) {
 
         Serial.print("_00_ = ");
         calc_temp_u64_0 = num_temp_u64;
@@ -2909,6 +2917,33 @@ AVRational_32 mul(AVRational_32 a, AVRational_32 b) {
 }
 
 AVRational_32 add(AVRational_32 a, AVRational_32 b, uint8_t c) {
+	
+  if ( Debug_Level == 24 ) {
+    Serial.print("add LS ( ");
+    Serial.print(a.num);
+    Serial.print(" / ");
+    Serial.print(a.denom);
+    Serial.print(" )");
+    if ( a.expo == 0 ) {
+    	Serial.println("");
+    }
+    else {
+    	Serial.print(" * 10^");
+      Serial.println(a.expo);
+    }
+    Serial.print("add RS ( ");
+    Serial.print(b.num);
+    Serial.print(" / ");
+    Serial.print(b.denom);
+    Serial.print(" )");
+    if ( b.expo == 0 ) {
+    	Serial.println("");
+    }
+    else {
+    	Serial.print(" * 10^");
+      Serial.println(b.expo);
+    }
+  }
 
   expo_temp_16    = a.expo;
   expo_temp_16   -= b.expo;
@@ -2955,52 +2990,63 @@ AVRational_32 add(AVRational_32 a, AVRational_32 b, uint8_t c) {
   calc_temp_64_c  *= c;
   calc_temp_64_c_abs = abs(calc_temp_64_c);
 
+  calc_temp_64_a_abs = abs(calc_temp_64_a);
+  calc_temp_64_b_abs = abs(calc_temp_64_b);
+
   if ( expo_temp_16 >=  9 ) {
     if ( calc_temp_64_c_abs < expo_test_9b ) {
-      calc_temp_64_a *= expo_10[9];
-      calc_temp_64_c *= expo_10[9];
+      calc_temp_64_a_abs *= expo_10[9];
+      calc_temp_64_c_abs *= expo_10[9];
       expo_temp_16   -= 9;
     }
   }
 
   if ( expo_temp_16 >=  6 ) {
     if ( calc_temp_64_c_abs < expo_test_6b ) {
-      calc_temp_64_a *= expo_10[6];
-      calc_temp_64_c *= expo_10[6];
+      calc_temp_64_a_abs *= expo_10[6];
+      calc_temp_64_c_abs *= expo_10[6];
       expo_temp_16   -= 6;
     }
   }
 
   if ( expo_temp_16 >=  3 ) {
     if ( calc_temp_64_c_abs < expo_test_3b ) {
-      calc_temp_64_a *= expo_10[3];
-      calc_temp_64_c *= expo_10[3];
+      calc_temp_64_a_abs *= expo_10[3];
+      calc_temp_64_c_abs *= expo_10[3];
       expo_temp_16   -= 3;
     }
   }
 
   if ( expo_temp_16 >=  2 ) {
     if ( calc_temp_64_c_abs < expo_test_2b ) {
-      calc_temp_64_a *= expo_10[2];
-      calc_temp_64_c *= expo_10[2];
+      calc_temp_64_a_abs *= expo_10[2];
+      calc_temp_64_c_abs *= expo_10[2];
       expo_temp_16   -= 2;
     }
   }
 
   if ( expo_temp_16 >=  1 ) {
     if ( calc_temp_64_c_abs < expo_test_1b ) {
-      calc_temp_64_a *= expo_10[1];
-      calc_temp_64_c *= expo_10[1];
+      calc_temp_64_a_abs *= expo_10[1];
+      calc_temp_64_c_abs *= expo_10[1];
       expo_temp_16   -= 1;
     }
   }
+
+  if ( calc_temp_64_a < 0 ) {
+    calc_temp_64_a  = calc_temp_64_a_abs;
+    calc_temp_64_a *= -1;
+  }
+  else {
+    calc_temp_64_a  = calc_temp_64_a_abs;
+  }
+  calc_temp_64_c = calc_temp_64_c_abs;
 
   if ( expo_temp_16 ==  0 ) {
     Expand_Reduce_add();
     return temp_32;
   }
   else {
-    calc_temp_64_b_abs = abs(calc_temp_64_b);
 
     if ( expo_temp_16 <  10 ) {
       calc_temp_64_b_abs += (expo_10[expo_temp_16] / 2);
@@ -3011,12 +3057,12 @@ AVRational_32 add(AVRational_32 a, AVRational_32 b, uint8_t c) {
       calc_temp_64_b_abs /= expo_10_[expo_temp_16 - 10];
     }
 
-    if ( calc_temp_64_b > 0 ) {
+    if ( calc_temp_64_b < 0 ) {
       calc_temp_64_b  = calc_temp_64_b_abs;
+      calc_temp_64_b *= -1;
     }
     else {
       calc_temp_64_b  = calc_temp_64_b_abs;
-      calc_temp_64_b *= -1;
     }
 
     Expand_Reduce_add();
@@ -3352,6 +3398,14 @@ void calc_stack(uint8_t count_stack) {
         case 222: //   _AGM AGM_
           count = 0;
         	temp_32 = agm(number_stack[1], number_stack[2]);
+          break;
+
+        case 152: //   _mod_ 
+    	  	temp_32 = mul(frac(mul(number_stack[1], div_x(number_stack[2]))), number_stack[2]);
+          break;
+
+        case 223: //   _mod mod_
+    	  	temp_32 = mul(frac(mul(number_stack[2], div_x(number_stack[1]))), number_stack[1]);
           break;
 
         case 92:  //   _//_ 
@@ -4595,7 +4649,7 @@ void Test_Switch_up_down() {
               break;
 
             case 8:
-              Switch_Code = 37;   //           new   grd
+              Switch_Code = 152;  //           new   _mod_
               break;
 
             case 16:
@@ -4616,7 +4670,12 @@ void Test_Switch_up_down() {
               break;
 
             case 8:
-              Switch_Code = 64; //             new  rad
+              if ( Rad_in_out == true ) {
+                Switch_Code = 37;   //           new   _Deg_
+              }
+              else {
+                Switch_Code = 64; //             new   _Rad_
+              }
               break;
 
             case 16:
@@ -6184,6 +6243,17 @@ void loop() {
           }
           break;
 
+        case 152:                 //    _mod_
+          if ( Debug_Level == 5 ) {
+            Serial.println("mod");
+          }
+          add_operation_to_mem( 3, 'S' );
+          if ( display_string[Expo_point] == '.' ) {
+          	Found_constant = false;
+            temp_operation = 223;
+          }
+          break;
+
         case 160:                 //   SM(MCs)
           if ( Debug_Level == 5 ) {
             Serial.println("MCs");
@@ -6446,13 +6516,12 @@ void loop() {
             mem_pointer = mem_stack_count;
             if ( Start_input != Display_Error ) {
               mem_pointer = 0;
-              if ( to_extra_test == 9 ) {
-                mem_stack_input[ mem_pointer ] = add(mem_stack_input[ mem_pointer ], to_xx[ 11 ], 1);
+              if ( to_extra_test < 8 ) {
+                mem_stack_input[ mem_pointer ] = mul(mem_stack_input[ mem_pointer ], to_xx[ to_extra_test ]);
+              } else {
+                mem_stack_input[ mem_pointer ] = add(to_xx[ to_extra_test + 2 ], mul(to_xx[ to_extra_test ], mem_stack_input[ mem_pointer ]), 1);
               }
-              if ( to_extra_test == 8 ) {
-                mem_stack_input[ mem_pointer ] = add(mem_stack_input[ mem_pointer ], to_xx[ 10 ], 1);
-              }
-              mem_stack_input[ mem_pointer ] = mul(mem_stack_input[ mem_pointer ], to_xx[ to_extra_test ]);
+             
               Error_Test();
               mem_pointer = mem_stack_count;
               if ( Start_input != Display_Error ) {
