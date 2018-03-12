@@ -26716,9 +26716,9 @@ LETTER landscape</description>
 <rectangle x1="-0.2286" y1="-1.2954" x2="0.2286" y2="-0.7112" layer="51" rot="R180"/>
 <rectangle x1="-1.1684" y1="0.7112" x2="-0.7112" y2="1.2954" layer="51" rot="R180"/>
 <rectangle x1="0.7112" y1="0.7112" x2="1.1684" y2="1.2954" layer="51" rot="R180"/>
-<smd name="1" x="0.9525" y="1.016" dx="1.143" dy="1.651" layer="1" roundness="50"/>
-<smd name="2" x="-0.9525" y="1.016" dx="1.143" dy="1.651" layer="1" roundness="50"/>
-<smd name="3" x="0" y="-1.016" dx="1.143" dy="1.651" layer="1" roundness="50"/>
+<smd name="1" x="0.9525" y="1.143" dx="1.143" dy="1.524" layer="1" roundness="50"/>
+<smd name="2" x="-0.9525" y="1.143" dx="1.143" dy="1.524" layer="1" roundness="50"/>
+<smd name="3" x="0" y="-1.143" dx="1.143" dy="1.524" layer="1" roundness="50"/>
 <text x="-1.397" y="1.778" size="1.27" layer="27" ratio="10">&gt;VALUE</text>
 <text x="-1.397" y="3.302" size="1.27" layer="25" ratio="10">&gt;NAME</text>
 </package>

@@ -79,7 +79,7 @@
 #define Debug_Level  0 //  0 - not Debug
                        //  1 - Test intern 1ms - Task by 100 ms
                        //  2 - Test intern 1ms - Task by 1000 ms
-                       //  3 - Test Switch "EE" up / down (analog)
+                       //  3 - Test Switch "=" up / down (analog)
                        //  4 - Test Switchnumber down (digital)
                        //  5 - Monitor Switch_Code (Text) 128 - Functions
                        //  6 - Test Pendulum Time - Sinus 0.5 Hz
@@ -99,6 +99,7 @@
                        // 22 - reduce test spezial
                        // 23 - On - Off - Test
                        // 24 - add Test
+                       // 25 - Test Switchnumber down (digital) _ spezial
 
 uint8_t mem_pointer        =  1;   //     mem_stack 0 .. 19
 #define mem_stack_max         2    // 19  Variable in calculate
@@ -109,7 +110,8 @@ uint8_t mem_pointer        =  1;   //     mem_stack 0 .. 19
 #define Switch_up_b         800  //   750  ..   840   60  %   ...  800
 #define Switch_down_b       600  //   570  ..   600   20  %   ...  600		
 #define Switch_up_start     400  //   360  ...  360    0  %   ...  500  <<--
-                                 //                  -20  %   ...  400
+#define Switch_down_extra   200  //                  -20  %   ...  400
+                                 //                  -40  %   ...  200
 #define Average               4  //     4
 #define Max_Buffer           24  // Count of Switches	
 
@@ -452,6 +454,7 @@ uint8_t display_digit_temp =  5;
 
 volatile uint8_t mem_stack_count    =  1;   // actual - mem_stack 1 .. 19
 volatile uint8_t temp_operation     =  0;
+volatile uint8_t temp_operation_a   =  0;
 volatile uint8_t mem_stack_test     =  0;
 volatile uint8_t count              =  0;   // Display wait counter
 
@@ -730,6 +733,9 @@ int64_t display_big = 1;
 int32_t display_number = 1;
 #define digit_count_max 8
 int16_t display_expo_mod = 0;
+
+uint8_t pgm_count_a = 0;
+uint8_t pgm_content_a[3] = { 0 };
 
 void reboot() {
 	MCUSR = 0;
@@ -1537,8 +1543,9 @@ void Error_String(uint8_t a) {
 }
 
 void Clear_String() {   // String loeschen -- Eingabe Mantisse
-  strcpy( display_string, string_start );      // normal
-  // strcpy( display_string, display_string_888 );    // On_Off_Test
+  
+  strcpy( display_string, string_start );          // normal
+
   display_string[Memory_1] = mem_str_1[mem_pointer];
   display_string[Memory_0] = mem_str_0[mem_pointer];
 
@@ -3570,7 +3577,9 @@ void add_operation_to_mem( uint8_t deep_step, char op_add ) {
       First_operation = true;
     }
   }
-  temp_operation = Switch_Code;
+  if ( mem_stack_count < mem_stack_max) {
+    temp_operation = Switch_Code;
+  }
   if ( Start_input < Input_Memory ) {      // Input Number
     Get_Number( deep_step );
   }
@@ -3610,15 +3619,20 @@ void add_operation_to_mem( uint8_t deep_step, char op_add ) {
       else {
         if ( max_input == false ) {
           max_input = true;
-          mem_stack_input[ mem_pointer ].op  = temp_op_;
-          mem_stack_input[ mem_pointer ].op += 'x';
-          Start_input  = Input_Operation_0;
-          temp_operation = mem_stack_calc[ mem_stack_count-1 ].op;
-          Display_Number();
-          Beep__on();
+          if ( mem_stack_max == 2 ) {
+            pgm_count_a = 2;
+            pgm_content_a[2] = 61;            // _=_
+            pgm_content_a[1] = Switch_Code;   // + - * /
+          }
+          else {
+            mem_stack_input[ mem_pointer ].op  = temp_op_;
+            mem_stack_input[ mem_pointer ].op += 'x';
+            Display_Number();
+            Beep__on();
+          }
         }
       }
-      if ( max_input == false ) {
+      if ( max_input == false ) {        
         Beep__on();
       }
     }
@@ -4829,7 +4843,7 @@ void Function_1_number() {
 boolean Test_buffer = false;
 uint8_t Number_of_buffer = 0;
 // Create a RingBufCPP object designed to hold a Max_Buffer of Switch_down
-RingBufCPP<uint32_t, Max_Buffer > q;
+RingBufCPP < uint32_t, Max_Buffer > q;
 
 // Define various ADC prescaler
 static const unsigned char PS_16  = (1 << ADPS2);
@@ -4853,6 +4867,10 @@ void setup() {
   // 12 MHz / 32 = 375.0 KHz, outside the desired 50-200 KHz range.
   // 12 MHz / 16 = 750.0 KHz, outside the desired 50-200 KHz range.
   ADCSRA |= PS_32;    // set our own prescaler to 32
+
+  if ( Debug_Level == 23 ) {
+    strcpy( display_string, display_string_888 );    // On_Off_Test
+  }
 
   uint8_t pin;
   for ( pin = Min_Out; pin <= Max_Out; pin += 1 ) {
@@ -4963,13 +4981,13 @@ void loop() {
 
         if ( Beep_on_off == true ) {
           display_string[Memory_1] = '^';
-          display_string[Memory_0] = '&';
+          display_string[Memory_0] = 'O';     //  "no"
           display_string[Beep_point] = ' ';
           Beep_on_off = false;
         }
         else {
           display_string[Memory_1] = 'O';
-          display_string[Memory_0] = '^';
+          display_string[Memory_0] = '^';     //  "on"
           display_string[Beep_point] = '.';
           Beep_on_off = true;
         }
@@ -5281,7 +5299,7 @@ void loop() {
           }
           add_operation_to_mem( 1, '+' );
           if ( display_string[Expo_point] == '.' ) {
-          	Found_constant = false;
+            Found_constant = false;
             temp_operation = 216;
           }
           break;
@@ -6726,6 +6744,11 @@ void loop() {
       }
     }
 
+    if ( pgm_count_a > 0 ) {
+      Switch_Code = pgm_content_a[pgm_count_a];             //    _=_
+      pgm_count_a -= 1;
+    }
+
     index_5min  = 255;
   }
 
@@ -7383,7 +7406,7 @@ void loop() {
       time = time_down - time_old;
       Serial.print(time);
       Serial.print("  ");
-      Serial.println(taste[0]);
+      Serial.println(taste[2]);
     }
 
     if ( Display_Status_new != Display_Status_old ) {

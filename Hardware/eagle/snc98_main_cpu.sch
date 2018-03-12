@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="yes"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.05" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="mil" style="lines" multiple="1" display="no" altdistance="0.05" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -30704,8 +30704,8 @@ This is the "EZ" version, which has limited top masking for improved ease of ass
 <rectangle x1="-0.2286" y1="-1.2954" x2="0.2286" y2="-0.7112" layer="51" rot="R180"/>
 <rectangle x1="-1.1684" y1="0.7112" x2="-0.7112" y2="1.2954" layer="51" rot="R180"/>
 <rectangle x1="0.7112" y1="0.7112" x2="1.1684" y2="1.2954" layer="51" rot="R180"/>
-<smd name="1" x="0.95" y="1.143" dx="1.143" dy="1.524" layer="1" roundness="30"/>
-<smd name="2" x="-0.95" y="1.143" dx="1.143" dy="1.524" layer="1" roundness="30"/>
+<smd name="1" x="0.9525" y="1.143" dx="1.143" dy="1.524" layer="1" roundness="30"/>
+<smd name="2" x="-0.9525" y="1.143" dx="1.143" dy="1.524" layer="1" roundness="30"/>
 <smd name="3" x="0" y="-1.143" dx="1.143" dy="1.524" layer="1" roundness="30"/>
 <text x="-1.397" y="1.778" size="1.27" layer="27" ratio="10">&gt;VALUE</text>
 <text x="-1.397" y="3.302" size="1.27" layer="25" ratio="10">&gt;NAME</text>
@@ -38306,9 +38306,9 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/22049b.pdf</description>
 <rectangle x1="-0.2286" y1="0.7112" x2="0.2286" y2="1.2954" layer="51"/>
 <rectangle x1="0.7112" y1="-1.2954" x2="1.1684" y2="-0.7112" layer="51"/>
 <rectangle x1="-1.1684" y1="-1.2954" x2="-0.7112" y2="-0.7112" layer="51"/>
-<smd name="B" x="-0.95" y="-1.143" dx="1.143" dy="1.524" layer="1" roundness="30"/>
+<smd name="B" x="-0.9525" y="-1.143" dx="1.143" dy="1.524" layer="1" roundness="30"/>
 <smd name="C" x="0" y="1.143" dx="1.143" dy="1.524" layer="1" roundness="30"/>
-<smd name="E" x="0.95" y="-1.143" dx="1.143" dy="1.524" layer="1" roundness="30"/>
+<smd name="E" x="0.9525" y="-1.143" dx="1.143" dy="1.524" layer="1" roundness="30"/>
 <text x="-1.905" y="1.905" size="1.27" layer="25">&gt;NAME</text>
 <text x="-1.905" y="-3.175" size="1.27" layer="27">&gt;VALUE</text>
 </package>
@@ -38764,7 +38764,7 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <part name="C18" library="rcl" deviceset="C-EU" device="C1206K" value="220n"/>
 <part name="U3" library="Atmel_By_element14_Batch_1-00" deviceset="ATMEGA1284P-PU" device=""/>
 <part name="R50" library="rcl" deviceset="R-EU_" device="R1206" value="6k8"/>
-<part name="R1" library="rcl" deviceset="R-EU_" device="R1206" value="22k"/>
+<part name="R1" library="rcl" deviceset="R-EU_" device="R1206" value="47k"/>
 <part name="R4" library="rcl" deviceset="R-EU_" device="R1206" value="100"/>
 <part name="R51" library="rcl" deviceset="R-EU_" device="R1206" value="3k3"/>
 <part name="R34" library="rcl" deviceset="R-EU_" device="R1206" value="6k8"/>
