@@ -30892,7 +30892,7 @@ With round pins</description>
 <plain>
 <text x="149.86" y="30.48" size="3.81" layer="91" ratio="12">Calculator 15-Digit with 1284P</text>
 <text x="149.86" y="25.4" size="2.54" layer="91" ratio="12">by Jens Grabner</text>
-<text x="238.76" y="7.62" size="2.54" layer="91" ratio="12">1.0</text>
+<text x="236.22" y="7.62" size="2.54" layer="91" ratio="12">V 4.0</text>
 <text x="5.08" y="10.16" size="2.1844" layer="91" ratio="10">Calculator 15-Digit with ATmega1284P by Jens Grabner is licensed under</text>
 <text x="5.08" y="15.24" size="3.81" layer="91" ratio="12">Copyright CERN 2013</text>
 <text x="5.08" y="5.08" size="2.1844" layer="91" ratio="10">the CERN OHL v.1.2 or later. (http://ohwr.org/cernohl)</text>
@@ -31434,7 +31434,7 @@ With round pins</description>
 <plain>
 <text x="-58.42" y="58.42" size="3.81" layer="91" ratio="12">Calculator 15-Digit with 1284P</text>
 <text x="-58.42" y="53.34" size="2.54" layer="91" ratio="12">by Jens Grabner</text>
-<text x="30.48" y="35.56" size="2.54" layer="91" ratio="12">1.0</text>
+<text x="27.94" y="35.56" size="2.54" layer="91" ratio="12">V 4.0</text>
 <text x="-203.2" y="38.1" size="2.1844" layer="91" ratio="10">Calculator 15-Digit with ATmega1284P by Jens Grabner is licensed under</text>
 <text x="-203.2" y="43.18" size="3.81" layer="91" ratio="12">Copyright CERN 2013</text>
 <text x="-203.2" y="33.02" size="2.1844" layer="91" ratio="10">the CERN OHL v.1.2 or later. (http://ohwr.org/cernohl)</text>
