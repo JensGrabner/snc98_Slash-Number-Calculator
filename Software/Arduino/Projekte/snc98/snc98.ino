@@ -3956,6 +3956,18 @@ void Test_Switch_up_down() {
           Switch_Code = 30;  //             new   <--
           break;
 
+        case 515:      //    "FN" + "EE" + "CE"   three Switch pressed
+          if ( Display_Status_new == 24 ) {
+            Switch_Code = 91;   //          new   Light up
+          }
+          break;
+
+        case 67:       //    "FN" + "EE" + "<--"  three Switch pressed
+          if ( Display_Status_new == 24 ) {
+            Switch_Code = 93;   //          new   Light down
+          }
+          break;
+
         case 1540:     //    "=" + "CE"  +  "("   three Switch pressed
         case 1542:     //    "=" + "CE"  +  "("   three Switch pressed
           Switch_Code = 148;  //            new   <<-->>
@@ -4014,11 +4026,9 @@ void Test_Switch_up_down() {
         case 11:       //    "pi()"               defect
         case 19:       //    "pi()"               defect
         case 27:       //    "EE" + "FN" + "1/x"  defect
-        case 67:       //    "<"                  defect
         case 72:       //    "<--"                defect
         case 131:      //    "<"                  defect
         case 194:      //    "<"                  defect
-        case 515:      //    "EE" + "FN" +  "<"   defect
         case 585:      //    "e()"                defect
         case 576:      //    "CE"                 defect
         case 1027:     //    "("                  defect
