@@ -69,6 +69,10 @@
 // Original:  http://www.naughter.com/int96.html
 // https://github.com/JensGrabner/snc98_Slash-Number-Calculator/tree/master/Software/Arduino/libraries/int96
 
+#include <r128.h>
+// Original:  https://github.com/fahickman/r128
+// https://github.com/JensGrabner/snc98_Slash-Number-Calculator/tree/master/Software/Arduino/libraries/r128
+
 #include <stdlib.h>         // for itoa(); ltoa();
 #include <string.h>
 #include <stdint.h>
@@ -94,7 +98,7 @@
                        // 15 - M+ Test
                        // 16 - Expand Test
                        // 17 - Display_Status Test
-                       // 18 - out 1.00 .. 100.00 sqr-Test: out 1.00 .. 10.00
+                       // 18 - out 1.00 .. 100.00 sqrt-Test: out 1.00 .. 10.00
                        // 19 - 5 x sqrt(2)
                        // 20 - reduce test 
                        // 21 - "=" - Output -- mem_stack_calc()
@@ -103,6 +107,8 @@
                        // 24 - add Test
                        // 25 - Test Switchnumber down (digital) _ spezial
                        // 26 - Pint_pos Test
+                       // 27 - out 1.0 .. 1000.0 cbrt-Test: out 1.00 .. 10.00
+                       // 28 - Test cbrt steps
 
 uint8_t mem_pointer        =  1;   //     mem_stack 0 .. 19
 #define mem_stack_max_c       39   // 39  Variable in calculate
@@ -257,6 +263,8 @@ AVRational_32       temp_32_a    = {0, int32_max, int32_max, 0};
 AVRational_32       temp_32_b    = {0, int32_max, int32_max, 0};
 AVRational_32       temp_32_a1   = {0, int32_max, int32_max, 0};
 AVRational_32       temp_32_b1   = {0, int32_max, int32_max, 0};
+AVRational_32       temp_32_b2   = {0, int32_max, int32_max, 0};
+AVRational_32       temp_32_cbrt = {0, int32_max, int32_max, 0};
 AVRational_64       temp_64      = {0, int32_max, int32_max};
 AVRational_32_plus  temp_32_plus = {0, int32_max, int32_max, ' ', 0};
 
@@ -319,8 +327,21 @@ static const uint64_t expo_10_[9] = {
 #define sqrt_10_expo            0
 #define sqrt_10_num    1499219281
 #define sqrt_10_denom   474094764  // Fehler ..  7.03e-19
+
 static const AVRational_32 sqrt_10_plus  = {0, sqrt_10_num, sqrt_10_denom, 0};
 static const AVRational_32 sqrt_10_minus = {1, sqrt_10_denom, sqrt_10_num, 0};
+
+// ---  cbrt(10)_Konstante  ---
+#define cbrt_10_expo            0
+#define cbrt_10_num     265396349
+#define cbrt_10_denom   123186073  // Fehler ..  3,9e-18
+
+#define cbrt_100_expo           1
+#define cbrt_100_num    123186073
+#define cbrt_100_denom  265396349  // Fehler .. -8,3e-18
+
+static const AVRational_32 cbrt_10_plus   = { 0, cbrt_10_num, cbrt_10_denom, 0};
+static const AVRational_32 cbrt_100_plus  = { 1, cbrt_100_num, cbrt_100_denom, 0};
 
 // ---  Tau_Konstante (2_Pi) ---
 #define Tau_expo                1       
@@ -446,6 +467,26 @@ uint32_t calc_temp_u32   = 1;
  int16_t calc_temp_16_0  = 1;
  int16_t calc_temp_16_1  = 1;
  int16_t calc_temp_16_2  = 1;
+ int16_t calc_temp_16_3  = 1;
+
+ static const int16_t calc_temp_16_0_array[] = {1038, 1117, 1199, 1286, 1377, 1472, 1571, 1674, 1782, 1895, 2012, 2134, 2261, 2392, 2529, 2671, 2818, 2970, 3128, 3291, 3460};  // 7,7E-15
+ static const int16_t calc_temp_16_1_array[] = {1000, 1025, 1050, 1075, 1100, 1125, 1150, 1175, 1200, 1225, 1250, 1275, 1300, 1325, 1350, 1375, 1400, 1425, 1450, 1475, 1500};  //-7,7E-15
+ static const int16_t calc_temp_16_2_array[] = {3000, 3075, 3150, 3225, 3300, 3375, 3450, 3525, 3600, 3675, 3750, 3825, 3900, 3975, 4050, 4125, 4200, 4275, 4350, 4425, 4500};
+ static const int16_t calc_temp_16_3_array[] = {1000, 1077, 1158, 1242, 1331, 1424, 1521, 1622, 1728, 1838, 1953, 2073, 2197, 2326, 2460, 2600, 2744, 2894, 3049, 3209, 3375}; 
+
+/*
+ static const int16_t calc_temp_16_0_array[] = {1045, 1141, 1242, 1349, 1462, 1581, 1706, 1838, 1976, 2121, 2274, 2433, 2599, 2773, 2955, 3144, 3341, 3546};  // 6,2E-15
+ static const int16_t calc_temp_16_1_array[] = {1000, 1030, 1060, 1090, 1120, 1150, 1180, 1210, 1240, 1270, 1300, 1330, 1360, 1390, 1420, 1450, 1480, 1510};  //-4,3E-15
+ static const int16_t calc_temp_16_2_array[] = {3000, 3090, 3180, 3270, 3360, 3450, 3540, 3630, 3720, 3810, 3900, 3990, 4080, 4170, 4260, 4350, 4440, 4530};
+ static const int16_t calc_temp_16_3_array[] = {1000, 1093, 1191, 1295, 1405, 1521, 1643, 1772, 1907, 2048, 2197, 2353, 2515, 2686, 2863, 3049, 3242, 3443}; 
+
+ static const int16_t calc_temp_16_0_array[] = {1077, 1242, 1423, 1622, 1838, 2073, 2326, 2600, 2894, 3209, 3547};  // 1,0E-14
+ static const int16_t calc_temp_16_1_array[] = {1000, 1050, 1100, 1150, 1200, 1250, 1300, 1350, 1400, 1450, 1500};  //-1,3E-14
+ static const int16_t calc_temp_16_2_array[] = {3000, 3150, 3300, 3450, 3600, 3750, 3900, 4050, 4200, 4350, 4500};
+ static const int16_t calc_temp_16_3_array[] = {1000, 1158, 1331, 1521, 1728, 1953, 2197, 2460, 2744, 3049, 3375}; 
+*/
+ static const int16_t denom_aaa = 1000;
+ static const int16_t denom_a_4 = 4;
 
   int8_t  calc_temp_8_0  = 1;
   int8_t  calc_temp_8_1  = 1;
@@ -3568,6 +3609,148 @@ AVRational_32 sqrt(AVRational_32 a) {
   return temp_32;
 }
 
+AVRational_32 cbrt(AVRational_32 a) {
+  uint8_t index_count = 0;	
+
+  if ( a.num == 0 ) {
+    return a;	
+  }
+
+  temp_32_cbrt.num   = abs(a.num);
+  temp_32_cbrt.denom = a.denom;	
+  temp_32_cbrt.expo  = a.expo;
+
+  if ( temp_32_cbrt.num > temp_32_cbrt.denom ) {
+    num_temp_u64   = abs(a.num);
+    denom_temp_u64 = abs(a.denom);
+  }
+  else {
+    num_temp_u64   = abs(a.denom);
+    denom_temp_u64 = abs(a.num);
+  }
+
+  num_temp_u64    *= denom_aaa;  // 1000
+  calc_temp_16_0   = num_temp_u64 / denom_temp_u64;
+  num_temp_u64_a   = denom_temp_u64; 
+  
+  if ( Debug_Level == 28 ) {
+    Serial.print(" calc_temp_16_0 = ");
+    Serial.println(calc_temp_16_0);
+  }
+  
+  while ( calc_temp_16_0 > calc_temp_16_0_array[index_count] ) {
+    index_count += 1;
+  }
+
+  num_temp_u64_a *= calc_temp_16_3_array[index_count];
+  num_temp_u64   *= denom_a_4;
+  num_temp_u64   -= num_temp_u64_a;
+  denom_temp_u64 *= calc_temp_16_2_array[index_count];
+  
+  Reduce_Number();                // reduce
+  temp_32_a.num     = num_temp_u32;
+  temp_32_a.denom   = denom_temp_u32;
+  temp_32_a.expo    = 0;
+
+  if ( Debug_Level == 28 ) {
+    Serial.print("   num_temp_u32 = ");
+    Serial.println(num_temp_u32);
+    Serial.print(" denom_temp_u32 = ");
+    Serial.println(denom_temp_u32);
+  }
+  
+  temp_32_b       = sqrt(temp_32_a);
+  temp_32_b.expo  = 0;
+
+  temp_32_a.num   = calc_temp_16_1_array[index_count];
+  temp_32_a.denom = denom_aaa;  // 1000
+  temp_32_a.expo  = 0; 
+   
+  temp_32_a1 = add(temp_32_a, temp_32_b, 2);
+  
+  if ( Debug_Level == 28 ) {
+    Serial.print(" a.expo % 3 = ");
+    Serial.println(a.expo % 3);
+  }
+  
+  if ( temp_32_cbrt.num > temp_32_cbrt.denom ) {
+    num_temp_u64   = abs(a.num);
+    denom_temp_u64 = abs(a.denom);
+  }
+  else {
+    num_temp_u64   = abs(a.denom);
+    denom_temp_u64 = abs(a.num);
+  }
+
+  num_temp_u64   *= temp_32_a1.denom;
+  denom_temp_u64 *= temp_32_a1.num;
+  
+  num_temp_u64   *= 4;
+  denom_temp_u64 *= 3;
+  
+  Reduce_Number();                // reduce
+  temp_32_a.num     = num_temp_u32;
+  temp_32_a.denom   = denom_temp_u32;
+  temp_32_a.expo    = 0;
+  
+  // return temp_32_a;
+  
+  num_temp_u64    = temp_32_a1.num;
+  denom_temp_u64  = temp_32_a1.denom;
+  
+  num_temp_u64   *= temp_32_a1.num;
+  denom_temp_u64 *= temp_32_a1.denom;
+  
+  denom_temp_u64 *= 3;
+  
+  Reduce_Number();                // reduce
+  temp_32_b.num     = num_temp_u32;
+  temp_32_b.denom   = denom_temp_u32;
+  temp_32_b.expo    = 0;
+  
+  temp_32_b2 = add(temp_32_a1, sqrt(add(temp_32_a, min_x(temp_32_b), 1)),2);
+
+  if ( temp_32_cbrt.num <= temp_32_cbrt.denom ) {
+    temp_32_b2 = div_x( temp_32_b2 );
+  }
+  
+  temp_32_b2.expo  = a.expo;
+  temp_32_b2.expo -= 1;
+  
+  if ( a.expo < 5 ) {
+    temp_32_b2.expo += 111;
+    temp_32_cbrt.expo += 111;
+  }
+	
+  temp_32_b2.expo /= 3;
+  if ( a.expo < 5 ) {
+    temp_32_b2.expo -= 37;
+  }
+
+  if ( a.num < 0 ) {
+     temp_32_b2.num  *= -1;
+  }
+
+  switch (temp_32_cbrt.expo % 3) {
+  	
+    case 1:
+    	temp_32_b1 = mul(temp_32_b2, cbrt_10_plus);  // 2,15^3 =  10.0
+    	break;
+  	
+    case 2:
+    	temp_32_b1 = mul(temp_32_b2, cbrt_100_plus); // 4,64^3 = 100.0
+    	break;
+  	
+    case 0:
+    	temp_32_b2.expo += 1;
+    	temp_32_b1 = temp_32_b2;
+    	break;
+  } 
+
+  return temp_32_b1;
+
+}
+
 AVRational_32 agm(AVRational_32 a, AVRational_32 b) {
   temp_32_a = add(abs_x(a), abs_x(b), 2);
   temp_32_b = sqrt(mul(abs_x(a), abs_x(b)));
@@ -3827,6 +4010,59 @@ void Test_all_function() {
       Serial.println(" ");
 
     test_index = false;
+  }
+  if ( Debug_Level == 27 ) {
+    time_start = millis();
+
+    Serial.println(" ");
+    for ( int32_t index = 10; index <= 10000; index += 1 ) {
+      Serial.print(index);
+      Serial.print("  ");
+      calc_32.expo = 0;
+      num_temp_u32 = index;
+      denom_temp_u32 = 10;
+      if ( num_temp_u32 > denom_temp_u32 ) {
+        gcd_temp_32 = num_temp_u32 / denom_temp_u32;
+        while ( gcd_temp_32 > 2 ) {
+          ++calc_32.expo;
+          gcd_temp_32    /= 10;
+          denom_temp_u32 *= 10;
+        }
+      }
+      else {
+        gcd_temp_32 = denom_temp_u32 / num_temp_u32;
+        while ( gcd_temp_32 > 2 ) {
+          --calc_32.expo;
+          gcd_temp_32    /= 10;
+          num_temp_u32   *= 10;
+        }
+      }
+      Expand_Number();
+
+      calc_32.num = num_temp_u32;
+      calc_32.denom = denom_temp_u32;
+    
+      Serial.print(calc_32.num);
+      Serial.print("  ");
+      Serial.print(calc_32.denom);
+      Serial.print("  ");
+      Serial.print(calc_32.expo);
+      Serial.print("  ");
+ 
+      test_32 = cbrt(calc_32);
+      Serial.print(test_32.num);
+      Serial.print("  ");
+      Serial.print(test_32.denom);
+      Serial.print("  ");
+      Serial.print(test_32.expo);
+      Serial.println(" -> ");
+
+    }
+    test_index = false;
+    time_end = millis();
+    time_diff = time_end - time_start;
+    Serial.print("Time: ");
+    Serial.println(time_diff);
   }
 }
 
@@ -4987,6 +5223,10 @@ void Function_1_number() {
     	case 172:                //    _x^3_
     	  mem_stack_input[ mem_pointer ] = cubic(mem_stack_input[ mem_pointer ]);
     	  break;
+
+    	case 173:                //    _cbrt()_
+    	  mem_stack_input[ mem_pointer ] = cbrt(mem_stack_input[ mem_pointer ]);
+    	  break;
     }
     
     Error_Test();
@@ -5099,8 +5339,8 @@ void loop() {
 
   if ( Switch_Code > 0 ) {     // Main Responce about Switch
 
-    Print_Statepoint();
     Beep__on();
+    Print_Statepoint();
     switch (Switch_Code) {
 
       case 90:                 //    _CE_
@@ -5120,26 +5360,6 @@ void loop() {
           Start_input = Start_Mode;
           Switch_Code =   0;
           index_5min  = 255;
-        }
-        break;
-
-      case 91:                 //   "FN"- Light_up
-        if ( Debug_Level == 5 ) {
-          Serial.println("Light_up");
-        }
-        ++led_bright_index;
-        if ( led_bright_index > led_bright_max ) {
-          led_bright_index = led_bright_max;
-        }
-        break;
-
-      case 93:                 //   "FN"- Light_down
-        if ( Debug_Level == 5 ) {
-          Serial.println("Light_down");
-        }
-        --led_bright_index;
-        if ( led_bright_index < led_bright_min ) {
-          led_bright_index = led_bright_min;
         }
         break;
 
@@ -6120,6 +6340,17 @@ void loop() {
           No_change = true;
           break;
 
+        case 91:                 //   "FN"- Light_up
+          if ( Debug_Level == 5 ) {
+            Serial.println("Light_up");
+          }
+          ++led_bright_index;
+          if ( led_bright_index > led_bright_max ) {
+            led_bright_index = led_bright_max;
+            Beep__off();
+          }
+          break;
+
         case 92:                 //    _//_
           if ( Debug_Level == 5 ) {
             Serial.println("_//_");
@@ -6128,6 +6359,17 @@ void loop() {
           if ( display_string[Expo_point] == '.' ) {
           	Found_constant = false;
             temp_operation = 215;
+          }
+          break;
+
+        case 93:                 //   "FN"- Light_down
+          if ( Debug_Level == 5 ) {
+            Serial.println("Light_down");
+          }
+          --led_bright_index;
+          if ( led_bright_index < led_bright_min ) {
+            led_bright_index = led_bright_min;
+            Beep__off();
           }
           break;
 
@@ -6560,6 +6802,7 @@ void loop() {
           if ( Debug_Level == 5 ) {
             Serial.println("cbrt()");
           }
+          Function_1_number();
           break;
 
         case 174:                //    _EE+1_
