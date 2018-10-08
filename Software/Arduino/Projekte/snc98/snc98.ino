@@ -4,7 +4,7 @@
 
    Developer: Jens Grabner
    Email:     jens@grabner-online.org
-   Date:      Apr 2018
+   Date:      Sep 2018
 
    Copyright CERN 2013.
    This documentation describes Open Hardware and is licensed
@@ -71,7 +71,6 @@
 
 #include <r128.h>
 // Original:  https://github.com/fahickman/r128
-// https://github.com/JensGrabner/snc98_Slash-Number-Calculator/tree/master/Software/Arduino/libraries/r128
 
 #include <string.h>
 #include <stdint.h>
@@ -110,6 +109,8 @@
                        // 28 - Test cbrt steps
                        // 29 - log2(x) : in 0.2 .. 2.0 _>_ out -2.30 .. 1.00 Step 0.0002
                        // 30 - log(x)  : in 0.3 .. 3.3 _>_ out -1.20 .. 1.20 Step 0.0004
+                       // 31 - Test Error
+                       // 32 - 2^x Test  0,00000000100 .. 320
 
 uint8_t mem_pointer        =  1;   //     mem_stack 0 .. 19
 #define mem_stack_max_c       39   // 39  Variable in calculate
@@ -191,6 +192,7 @@ uint8_t  Switch_up_down = 0;  // Bit 0 to 7 - Multiswitch
 uint32_t time          = 0;
 uint32_t time_down     = 0;
 uint32_t time_old      = 0;
+uint32_t time_is       = 0;
 
 #define expo_max_input  90
 #define expo_min_input -90
@@ -267,8 +269,13 @@ AVRational_32       temp_32_b1   = {0, int32_max, int32_max, 0};
 AVRational_32       temp_32_b2   = {0, int32_max, int32_max, 0};
 AVRational_32       temp_32_cbrt = {0, int32_max, int32_max, 0};
 AVRational_32       temp_32_log  = {0, int32_max, int32_max, 0};
+AVRational_32       temp_32_mul  = {0, int32_max, int32_max, 0};
+AVRational_32       temp_32_ext  = {0, int32_max, int32_max, 0};
+AVRational_32       temp_32_pow  = {0, int32_max, int32_max, 0};
 AVRational_64       temp_64      = {0, int32_max, int32_max};
 AVRational_32_plus  temp_32_plus = {0, int32_max, int32_max, ' ', 0};
+
+int8_t  test_signum_log  = 0;
 
 int8_t  temp_expo  = 0;          // <-- expo
 int32_t temp_num   = int32_max;  // <-- numerator
@@ -333,9 +340,30 @@ static const uint64_t expo_10_[9] = {
 static const AVRational_32 sqrt_10_plus  = {0, sqrt_10_num, sqrt_10_denom, 0};
 static const AVRational_32 sqrt_10_minus = {1, sqrt_10_denom, sqrt_10_num, 0};
 
+// ---  exp2()_Konstante  ---
+#define num_exp2_1_32      671032160
+#define denum_exp2_1_32   2147302912  // 1/32
+static const AVRational_32 exp2_1_32   = { -1, num_exp2_1_32, denum_exp2_1_32, 0};
+
+#define num_exp2_2_1     2147302920
+#define denum_exp2_2_1   1073651460   // 2/1
+static const AVRational_32 exp2_2_1   = { 0, num_exp2_2_1, denum_exp2_2_1, 0};
+
+#define num_exp2_8_1     1717842336
+#define denum_exp2_8_1   2147302920   // 8/1
+static const AVRational_32 exp2_8_1   = { 1, num_exp2_8_1, denum_exp2_8_1, 0};
+
+#define num_exp2_1_8     2147302920
+#define denum_exp2_1_8   1717842336   // 1/8
+static const AVRational_32 exp2_1_8   = { -1, num_exp2_1_8, denum_exp2_1_8, 0};
+
+#define num_exp2_1_2     1073651460
+#define denum_exp2_1_2   2147302920   // 1/2
+static const AVRational_32 exp2_1_2   = { 0, num_exp2_1_2, denum_exp2_1_2, 0};
+
 // ---  log2()_Konstante  ---
 #define num_log_to_2      717140287
-#define denum_log_to_2    497083768  // Fehler ..  2,92e-19
+#define denum_log_to_2    497083768   // Fehler ..  2,92e-19
 static const AVRational_32 log_to_2   = { 0, num_log_to_2, denum_log_to_2, 0};
 
 // ---  log10()_Konstante  ---
@@ -396,6 +424,18 @@ static const AVRational_32  Pi_2 = {Pi_2_expo, Pi_2_num, Pi_2_denom, 0};
 #define e_expo                  0
 #define e_num           848456353
 #define e_denom         312129649  // Fehler .. -6.03e-19
+
+// ---  ln2_Konstante  ---
+#define ln2_expo                0
+#define ln2_num         497083768
+#define ln2_denom       717140287  // Fehler .. -1.4e-19
+static const AVRational_32  ln2 = {ln2_expo, ln2_num, ln2_denom, 0};
+
+// ---  log_2_Konstante  ---
+#define log_2_expo              0
+#define log_2_num       579001193
+#define log_2_denom    1923400330  // Fehler .. -6,29e-21
+static const AVRational_32  log_2 = {log_2_expo, log_2_num, log_2_denom, 0};
 
 char    expo_temp_str[]    = "#00";
 int8_t  expo_temp_8        =  1;
@@ -491,6 +531,8 @@ uint64_t calc_temp_u64_2 = 1;
 
 uint32_t num_temp_u32    = 1;
 uint32_t denom_temp_u32  = 1;
+uint32_t num_temp_u32_   = 1;
+uint32_t denom_temp_u32_ = 1;
 uint32_t mul_temp_u32    = 1;
 uint32_t mul_temp_u32_a  = 1;
 uint32_t mul_temp_u32_b  = 1;
@@ -543,7 +585,7 @@ AVRational_32_plus mem_stack_calc[mem_stack_max_c + 1] = {   // after calc
 };
 
 static const AVRational_32 to_xx[14] = {
-  { -1, 1250000000,  473176473, 0 },   // 0  7  ..  1 Liter = (1 / 3,785411784) US-gal
+  { -1, 1250000000,  473176473, 0 },   // 0  7  ..  1 Liter =  (1 / 3,785411784) US-gal
   {  1,  473176473, 1250000000, 0 },   // 1  3  ..  1 gallon [US] = 3,785411784 Liter
   {  0,  565007021, 1245627260, 0 },   // 2  2  ..  1 lb = (1 / 2,2046226218488) kg
   {  0, 1245627260,  565007021, 0 },   // 3  8  ..  1 kg = 2,2046226218488 lbs
@@ -633,7 +675,7 @@ static const uint16_t led_bright[led_bright_max + 3] = {
 //      0011011001101100110110011011001101100110110011011001101100110110 -- binaer
 #define Beep_patt_m 0x6CD9B366CD9B366CULL   //  16.579 ms -- 1085.714 Hz -- 18x Peak
 //      0110110011011001101100110110011011001101100110110011011001101100 -- binaer
-#define max_Beep_count  65   //  65   Beep on
+#define max_Beep_count  105  //  65   Beep on
 #define min_Beep_count -25   // -25   Beep off  = 90
 
 uint8_t Countdown_OFF = 0;
@@ -658,10 +700,10 @@ uint8_t index_TIME = 255;         // counter Time
 
 boolean Display_rotate = false;
 boolean Memory_xch = false;
-boolean Beep_on = false;
-boolean Beep_on_off = true;
-boolean Beep_on_off_temp = true;
-int8_t Beep_count = max_Beep_count;
+volatile boolean Beep_on = false;
+volatile boolean Beep_on_off = true;
+volatile boolean Beep_on_off_temp = true;
+volatile int8_t Beep_count = max_Beep_count;
 
 boolean Constant_arithmetic = false;
 boolean Found_constant = false;
@@ -677,7 +719,7 @@ static const uint8_t led_font[count_ascii] = {
   123, 119, 127,  57,  15, 121, 113,  61, 118,  48,  30, 122,  56,  85,  55,  99,     //  ¦@ABCDEFGHIJKLMNO¦
   115, 103,  49,  45,   7,  28,  34,  60,  73, 110,  27,  57, 100,  15,  35,   8,     //  ¦PQRSTUVWXYZ[\]^_¦
    32,  95, 124,  88,  94, 123,  43, 111, 116,  16,  14, 120,  24,  21,  84,  92,     //  ¦`abcdefghijklmno¦
-   83,  53,  80, 108,  70,  29,  43, 106,  65, 102,  11,  24,  20,   3,   1,  54};    //  ¦pqrstuvwxyz{|}~ ¦
+   83,  53,  80, 108,  70,  29,  43, 106,   9, 102,  11,  24,  20,   3,   1,  54};    //  ¦pqrstuvwxyz{|}~ ¦
    
 uint8_t count_led[8] = {      // 1 .. 7
   0
@@ -762,6 +804,7 @@ char Temp_char[12]     = "           ";
 char Temp_char_expo[5] = "    ";
 
 uint8_t Switch_Code = 0;
+uint8_t Switch_Code_old = 0;
 uint8_t Switch_Test = 0;
 uint8_t Start_mem = 0;
 uint8_t Display_Status_new = 0;    // Switch up / down
@@ -1586,11 +1629,13 @@ void Memory_to_Input_Operation() {
 }
 
 void Result_to_Start_Mode() {
+	Beep__off();
   Constant_arithmetic = false;
   First_operation = false;
   mem_stack_count = 1;
   mem_pointer = mem_stack_count;
   Clear_String();
+  Beep__on();
 }
 
 void Mux_change(uint8_t change) {
@@ -1670,6 +1715,7 @@ int32_t gcd_iter_32(int32_t u_0, int32_t v_0) {
 }
 
 void Error_String(uint8_t a) {
+	Beep__off();
   Clear_String();
   Start_input = Display_Error;
   strcpy( display_string, string_start );
@@ -1689,7 +1735,10 @@ void Error_String(uint8_t a) {
   if ( a == 'I' ) {
     display_string[2] = '1';
   }
-  Display_new = true;
+  if ( a == '[' ) {
+    display_string[2] = ']';
+  }
+  Beep__on();
 }
 
 void Clear_String() {   // String loeschen -- Eingabe Mantisse
@@ -1730,7 +1779,7 @@ void Clear_String() {   // String loeschen -- Eingabe Mantisse
   temp_Memory_0[0] = display_string[Memory_0];
 
   Start_input = Input_Mantisse;
-  Beep__on();
+  Display_new = true;
 }
 
 int16_t Get_Expo() {
@@ -1852,6 +1901,35 @@ void Get_Number( uint8_t deep_test ) {
   }
 }
 
+void Get_Expo_( uint8_t test ) {
+  expo_temp_16 = Get_Expo();
+  mem_stack_input[mem_pointer].expo = expo_temp_16;
+
+  switch (Point_pos) {
+
+    case 0:
+      mem_stack_input[mem_pointer].expo = mem_stack_input[mem_pointer].expo + Number_count;
+      break;
+
+    case 1:
+      break;
+
+    case 2:
+      mem_stack_input[mem_pointer].expo = mem_stack_input[mem_pointer].expo - Zero_after_Point;
+      break;
+
+    default:
+      mem_stack_input[mem_pointer].expo = mem_stack_input[mem_pointer].expo + Point_pos - 2;
+      break;
+  }
+  
+  if ( test == 1 ) {
+    if (abs(mem_stack_input[ mem_pointer ].num) >= mem_stack_input[ mem_pointer ].denom ) {
+      mem_stack_input[ mem_pointer ].expo -= 1;
+    }
+  }
+}
+
 void Get_Mantisse() {          // " -1.2345678#- 1 5# 1 9."
   if ( Debug_Level == 8 ) {
     Serial.print("'");
@@ -1901,26 +1979,8 @@ void Get_Mantisse() {          // " -1.2345678#- 1 5# 1 9."
       ++Zero_index_a;
     }
   }
-  expo_temp_16 = Get_Expo();
-  mem_stack_input[mem_pointer].expo = expo_temp_16;
 
-  switch (Point_pos) {
-
-    case 0:
-      mem_stack_input[mem_pointer].expo = mem_stack_input[mem_pointer].expo + Number_count;
-      break;
-
-    case 1:
-      break;
-
-    case 2:
-      mem_stack_input[mem_pointer].expo = mem_stack_input[mem_pointer].expo - Zero_after_Point;
-      break;
-
-    default:
-      mem_stack_input[mem_pointer].expo = mem_stack_input[mem_pointer].expo + Point_pos - 2;
-      break;
-  }
+  Get_Expo_( 0 );
 
   num_temp_u32 = atol(Temp_char);
   num_temp_u32 *= expo_10[Zero_after_Point];
@@ -2680,6 +2740,7 @@ void Display_Number() {
   expo_temp_16 = display_expo;
   Put_Expo();
   if ( Start_input == Display_Error ) {
+    Beep__on();
     return;
   }
 
@@ -2785,6 +2846,14 @@ void Display_Number() {
 
   if ( mem_stack_input[mem_pointer].denom == 2 ) {
     Error_String('u');  
+  }
+
+  if ( mem_stack_input[mem_pointer].denom == 3 ) {
+    Error_String('X');  
+  }
+
+  if ( mem_stack_input[mem_pointer].denom == 4 ) {
+    Error_String('[');  
   }
 
   if ( Display_Status_new == 40 ) {
@@ -2976,6 +3045,30 @@ void Expand_Reduce_add() {
       temp_32.expo  = 0;
     }
   }
+}
+
+AVRational_32 one_x_n_add(AVRational_32 a, uint8_t n) {
+  num_temp_u64   = abs(a.num);
+  denom_temp_u64 = abs(a.denom);
+
+  if ( n == 0 ) {
+    Error_String('0');  
+  }
+	
+  while ( a.expo < 0 ) {
+    denom_temp_u64 *= 10;
+    a.expo += 1;
+  }
+	
+	denom_temp_u64 *= n;
+	num_temp_u64   += denom_temp_u64;
+                     // num_temp_u64 ,  denom_temp_u64
+  Reduce_Number();   // reduce
+  temp_32.num    = num_temp_u32;
+  temp_32.denom  = denom_temp_u32;
+	temp_32.expo   = 0;
+	
+	return temp_32;
 }
 
 AVRational_32 div_u32(AVRational_32 a, uint32_t denom_x) {
@@ -3587,6 +3680,8 @@ void calc_stack(uint8_t count_stack) {
   if ( count_stack > 1 ) {
     if ( (Found_constant == true) || count_stack > 2 ) {
     	
+      Beep__off();
+    	
     	if ( count_stack > 2 ) {
     	  Found_constant = false;
     	}
@@ -3605,77 +3700,85 @@ void calc_stack(uint8_t count_stack) {
       
         temp_operation = mem_stack_calc[ count_stack ].op;
       
+        count = 0;
         switch (temp_operation) {
       	
-          case 42:  //  _*_
-          case 213: //  _* *_
+          case 213: //    _* *_
+          case 42:  //    _*_
           	number_stack[ count_stack ] = mul(number_stack[ count_stack ], number_stack[ count_stack + 1 ]);
             break;
 
-          case 43:  //   _+_ 
-          case 216: //   _+ +_
+          case 216: //    _+ +_
+          case 43:  //    _+_ 
           	number_stack[ count_stack ] = add(number_stack[ count_stack ], number_stack[ count_stack + 1 ], 1);
             break;
 
-          case 45:  //   _-_
+          case 45:  //    _-_
           	number_stack[ count_stack ] = add(number_stack[ count_stack ], min_x(number_stack[ count_stack + 1 ]), 1);
             break;
                     
-          case 47:  //   _/_
+          case 47:  //    _/_
           	number_stack[ count_stack ] = mul(number_stack[ count_stack ], div_x(number_stack[ count_stack + 1 ]));
             break;
 
-          case 89:                 //    y_root
+          case 88:  //    _y_expo
+          	number_stack[ count_stack ] = powx(number_stack[ count_stack     ], number_stack[ count_stack + 1 ]);
+            break;
+
+          case 89:  //    _y_root
           	number_stack[ count_stack ] = logx(number_stack[ count_stack + 1 ], number_stack[ count_stack     ]);
             break;
 
-          case 212:  //   _- -_
+          case 212: //    _- -_
            	number_stack[ count_stack ] = add(number_stack[ count_stack + 1 ], min_x(number_stack[ count_stack ]), 1);
             break;
                     
-          case 214: //   _/ /_
+          case 214: //    _/ /_
           	number_stack[ count_stack ] = mul(number_stack[ count_stack + 1 ], div_x(number_stack[ count_stack ]));
             break;
 
-          case 218:                 //    _y_root y_root_
+          case 217: //    _y_expo y_expo_
+          	number_stack[ count_stack ] = powx(number_stack[ count_stack + 1 ], number_stack[ count_stack     ]);
+            break;
+
+          case 218: //    _y_root y_root_
           	number_stack[ count_stack ] = logx(number_stack[ count_stack     ], number_stack[ count_stack + 1 ]);
             break;
 
-          case 124: //   _HM_ 
-          case 219: //   _HM HM_
+          case 219: //    _HM HM_
+          case 124: //    _HM_ 
           	number_stack[ count_stack ] = div_x(add(div_x(number_stack[ count_stack ]), div_x(number_stack[ count_stack + 1 ]), 2));
             break;
 
-          case 128: //   _AM_ 
-          case 220: //   _AM AM_
+          case 220: //    _AM AM_
+          case 128: //    _AM_ 
           	number_stack[ count_stack ] = add(number_stack[ count_stack ], number_stack[ count_stack + 1 ], 2);
             break;
 
-          case 129: //   _GM_ 
-          case 221: //   _GM GM_
+          case 221: //    _GM GM_
+          case 129: //    _GM_ 
             number_stack[ count_stack ] = sqrt(mul(number_stack[ count_stack ], number_stack[ count_stack + 1 ]));
             break;
 
-          case 151: //   _AGM_ 
-          case 222: //   _AGM AGM_
-            count = 0;
+          case 222: //    _AGM AGM_
+          case 151: //    _AGM_ 
           	number_stack[ count_stack ] = agm(number_stack[ count_stack ], number_stack[ count_stack + 1 ]);
             break;
 
-          case 152: //   _mod_ 
+          case 152: //    _mod_ 
       	  	number_stack[ count_stack ] = mul(frac(mul(number_stack[ count_stack     ], div_x(number_stack[ count_stack + 1 ]))), number_stack[ count_stack + 1 ]);
             break;
 
-          case 223: //   _mod_mod_
+          case 223: //    _mod_mod_
     	    	number_stack[ count_stack ] = mul(frac(mul(number_stack[ count_stack + 1 ], div_x(number_stack[ count_stack     ]))), number_stack[ count_stack     ]);
             break;
 
-          case 92:  //   _//_ 
-          case 215: //   _// //_
+          case 215: //    _// //_
+          case 92:  //    _//_ 
           	number_stack[ count_stack ] = div_x(add(div_x(number_stack[ count_stack ]), div_x(number_stack[ count_stack + 1 ]), 1));
             break;
 
-          case 94:  //   _/p/_ 
+          case 94:  //    _/p/_ 
           	number_stack[ count_stack ] = sqrt(add(square(number_stack[ count_stack ]), square(number_stack[ count_stack + 1 ]), 1));
             break;
 
@@ -3698,6 +3801,8 @@ void calc_stack(uint8_t count_stack) {
       mem_stack_input[ 0 ].expo  = number_stack[ 1 ].expo;
       
       mem_extra_left_right( 0, 0 );
+      
+      Beep__on();
     }
   }
 }
@@ -3767,20 +3872,16 @@ AVRational_32 cbrt(AVRational_32 a) {
   if ( a.num == 0 ) {
     return a;	
   }
- /*
+
   temp_32_cbrt = abs_x(a);
- */
-  temp_32_cbrt.num   = abs(a.num);
-  temp_32_cbrt.denom = a.denom;	
-  temp_32_cbrt.expo  = a.expo;
 
   if ( temp_32_cbrt.num > temp_32_cbrt.denom ) {
-    num_temp_u64   = abs(a.num);
-    denom_temp_u64 = abs(a.denom);
+    num_temp_u64   = temp_32_cbrt.num;
+    denom_temp_u64 = temp_32_cbrt.denom;
   }
   else {
-    num_temp_u64   = abs(a.denom);
-    denom_temp_u64 = abs(a.num);
+    num_temp_u64   = temp_32_cbrt.denom;
+    denom_temp_u64 = temp_32_cbrt.num;
   }
 
   num_temp_u64    *= denom_aaa;  // 1000
@@ -3840,12 +3941,12 @@ AVRational_32 cbrt(AVRational_32 a) {
   }
   
   if ( temp_32_cbrt.num > temp_32_cbrt.denom ) {
-    num_temp_u64   = abs(a.num);
-    denom_temp_u64 = abs(a.denom);
+    num_temp_u64   = temp_32_cbrt.num;
+    denom_temp_u64 = temp_32_cbrt.denom;
   }
   else {
-    num_temp_u64   = abs(a.denom);
-    denom_temp_u64 = abs(a.num);
+    num_temp_u64   = temp_32_cbrt.denom;
+    denom_temp_u64 = temp_32_cbrt.num;
   }
 
   num_temp_u64   *= temp_32_a1.denom;
@@ -3858,8 +3959,6 @@ AVRational_32 cbrt(AVRational_32 a) {
   temp_32_a.num     = num_temp_u32;
   temp_32_a.denom   = denom_temp_u32;
   temp_32_a.expo    = 0;
-  
-  // return temp_32_a;
   
   num_temp_u64    = temp_32_a1.num;
   denom_temp_u64  = temp_32_a1.denom;
@@ -3918,61 +4017,242 @@ AVRational_32 cbrt(AVRational_32 a) {
 }
 
 AVRational_32 exp(AVRational_32 a) {
-  if ( a.expo == 0 ) {
+  if ( a.expo == 0 ) { //  input = 1.000 or -1.000
     if ( a.num == a.denom ) {
       temp_32_log.num   = e_num;
       temp_32_log.denom = e_denom;
       temp_32_log.expo  = e_expo;
       return temp_32_log;
     }
-    if ( a.num == 0 ) {
-      temp_32_log.num   = int32_max;
-      temp_32_log.denom = int32_max;
-      temp_32_log.expo  = 0;
+    if ( -(a.num) == a.denom ) {
+      temp_32_log.num   = e_denom;
+      temp_32_log.denom = e_num;
+      temp_32_log.expo  = e_expo;
       return temp_32_log;
     }
   }
-  return a;
+  return exp2( mul(div_x( ln2 ), a ));
 }
 
 AVRational_32 exp2(AVRational_32 a) {
-  if ( a.expo == 0 ) {
+  int8_t  count_x       = 0;
+  uint8_t count_horner  = 8;
+  test_signum_log       = 0;
+
+  if ( a.num > 0 ) {
+    test_signum_log =  1;
+  }
+  if ( a.num < 0 ) {
+    test_signum_log = -1;
+  }
+
+  if ( test_signum_log == 0 ) { //  input =   0.000
+    temp_32_log.num   = int32_max;
+    temp_32_log.denom = int32_max;
+    temp_32_log.expo  = 0;
+    return temp_32_log;
+  }
+
+  if ( a.expo ==  0 ) { //  input = 1.000 or -1.000
     if ( a.num == a.denom ) {
       temp_32_log.num   = int32_max;
       temp_32_log.denom = int30_max;
       temp_32_log.expo  = 0;
       return temp_32_log;
     }
-    if ( a.num == 0 ) {
-      temp_32_log.num   = int32_max;
+    if ( -(a.num) == a.denom ) {
+      temp_32_log.num   = int30_max;
       temp_32_log.denom = int32_max;
       temp_32_log.expo  = 0;
       return temp_32_log;
     }
   }
-  return a;
+
+  temp_32_log = abs_x(a);
+  
+  if ( temp_32_log.expo  < -9 ) { //  input < 3.3e-10
+  	Error_String('X'); 
+    return temp_32_log;
+  }
+
+  if ( temp_32_log.expo == -9 ) { //  input < 1e-9
+    if ( temp_32_log.num < temp_32_log.denom ) {
+    	Error_String('X');
+      return temp_32_log;
+    }
+  }
+  
+  if ( temp_32_log.expo  >  3 ) { //  input > 3000
+  	Error_String('['); 
+    return temp_32_log;
+  }
+
+  if ( temp_32_log.expo >=  0 ) {
+    temp_32_log = mul( exp2_1_32, temp_32_log );
+    count_x += 5;
+  }
+
+  if ( temp_32_log.expo ==  2 ) { //  input > 1066_2/3
+    Error_String('['); 
+    return temp_32_log;
+  }
+
+  if ( temp_32_log.expo ==  1 ) { //  input > 320
+    if ( temp_32_log.num > temp_32_log.denom ) {
+      Error_String('[');
+      return temp_32_log;
+    }
+  }
+  
+  while ( temp_32_log.num < temp_32_log.denom ) {
+    temp_32_log = mul( exp2_2_1, temp_32_log );
+    count_x -= 1;
+  }
+
+  Display_wait();  
+  
+  while ( temp_32_log.expo < -2 ) {
+    temp_32_log = mul( exp2_8_1, temp_32_log );
+    count_x -= 3;
+  }
+  
+  while ( temp_32_log.expo > -2 ) {
+    temp_32_log = mul( exp2_1_8, temp_32_log );
+    count_x += 3;
+  }
+  
+  Display_wait();
+  temp_32_log = mul( ln2, temp_32_log );   // e^x   Change
+
+  while ( temp_32_log.num < temp_32_log.denom ) {
+    temp_32_log = mul( exp2_2_1, temp_32_log );
+    count_x -= 1;
+  }
+  
+  if ( temp_32_log.num > temp_32_log.denom ) {
+    if ( (temp_32_log.num - temp_32_log.denom ) >= temp_32_log.denom ) {
+      temp_32_log = mul( exp2_1_2, temp_32_log );
+      count_x += 1;
+    }
+  }
+
+  temp_32_ext = mul( log_1e0, temp_32_log );
+  
+  while ( count_horner > 1 ) {
+    if ( (count_horner % 2) == 0 ) {
+      Display_wait();
+    }
+    count_horner -= 1;
+    temp_32_log = one_x_n_add(temp_32_log, count_horner);
+    if ( count_horner > 1 ) {
+      temp_32_log = mul(temp_32_ext, temp_32_log);
+    }
+  }
+
+  while ( count_x > 0 ) {
+    if ( (count_x % 5) == 0 ) {
+      Display_wait();
+    }
+    temp_32_log = mul( temp_32_log, temp_32_log );
+    count_x -= 1;
+  }
+
+  while ( count_x < 0 ) {
+    if ( (count_x % 5) == 0 ) {
+      Display_wait();
+    }
+    temp_32_log = sqrt( temp_32_log );
+    count_x += 1;
+  }
+  
+  if ( test_signum_log < 0 ) {
+    return div_x(temp_32_log);
+  }
+  
+  return temp_32_log;
 }
 
 AVRational_32 exp10(AVRational_32 a) {
-  if ( a.expo == 0 ) {
+  if ( a.expo == 0 ) { //  input = 1.000 or -1.000
     if ( a.num == a.denom ) {
       temp_32_log.num   = int32_max;
       temp_32_log.denom = int32_max;
       temp_32_log.expo  = 1;
       return temp_32_log;
     }
-    if ( a.num == 0 ) {
+    if ( -(a.num) == a.denom ) {
       temp_32_log.num   = int32_max;
       temp_32_log.denom = int32_max;
-      temp_32_log.expo  = 0;
+      temp_32_log.expo  = -1;
       return temp_32_log;
     }
+  }
+  return exp2( mul(div_x( log_2 ), a ));
+}
+
+AVRational_32 powx(AVRational_32 a, AVRational_32 b) {
+  if ( b.num == 0 ) {
+    temp_32_pow.num   = int32_max;
+    temp_32_pow.denom = int32_max;
+    temp_32_pow.expo  = 0;
+    return temp_32_pow;
+  }
+  
+  if ( a.num > 0 ) {
+    if ( b.expo == 0 ) {
+      if ( b.num == b.denom ) {
+      	return a;
+      }
+    }
+    temp_32_pow = mul(log2(a), b);
+    temp_32_ext = mul( log_1e0, temp_32_pow );
+    
+    temp_32_pow = abs_x(temp_32_pow);
+  
+    if ( temp_32_pow.expo == -9 ) { //  input < 1e-9
+      if ( temp_32_pow.num < temp_32_pow.denom ) {
+        temp_32_pow.denom = 3;   // Error_String('X');
+        return temp_32_pow;
+      }
+    }
+
+    if ( temp_32_pow.expo > 3 ) { //  input > 3000
+      temp_32_pow.denom = 4;   // Error_String('['); 
+      return temp_32_pow;
+    }
+
+    if ( temp_32_pow.expo >=  0 ) {
+      temp_32_pow = mul( exp2_1_32, temp_32_pow );
+    }
+
+    if ( temp_32_pow.expo ==  2 ) { //  input > 1066_2/3
+      temp_32_pow.denom = 4;   // Error_String('['); 
+      return temp_32_pow;
+    }
+
+    if ( temp_32_pow.expo ==  1 ) { //  input > 320
+      if ( temp_32_pow.num > temp_32_pow.denom ) {
+        temp_32_pow.denom = 4;   // Error_String('[');
+        return temp_32_pow;
+      }
+    }
+
+    Display_wait();
+    temp_32_pow = exp2(temp_32_ext);
+    return temp_32_pow;
+  }
+  else {
+    if ( b.expo == 0 ) {
+      if ( b.num == b.denom ) {
+      	return a;
+      }
+    }
+  	a.denom = 2;  // 'u'
   }
   return a;
 }
 
 AVRational_32 logx(AVRational_32 a, AVRational_32 b) {
-
   if ( (a.num > 0) && (b.num > 0) ) {
     if ( b.expo == 0 ) {
       if ( b.num == b.denom ) {
@@ -3980,7 +4260,10 @@ AVRational_32 logx(AVRational_32 a, AVRational_32 b) {
       	return a;
       }
     }
-    temp_32 = mul( div_x(log(b)), log(a) );
+    temp_32_ext = div_x(log(b));
+    Display_wait();
+    temp_32 = mul( temp_32_ext, log(a) );
+    
     return temp_32;
   }
   else {
@@ -3995,9 +4278,10 @@ AVRational_32 log2(AVRational_32 a) {
     return temp_32;
   }
   else {
-    Error_String('u');  // input <= 0	      
+  	a.denom = 2;
+    Error_String('u');  // input <= 0
+    return a;
   }
-  return a;
 }
 
 AVRational_32 log10(AVRational_32 a) {
@@ -4006,14 +4290,15 @@ AVRational_32 log10(AVRational_32 a) {
     return temp_32;
   }
   else {
+  	a.denom = 2;
     Error_String('u');  // input <= 0	      
+    return a;
   }
-  return a;
 }
 
 AVRational_32 log(AVRational_32 a) {
-	uint32_t denom_x    = 1;
-	 uint8_t count_x    = 0;
+  uint32_t denom_x   = 1;
+  uint8_t count_x    = 0;
 	
   if ( a.num > 0 ) {
   	
@@ -4035,10 +4320,15 @@ AVRational_32 log(AVRational_32 a) {
   	}
   	
     calc_32.expo   =  0;
+    calc_32.denom  =  1;
     calc_32.num    =  a.expo;
     calc_32.num   +=  1;
-    calc_32.denom  =  1;
-    
+    if ( abs(calc_32.num) > 9 ) {
+      calc_32.expo   =  1;
+      calc_32.denom  = 10;
+    }
+    calc_32 = mul(log_1e0, calc_32);
+
     a.expo         = -1;
 
     Display_wait();
@@ -4062,9 +4352,10 @@ AVRational_32 log(AVRational_32 a) {
     return div_u32( add(mul( log_1e1, calc_32 ), temp_32_log, 1 ), denom_x );
   }
   else {
+  	a.denom = 2;
     Error_String('u');  // input <= 0	      
+    return a;
   }
-  return a;
 }
 	
 AVRational_32 agm(AVRational_32 a, AVRational_32 b) {
@@ -4478,6 +4769,56 @@ void Test_all_function() {
       Serial.print("  ");
       Serial.print(test_32.expo);
       Serial.println(" -> ");
+    }
+    test_index = false;
+    time_end = millis();
+    time_diff = time_end - time_start;
+    Serial.print("Time: ");
+    Serial.println(time_diff);
+  }
+  if ( Debug_Level == 32 ) {
+    time_start = millis();
+
+    calc_32.expo = -9;
+    num_temp_u32_   = 100;
+    denom_temp_u32_ = 100;
+    Serial.println(" ");                        // Step    4
+    for ( uint16_t index = 1; index <= 10121; index += 1 ) {
+      Serial.print(index);
+      Serial.print("  ");
+      num_temp_u32   = num_temp_u32_;
+      denom_temp_u32 = denom_temp_u32_;
+      Expand_Number();
+
+      calc_32.num = num_temp_u32;
+      calc_32.denom = denom_temp_u32;
+     /*
+      Serial.print(calc_32.num);
+      Serial.print("  ");
+      Serial.print(calc_32.denom);
+      Serial.print("  ");
+      Serial.print(calc_32.expo);
+      Serial.println("  ");
+     */
+      test_32 = exp2(calc_32);
+      Serial.print(test_32.num);
+      Serial.print("  ");
+      Serial.print(test_32.denom);
+      Serial.print("  ");
+      Serial.print(test_32.expo);
+      Serial.println(" -> ");
+
+      num_temp_u32_  += 1;
+      
+      if ( num_temp_u32_ == 300 ) {
+        calc_32.expo    += 1;
+        denom_temp_u32_ *= 10;
+      }
+      
+      if ( num_temp_u32_ == denom_temp_u32_ ) {
+        num_temp_u32_   = 100;
+        denom_temp_u32_ = 100;
+      }
     }
     test_index = false;
     time_end = millis();
@@ -5539,15 +5880,22 @@ void Mantisse_add_strg_eins() {
 }
 
 void Beep__on() {
-	Display_new = true;
+  Display_new = true;
   if ( Beep_on == false ) {
     Beep_on = true;
+    Beep_count = max_Beep_count;
+  }
+  else {
+    if ( Beep_count > 63 ) {
+      Beep_count = max_Beep_count;
+    }
   }
 }
 
 void Beep__off() {
-	Display_new = true;
+  Display_new = true;
   Beep_on = false;
+  Beep_count = max_Beep_count;
 }
 
 void copy_stack_input_2_calc( uint8_t left, uint8_t right ) {
@@ -5601,6 +5949,7 @@ void Function_2_display() {
 }
 
 void Function_1_number() {	
+  Beep__off();
   if ( Start_input < Input_Memory ) {      // Input Number
     Get_Number( 0 );
   }
@@ -5619,6 +5968,7 @@ void Function_1_number() {
     Start_input = Input_Operation_0;
     mem_pointer = 0;
     
+    count = 0;
     switch (Switch_Code) {
     	
       case 33:                 //    _1/x_
@@ -5626,12 +5976,10 @@ void Function_1_number() {
       	break;
 
       case 34:                 //    _log2_
-      	count = 0;
       	mem_stack_input[ mem_pointer ] = log2(mem_stack_input[ mem_pointer ]);
       	break;
 
     	case 112:                //    _log_
-      	count = 0;
     	  mem_stack_input[ mem_pointer ] = log(mem_stack_input[ mem_pointer ]);
     	  break;
     	  
@@ -5644,16 +5992,15 @@ void Function_1_number() {
     	  break;
     	  
     	case 115:                //    _log10_
-      	count = 0;
     	  mem_stack_input[ mem_pointer ] = log10(mem_stack_input[ mem_pointer ]);
-    	  break;
-    	  
-    	case 117:                //    _x^2_
-    	  mem_stack_input[ mem_pointer ] = square(mem_stack_input[ mem_pointer ]);
     	  break;
     	  
       case 116:                //    10^x
     	  mem_stack_input[ mem_pointer ] = exp10(mem_stack_input[ mem_pointer ]);
+    	  break;
+    	  
+    	case 117:                //    _x^2_
+    	  mem_stack_input[ mem_pointer ] = square(mem_stack_input[ mem_pointer ]);
     	  break;
 
     	case 118:                //    _sqrt()_
@@ -5676,7 +6023,7 @@ void Function_1_number() {
     	  mem_stack_input[ mem_pointer ] = cbrt(mem_stack_input[ mem_pointer ]);
     	  break;
     }
-    
+
     Error_Test();
     if ( Start_input != Display_Error ) {
       Function_2_display();
@@ -5684,6 +6031,7 @@ void Function_1_number() {
     else {
       mem_pointer = mem_stack_count;
     }
+    Beep__on();
   }
   temp_Memory_1[0] = display_string[Memory_1];
   temp_Memory_0[0] = display_string[Memory_0];
@@ -5787,8 +6135,8 @@ void loop() {
 
   if ( Switch_Code > 0 ) {     // Main Responce about Switch
 
-    Beep__on();
     Print_Statepoint();
+    Beep__on();
     switch (Switch_Code) {
 
       case 90:                 //    _CE_
@@ -5866,10 +6214,18 @@ void loop() {
           break;
 
         case 33:                 //    _1/x_
-          Function_1_number();
-          break;
-
         case 34:                 //    _log2_
+        case 112:                //    log(x)
+        case 113:                //    e^x
+        case 114:                //    2^x
+        case 115:                //    log10(x)
+        case 116:                //    10^x
+        case 117:                //    _x^2_
+        case 118:                //    _sqrt()_
+        case 170:                //    _Int_
+        case 171:                //    _Frac_
+        case 172:                //    _x^3_
+        case 173:                //    _cbrt()_
           Function_1_number();
           break;
 
@@ -5913,13 +6269,13 @@ void loop() {
             }
           }
           if ( Start_input == Input_Expo ) {
-            Expo_change = true;
             if ( display_string[Plus_Minus_Expo] == '-' ) {
               display_string[Plus_Minus_Expo] = '#';
             }
             else {
               display_string[Plus_Minus_Expo] = '-';
             }
+          	Get_Expo_( 1 );
           }
           break;
 
@@ -6162,9 +6518,9 @@ void loop() {
             }
           }
           if ( Start_input == Input_Expo ) {
-            Expo_change = true;
             display_string[Expo_1] = display_string[Expo_0];
             display_string[Expo_0] = Switch_Code;
+            Get_Expo_( 1 );
           }
           if ( (Start_input == Display_Result) || (Start_input == Display_M_Plus) || (Start_input == M_Plus_spezial) || (Start_input == Input_Operation_0) ) {
             Result_to_Start_Mode();
@@ -6193,11 +6549,11 @@ void loop() {
         case 56:                 //    _8_
         case 57:                 //    _9_
           if ( Start_input == Input_Expo ) {
-            Expo_change = true;
             display_string[Expo_1] = display_string[Expo_0];
             display_string[Expo_0] = Switch_Code;
             display_string[Memory_1] = mem_str_1[mem_pointer];
             display_string[Memory_0] = mem_str_0[mem_pointer];
+            Get_Expo_( 1 );
           }
           if ( display_string[Memory_1] == Display_Memory_1[4] ) {   // E
           	Start_input = Input_Memory;
@@ -6264,6 +6620,7 @@ void loop() {
             Start_input = Input_Mantisse;
           }
           if ( Start_input > Input_Fraction ) {   // no Number Input
+          	
             Init_expo = false;
             mem_pointer = 0;
 
@@ -6436,6 +6793,7 @@ void loop() {
               Display_Number();
               mem_extra_test = 0;
               max_input = false;
+              Beep__on();
             }
           }
           mem_extra_stack[ 12 ].num = mem_extra_stack[ 0 ].num;
@@ -6628,7 +6986,6 @@ void loop() {
             if ( Start_input <= Input_Operation_0 ) {
               Mantisse_change = false;
               mem_pointer = mem_stack_count;
-
               Start_input = Input_Mantisse;
               Init_expo = false;
               display_digit_temp = display_digit;
@@ -6762,34 +7119,6 @@ void loop() {
             left_right_mem_extra( 0, 0 );
             Start_input = Display_Result;
           }
-          break;
-
-        case 112:                //    log(x)
-          Function_1_number();
-          break;
-
-        case 113:                //    e^x
-          Function_1_number();
-          break;
-
-        case 114:                //    2^x
-          Function_1_number();
-          break;
-
-        case 115:                //    log10(x)
-          Function_1_number();
-          break;
-
-        case 116:                //    10^x
-          Function_1_number();
-          break;
-
-        case 117:                //    _x^2_
-          Function_1_number();
-          break;
-
-        case 118:                //    _sqrt()_
-          Function_1_number();
           break;
 
         case 119:                //    x!
@@ -7003,22 +7332,6 @@ void loop() {
           temp_Memory_0[0] = display_string[Memory_0];
           break;
 
-        case 170:                //    _Int_
-          Function_1_number();
-          break;
-
-        case 171:                //    _Frac_
-          Function_1_number();
-          break;
-
-        case 172:                //    _x^3_
-          Function_1_number();
-          break;
-
-        case 173:                //    _cbrt()_
-          Function_1_number();
-          break;
-
         case 174:                //    _EE+1_
           if ( (Start_input == Display_Result) || (Start_input == Display_M_Plus) || (Start_input == M_Plus_spezial) ) {
             if ( display_string[Point_pos - 1] > '/' ) {
@@ -7222,7 +7535,6 @@ void loop() {
           }
           break;
 
-        case 201:                 //    Beep
         case 211:                 //    _/p/ /p/_
         case 212:                 //    _- -_
         case 213:                 //    _* *_
@@ -7236,6 +7548,7 @@ void loop() {
         case 221:                 //    _GM GM_
         case 222:                 //    _AGM AGM_
         case 223:                 //    _mod_mod_
+        case 201:                 //    Beep
           Switch_Code = 0;
           break;
 
@@ -7348,6 +7661,16 @@ void loop() {
   }
 
   if ( Display_new == true ) { // Display refresh
+  	if ( display_string[5] == 'E' ) {
+      if ( Switch_Code_old > EE_9 ) {         //    
+        Beep__on();
+      }
+      if ( Debug_Level == 31 ) {
+        Serial.print("Switch_Code =  ");
+        Serial.println(Switch_Code);
+      }
+    }
+    Switch_Code_old = Switch_Code;
     index_LED = 0;
     for ( index_a = 0; index_a <= Digit_Count; index_a += 1 ) {
       if ( display_string[index_LED] == '.' ) {
@@ -7500,6 +7823,7 @@ void loop() {
 
     if ( Start_input == Start_Mode ) {
       Clear_String();
+      Beep__on();
     }
 
     switch (index_10ms) {
@@ -8113,27 +8437,8 @@ void loop() {
           display_string[Memory_0] = Display_Memory_0[14];
           break;
  
-       default:
+        default:
         	Beep__off();
-        /*
-           if ( Start_input == Display_Result ) {
-          	if ( bit_6 == 0 ) {
-              display_string[Memory_1] = Display_Memory_1[8];    // =
-              display_string[Memory_0] = Display_Memory_0[8];    // =
-              Beep__on();
-          	}
-          }
-          if ( Start_input == Display_M_Plus ) {
-            display_string[Memory_1] = Display_Memory_1[3];      // MS
-            display_string[Memory_0] = '0' + mem_extra_test;
-            Beep__on();
-          }
-          if ( Start_input == Input_Memory ) {
-            display_string[Memory_1] = Display_Memory_1[2];     // MR
-            display_string[Memory_0] = '0' + mem_extra_test;
-            Beep__on();
-          }
-        */
           break;
         }
 
@@ -8157,10 +8462,10 @@ void loop() {
       }
 
       if ( Display_Status_old == 255 ) {
-        Beep_on = false;
+      	Beep__off();
       }
       if ( Display_Status_old > Display_Status_new ) {
-        Beep_on = false;
+      	Beep__off();
 
         switch (Display_Status_old) {
 
@@ -8630,14 +8935,15 @@ uint16_t temp_pwm = test_pwm;
     }
     if (Beep_count < 0) {
       digitalWrite(Beep_m, HIGH);
+      digitalWrite(Beep_p, HIGH);
       if ( Beep_count <= min_Beep_count ) {
         pinMode(Beep_m, INPUT_PULLUP); // Pin A3
         pinMode(Beep_p, INPUT_PULLUP); // Pin A7
-        Beep_on = false;
         Beep_count = max_Beep_count;
+        Beep_on = false;
       } 
     }
-    else {      //  0 .. 63
+    else {       //  0 .. 63
       if ( Beep_on_off == true ) {
         if ( Beep_count > 63 ) {
           pinMode(Beep_m, OUTPUT);     // Pin A3
@@ -8645,7 +8951,7 @@ uint16_t temp_pwm = test_pwm;
           pinMode(Beep_p, OUTPUT);     // Pin A7
           digitalWrite(Beep_p, HIGH);
         }
-        else {
+        else {   //  0 .. 63
           digitalWrite( Beep_m, bitRead(Beep_patt_m, Beep_count) );    // Toggle Beep
           digitalWrite( Beep_p, bitRead(Beep_patt_p, Beep_count) );    // Toggle Beep
         }
