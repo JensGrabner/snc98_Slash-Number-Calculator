@@ -72,6 +72,9 @@
 #include <r128.h>
 // Original:  https://github.com/fahickman/r128
 
+#include <OneWire.h>
+// https://github.com/PaulStoffregen/OneWire
+
 #include <string.h>
 #include <stdint.h>
 #include <stdlib.h>         // for itoa(); ltoa();
@@ -80,6 +83,9 @@
 
 #include <TimerOne.h>
 // https://github.com/PaulStoffregen/TimerOne
+
+#include <OneWireHub.h>
+// https://github.com/orgua/OneWireHub
 
 #define Debug_Level  0 //  0 - not Debug
                        //  1 - Test intern 1ms - Task by 100 ms
@@ -112,11 +118,12 @@
                        // 31 - Test Error
                        // 32 - 2^x Test  0,00000000100 .. 320
                        // 33 - log2 Test out -> 0,00000000100 .. 320
-                       // 34 - factorial Test 0 .. 67.75 Step +0.25
+                       // 34 - factorial Test 0 .. 71.00 Step +0.005
+                       // 35 - DS18B20 (0x28) Digital Thermometer, 12bit
 
 uint8_t mem_pointer        =  1;   //     mem_stack 0 .. 19
 #define mem_stack_max_c       39   // 39  Variable in calculate
-uint8_t mem_stack_max      =  mem_stack_max_c; 
+uint8_t mem_stack_max      =  2;   // Start in Standardmode
 
 #define operation_test_max    4  //  0 .. 3  Stacktiefe
 #define Switch_down_max    1200  //                  140  %    
@@ -146,6 +153,8 @@ uint8_t PWM_Pin = PWM;
 #define Out_B  A2      //  A2   Pin A5
 #define Out_C  A1      //  A1   Pin A6
 
+#define Rx_1          10
+#define Tx_1          11
 #define On_Off_PIN    18
 boolean Power_on = true;
 boolean switch_Pos_0 = false;
@@ -561,1064 +570,6 @@ static const AVRational_32  ln2 = {ln2_expo, ln2_num, ln2_denom, 0};
 #define log_2_denom    1923400330  // Fehler .. -6,29e-21
 static const AVRational_32  log_2 = {log_2_expo, log_2_num, log_2_denom, 0};
 
-// ---  ln_1_000625_Konstante  ---
-#define ln_1_000625_expo           -3  
-#define ln_1_000625_num    1152504015  
-#define ln_1_000625_denom  1844582616  // Fehler ..  9,92e-23
-
-// ---  ln_1_001250_Konstante  ---
-#define ln_1_001250_expo           -3  
-#define ln_1_001250_num    2113848110  
-#define ln_1_001250_denom  1692135192  // Fehler ..  6,33e-21
-
-// ---  ln_1_001875_Konstante  ---
-#define ln_1_001875_expo           -3  
-#define ln_1_001875_num    2014800769  
-#define ln_1_001875_denom  1075567496  // Fehler .. -4,48e-22
-
-// ---  ln_1_002500_Konstante  ---
-#define ln_1_002500_expo           -3  
-#define ln_1_002500_num    1919993799  
-#define ln_1_002500_denom   768957117  // Fehler .. -1,23e-21
-
-// ---  ln_1_003125_Konstante  ---
-#define ln_1_003125_expo           -2  
-#define ln_1_003125_num     616321100  
-#define ln_1_003125_denom  1975307523  // Fehler .. -1,03e-21
-
-// ---  ln_1_003750_Konstante  ---
-#define ln_1_003750_expo           -2  
-#define ln_1_003750_num     571736667  
-#define ln_1_003750_denom  1527488012  // Fehler ..  2,02e-21
-
-// ---  ln_1_004375_Konstante  ---
-#define ln_1_004375_expo           -2  
-#define ln_1_004375_num     739363486  
-#define ln_1_004375_denom  1693667810  // Fehler ..  1,00e-21
-
-// ---  ln_1_005000_Konstante  ---
-#define ln_1_005000_expo           -2  
-#define ln_1_005000_num     966008601  
-#define ln_1_005000_denom  1936843230  // Fehler ..  1,00e-21
-
-// ---  ln_1_005625_Konstante  ---
-#define ln_1_005625_expo           -2  
-#define ln_1_005625_num    1175858211  
-#define ln_1_005625_denom  2096288392  // Fehler ..  1,95e-20
-
-// ---  ln_1_006250_Konstante  ---
-#define ln_1_006250_expo           -2  
-#define ln_1_006250_num    1145294862  
-#define ln_1_006250_denom  1838192307  // Fehler ..  1,40e-21
-
-static const AVRational_32 ln_x_1600[11] = {
-  { 0,                0,               int32_max,         0 },
-  { ln_1_000625_expo, ln_1_000625_num, ln_1_000625_denom, 0 },
-  { ln_1_001250_expo, ln_1_001250_num, ln_1_001250_denom, 0 },
-  { ln_1_001875_expo, ln_1_001875_num, ln_1_001875_denom, 0 },
-  { ln_1_002500_expo, ln_1_002500_num, ln_1_002500_denom, 0 },
-  { ln_1_003125_expo, ln_1_003125_num, ln_1_003125_denom, 0 },
-  { ln_1_003750_expo, ln_1_003750_num, ln_1_003750_denom, 0 },
-  { ln_1_004375_expo, ln_1_004375_num, ln_1_004375_denom, 0 },
-  { ln_1_005000_expo, ln_1_005000_num, ln_1_005000_denom, 0 },
-  { ln_1_005625_expo, ln_1_005625_num, ln_1_005625_denom, 0 },
-  { ln_1_006250_expo, ln_1_006250_num, ln_1_006250_denom, 0 }
-};
-
-// ---  ln_1_0125_Konstante  ---
-#define ln_1_0125_expo           -2  
-#define ln_1_0125_num    2141549736  
-#define ln_1_0125_denom  1723925368  // Fehler ..  5,10e-21
-
-// ---  ln_1_0250_Konstante  ---
-#define ln_1_0250_expo           -2  
-#define ln_1_0250_num    2014886250  
-#define ln_1_0250_denom   815987471  // Fehler .. -7,74e-20
-
-// ---  ln_1_0375_Konstante  ---
-#define ln_1_0375_expo           -1  
-#define ln_1_0375_num     768490022  
-#define ln_1_0375_denom  2087495472  // Fehler ..  8,33e-21
-
-// ---  ln_1_0500_Konstante  ---
-#define ln_1_0500_expo           -1  
-#define ln_1_0500_num    1039996276  
-#define ln_1_0500_denom  2131569536  // Fehler .. -7,39e-20
-
-// ---  ln_1_0625_Konstante  ---
-#define ln_1_0625_expo           -1  
-#define ln_1_0625_num    1072970788  
-#define ln_1_0625_denom  1769859763  // Fehler ..  3,02e-21
-
-// ---  ln_1_0750_Konstante  ---
-#define ln_1_0750_expo           -1  
-#define ln_1_0750_num    1531940806  
-#define ln_1_0750_denom  2118261604  // Fehler ..  6,78e-21
-
-// ---  ln_1_0875_Konstante  ---
-#define ln_1_0875_expo           -1  
-#define ln_1_0875_num    1696659762  
-#define ln_1_0875_denom  2022686869  // Fehler ..  8,33e-20
-
-// ---  ln_1_1000_Konstante  ---
-#define ln_1_1000_expo           -1  
-#define ln_1_1000_num    1176530229  
-#define ln_1_1000_denom  1234422421  // Fehler .. -4,81e-21
-
-// ---  ln_1_1125_Konstante  ---
-#define ln_1_1125_expo           -1  
-#define ln_1_1125_num    1363576828  
-#define ln_1_1125_denom  1279035941  // Fehler ..  2,00e-20
-
-// ---  ln_1_1250_Konstante  ---
-#define ln_1_1250_expo           -1  
-#define ln_1_1250_num    2042615365  
-#define ln_1_1250_denom  1734218645  // Fehler .. -7,54e-20
-
-static const AVRational_32 ln_x_80[9] = {
-  { 0,              0,             int32_max,       0 },
-  { ln_1_0125_expo, ln_1_0125_num, ln_1_0125_denom, 0 },
-  { ln_1_0250_expo, ln_1_0250_num, ln_1_0250_denom, 0 },
-  { ln_1_0375_expo, ln_1_0375_num, ln_1_0375_denom, 0 },
-  { ln_1_0500_expo, ln_1_0500_num, ln_1_0500_denom, 0 },
-  { ln_1_0625_expo, ln_1_0625_num, ln_1_0625_denom, 0 },
-  { ln_1_0750_expo, ln_1_0750_num, ln_1_0750_denom, 0 },
-  { ln_1_0875_expo, ln_1_0875_num, ln_1_0875_denom, 0 },
-  { ln_1_1000_expo, ln_1_1000_num, ln_1_1000_denom, 0 }
-};
-
-// ---  ln_1_02_Konstante  ---
-#define ln_1_02_expo           -2  
-#define ln_1_02_num    1508420917  
-#define ln_1_02_denom   761727671  // Fehler .. -1,005e-21
-
-// ---  ln_1_04_Konstante  ---
-#define ln_1_04_expo           -1  
-#define ln_1_04_num     534534377  
-#define ln_1_04_denom  1362887959  // Fehler .. -1,85e-20
-
-// ---  ln_1_06_Konstante  ---
-#define ln_1_06_expo           -1  
-#define ln_1_06_num    1208078465  
-#define ln_1_06_denom  2073281453  // Fehler .. -9,05e-21
-
-// ---  ln_1_08_Konstante  ---
-#define ln_1_08_expo           -1  
-#define ln_1_08_num     869859538  
-#define ln_1_08_denom  1130259577  // Fehler .. -1,27e-20
-
-// ---  ln_1_10_Konstante  ---
-#define ln_1_10_expo           -1  
-#define ln_1_10_num    1176530229  
-#define ln_1_10_denom  1234422421  // Fehler .. -4,81e-21
-
-// ---  ln_1_12_Konstante  ---
-#define ln_1_12_expo           -1  
-#define ln_1_12_num    1929195375  
-#define ln_1_12_denom  1702301028  // Fehler ..  2,57e-20
-/*
-static const AVRational_32 ln_x_50[7] = {
-  { 0,            0,           int32_max,     0 },
-  { ln_1_02_expo, ln_1_02_num, ln_1_02_denom, 0 },
-  { ln_1_04_expo, ln_1_04_num, ln_1_04_denom, 0 },
-  { ln_1_06_expo, ln_1_06_num, ln_1_06_denom, 0 },
-  { ln_1_08_expo, ln_1_08_num, ln_1_08_denom, 0 },
-  { ln_1_10_expo, ln_1_10_num, ln_1_10_denom, 0 },
-  { ln_1_12_expo, ln_1_12_num, ln_1_12_denom, 0 }
-};
-*/
-// ---  ln_1_20_Konstante  ---
-#define ln_1_20_expo           -1  
-#define ln_1_20_num    1969304287  
-#define ln_1_20_denom  1080126959  // Fehler ..  5,51e-21
-
-// ---  ln_1_25_Konstante  ---
-#define ln_1_25_expo           -1  
-#define ln_1_25_num    1468373082  
-#define ln_1_25_denom   658039667  // Fehler .. -7,99e-20
-
-// ---  ln_1_40_Konstante  ---
-#define ln_1_40_expo            0  
-#define ln_1_40_num     499702786  
-#define ln_1_40_denom  1485123382  // Fehler .. -1,97e-19
-
-// ---  ln_1_50_Konstante  ---
-#define ln_1_50_expo            0  
-#define ln_1_50_num     551104173  
-#define ln_1_50_denom  1359190130  // Fehler .. -2,96e-19
-
-// ---  ln_1_60_Konstante  ---
-#define ln_1_60_expo            0  
-#define ln_1_60_num     654918467  
-#define ln_1_60_denom  1393432787  // Fehler .. -2,79e-19
-
-// ---  ln_1_75_Konstante  ---
-#define ln_1_75_expo            0  
-#define ln_1_75_num    1052692276  
-#define ln_1_75_denom  1881098244  // Fehler .. -2,88e-19
-
-// ---  ln_1_80_Konstante  ---
-#define ln_1_80_expo            0  
-#define ln_1_80_num    1234102137  
-#define ln_1_80_denom  2099574915  // Fehler ..  2,86e-20
-
-// ---  ln_2_00_Konstante  ---
-#define ln_2_00_expo            0  
-#define ln_2_00_num     994167536  
-#define ln_2_00_denom  1434280574  // Fehler ..  1,40e-19
-
-// ---  ln_2_20_Konstante  ---
-#define ln_2_20_expo            0  
-#define ln_2_20_num    1397126139  
-#define ln_2_20_denom  1771974249  // Fehler ..  2,03e-20
-
-// ---  ln_2_25_Konstante  ---
-#define ln_2_25_expo            0  
-#define ln_2_25_num    1653312519  
-#define ln_2_25_denom  2038785195  // Fehler .. -5,92e-19
-
-// ---  ln_2_40_Konstante  ---
-#define ln_2_40_expo            0  
-#define ln_2_40_num    1839570532  
-#define ln_2_40_denom  2101240688  // Fehler .. -1,07e-19
-
-// ---  ln_2_50_Konstante  ---
-#define ln_2_50_expo            0  
-#define ln_2_50_num    1930861140  
-#define ln_2_50_denom  2107258180  // Fehler ..  3,94e-18
-
-// ---  ln_2_60_Konstante  ---
-#define ln_2_60_expo            0  
-#define ln_2_60_num    1769411560  
-#define ln_2_60_denom  1851795255  // Fehler ..  5,66e-19
-
-// ---  ln_2_75_Konstante  ---
-#define ln_2_75_expo            0  
-#define ln_2_75_num    2097476676  
-#define ln_2_75_denom  2073423078  // Fehler ..  3,41e-18
-
-// ---  ln_2_80_Konstante  ---
-#define ln_2_80_expo            0  
-#define ln_2_80_num    1604323086  
-#define ln_2_80_denom  1558170970  // Fehler .. -2,71e-19
-
-// ---  ln_3_00_Konstante  ---
-#define ln_3_00_expo            0  
-#define ln_3_00_num     997020788  
-#define ln_3_00_denom   907527431  // Fehler ..  1,56e-19
-
-// ---  ln_3_20_Konstante  ---
-#define ln_3_20_expo            0  
-#define ln_3_20_num    1701431007  
-#define ln_3_20_denom  1462777649  // Fehler ..  1,89e-19
-
-// ---  ln_3_25_Konstante  ---
-#define ln_3_25_expo            0  
-#define ln_3_25_num    2144735229  
-#define ln_3_25_denom  1819646322  // Fehler ..  1,03e-16
-
-// ---  ln_3_40_Konstante  ---
-#define ln_3_40_expo            0  
-#define ln_3_40_num    1129808015  
-#define ln_3_40_denom   923215147  // Fehler ..  3,88e-19
-
-// ---  ln_3_50_Konstante  ---
-#define ln_3_50_expo            0  
-#define ln_3_50_num    2125035771  
-#define ln_3_50_denom  1696279204  // Fehler ..  5,81e-17
-
-// ---  ln_3_60_Konstante  ---
-#define ln_3_60_expo            0  
-#define ln_3_60_num    1846784376  
-#define ln_3_60_denom  1441748442  // Fehler .. -9,46e-21
-
-static const AVRational_32 ln_x_5[14] = {
-  { 0,            0,           int32_max,     0 },
-  { ln_1_20_expo, ln_1_20_num, ln_1_20_denom, 0 },
-  { ln_1_40_expo, ln_1_40_num, ln_1_40_denom, 0 },
-  { ln_1_60_expo, ln_1_60_num, ln_1_60_denom, 0 },
-  { ln_1_80_expo, ln_1_80_num, ln_1_80_denom, 0 },
-  { ln_2_00_expo, ln_2_00_num, ln_2_00_denom, 0 },
-  { ln_2_20_expo, ln_2_20_num, ln_2_20_denom, 0 },
-  { ln_2_40_expo, ln_2_40_num, ln_2_40_denom, 0 },
-  { ln_2_60_expo, ln_2_60_num, ln_2_60_denom, 0 },
-  { ln_2_80_expo, ln_2_80_num, ln_2_80_denom, 0 },
-  { ln_3_00_expo, ln_3_00_num, ln_3_00_denom, 0 },
-  { ln_3_20_expo, ln_3_20_num, ln_3_20_denom, 0 },
-  { ln_3_40_expo, ln_3_40_num, ln_3_40_denom, 0 },
-  { ln_3_60_expo, ln_3_60_num, ln_3_60_denom, 0 }
-};
-
-static const AVRational_32 ln_x_4[11] = {
-  { 0,            0,           int32_max,     0 },
-  { ln_1_25_expo, ln_1_25_num, ln_1_25_denom, 0 },
-  { ln_1_50_expo, ln_1_50_num, ln_1_50_denom, 0 },
-  { ln_1_75_expo, ln_1_75_num, ln_1_75_denom, 0 },
-  { ln_2_00_expo, ln_2_00_num, ln_2_00_denom, 0 },
-  { ln_2_25_expo, ln_2_25_num, ln_2_25_denom, 0 },
-  { ln_2_50_expo, ln_2_50_num, ln_2_50_denom, 0 },
-  { ln_2_75_expo, ln_2_75_num, ln_2_75_denom, 0 },
-  { ln_3_00_expo, ln_3_00_num, ln_3_00_denom, 0 },
-  { ln_3_25_expo, ln_3_25_num, ln_3_25_denom, 0 },
-  { ln_3_50_expo, ln_3_50_num, ln_3_50_denom, 0 }
-};
-
-// ---  fac_0_Offset  ---
-#define fac_0_expo              -2  
-#define fac_0_num        -38167625  
-#define fac_0_denom       79368703  // 
-
-// ---  fac_0_5_Offset  ---
-#define fac_0_5_expo            -3  
-#define fac_0_5_num      -76341733  
-#define fac_0_5_denom    245592408  // 
-
-// ---  fac_1_Offset  ---
-#define fac_1_expo              -4  
-#define fac_1_num       -588055000  
-#define fac_1_denom      973844203  // 
-
-// ---  fac_1_5_Offset  ---
-#define fac_1_5_expo            -4  
-#define fac_1_5_num     -753604415  
-#define fac_1_5_denom    351172806  // 
-
-// ---  fac_2_Offset  ---
-#define fac_2_expo              -5  
-#define fac_2_num       -121200000  
-#define fac_2_denom      107583991  // 
-
-// ---  fac_2_5_Offset  ---
-#define fac_2_5_expo            -5  
-#define fac_2_5_num     -431658750  
-#define fac_2_5_denom    552981271  // 
-
-// ---  fac_3_Offset  ---
-#define fac_3_expo              -5  
-#define fac_3_num        -11350000  
-#define fac_3_denom       17004069  // 
-
-// ---  fac_3_5_Offset  ---
-#define fac_3_5_expo            -5  
-#define fac_3_5_num     -164550730  
-#define fac_3_5_denom    244056347  // 
-
-// ---  fac_4_Offset  ---
-#define fac_4_expo              -5  
-#define fac_4_num       -110400000  
-#define fac_4_denom      141434149  // 
-
-// ---  fac_4_5_Offset  ---
-#define fac_4_5_expo            -5  
-#define fac_4_5_num    -1453252477  
-#define fac_4_5_denom   1434076343  // 
-
-// ---  fac_5_Offset  ---
-#define fac_5_expo              -5  
-#define fac_5_num      -1970924237  
-#define fac_5_denom     1358058380  // 
-
-// ---  fac_5_5_Offset  ---
-#define fac_5_5_expo            -5  
-#define fac_5_5_num    -1708624556  
-#define fac_5_5_denom    754718667  // 
-
-// ---  fac_6_Offset  ---
-#define fac_6_expo              -4  
-#define fac_6_num        -35600000  
-#define fac_6_denom       93477027  // 
-
-// ---  fac_6_5_Offset  ---
-#define fac_6_5_expo            -4  
-#define fac_6_5_num      -99630336  
-#define fac_6_5_denom    145380637  // 
-
-// ---  fac_7_Offset  ---
-#define fac_7_expo              -4  
-#define fac_7_num        -90400000  
-#define fac_7_denom       68988499  // 
-
-// ---  fac_7_5_Offset  ---
-#define fac_7_5_expo            -4  
-#define fac_7_5_num    -1855261976  
-#define fac_7_5_denom    700730481  // 
-
-// ---  fac_8_Offset  ---
-#define fac_8_expo              -3  
-#define fac_8_num          -678750  
-#define fac_8_denom        1206347  // 
-
-// ---  fac_8_5_Offset  ---
-#define fac_8_5_expo            -3  
-#define fac_8_5_num     -535263304  
-#define fac_8_5_denom    427349455  // 
-
-// ---  fac_9_Offset  ---
-#define fac_9_expo              -3  
-#define fac_9_num      -1509440000  
-#define fac_9_denom      518502837  // 
-
-// ---  fac_9_5_Offset  ---
-#define fac_9_5_expo            -2  
-#define fac_9_5_num     -414980686  
-#define fac_9_5_denom    589290319  // 
-
-// ---  fac_10_Offset  ---
-#define fac_10_expo             -2  
-#define fac_10_num      -812301049  
-#define fac_10_denom     459365485  // 
-
-// ---  fac_10_5_Offset  ---
-#define fac_10_5_expo           -2  
-#define fac_10_5_num    -341782261  
-#define fac_10_5_denom   743209659  // 
-
-// ---  fac_11_Offset  ---
-#define fac_11_expo             -1  
-#define fac_11_num       -12556000  
-#define fac_11_denom      10158083  // 
-
-// ---  fac_11_5_Offset  ---
-#define fac_11_5_expo            0  
-#define fac_11_5_num     -32490941  
-#define fac_11_5_denom    94799087  // 
-
-// ---  fac_12_Offset  ---
-#define fac_12_expo              0  
-#define fac_12_num      -118439200  
-#define fac_12_denom     121010663  // 
-
-// ---  fac_12_5_Offset  ---
-#define fac_12_5_expo            0  
-#define fac_12_5_num   -1331418638  
-#define fac_12_5_denom   463219637  // 
-
-// ---  fac_13_Offset  ---
-#define fac_13_expo              1  
-#define fac_13_num      -275253760 
-#define fac_13_denom     317539253  // 
-
-// ---  fac_13_5_Offset  ---
-#define fac_13_5_expo            1  
-#define fac_13_5_num    -921653070 
-#define fac_13_5_denom   343723249  // 
-
-// ---  fac_14_Offset  ---
-#define fac_14_expo              2  
-#define fac_14_num     -1223791104 
-#define fac_14_denom    1440728183  // 
-
-// ---  fac_14_5_Offset  ---
-#define fac_14_5_expo            2  
-#define fac_14_5_num    -456651368 
-#define fac_14_5_denom   165680065  // 
-
-// ---  fac_15_Offset  ---
-#define fac_15_expo              3  
-#define fac_15_num      -943377664 
-#define fac_15_denom    1032065827  // 
-
-// ---  fac_15_5_Offset  ---
-#define fac_15_5_expo            4  
-#define fac_15_5_num    -131405355 
-#define fac_15_5_denom   424691983  // 
-
-// ---  fac_16_Offset  ---
-#define fac_16_expo              4  
-#define fac_16_num      -367397951 
-#define fac_16_denom     343435494  // 
-
-// ---  fac_16_5_Offset  ---
-#define fac_16_5_expo            4  
-#define fac_16_5_num    -232082905 
-#define fac_16_5_denom   614319576  // 
-
-// ---  fac_17_Offset  ---
-#define fac_17_expo              5  
-#define fac_17_num     -1847449155 
-#define fac_17_denom    1360115594  // 
-
-// ---  fac_17_5_Offset  ---
-#define fac_17_5_expo            6  
-#define fac_17_5_num    -606979409 
-#define fac_17_5_denom  1220093681  // 
-
-// ---  fac_18_Offset  ---
-#define fac_18_expo              6  
-#define fac_18_num      -187350565 
-#define fac_18_denom     101304759  // 
-
-// ---  fac_18_5_Offset  ---
-#define fac_18_5_expo            7  
-#define fac_18_5_num    -933501728 
-#define fac_18_5_denom  1331590443  // 
-
-// ---  fac_19_Offset  ---
-#define fac_19_expo              7  
-#define fac_19_num     -1498880369 
-#define fac_19_denom     552904206  // 
-
-// ---  fac_19_5_Offset  ---
-#define fac_19_5_expo            8  
-#define fac_19_5_num    -720709536 
-#define fac_19_5_denom   677650739  // 
-
-// ---  fac_20_Offset  ---
-#define fac_20_expo              9  
-#define fac_20_num      -463923091 
-#define fac_20_denom    1095693118  // 
-
-// ---  fac_20_5_Offset  ---
-#define fac_20_5_expo            9  
-#define fac_20_5_num      -5129461 
-#define fac_20_5_denom     2998823  // 
-
-// ---  fac_21_Offset  ---
-#define fac_21_expo             10  
-#define fac_21_num     -1067915132 
-#define fac_21_denom    1520727459  // 
-
-// ---  fac_21_5_Offset  ---
-#define fac_21_5_expo           10  
-#define fac_21_5_num   -1385707585 
-#define fac_21_5_denom   474144672  // 
-
-// ---  fac_22_Offset  ---
-#define fac_22_expo             11  
-#define fac_22_num     -1332208012 
-#define fac_22_denom    1079725445  // 
-
-// ---  fac_22_5_Offset  ---
-#define fac_22_5_expo           12  
-#define fac_22_5_num    -217082903 
-#define fac_22_5_denom   411391994  // 
-
-// ---  fac_23_Offset  ---
-#define fac_23_expo             12  
-#define fac_23_num     -1225189809 
-#define fac_23_denom     534963808  // 
-
-// ---  fac_23_5_Offset  ---
-#define fac_23_5_expo           13  
-#define fac_23_5_num    -193916279 
-#define fac_23_5_denom   192648931  // 
-
-// ---  fac_24_Offset  ---
-#define fac_24_expo             14  
-#define fac_24_num      -198054244 
-#define fac_24_denom     442079933  // 
-
-// ---  fac_24_5_Offset  ---
-#define fac_24_5_expo           14  
-#define fac_24_5_num     -50906172 
-#define fac_24_5_denom    25212197  // 
-
-// ---  fac_25_Offset  ---
-#define fac_25_expo             15  
-#define fac_25_num     -1592701879 
-#define fac_25_denom    1729214202  // 
-
-// ---  fac_25_5_Offset  ---
-#define fac_25_5_expo           16  
-#define fac_25_5_num    -629511790 
-#define fac_25_5_denom  1480346453  // 
-
-// ---  fac_26_Offset  ---
-#define fac_26_expo             16  
-#define fac_26_num     -1325072947 
-#define fac_26_denom     675289173  // 
-
-// ---  fac_26_5_Offset  ---
-#define fac_26_5_expo           17  
-#define fac_26_5_num    -379088621 
-#define fac_26_5_denom   403778742  // 
-
-// ---  fac_27_Offset  ---
-#define fac_27_expo             18  
-#define fac_27_num      -634230256 
-#define fac_27_denom    1516071167  // 
-
-// ---  fac_27_5_Offset  ---
-#define fac_27_5_expo           18  
-#define fac_27_5_num    -393944191 
-#define fac_27_5_denom   196358696  // 
-
-// ---  fac_28_Offset  ---
-#define fac_28_expo             19  
-#define fac_28_num     -1627101625 
-#define fac_28_denom    1674408712  // 
-
-// ---  fac_28_5_Offset  ---
-#define fac_28_5_expo           20  
-#define fac_28_5_num    -334027319 
-#define fac_28_5_denom   703136685  // 
-
-// ---  fac_29_Offset  ---
-#define fac_29_expo             20  
-#define fac_29_num      -742984871 
-#define fac_29_denom     316870243  // 
-
-// ---  fac_29_5_Offset  ---
-#define fac_29_5_expo           21  
-#define fac_29_5_num   -1095375079 
-#define fac_29_5_denom   937687056  // 
-
-// ---  fac_30_Offset  ---
-#define fac_30_expo             22  
-#define fac_30_num      -221881471 
-#define fac_30_denom     377739731  // 
-
-// ---  fac_30_5_Offset  ---
-#define fac_30_5_expo           23  
-#define fac_30_5_num    -365417368 
-#define fac_30_5_denom  1193283281  // 
-
-// ---  fac_31_Offset  ---
-#define fac_31_expo             23  
-#define fac_31_num      -316345565 
-#define fac_31_denom     201727661  // 
-
-// ---  fac_31_5_Offset  ---
-#define fac_31_5_expo           25  
-#define fac_31_5_num    -962395986 
-#define fac_31_5_denom  1225256117  // 
-
-// ---  fac_32_Offset  ---
-#define fac_32_expo             25  
-#define fac_32_num      -173868483 
-#define fac_32_denom     425740088  // 
-
-// ---  fac_32_5_Offset  ---
-#define fac_32_5_expo           25  
-#define fac_32_5_num    -329961872 
-#define fac_32_5_denom   154125485  // 
-
-// ---  fac_33_Offset  ---
-#define fac_33_expo             26  
-#define fac_33_num     -2043913809 
-#define fac_33_denom    1769038886  // 
-
-// ---  fac_33_5_Offset  ---
-#define fac_33_5_expo           27  
-#define fac_33_5_num    -624272507 
-#define fac_33_5_denom  1039837828  // 
-
-// ---  fac_34_Offset  ---
-#define fac_34_expo             28  
-#define fac_34_num      -145441367 
-#define fac_34_denom     453140294  // 
-
-// ---  fac_34_5_Offset  ---
-#define fac_34_5_expo           29  
-#define fac_34_5_num   -1512686212 
-#define fac_34_5_denom   880289327  // 
-
-// ---  fac_35_Offset  ---
-#define fac_35_expo             29  
-#define fac_35_num     -1547986916 
-#define fac_35_denom    1660921469  // 
-
-// ---  fac_35_5_Offset  ---
-#define fac_35_5_expo           30  
-#define fac_35_5_num    -244986479 
-#define fac_35_5_denom   590920622  // 
-
-// ---  fac_36_Offset  ---
-#define fac_36_expo             30  
-#define fac_36_num       -63597834 
-#define fac_36_denom      21285113  // 
-
-// ---  fac_36_5_Offset  ---
-#define fac_36_5_expo           31  
-#define fac_36_5_num   -1086153737 
-#define fac_36_5_denom   711956168  // 
-
-// ---  fac_37_Offset  ---
-#define fac_37_expo             32  
-#define fac_37_num     -1225610293 
-#define fac_37_denom    1331254197  // 
-
-// ---  fac_37_5_Offset  ---
-#define fac_37_5_expo           33  
-#define fac_37_5_num    -544649865 
-#define fac_37_5_denom  1166625031  // 
-
-// ---  fac_38_Offset  ---
-#define fac_38_expo             33  
-#define fac_38_num      -198712988 
-#define fac_38_denom      76995105  // 
-
-// ---  fac_38_5_Offset  ---
-#define fac_38_5_expo           34  
-#define fac_38_5_num   -1830417151 
-#define fac_38_5_denom  1212375790  // 
-
-// ---  fac_39_Offset  ---
-#define fac_39_expo             35  
-#define fac_39_num      -552383487 
-#define fac_39_denom     647786629  // 
-
-// ---  fac_39_5_Offset  ---
-#define fac_39_5_expo           36  
-#define fac_39_5_num    -872853668 
-#define fac_39_5_denom  1234261597  // 
-
-// ---  fac_40_Offset  ---
-#define fac_40_expo             36  
-#define fac_40_num      -432688789 
-#define fac_40_denom     173817992  // 
-
-// ---  fac_40_5_Offset  ---
-#define fac_40_5_expo           37  
-#define fac_40_5_num    -687178270 
-#define fac_40_5_denom   434440441  // 
-
-// ---  fac_41_Offset  ---
-#define fac_41_expo             38  
-#define fac_41_num     -1122536483 
-#define fac_41_denom    1229633891  // 
-
-// ---  fac_41_5_Offset  ---
-#define fac_41_5_expo           39  
-#define fac_41_5_num    -153641613 
-#define fac_41_5_denom   292346807  // 
-
-// ---  fac_42_Offset  ---
-#define fac_42_expo             40  
-#define fac_42_num      -879537278 
-#define fac_42_denom    1638690119  // 
-
-// ---  fac_42_5_Offset  ---
-#define fac_42_5_expo           40  
-#define fac_42_5_num    -517209660 
-#define fac_42_5_denom   296048111  // 
-
-// ---  fac_43_Offset  ---
-#define fac_43_expo             41  
-#define fac_43_num      -242095331 
-#define fac_43_denom     243101793  // 
-
-// ---  fac_43_5_Offset  ---
-#define fac_43_5_expo           42  
-#define fac_43_5_num    -257280971 
-#define fac_43_5_denom   455901988  // 
-
-// ---  fac_44_Offset  ---
-#define fac_44_expo             43  
-#define fac_44_num      -658824410 
-#define fac_44_denom    2058167293  // 
-
-// ---  fac_44_5_Offset  ---
-#define fac_44_5_expo           43  
-#define fac_44_5_num    -554524872 
-#define fac_44_5_denom   314382991  // 
-
-// ---  fac_45_Offset  ---
-#define fac_45_expo             44  
-#define fac_45_num      -246604169 
-#define fac_45_denom     258559783  // 
-
-// ---  fac_45_5_Offset  ---
-#define fac_45_5_expo           45  
-#define fac_45_5_num     -67592881 
-#define fac_45_5_denom   131958268  // 
-
-// ---  fac_46_Offset  ---
-#define fac_46_expo             45  
-#define fac_46_num       -96609683 
-#define fac_46_denom      39530726  // 
-
-// ---  fac_46_5_Offset  ---
-#define fac_46_5_expo           46  
-#define fac_46_5_num    -601128754 
-#define fac_46_5_denom   580395167  // 
-
-// ---  fac_47_Offset  ---
-#define fac_47_expo             47  
-#define fac_47_num       -15982684 
-#define fac_47_denom      49211871  // 
-
-// ---  fac_47_5_Offset  ---
-#define fac_47_5_expo           48  
-#define fac_47_5_num   -1621326698 
-#define fac_47_5_denom   621413627  // 
-
-// ---  fac_48_Offset  ---
-#define fac_48_expo             49  
-#define fac_48_num     -2056153331 
-#define fac_48_denom    1261013616  // 
-
-// ---  fac_48_5_Offset  ---
-#define fac_48_5_expo           50  
-#define fac_48_5_num   -1567296141 
-#define fac_48_5_denom  1621269865  // 
-
-// ---  fac_49_Offset  ---
-#define fac_49_expo             51  
-#define fac_49_num       -38459009 
-#define fac_49_denom      63537848  // 
-
-// ---  fac_49_5_Offset  ---
-#define fac_49_5_expo           52  
-#define fac_49_5_num    -382855372 
-#define fac_49_5_denom  1029504777  // 
-
-// ---  fac_50_Offset  ---
-#define fac_50_expo             52  
-#define fac_50_num       556468741 
-#define fac_50_denom     270526176  // 
-
-// ---  fac_50_5_Offset  ---
-#define fac_50_5_expo           53  
-#define fac_50_5_num   -1980154981 
-#define fac_50_5_denom  1419714169  // 
-
-// ---  fac_51_Offset  ---
-#define fac_51_expo             54  
-#define fac_51_num      1439463197 
-#define fac_51_denom    1046184913  // 
-
-// ---  fac_51_5_Offset  ---
-#define fac_51_5_expo           55  
-#define fac_51_5_num    -368743016 
-#define fac_51_5_denom   873116401  // 
-
-// ---  fac_52_Offset  ---
-#define fac_52_expo             56  
-#define fac_52_num       839285396 
-#define fac_52_denom     969892413  // 
-
-// ---  fac_52_Offset  ---
-#define fac_52_5_expo           57  
-#define fac_52_5_num     868597565 
-#define fac_52_5_denom  1235749043  // 
-
-// ---  fac_53_Offset  ---
-#define fac_53_expo             58  
-#define fac_53_num       665466203 
-#define fac_53_denom    1218751210  // 
-
-// ---  fac_53_5_Offset  ---
-#define fac_53_5_expo           59  
-#define fac_53_5_num     538861954 
-#define fac_53_5_denom  1318978929  // 
-
-// ---  fac_54_Offset  ---
-#define fac_54_expo             59  
-#define fac_54_num       776625383 
-#define fac_54_denom    2136814531  // 
-
-// ---  fac_54_5_Offset  ---
-#define fac_54_5_expo           60  
-#define fac_54_5_num     731236499 
-#define fac_54_5_denom   280498801  // 
-
-// ---  fac_55_Offset  ---
-#define fac_55_expo             61  
-#define fac_55_num      1992300007 
-#define fac_55_denom     905728039  // 
-
-// ---  fac_55_5_Offset  ---
-#define fac_55_5_expo           62  
-#define fac_55_5_num     149851799 
-#define fac_55_5_denom    93124364  // 
-
-// ---  fac_56_Offset  ---
-#define fac_56_expo             63  
-#define fac_56_num       934928336 
-#define fac_56_denom     754424491  // 
-
-// ---  fac_56_5_Offset  ---
-#define fac_56_5_expo           64  
-#define fac_56_5_num     412008249 
-#define fac_56_5_denom   321166034  // 
-
-// ---  fac_57_Offset  ---
-#define fac_57_expo             65  
-#define fac_57_num      1520672342 
-#define fac_57_denom    1857244887  // 
-
-// ---  fac_57_5_Offset  ---
-#define fac_57_5_expo           66  
-#define fac_57_5_num    1316540577 
-#define fac_57_5_denom  2118497009  // 
-
-// ---  fac_58_Offset  ---
-#define fac_58_expo             67  
-#define fac_58_num       553452262 
-#define fac_58_denom    1148993719  // 
-
-// ---  fac_58_5_Offset  ---
-#define fac_58_5_expo           68  
-#define fac_58_5_num     670252789 
-#define fac_58_5_denom  2024633716  // 
-
-// ---  fac_59_Offset  ---
-#define fac_59_expo             69  
-#define fac_59_num        13006851 
-#define fac_59_denom      42751714  // 
-
-// ---  fac_59_5_Offset  ---
-#define fac_59_5_expo           68  
-#define fac_59_5_num    1969684929 
-#define fac_59_5_denom   796810957  // 
-
-// ---  fac_60_Offset  ---
-#define fac_60_expo             70  
-#define fac_60_num       461291125 
-#define fac_60_denom     239940848  // 
-
-// ---  fac_60_5_Offset  ---
-#define fac_60_5_expo           71  
-#define fac_60_5_num    1120907009 
-#define fac_60_5_denom   723669865  // 
-
-// ---  fac_61_Offset  ---
-#define fac_61_expo             72  
-#define fac_61_num       745216830 
-#define fac_61_denom     537425071  // 
-
-// ---  fac_61_5_Offset  ---
-#define fac_61_5_expo           71  
-#define fac_61_5_num     758983651 
-#define fac_61_5_denom  1753533849  // 
-
-// ---  fac_62_Offset  ---
-#define fac_62_expo             74  
-#define fac_62_num      1701150535 
-#define fac_62_denom    1912965987  // 
-
-// ---  fac_62_5_Offset  ---
-#define fac_62_5_expo           73  
-#define fac_62_5_num     716301640 
-#define fac_62_5_denom  1872629669  // 
-
-// ---  fac_63_Offset  ---
-#define fac_63_expo             76  
-#define fac_63_num       627657147 
-#define fac_63_denom    1136227748  // 
-
-// ---  fac_63_5_Offset  ---
-#define fac_63_5_expo           73  
-#define fac_63_5_num     613920499 
-#define fac_63_5_denom  1339047591  // 
-
-// ---  fac_64_Offset  ---
-#define fac_64_expo             78  
-#define fac_64_num       200350170 
-#define fac_64_denom     526543871  // 
-
-// ---  fac_64_5_Offset  ---
-#define fac_64_5_expo           74  
-#define fac_64_5_num    1401739167 
-#define fac_64_5_denom   495685534  // 
-
-// ---  fac_65_Offset  ---
-#define fac_65_expo             79  
-#define fac_65_num      1573045383 
-#define fac_65_denom     621464525  // 
-
-// ---  fac_65_5_Offset  ---
-#define fac_65_5_expo           76  
-#define fac_65_5_num     681533990 
-#define fac_65_5_denom   317007513  // 
-
-// ---  fac_66_Offset  ---
-#define fac_66_expo             81  
-#define fac_66_num       776272064 
-#define fac_66_denom     461367509  // 
-
-// ---  fac_66_5_Offset  ---
-#define fac_66_5_expo           78  
-#define fac_66_5_num     415172353 
-#define fac_66_5_denom   331981486  // 
-
-// ---  fac_67_Offset  ---
-#define fac_67_expo             83  
-#define fac_67_num       942095599 
-#define fac_67_denom     781379150  // 
-
-// ---  fac_67_5_Offset  ---
-#define fac_67_5_expo           80  
-#define fac_67_5_num    1965780533 
-#define fac_67_5_denom  1946066111  // 
-
-// ---  fac_68_Offset  ---
-#define fac_68_expo             85  
-#define fac_68_num       934304394 
-#define fac_68_denom    1100214289  // 
-
-static const AVRational_32 fac_x[69] = {
-  { fac_0_expo,  fac_0_num,  fac_0_denom, 0 },
-  { fac_1_expo,  fac_1_num,  fac_1_denom, 0 },
-  { fac_2_expo,  fac_2_num,  fac_2_denom, 0 },
-  { fac_3_expo,  fac_3_num,  fac_3_denom, 0 },
-  { fac_4_expo,  fac_4_num,  fac_4_denom, 0 },
-  { fac_5_expo,  fac_5_num,  fac_5_denom, 0 },
-  { fac_6_expo,  fac_6_num,  fac_6_denom, 0 },
-  { fac_7_expo,  fac_7_num,  fac_7_denom, 0 },
-  { fac_8_expo,  fac_8_num,  fac_8_denom, 0 },
-  { fac_9_expo,  fac_9_num,  fac_9_denom, 0 },
-  { fac_10_expo, fac_10_num, fac_10_denom, 0 },
-  { fac_11_expo, fac_11_num, fac_11_denom, 0 },
-  { fac_12_expo, fac_12_num, fac_12_denom, 0 },
-  { fac_13_expo, fac_13_num, fac_13_denom, 0 },
-  { fac_14_expo, fac_14_num, fac_14_denom, 0 },
-  { fac_15_expo, fac_15_num, fac_15_denom, 0 },
-  { fac_16_expo, fac_16_num, fac_16_denom, 0 },
-  { fac_17_expo, fac_17_num, fac_17_denom, 0 },
-  { fac_18_expo, fac_18_num, fac_18_denom, 0 },
-  { fac_19_expo, fac_19_num, fac_19_denom, 0 },
-  { fac_20_expo, fac_20_num, fac_20_denom, 0 },
-  { fac_21_expo, fac_21_num, fac_21_denom, 0 },
-  { fac_22_expo, fac_22_num, fac_22_denom, 0 },
-  { fac_23_expo, fac_23_num, fac_23_denom, 0 },
-  { fac_24_expo, fac_24_num, fac_24_denom, 0 },
-  { fac_25_expo, fac_25_num, fac_25_denom, 0 },
-  { fac_26_expo, fac_26_num, fac_26_denom, 0 },
-  { fac_27_expo, fac_27_num, fac_27_denom, 0 },
-  { fac_28_expo, fac_28_num, fac_28_denom, 0 },
-  { fac_29_expo, fac_29_num, fac_29_denom, 0 },
-  { fac_30_expo, fac_30_num, fac_30_denom, 0 },
-  { fac_31_expo, fac_31_num, fac_31_denom, 0 },
-  { fac_32_expo, fac_32_num, fac_32_denom, 0 },
-  { fac_33_expo, fac_33_num, fac_33_denom, 0 },
-  { fac_34_expo, fac_34_num, fac_34_denom, 0 },
-  { fac_35_expo, fac_35_num, fac_35_denom, 0 },
-  { fac_36_expo, fac_36_num, fac_36_denom, 0 },
-  { fac_37_expo, fac_37_num, fac_37_denom, 0 },
-  { fac_38_expo, fac_38_num, fac_38_denom, 0 },
-  { fac_39_expo, fac_39_num, fac_39_denom, 0 },
-  { fac_40_expo, fac_40_num, fac_40_denom, 0 },
-  { fac_41_expo, fac_41_num, fac_41_denom, 0 },
-  { fac_42_expo, fac_42_num, fac_42_denom, 0 },
-  { fac_43_expo, fac_43_num, fac_43_denom, 0 },
-  { fac_44_expo, fac_44_num, fac_44_denom, 0 },
-  { fac_45_expo, fac_45_num, fac_45_denom, 0 },
-  { fac_46_expo, fac_46_num, fac_46_denom, 0 },
-  { fac_47_expo, fac_47_num, fac_47_denom, 0 },
-  { fac_48_expo, fac_48_num, fac_48_denom, 0 },
-  { fac_49_expo, fac_49_num, fac_49_denom, 0 },
-  { fac_50_expo, fac_50_num, fac_50_denom, 0 },
-  { fac_51_expo, fac_51_num, fac_51_denom, 0 },
-  { fac_52_expo, fac_52_num, fac_52_denom, 0 },
-  { fac_53_expo, fac_53_num, fac_53_denom, 0 },
-  { fac_54_expo, fac_54_num, fac_54_denom, 0 },
-  { fac_55_expo, fac_55_num, fac_55_denom, 0 },
-  { fac_56_expo, fac_56_num, fac_56_denom, 0 },
-  { fac_57_expo, fac_57_num, fac_57_denom, 0 },
-  { fac_58_expo, fac_58_num, fac_58_denom, 0 },
-  { fac_59_expo, fac_59_num, fac_59_denom, 0 },
-  { fac_60_expo, fac_60_num, fac_60_denom, 0 },
-  { fac_61_expo, fac_61_num, fac_61_denom, 0 },
-  { fac_62_expo, fac_62_num, fac_62_denom, 0 },
-  { fac_63_expo, fac_63_num, fac_63_denom, 0 },
-  { fac_64_expo, fac_64_num, fac_64_denom, 0 },
-  { fac_65_expo, fac_65_num, fac_65_denom, 0 },
-  { fac_66_expo, fac_66_num, fac_66_denom, 0 },
-  { fac_67_expo, fac_67_num, fac_67_denom, 0 },
-  { fac_68_expo, fac_68_num, fac_68_denom, 0 }
-};
 char    expo_temp_str[]    = "#00";
 int8_t  expo_temp_8        =  1;
 
@@ -1903,7 +854,7 @@ static const uint8_t led_font[count_ascii] = {
   123, 119, 127,  57,  15, 121, 113,  61, 118,  48,  30, 122,  56,  85,  55,  99,     //  ¦@ABCDEFGHIJKLMNO¦
   115, 103,  49,  45,   7,  28,  34,  60,  73, 110,  27,  57, 100,  15,  35,   8,     //  ¦PQRSTUVWXYZ[\]^_¦
    32,  95, 124,  88,  94, 123,  43, 111, 116,  16,  14, 120,  24,  21,  84,  92,     //  ¦`abcdefghijklmno¦
-   83,  53,  80, 108,  70,  29,  43, 106,   9, 102,  11,  24,  20,   3,   1,  54};    //  ¦pqrstuvwxyz{|}~ ¦
+   83,  53,  80, 108,  70,  29,  43, 106,   9, 102,   3,  24,  17,   5,   1,  54};    //  ¦pqrstuvwxyz{|}~ ¦
    
 uint8_t count_led[8] = {      // 1 .. 7
   0
@@ -1967,7 +918,7 @@ uint8_t    index_5min = 255;  // 0..39
 boolean Init_expo = true;
 boolean Display_new = true;
 boolean Display_change = false;
-boolean Std_mode = false;
+boolean Std_mode = true;
 boolean Display_mode = false;
 #define Std_string_count  9  //
 static char Std_mode_string[ Std_string_count ]   = "       " ;
@@ -2004,8 +955,8 @@ auto bit_5 = toBitRef( Display_Status_new, 5 );  // ( "=" )
 auto bit_6 = toBitRef( Display_Status_new, 6 );  // ( "M+" )
 uint8_t Display_Memory = 0;    // 0 .. 12
                                          //01234567890123456789
-static const char    Display_Memory_1[] = "  mmE]{F mFm=O_X";
-static const char    Display_Memory_0[] = "1 r__[}n=+Fc_V,_";
+static const char    Display_Memory_1[] = "  mmE]{F mFm=O_X}";
+static const char    Display_Memory_0[] = "1 r__[zn=+Fc_V,_|";
 
 boolean max_input = false;
 boolean Mantisse_change = false;
@@ -3881,13 +2832,14 @@ void Display_Number() {
   }
 
   if ( display_big > abs(mem_stack_input[mem_pointer].denom) ) {
-    display_big = expo_10[display_digit -1] * display_big;
+    display_big *= expo_10[display_digit -1];
     ++display_expo;
   }
   else {
-    display_big = expo_10[display_digit] * display_big;
+    display_big *= expo_10[display_digit];
   }
-  display_big = display_big + (abs(mem_stack_input[mem_pointer].denom) / 2) - 1;
+  display_big += (abs(mem_stack_input[mem_pointer].denom) / 2);
+  display_big -= 1;
   display_number = display_big / mem_stack_input[mem_pointer].denom;
 
   if (abs(display_number) == expo_10[display_digit]) {
@@ -4234,54 +3186,7 @@ void Expand_Reduce_add() {
     }
   }
 }
-/*   // one_x_n_log_e
-AVRational_32 one_x_n_log_e(AVRational_32 a, uint8_t n) {
-	uint8_t n_num    = n;
-	uint8_t n_denum  = n;	
-  num_temp_u64_a   = abs(a.num);
-  denom_temp_u64   = abs(a.denom);
 
-  if ( n > 1 ) {
-  	n_num  -= 1;
-  		
-    while ( a.expo < 0 ) {
-      denom_temp_u64 *= 10;
-      a.expo += 1;
-    }
-	
-  	denom_temp_u64 *= n_denum;
-	  num_temp_u64_a *= n_num;
-	  num_temp_u64    = denom_temp_u64;
-	  
-	  if ( (n % 2) == 0 ) {
-	    if ( a.num > 0 ) {
-	      num_temp_u64 -= num_temp_u64_a;
-	    }
-	    else {
-	      num_temp_u64 += num_temp_u64_a;	      
-	    }
-	  }
-	  else {
-	    if ( a.num > 0 ) {
-	      num_temp_u64 += num_temp_u64_a;
-	    }
-	    else {
-	      num_temp_u64 -= num_temp_u64_a;	      
-	    }
-	  }  
-                       // num_temp_u64 ,  denom_temp_u64
-    Reduce_Number();   // reduce
-    temp_32.num    = num_temp_u32;
-    temp_32.denom  = denom_temp_u32;
-  	temp_32.expo   = 0;
-	
-  	return temp_32;
-  } 
-  else {
-    return a;
-  }
-}
-*/
 AVRational_32 one_x_n_add(AVRational_32 a, uint8_t n) {
   num_temp_u64   = abs(a.num);
   denom_temp_u64 = abs(a.denom);
@@ -4837,7 +3742,8 @@ AVRational_32 floor_(AVRational_32 a, int8_t expo_test) {
   return temp_32;
 }
 
-AVRational_32 copy(AVRational_32 a) {
+AVRational_32 clone(AVRational_32 a) {
+	// Creates a copy of the actual Fraction object
   return a;
 }
 
@@ -5340,9 +4246,7 @@ AVRational_32 cbrt(AVRational_32 a) {
     	temp_32_b1 = temp_32_b2;
     	break;
   } 
-
   return temp_32_b1;
-
 }
 
 AVRational_32 factorial(AVRational_32 a) {
@@ -5380,8 +4284,8 @@ AVRational_32 factorial(AVRational_32 a) {
     	}
     }
     
-    temp_32_corr     = copy( log_1e0 );
-    temp_32_corr_0_1 = copy( log_1e0 );    
+    temp_32_corr     = clone( log_1e0 );
+    temp_32_corr_0_1 = clone( log_1e0 );    
     if ( a.expo < 0 ) {
       a                = add( a, log_1e0, 1 );
       temp_32_corr_0_1 = div_x( a );      
@@ -5438,17 +4342,6 @@ AVRational_32 factorial(AVRational_32 a) {
     temp_32_mul = mul( temp_32_mul, temp_32_corr_0_1 ); 	
 
     return temp_32_mul;
-   /*     
-    if ( index_a < 68 ) {
-      temp_32_corr = frac(a);
-      temp_32_corr = add(mul( temp_32_corr, fac_x[index_a + 1]), mul(add( log_1e0, min_x(temp_32_corr), 1 ), fac_x[index_a]), 1 );
-    }
-    else {
-      temp_32_corr = fac_x[index_a];
-    }
-    temp_32_fac = add( temp_32_fac, temp_32_corr, 1 );
-   // return temp_32_fac;
-   */
   }
   else {
   	a.denom = 2;
@@ -5738,219 +4631,7 @@ AVRational_32 log10(AVRational_32 a) {
     return a;
   }
 }
-/*  // log_e
-AVRational_32 log_e(AVRational_32 a) {
-  int16_t test_signum  = 0;
-  int16_t up_mul       = 0;
-     	
-  if ( a.num > 0 ) {
 
-    calc_32_e.expo   =  0;
-    calc_32_e.denom  =  1000;
-    calc_32_e.num    =  a.expo;
-    calc_32_e.num   *=  calc_32_e.denom;
-    if ( abs(a.expo) > 2 ) {
-      calc_32_e.expo  +=  1;
-      calc_32_e.denom *= 10;
-    }
-    if ( calc_32_e.num == 0 ) {
-      calc_32_e.denom = int32_max;
-    }
-    calc_32_e = mul( log_1e0, calc_32_e );
-    calc_32_e = mul( log_1e1, calc_32_e );
-    
-    a.expo         = 0;
-    if ( a.num == a.denom ) {
-      return calc_32_e;
-    }
-
-    num_temp_u64_e       = a.num;
-    denom_temp_u64_e     = a.denom;
-    
-    if ( num_temp_u64_e > denom_temp_u64_e ) { // ln_x_5
-      num_temp_u64_e    *= 11;
-      denom_temp_u64_e  *=  2;
-      up_mul             =  num_temp_u64_e / denom_temp_u64_e;
-      if ( up_mul > 18 ) {
-    	  up_mul = 18;
-      }
-      num_temp_u64_e    /= 11;
-      denom_temp_u64_e  /=  2;
-      
-    	test_signum        =  up_mul;
-    	test_signum       -=  5;
-    	
-    	num_temp_u64_e    *=  5;
-    	denom_temp_u64_e  *=  up_mul;
-    	
-      calc_32_e   = add( calc_32_e, ln_x_5[test_signum], 1 );
-    }
-    if ( num_temp_u64_e < denom_temp_u64_e ) { // ln_x_5
-    	denom_temp_u64_e  *= 11;
-    	num_temp_u64_e    *=  2;
-    	up_mul             =  denom_temp_u64_e / num_temp_u64_e;
-    	if ( up_mul > 18 ) {
-    	  up_mul = 18;
-      }
-    	denom_temp_u64_e  /= 11;
-    	num_temp_u64_e    /=  2;
-
-    	test_signum        =  up_mul;
-     	test_signum       -=  5;
-     	
-    	denom_temp_u64_e  *=  5;
-    	num_temp_u64_e    *=  up_mul;
-
-      calc_32_e   = add( calc_32_e, min_x(ln_x_5[test_signum]), 1);
-    }
-    Display_wait();
-
-    if ( num_temp_u64_e == denom_temp_u64_e ) {
-      return calc_32_e;
-    }
-    if ( num_temp_u64_e > denom_temp_u64_e ) { // ln_x_80
-      num_temp_u64_e    *=  161;
-      denom_temp_u64_e  *=  2;
-      up_mul             =  num_temp_u64_e / denom_temp_u64_e;
-      if ( up_mul > 88 ) {
-    	  up_mul = 88;
-      }
-      num_temp_u64_e    /=  161;
-      denom_temp_u64_e  /=  2;
-      
-    	test_signum        =  up_mul;
-    	test_signum       -=  80;
-
-    	num_temp_u64_e    *=  80;
-    	denom_temp_u64_e  *=  up_mul;
-
-      calc_32_e   = add( calc_32_e, ln_x_80[test_signum], 1 );
-    }
-    if ( num_temp_u64_e < denom_temp_u64_e ) { // ln_x_80
-    	denom_temp_u64_e  *=  161;
-    	num_temp_u64_e    *=  2;
-    	up_mul             =  denom_temp_u64_e / num_temp_u64_e;
-    	if ( up_mul > 88 ) {
-    	  up_mul = 88;
-      }
-    	denom_temp_u64_e  /=  161;
-    	num_temp_u64_e    /=  2;
-      
-    	test_signum        =  up_mul;
-     	test_signum       -=  80;
-
-    	denom_temp_u64_e  *=  80;
-    	num_temp_u64_e    *=  up_mul;
-
-      calc_32_e   = add( calc_32_e, min_x(ln_x_80[test_signum]), 1);
-    }
-    // Display_wait();
-
-    if ( num_temp_u64_e == denom_temp_u64_e ) {
-      return calc_32_e;
-    }
-    if ( num_temp_u64_e > denom_temp_u64_e ) { // ln_x_1600
-      num_temp_u64_e    *=  3201;
-      denom_temp_u64_e  *=  2;
-      up_mul           =  num_temp_u64_e / denom_temp_u64_e;
-      if ( up_mul > 1610 ) {
-    	  up_mul = 1610;
-      }
-      num_temp_u64_e    /=  3201;
-      denom_temp_u64_e  /=  2;
-      
-    	test_signum        =  up_mul;
-    	test_signum       -=  1600;
-
-    	num_temp_u64_e    *=  1600;
-    	denom_temp_u64_e  *=  up_mul;
-
-      calc_32_e   = add( calc_32_e, ln_x_1600[test_signum], 1 );
-    }
-    if ( num_temp_u64_e < denom_temp_u64_e ) { // ln_x_1600
-    	denom_temp_u64_e  *=  3201;
-    	num_temp_u64_e    *=  2;
-    	up_mul             =  denom_temp_u64_e / num_temp_u64_e;
-    	if ( up_mul > 1610 ) {
-    	  up_mul = 1610;
-      }
-    	denom_temp_u64_e  /=  3201;
-    	num_temp_u64_e    /=  2;
-      
-    	test_signum        =  up_mul;
-     	test_signum       -=  1600;
-
-    	denom_temp_u64_e  *=  1600;
-    	num_temp_u64_e    *=  up_mul;
-
-      calc_32_e   = add( calc_32_e, min_x(ln_x_1600[test_signum]), 1);
-    }
-    Display_wait();
-
-   	temp_32_e_mul.num    = 0;
-   	temp_32_e_mul.denom  = int32_max;   
-   	temp_32_e_mul.expo   = 0;
-    if ( num_temp_u64_e == denom_temp_u64_e ) {
-      return calc_32_e;
-    }
-    if ( num_temp_u64_e > denom_temp_u64_e ) {
-    	num_temp_u64    = num_temp_u64_e;
-    	denom_temp_u64  = denom_temp_u64_e;
-    	num_temp_u64   -= denom_temp_u64;
-    	
-      while ( num_temp_u64 < denom_temp_u64 ) {
-        num_temp_u64        *= 10;
-        temp_32_e_mul.expo  -= 1;
-      }
-      up_mul  = num_temp_u64 / denom_temp_u64;
-      if ( up_mul > 2 ) {
-        denom_temp_u64      *= 10;
-        temp_32_e_mul.expo  += 1;
-      }      
-                         // num_temp_u64 ,  denom_temp_u64
-      Reduce_Number();   // reduce
-      temp_32_e_mul.num    = num_temp_u32;
-      temp_32_e_mul.denom  = denom_temp_u32;
-    }
-    if ( num_temp_u64_e < denom_temp_u64_e ) {
-    	num_temp_u64    = denom_temp_u64_e;
-    	denom_temp_u64  = denom_temp_u64_e;
-    	num_temp_u64   -= num_temp_u64_e;
-
-      while ( num_temp_u64 < denom_temp_u64 ) {
-        num_temp_u64        *= 10;
-        temp_32_e_mul.expo  -= 1;
-      }
-      up_mul  = num_temp_u64 / denom_temp_u64;
-      if ( up_mul > 2 ) {
-        denom_temp_u64      *= 10;
-        temp_32_e_mul.expo  += 1;
-      }
-                               // num_temp_u64 ,  denom_temp_u64
-      Reduce_Number();   // reduce
-      temp_32_e_mul.num    = num_temp_u32;
-      temp_32_e_mul.denom  = denom_temp_u32;
-      temp_32_e_mul.num   *= -1; 
-    }
-
-   // temp_32_e     = one_x_n_log_e( temp_32_e_mul, 2);
-   // temp_32_e     = mul( temp_32_e_mul, temp_32_e );
-
-    temp_32_e     = mul( temp_32_e_mul, temp_32_e_mul );
-    temp_32_e     = min_x(mul( mul_0_500, temp_32_e ));
-
-    calc_32_e     = add( calc_32_e, temp_32_e, 1);
-    calc_32_e     = add( calc_32_e, temp_32_e_mul, 1);
-       
-    return calc_32_e;   
-  }
-  else {
-  	a.denom = 2;
-    Error_String('u');  // input <= 0	      
-    return a;
-  }
-}
-*/	
 AVRational_32 log(AVRational_32 a) {
   uint32_t denom_x   = 1;
   volatile uint8_t count_x    = 0;
@@ -7846,6 +6527,11 @@ static const unsigned char PS_128 = (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);
 
 // the setup routine runs once when you press reset:
 void setup() {
+ 
+  pinMode(On_Off_PIN, INPUT_PULLUP);
+  pinMode(On_Off_PIN, OUTPUT);
+  digitalWrite(On_Off_PIN, LOW);
+
   // Initialize the digital pin as an output.
   // Pin 13 has an LED connected on most Arduino boards
 
@@ -7869,10 +6555,13 @@ void setup() {
   for ( pin = Min_Out; pin <= Max_Out; pin += 1 ) {
     pinMode(pin, INPUT_PULLUP);
     pinMode(pin, OUTPUT);
-    digitalWrite(pin, HIGH);
+    if ( pin == On_Off_PIN) {
+      digitalWrite(pin, LOW);
+    }
+    else {
+      digitalWrite(pin, HIGH);
+    }
   }
-
-  digitalWrite(On_Off_PIN, LOW);
 
   pinMode(SDA, INPUT);           // Pin 17
   pinMode(SCL, OUTPUT);          // Pin 16
@@ -7881,6 +6570,11 @@ void setup() {
   pinMode(A_0, INPUT);           // set pin to input
   pinMode(A_1, INPUT);           // set pin to input
   pinMode(A_2, INPUT);           // set pin to input
+
+  pinMode(Rx_1, INPUT_PULLUP);   // Pin D10
+  digitalWrite(Tx_1, LOW);       // Pin D11
+
+  OneWire ds(Rx_1);              // on pin D10 (a 4.7K resistor is necessary)
 
   pinMode(Beep_m, INPUT_PULLUP); // Pin A3
   pinMode(Beep_p, INPUT_PULLUP); // Pin A7
@@ -9056,6 +7750,7 @@ void loop() {
           display_string[6] = Std_mode_string[5];
           display_string[7] = Std_mode_string[6];
           Display_new = true;
+          Beep__off();
           break;
 
         case 160:                 //   SM(MCs)
@@ -9318,6 +8013,7 @@ void loop() {
           }
           break;
 
+        case 122:                 //    Beep_On_Off    
         case 211:                 //    _/p/ /p/_
         case 212:                 //    _- -_
         case 213:                 //    _* *_
@@ -10116,8 +8812,14 @@ void loop() {
             display_string[Memory_0] = Display_Memory_0[15];
           }
           else {
-            display_string[Memory_1] = '_';
-            display_string[Memory_0] = '_';
+            if ( Display_Status_old == 3 ) {
+              display_string[Memory_1] = Display_Memory_1[16];
+              display_string[Memory_0] = Display_Memory_0[16];
+            }
+            else {
+              display_string[Memory_1] = '_';
+              display_string[Memory_0] = '_';
+            }
           }
           if ( expo_exchange == true ) {
             display_string[Memory_0] = '0' + to_extra_test;
@@ -10349,7 +9051,6 @@ void loop() {
   if ( test_index == true ) {
     Test_all_function();
   }
-
 }
 
 /// --------------------------

@@ -30640,14 +30640,12 @@ This is the "EZ" version, which has limited top masking for improved ease of ass
 <wire x1="2.15" y1="1.3" x2="2.15" y2="-1.3" width="0.2032" layer="51"/>
 <wire x1="2.15" y1="-1.3" x2="-2.15" y2="-1.3" width="0.2032" layer="51"/>
 <wire x1="-2.15" y1="-1.3" x2="-2.15" y2="1.3" width="0.2032" layer="51"/>
-<wire x1="-3.789" y1="-1.6" x2="-3.789" y2="1.6" width="0.127" layer="21"/>
-<wire x1="-3.789" y1="1.6" x2="3.816" y2="1.6" width="0.127" layer="21"/>
-<wire x1="3.816" y1="1.6" x2="3.816" y2="-1.6" width="0.127" layer="21"/>
-<wire x1="3.816" y1="-1.6" x2="-3.789" y2="-1.6" width="0.127" layer="21"/>
-<wire x1="-0.3175" y1="-0.4445" x2="-0.3175" y2="0.4445" width="0.127" layer="21"/>
-<wire x1="-0.3175" y1="0.4445" x2="-0.6985" y2="0" width="0.127" layer="21"/>
-<wire x1="-0.6985" y1="0" x2="-0.3175" y2="-0.4445" width="0.127" layer="21"/>
-<wire x1="-0.6985" y1="-0.4445" x2="-0.6985" y2="0.4445" width="0.127" layer="21"/>
+<wire x1="-3.789" y1="1.6" x2="3.816" y2="1.6" width="0.3048" layer="21"/>
+<wire x1="3.816" y1="-1.6" x2="-3.789" y2="-1.6" width="0.3048" layer="21"/>
+<wire x1="0.5715" y1="-0.6985" x2="0.5715" y2="0.6985" width="0.3048" layer="21"/>
+<wire x1="0.5715" y1="0.6985" x2="-0.5715" y2="0" width="0.3048" layer="21"/>
+<wire x1="-0.5715" y1="0" x2="0.5715" y2="-0.6985" width="0.3048" layer="21"/>
+<wire x1="-0.5715" y1="-0.6985" x2="-0.5715" y2="0" width="0.3048" layer="21"/>
 <rectangle x1="-2.825" y1="-1.1" x2="-2.175" y2="1.1" layer="51"/>
 <rectangle x1="2.175" y1="-1.1" x2="2.825" y2="1.1" layer="51" rot="R180"/>
 <rectangle x1="-1.75" y1="-1.225" x2="-1.075" y2="1.225" layer="51"/>
@@ -30655,6 +30653,7 @@ This is the "EZ" version, which has limited top masking for improved ease of ass
 <smd name="C" x="-2.3495" y="0" dx="2.54" dy="2.54" layer="1" roundness="30"/>
 <text x="-2.54" y="1.905" size="0.4064" layer="25" font="vector">&gt;NAME</text>
 <text x="-2.54" y="-2.286" size="0.4064" layer="27" font="vector">&gt;VALUE</text>
+<wire x1="-0.5715" y1="0" x2="-0.5715" y2="0.6985" width="0.3048" layer="21"/>
 </package>
 <package name="SOD-323">
 <wire x1="-0.85" y1="0.65" x2="0.85" y2="0.65" width="0.127" layer="21"/>
@@ -30680,18 +30679,16 @@ This is the "EZ" version, which has limited top masking for improved ease of ass
 <wire x1="1" y1="0.7" x2="1" y2="-0.7" width="0.1524" layer="51"/>
 <wire x1="1" y1="-0.7" x2="-1" y2="-0.7" width="0.1524" layer="51"/>
 <wire x1="-1" y1="-0.7" x2="-1" y2="0.7" width="0.1524" layer="51"/>
-<wire x1="-0.5" y1="0" x2="0.1" y2="0.4" width="0.1524" layer="51"/>
-<wire x1="0.1" y1="0.4" x2="0.1" y2="-0.4" width="0.1524" layer="51"/>
-<wire x1="0.1" y1="-0.4" x2="-0.5" y2="0" width="0.1524" layer="51"/>
-<wire x1="-1.778" y1="0.762" x2="1.778" y2="0.762" width="0.127" layer="21"/>
-<wire x1="1.778" y1="0.762" x2="1.778" y2="-0.762" width="0.127" layer="21"/>
-<wire x1="1.778" y1="-0.762" x2="-1.778" y2="-0.762" width="0.127" layer="21"/>
-<wire x1="-1.778" y1="-0.762" x2="-1.778" y2="0.762" width="0.127" layer="21"/>
-<rectangle x1="-0.7" y1="-0.7" x2="-0.5" y2="0.7" layer="51"/>
+<wire x1="-0.246" y1="0" x2="0.354" y2="0.4" width="0.2286" layer="21"/>
+<wire x1="0.354" y1="0.4" x2="0.354" y2="-0.4" width="0.2286" layer="21"/>
+<wire x1="0.354" y1="-0.4" x2="-0.246" y2="0" width="0.2286" layer="21"/>
+<wire x1="-1.778" y1="0.762" x2="1.778" y2="0.762" width="0.3048" layer="21"/>
+<wire x1="1.778" y1="-0.762" x2="-1.778" y2="-0.762" width="0.3048" layer="21"/>
 <smd name="A" x="1.85" y="0" dx="1.2" dy="0.7" layer="1" roundness="50"/>
 <smd name="C" x="-1.85" y="0" dx="1.2" dy="0.7" layer="1" roundness="50"/>
 <text x="-1.1" y="1" size="0.4064" layer="25">&gt;NAME</text>
 <text x="-1.1" y="-1.284" size="0.4064" layer="27">&gt;VALUE</text>
+<wire x1="-0.408" y1="0.4" x2="-0.408" y2="-0.4" width="0.2286" layer="21"/>
 </package>
 <package name="SOT23-R">
 <wire x1="1.5724" y1="0.6604" x2="1.5724" y2="-0.6604" width="0.1524" layer="51"/>
@@ -30927,11 +30924,11 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <wire x1="5.08" y1="-3.81" x2="-4.318" y2="-3.81" width="0.254" layer="21"/>
 <wire x1="-4.318" y1="-3.81" x2="-4.318" y2="3.81" width="0.254" layer="21"/>
 <wire x1="-4.318" y1="3.81" x2="5.08" y2="3.81" width="0.254" layer="21"/>
-<wire x1="-2.54" y1="0" x2="3.81" y2="0" width="0.4064" layer="49"/>
+<wire x1="-2.413" y1="0" x2="3.937" y2="0" width="0.4064" layer="49"/>
 <wire x1="-5.08" y1="5.08" x2="5.08" y2="5.08" width="0.127" layer="51"/>
 <wire x1="-5.08" y1="-5.08" x2="5.08" y2="-5.08" width="0.127" layer="51"/>
-<pad name="P1" x="-2.54" y="0" drill="1.6" shape="long" rot="R90"/>
-<pad name="P2" x="3.81" y="0" drill="1.6" shape="long" rot="R90"/>
+<pad name="P1" x="-2.413" y="0" drill="1.6" shape="long" rot="R90"/>
+<pad name="P2" x="3.937" y="0" drill="1.6" shape="long" rot="R90"/>
 <pad name="P3" x="2.032" y="0" drill="1.6" shape="long" rot="R90"/>
 <pad name="P4" x="-4.318" y="0" drill="1.6" shape="long" rot="R90"/>
 </package>
@@ -30947,11 +30944,11 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <wire x1="-5.08" y1="3.81" x2="4.318" y2="3.81" width="0.254" layer="21"/>
 <wire x1="4.318" y1="3.81" x2="4.318" y2="-3.81" width="0.254" layer="21"/>
 <wire x1="4.318" y1="-3.81" x2="-5.08" y2="-3.81" width="0.254" layer="21"/>
-<wire x1="2.54" y1="0" x2="-3.81" y2="0" width="0.4064" layer="49"/>
+<wire x1="2.413" y1="0" x2="-3.937" y2="0" width="0.4064" layer="49"/>
 <wire x1="5.08" y1="-5.08" x2="-5.08" y2="-5.08" width="0.127" layer="51"/>
 <wire x1="5.08" y1="5.08" x2="-5.08" y2="5.08" width="0.127" layer="51"/>
-<pad name="M1" x="-3.81" y="0" drill="1.6" shape="long" rot="R270"/>
-<pad name="M2" x="2.54" y="0" drill="1.6" shape="long" rot="R270"/>
+<pad name="M1" x="-3.937" y="0" drill="1.6" shape="long" rot="R270"/>
+<pad name="M2" x="2.413" y="0" drill="1.6" shape="long" rot="R270"/>
 <pad name="M3" x="4.318" y="0" drill="1.6" shape="long" rot="R270"/>
 <pad name="M4" x="-2.032" y="0" drill="1.6" shape="long" rot="R270"/>
 </package>
@@ -38974,7 +38971,7 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <plain>
 <text x="149.86" y="30.48" size="3.81" layer="91" ratio="12">Calculator 15-Digit with 1284P</text>
 <text x="149.86" y="25.4" size="2.54" layer="91" ratio="12">by Jens Grabner</text>
-<text x="236.22" y="7.62" size="2.54" layer="91" ratio="12">V 5.0</text>
+<text x="236.22" y="7.62" size="2.54" layer="91" ratio="12">V 5.1</text>
 <text x="5.08" y="10.16" size="2.1844" layer="91" ratio="10">Calculator 15-Digit with ATmega1284P by Jens Grabner is licensed under</text>
 <text x="5.08" y="15.24" size="3.81" layer="91" ratio="12">Copyright CERN 2013</text>
 <text x="5.08" y="5.08" size="2.1844" layer="91" ratio="10">the CERN OHL v.1.2 or later. (http://ohwr.org/cernohl)</text>
@@ -39570,7 +39567,7 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <plain>
 <text x="149.86" y="30.48" size="3.81" layer="91" ratio="12">Calculator 15-Digit with 1284P</text>
 <text x="149.86" y="25.4" size="2.54" layer="91" ratio="12">by Jens Grabner</text>
-<text x="236.22" y="7.62" size="2.54" layer="91" ratio="12">V 5.0</text>
+<text x="236.22" y="7.62" size="2.54" layer="91" ratio="12">V 5.1</text>
 <text x="5.08" y="10.16" size="2.1844" layer="91" ratio="10">Calculator 15-Digit with ATmega1284P by Jens Grabner is licensed under</text>
 <text x="5.08" y="15.24" size="3.81" layer="91" ratio="12">Copyright CERN 2013</text>
 <text x="5.08" y="5.08" size="2.1844" layer="91" ratio="10">the CERN OHL v.1.2 or later. (http://ohwr.org/cernohl)</text>
@@ -40074,7 +40071,7 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <plain>
 <text x="149.86" y="30.48" size="3.81" layer="91" ratio="12">Calculator 15-Digit with 1284P</text>
 <text x="149.86" y="25.4" size="2.54" layer="91" ratio="12">by Jens Grabner</text>
-<text x="236.22" y="7.62" size="2.54" layer="91" ratio="12">V 5.0</text>
+<text x="236.22" y="7.62" size="2.54" layer="91" ratio="12">V 5.1</text>
 <text x="5.08" y="10.16" size="2.1844" layer="91" ratio="10">Calculator 15-Digit with ATmega1284P by Jens Grabner is licensed under</text>
 <text x="5.08" y="15.24" size="3.81" layer="91" ratio="12">Copyright CERN 2013</text>
 <text x="5.08" y="5.08" size="2.1844" layer="91" ratio="10">the CERN OHL v.1.2 or later. (http://ohwr.org/cernohl)</text>
@@ -40468,24 +40465,24 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <wire x1="118.11" y1="149.86" x2="101.6" y2="149.86" width="0.1524" layer="91"/>
 <wire x1="120.65" y1="175.26" x2="119.38" y2="175.26" width="0.1524" layer="91"/>
 <wire x1="119.38" y1="175.26" x2="118.11" y2="175.26" width="0.1524" layer="91"/>
-<wire x1="118.11" y1="175.26" x2="118.11" y2="168.91" width="0.1524" layer="91"/>
+<wire x1="118.11" y1="175.26" x2="118.11" y2="163.83" width="0.1524" layer="91"/>
 <junction x="118.11" y="149.86"/>
 <pinref part="U$3" gate="G$1" pin="VIN"/>
 <junction x="119.38" y="175.26"/>
 <pinref part="S3" gate="S" pin="5"/>
-<wire x1="118.11" y1="168.91" x2="118.11" y2="149.86" width="0.1524" layer="91"/>
+<wire x1="118.11" y1="163.83" x2="118.11" y2="149.86" width="0.1524" layer="91"/>
 <wire x1="104.14" y1="162.56" x2="101.6" y2="162.56" width="0.1524" layer="91"/>
 <wire x1="101.6" y1="162.56" x2="101.6" y2="157.48" width="0.1524" layer="91"/>
 <junction x="101.6" y="157.48"/>
 <pinref part="T2" gate="T$1" pin="C"/>
-<wire x1="154.94" y1="165.1" x2="154.94" y2="168.91" width="0.1524" layer="91"/>
-<wire x1="154.94" y1="168.91" x2="139.7" y2="168.91" width="0.1524" layer="91"/>
-<junction x="118.11" y="168.91"/>
+<wire x1="154.94" y1="165.1" x2="139.7" y2="166.37" width="0.1524" layer="91"/>
+<wire x1="139.7" y1="166.37" x2="139.7" y2="163.83" width="0.1524" layer="91"/>
+<junction x="118.11" y="163.83"/>
 <pinref part="T2" gate="T$1" pin="B"/>
-<wire x1="139.7" y1="168.91" x2="118.11" y2="168.91" width="0.1524" layer="91"/>
+<wire x1="139.7" y1="163.83" x2="118.11" y2="163.83" width="0.1524" layer="91"/>
 <wire x1="142.24" y1="160.02" x2="139.7" y2="160.02" width="0.1524" layer="91"/>
-<wire x1="139.7" y1="160.02" x2="139.7" y2="168.91" width="0.1524" layer="91"/>
-<junction x="139.7" y="168.91"/>
+<wire x1="139.7" y1="160.02" x2="139.7" y2="163.83" width="0.1524" layer="91"/>
+<junction x="139.7" y="163.83"/>
 </segment>
 <segment>
 <pinref part="U$1" gate="G$1" pin="OUT+"/>
@@ -40711,6 +40708,8 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <approved hash="104,2,38.1,85.09,BH11,+,P3,,,"/>
 <approved hash="104,2,35.56,104.14,BH12,-,P2,,,"/>
 <approved hash="202,3,124.46,149.86,IC1,VI,,,,"/>
+<approved hash="104,1,227.33,114.3,U2,VDD,VCC,,,"/>
+<approved hash="104,1,227.33,104.14,U2,GND,GND-ISO,,,"/>
 <approved hash="113,2,56.1171,167.771,JP3,,,,,"/>
 <approved hash="113,2,56.1171,136.021,JP15,,,,,"/>
 <approved hash="113,2,114.258,166.501,JP13,,,,,"/>

@@ -28,45 +28,45 @@
 <layer number="18" name="Vias" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="yes"/>
 <layer number="20" name="Dimension" color="15" fill="1" visible="yes" active="yes"/>
-<layer number="21" name="tPlace" color="16" fill="1" visible="no" active="yes"/>
+<layer number="21" name="tPlace" color="16" fill="1" visible="yes" active="yes"/>
 <layer number="22" name="bPlace" color="14" fill="1" visible="yes" active="yes"/>
 <layer number="23" name="tOrigins" color="15" fill="1" visible="yes" active="yes"/>
 <layer number="24" name="bOrigins" color="15" fill="1" visible="yes" active="yes"/>
 <layer number="25" name="tNames" color="7" fill="1" visible="yes" active="yes"/>
-<layer number="26" name="bNames" color="7" fill="1" visible="no" active="yes"/>
-<layer number="27" name="tValues" color="7" fill="1" visible="no" active="yes"/>
-<layer number="28" name="bValues" color="7" fill="1" visible="no" active="yes"/>
+<layer number="26" name="bNames" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="27" name="tValues" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="28" name="bValues" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="29" name="tStop" color="7" fill="3" visible="yes" active="yes"/>
 <layer number="30" name="bStop" color="7" fill="6" visible="yes" active="yes"/>
-<layer number="31" name="tCream" color="7" fill="4" visible="no" active="yes"/>
-<layer number="32" name="bCream" color="7" fill="5" visible="no" active="yes"/>
-<layer number="33" name="tFinish" color="6" fill="3" visible="no" active="yes"/>
-<layer number="34" name="bFinish" color="6" fill="6" visible="no" active="yes"/>
-<layer number="35" name="tGlue" color="7" fill="4" visible="no" active="yes"/>
-<layer number="36" name="bGlue" color="7" fill="5" visible="no" active="yes"/>
-<layer number="37" name="tTest" color="7" fill="1" visible="no" active="yes"/>
-<layer number="38" name="bTest" color="7" fill="1" visible="no" active="yes"/>
-<layer number="39" name="tKeepout" color="4" fill="11" visible="no" active="yes"/>
-<layer number="40" name="bKeepout" color="1" fill="11" visible="no" active="yes"/>
-<layer number="41" name="tRestrict" color="4" fill="10" visible="no" active="yes"/>
-<layer number="42" name="bRestrict" color="1" fill="10" visible="no" active="yes"/>
-<layer number="43" name="vRestrict" color="2" fill="10" visible="no" active="yes"/>
+<layer number="31" name="tCream" color="7" fill="4" visible="yes" active="yes"/>
+<layer number="32" name="bCream" color="7" fill="5" visible="yes" active="yes"/>
+<layer number="33" name="tFinish" color="6" fill="3" visible="yes" active="yes"/>
+<layer number="34" name="bFinish" color="6" fill="6" visible="yes" active="yes"/>
+<layer number="35" name="tGlue" color="7" fill="4" visible="yes" active="yes"/>
+<layer number="36" name="bGlue" color="7" fill="5" visible="yes" active="yes"/>
+<layer number="37" name="tTest" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="38" name="bTest" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="39" name="tKeepout" color="4" fill="11" visible="yes" active="yes"/>
+<layer number="40" name="bKeepout" color="1" fill="11" visible="yes" active="yes"/>
+<layer number="41" name="tRestrict" color="4" fill="10" visible="yes" active="yes"/>
+<layer number="42" name="bRestrict" color="1" fill="10" visible="yes" active="yes"/>
+<layer number="43" name="vRestrict" color="2" fill="10" visible="yes" active="yes"/>
 <layer number="44" name="Drills" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="45" name="Holes" color="7" fill="1" visible="yes" active="yes"/>
-<layer number="46" name="Milling" color="3" fill="1" visible="no" active="yes"/>
+<layer number="46" name="Milling" color="3" fill="1" visible="yes" active="yes"/>
 <layer number="47" name="Measures" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="48" name="Document" color="7" fill="1" visible="yes" active="yes"/>
-<layer number="49" name="Reference" color="7" fill="1" visible="no" active="yes"/>
-<layer number="50" name="dxf" color="7" fill="1" visible="no" active="yes"/>
+<layer number="49" name="Reference" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="50" name="dxf" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="51" name="tDocu" color="6" fill="1" visible="yes" active="yes"/>
 <layer number="52" name="bDocu" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="53" name="tGND_GNDA" color="7" fill="9" visible="no" active="no"/>
 <layer number="54" name="bGND_GNDA" color="1" fill="9" visible="no" active="no"/>
-<layer number="56" name="wert" color="7" fill="1" visible="no" active="yes"/>
+<layer number="56" name="wert" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="57" name="tCAD" color="7" fill="1" visible="no" active="no"/>
 <layer number="59" name="tCarbon" color="7" fill="1" visible="no" active="no"/>
 <layer number="60" name="bCarbon" color="7" fill="1" visible="no" active="no"/>
-<layer number="90" name="Modules" color="7" fill="1" visible="no" active="yes"/>
+<layer number="90" name="Modules" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="91" name="Nets" color="2" fill="1" visible="no" active="no"/>
 <layer number="92" name="Busses" color="1" fill="1" visible="no" active="no"/>
 <layer number="93" name="Pins" color="2" fill="1" visible="no" active="no"/>
@@ -77,82 +77,82 @@
 <layer number="98" name="Guide" color="6" fill="1" visible="no" active="no"/>
 <layer number="99" name="SpiceOrder" color="5" fill="1" visible="no" active="no"/>
 <layer number="100" name="Muster" color="7" fill="1" visible="no" active="no"/>
-<layer number="101" name="Patch_Top" color="12" fill="4" visible="no" active="yes"/>
-<layer number="102" name="Vscore" color="7" fill="1" visible="no" active="yes"/>
-<layer number="103" name="fp3" color="7" fill="1" visible="no" active="yes"/>
-<layer number="104" name="Name" color="7" fill="1" visible="no" active="yes"/>
-<layer number="105" name="Beschreib" color="9" fill="1" visible="no" active="yes"/>
-<layer number="106" name="BGA-Top" color="4" fill="1" visible="no" active="yes"/>
-<layer number="107" name="BD-Top" color="5" fill="1" visible="no" active="yes"/>
-<layer number="108" name="fp8" color="7" fill="1" visible="no" active="yes"/>
-<layer number="109" name="fp9" color="7" fill="1" visible="no" active="yes"/>
-<layer number="110" name="fp0" color="7" fill="1" visible="no" active="yes"/>
-<layer number="111" name="LPC17xx" color="7" fill="1" visible="no" active="yes"/>
-<layer number="112" name="tSilk" color="7" fill="1" visible="no" active="yes"/>
+<layer number="101" name="Patch_Top" color="12" fill="4" visible="yes" active="yes"/>
+<layer number="102" name="Vscore" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="103" name="fp3" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="104" name="Name" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="105" name="Beschreib" color="9" fill="1" visible="yes" active="yes"/>
+<layer number="106" name="BGA-Top" color="4" fill="1" visible="yes" active="yes"/>
+<layer number="107" name="BD-Top" color="5" fill="1" visible="yes" active="yes"/>
+<layer number="108" name="fp8" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="109" name="fp9" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="110" name="fp0" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="111" name="LPC17xx" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="112" name="tSilk" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="113" name="ReferenceLS" color="7" fill="1" visible="no" active="no"/>
-<layer number="114" name="Badge_Outline" color="7" fill="1" visible="no" active="yes"/>
-<layer number="115" name="ReferenceISLANDS" color="7" fill="1" visible="no" active="yes"/>
-<layer number="116" name="Patch_BOT" color="9" fill="4" visible="no" active="yes"/>
+<layer number="114" name="Badge_Outline" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="115" name="ReferenceISLANDS" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="116" name="Patch_BOT" color="9" fill="4" visible="yes" active="yes"/>
 <layer number="118" name="Rect_Pads" color="7" fill="1" visible="no" active="no"/>
-<layer number="121" name="_tsilk" color="7" fill="1" visible="no" active="yes"/>
-<layer number="122" name="_bsilk" color="7" fill="1" visible="no" active="yes"/>
-<layer number="123" name="tTestmark" color="7" fill="1" visible="no" active="yes"/>
-<layer number="124" name="bTestmark" color="7" fill="1" visible="no" active="yes"/>
-<layer number="125" name="_tNames" color="7" fill="1" visible="no" active="yes"/>
-<layer number="126" name="_bNames" color="7" fill="1" visible="no" active="yes"/>
-<layer number="127" name="_tValues" color="7" fill="1" visible="no" active="yes"/>
-<layer number="128" name="_bValues" color="7" fill="1" visible="no" active="yes"/>
-<layer number="129" name="Mask" color="7" fill="1" visible="no" active="yes"/>
-<layer number="131" name="tAdjust" color="7" fill="1" visible="no" active="yes"/>
-<layer number="132" name="bAdjust" color="7" fill="1" visible="no" active="yes"/>
-<layer number="144" name="Drill_legend" color="7" fill="1" visible="no" active="yes"/>
-<layer number="150" name="Notes" color="7" fill="1" visible="no" active="yes"/>
-<layer number="151" name="HeatSink" color="7" fill="1" visible="no" active="yes"/>
-<layer number="152" name="_bDocu" color="7" fill="1" visible="no" active="yes"/>
+<layer number="121" name="_tsilk" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="122" name="_bsilk" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="123" name="tTestmark" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="124" name="bTestmark" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="125" name="_tNames" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="126" name="_bNames" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="127" name="_tValues" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="128" name="_bValues" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="129" name="Mask" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="131" name="tAdjust" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="132" name="bAdjust" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="144" name="Drill_legend" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="150" name="Notes" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="151" name="HeatSink" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="152" name="_bDocu" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="153" name="FabDoc1" color="6" fill="1" visible="no" active="no"/>
 <layer number="154" name="FabDoc2" color="2" fill="1" visible="no" active="no"/>
 <layer number="155" name="FabDoc3" color="7" fill="15" visible="no" active="no"/>
-<layer number="199" name="Contour" color="7" fill="1" visible="no" active="yes"/>
+<layer number="199" name="Contour" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="200" name="200bmp" color="1" fill="10" visible="no" active="no"/>
 <layer number="201" name="201bmp" color="2" fill="1" visible="no" active="no"/>
 <layer number="202" name="202bmp" color="3" fill="1" visible="no" active="no"/>
-<layer number="203" name="203bmp" color="4" fill="10" visible="no" active="yes"/>
-<layer number="204" name="204bmp" color="5" fill="10" visible="no" active="yes"/>
-<layer number="205" name="205bmp" color="6" fill="10" visible="no" active="yes"/>
-<layer number="206" name="206bmp" color="7" fill="10" visible="no" active="yes"/>
-<layer number="207" name="207bmp" color="8" fill="10" visible="no" active="yes"/>
-<layer number="208" name="208bmp" color="9" fill="10" visible="no" active="yes"/>
-<layer number="209" name="209bmp" color="7" fill="1" visible="no" active="yes"/>
-<layer number="210" name="210bmp" color="7" fill="1" visible="no" active="yes"/>
-<layer number="211" name="211bmp" color="7" fill="1" visible="no" active="yes"/>
-<layer number="212" name="212bmp" color="7" fill="1" visible="no" active="yes"/>
-<layer number="213" name="213bmp" color="7" fill="1" visible="no" active="yes"/>
-<layer number="214" name="214bmp" color="7" fill="1" visible="no" active="yes"/>
-<layer number="215" name="215bmp" color="7" fill="1" visible="no" active="yes"/>
-<layer number="216" name="216bmp" color="7" fill="1" visible="no" active="yes"/>
-<layer number="217" name="217bmp" color="7" fill="1" visible="no" active="yes"/>
-<layer number="218" name="218bmp" color="7" fill="1" visible="no" active="yes"/>
-<layer number="219" name="219bmp" color="7" fill="1" visible="no" active="yes"/>
-<layer number="220" name="220bmp" color="7" fill="1" visible="no" active="yes"/>
-<layer number="221" name="221bmp" color="7" fill="1" visible="no" active="yes"/>
-<layer number="222" name="222bmp" color="7" fill="1" visible="no" active="yes"/>
-<layer number="223" name="223bmp" color="7" fill="1" visible="no" active="yes"/>
-<layer number="224" name="224bmp" color="7" fill="1" visible="no" active="yes"/>
-<layer number="225" name="225bmp" color="7" fill="1" visible="no" active="yes"/>
-<layer number="226" name="226bmp" color="7" fill="1" visible="no" active="yes"/>
-<layer number="227" name="227bmp" color="7" fill="1" visible="no" active="yes"/>
-<layer number="228" name="228bmp" color="7" fill="1" visible="no" active="yes"/>
-<layer number="229" name="229bmp" color="7" fill="1" visible="no" active="yes"/>
-<layer number="230" name="230bmp" color="7" fill="1" visible="no" active="yes"/>
+<layer number="203" name="203bmp" color="4" fill="10" visible="yes" active="yes"/>
+<layer number="204" name="204bmp" color="5" fill="10" visible="yes" active="yes"/>
+<layer number="205" name="205bmp" color="6" fill="10" visible="yes" active="yes"/>
+<layer number="206" name="206bmp" color="7" fill="10" visible="yes" active="yes"/>
+<layer number="207" name="207bmp" color="8" fill="10" visible="yes" active="yes"/>
+<layer number="208" name="208bmp" color="9" fill="10" visible="yes" active="yes"/>
+<layer number="209" name="209bmp" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="210" name="210bmp" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="211" name="211bmp" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="212" name="212bmp" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="213" name="213bmp" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="214" name="214bmp" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="215" name="215bmp" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="216" name="216bmp" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="217" name="217bmp" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="218" name="218bmp" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="219" name="219bmp" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="220" name="220bmp" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="221" name="221bmp" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="222" name="222bmp" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="223" name="223bmp" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="224" name="224bmp" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="225" name="225bmp" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="226" name="226bmp" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="227" name="227bmp" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="228" name="228bmp" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="229" name="229bmp" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="230" name="230bmp" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="231" name="Eagle3D_PG1" color="7" fill="1" visible="no" active="no"/>
 <layer number="232" name="Eagle3D_PG2" color="7" fill="1" visible="no" active="no"/>
 <layer number="233" name="Eagle3D_PG3" color="7" fill="1" visible="no" active="no"/>
-<layer number="248" name="Housing" color="7" fill="1" visible="no" active="yes"/>
-<layer number="249" name="Edge" color="7" fill="1" visible="no" active="yes"/>
+<layer number="248" name="Housing" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="249" name="Edge" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="250" name="Descript" color="7" fill="1" visible="no" active="no"/>
 <layer number="251" name="SMDround" color="7" fill="1" visible="no" active="no"/>
-<layer number="254" name="cooling" color="7" fill="1" visible="no" active="yes"/>
-<layer number="255" name="routoute" color="7" fill="1" visible="no" active="yes"/>
+<layer number="254" name="cooling" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="255" name="routoute" color="7" fill="1" visible="yes" active="yes"/>
 </layers>
 <board>
 <plain>
@@ -163,7 +163,7 @@
 <wire x1="56.388" y1="73.279" x2="56.388" y2="9.779" width="0" layer="20"/>
 <wire x1="56.388" y1="7.239" x2="56.388" y2="2.54" width="0" layer="20"/>
 <wire x1="2.54" y1="0" x2="53.848" y2="0" width="0" layer="20"/>
-<text x="7.874" y="42.164" size="1.27" layer="22" ratio="16" rot="MR180">snc98 3x4 Switch-block Rev. 0.3</text>
+<text x="7.874" y="42.164" size="1.27" layer="22" ratio="16" rot="MR180">snc98 3x4 Switch-block Rev. 0.4</text>
 <text x="37.846" y="42.545" size="1.27" layer="22" ratio="16" rot="MR0">CERN OHL    v.1.2 or later</text>
 <text x="39.878" y="45.466" size="1.27" layer="22" ratio="16" rot="MR0">http://ohwr  .org/cernohl</text>
 <text x="2.159" y="16.129" size="1.27" layer="22" ratio="16" rot="MR270" align="center">open</text>
@@ -3553,14 +3553,12 @@
 <wire x1="2.15" y1="1.3" x2="2.15" y2="-1.3" width="0.2032" layer="51"/>
 <wire x1="2.15" y1="-1.3" x2="-2.15" y2="-1.3" width="0.2032" layer="51"/>
 <wire x1="-2.15" y1="-1.3" x2="-2.15" y2="1.3" width="0.2032" layer="51"/>
-<wire x1="-3.789" y1="-1.6" x2="-3.789" y2="1.6" width="0.127" layer="21"/>
-<wire x1="-3.789" y1="1.6" x2="3.816" y2="1.6" width="0.127" layer="21"/>
-<wire x1="3.816" y1="1.6" x2="3.816" y2="-1.6" width="0.127" layer="21"/>
-<wire x1="3.816" y1="-1.6" x2="-3.789" y2="-1.6" width="0.127" layer="21"/>
-<wire x1="-0.3175" y1="-0.4445" x2="-0.3175" y2="0.4445" width="0.127" layer="21"/>
-<wire x1="-0.3175" y1="0.4445" x2="-0.6985" y2="0" width="0.127" layer="21"/>
-<wire x1="-0.6985" y1="0" x2="-0.3175" y2="-0.4445" width="0.127" layer="21"/>
-<wire x1="-0.6985" y1="-0.4445" x2="-0.6985" y2="0.4445" width="0.127" layer="21"/>
+<wire x1="-3.789" y1="1.6" x2="3.816" y2="1.6" width="0.3048" layer="21"/>
+<wire x1="3.816" y1="-1.6" x2="-3.789" y2="-1.6" width="0.3048" layer="21"/>
+<wire x1="0.6985" y1="-0.9525" x2="0.6985" y2="0.9525" width="0.3048" layer="21"/>
+<wire x1="0.6985" y1="0.9525" x2="-0.4445" y2="0" width="0.3048" layer="21"/>
+<wire x1="-0.4445" y1="0" x2="0.6985" y2="-0.9525" width="0.3048" layer="21"/>
+<wire x1="-0.4445" y1="-0.9525" x2="-0.4445" y2="0" width="0.3048" layer="21"/>
 <smd name="C" x="-3.3655" y="0" dx="3.048" dy="2.54" layer="1" roundness="50"/>
 <smd name="A" x="3.3655" y="0" dx="3.048" dy="2.54" layer="1" roundness="50" rot="R180"/>
 <text x="-2.54" y="1.905" size="0.4064" layer="25" font="vector">&gt;NAME</text>
@@ -3568,6 +3566,7 @@
 <rectangle x1="-2.825" y1="-1.1" x2="-2.175" y2="1.1" layer="51"/>
 <rectangle x1="2.175" y1="-1.1" x2="2.825" y2="1.1" layer="51" rot="R180"/>
 <rectangle x1="-1.75" y1="-1.225" x2="-1.075" y2="1.225" layer="51"/>
+<wire x1="-0.4445" y1="0" x2="-0.4445" y2="0.9525" width="0.3048" layer="21"/>
 </package>
 </packages>
 </library>
@@ -3668,33 +3667,29 @@ We've spent an enormous amount of time creating and checking these footprints an
 &lt;b&gt;Licensing:&lt;/b&gt; CC v3.0 Share-Alike You are welcome to use this library for commercial purposes. For attribution, we ask that when you begin to sell your device using our footprint, you email us with a link to the product being sold. We want bragging rights that we helped (in a very small part) to create your 8th world wonder. We would like the opportunity to feature your device on our homepage.</description>
 <packages>
 <package name="1X09_LOCK_LONGPADS">
-<wire x1="1.524" y1="0" x2="1.016" y2="0" width="0.2032" layer="21"/>
-<wire x1="4.064" y1="0" x2="3.556" y2="0" width="0.2032" layer="21"/>
-<wire x1="6.604" y1="0" x2="6.096" y2="0" width="0.2032" layer="21"/>
-<wire x1="9.144" y1="0" x2="8.636" y2="0" width="0.2032" layer="21"/>
-<wire x1="11.684" y1="0" x2="11.176" y2="0" width="0.2032" layer="21"/>
-<wire x1="-1.27" y1="0" x2="-1.016" y2="0" width="0.2032" layer="21"/>
-<wire x1="-1.27" y1="0" x2="-1.27" y2="0.9906" width="0.2032" layer="21"/>
-<wire x1="-1.27" y1="0.9906" x2="-0.9906" y2="1.27" width="0.2032" layer="21"/>
-<wire x1="-1.27" y1="0" x2="-1.27" y2="-0.9906" width="0.2032" layer="21"/>
-<wire x1="-1.27" y1="-0.9906" x2="-0.9906" y2="-1.27" width="0.2032" layer="21"/>
-<wire x1="14.224" y1="0" x2="13.716" y2="0" width="0.2032" layer="21"/>
-<wire x1="16.764" y1="0" x2="16.256" y2="0" width="0.2032" layer="21"/>
-<wire x1="19.304" y1="0" x2="18.796" y2="0" width="0.2032" layer="21"/>
-<wire x1="21.59" y1="0" x2="21.59" y2="-0.9906" width="0.2032" layer="21"/>
-<wire x1="21.59" y1="-0.9906" x2="21.3106" y2="-1.27" width="0.2032" layer="21"/>
-<wire x1="21.59" y1="0" x2="21.59" y2="0.9906" width="0.2032" layer="21"/>
-<wire x1="21.59" y1="0.9906" x2="21.3106" y2="1.27" width="0.2032" layer="21"/>
-<wire x1="21.59" y1="0" x2="21.336" y2="0" width="0.2032" layer="21"/>
-<pad name="1" x="0" y="0.127" drill="1.016" shape="long" rot="R90"/>
-<pad name="2" x="2.54" y="-0.127" drill="1.016" shape="long" rot="R90"/>
-<pad name="3" x="5.08" y="0.127" drill="1.016" shape="long" rot="R90"/>
-<pad name="4" x="7.62" y="-0.127" drill="1.016" shape="long" rot="R90"/>
-<pad name="5" x="10.16" y="0.127" drill="1.016" shape="long" rot="R90"/>
-<pad name="6" x="12.7" y="-0.127" drill="1.016" shape="long" rot="R90"/>
-<pad name="7" x="15.24" y="0.127" drill="1.016" shape="long" rot="R90"/>
-<pad name="8" x="17.78" y="-0.127" drill="1.016" shape="long" rot="R90"/>
-<pad name="9" x="20.32" y="0.127" drill="1.016" shape="long" rot="R90"/>
+<wire x1="1.397" y1="0" x2="1.143" y2="0" width="0.2032" layer="21"/>
+<wire x1="3.937" y1="0" x2="3.683" y2="0" width="0.2032" layer="21"/>
+<wire x1="6.477" y1="0" x2="6.223" y2="0" width="0.2032" layer="21"/>
+<wire x1="9.017" y1="0" x2="8.763" y2="0" width="0.2032" layer="21"/>
+<wire x1="11.557" y1="0" x2="11.303" y2="0" width="0.2032" layer="21"/>
+<wire x1="-1.27" y1="-0.9906" x2="-1.27" y2="1.2446" width="0.2032" layer="21"/>
+<wire x1="-1.27" y1="1.2446" x2="-0.9906" y2="1.778" width="0.2032" layer="21"/>
+<wire x1="-1.27" y1="-0.9906" x2="-0.9906" y2="-1.524" width="0.2032" layer="21"/>
+<wire x1="14.097" y1="0" x2="13.843" y2="0" width="0.2032" layer="21"/>
+<wire x1="16.637" y1="0" x2="16.383" y2="0" width="0.2032" layer="21"/>
+<wire x1="19.177" y1="0" x2="18.923" y2="0" width="0.2032" layer="21"/>
+<wire x1="21.59" y1="-0.9906" x2="21.3106" y2="-1.524" width="0.2032" layer="21"/>
+<wire x1="21.59" y1="-0.9906" x2="21.59" y2="1.2446" width="0.2032" layer="21"/>
+<wire x1="21.59" y1="1.2446" x2="21.3106" y2="1.778" width="0.2032" layer="21"/>
+<pad name="1" x="0" y="0.127" drill="1.016" diameter="1.6764" shape="long" rot="R90"/>
+<pad name="2" x="2.54" y="-0.127" drill="1.016" diameter="1.6764" shape="long" rot="R90"/>
+<pad name="3" x="5.08" y="0.127" drill="1.016" diameter="1.6764" shape="long" rot="R90"/>
+<pad name="4" x="7.62" y="-0.127" drill="1.016" diameter="1.6764" shape="long" rot="R90"/>
+<pad name="5" x="10.16" y="0.127" drill="1.016" diameter="1.6764" shape="long" rot="R90"/>
+<pad name="6" x="12.7" y="-0.127" drill="1.016" diameter="1.6764" shape="long" rot="R90"/>
+<pad name="7" x="15.24" y="0.127" drill="1.016" diameter="1.6764" shape="long" rot="R90"/>
+<pad name="8" x="17.78" y="-0.127" drill="1.016" diameter="1.6764" shape="long" rot="R90"/>
+<pad name="9" x="20.32" y="0.127" drill="1.016" diameter="1.6764" shape="long" rot="R90"/>
 <text x="-1.27" y="1.905" size="1.27" layer="25" font="vector">&gt;NAME</text>
 <text x="-1.27" y="-3.175" size="1.27" layer="27" font="vector">&gt;VALUE</text>
 <rectangle x1="-0.2921" y1="-0.2921" x2="0.2921" y2="0.2921" layer="51"/>
@@ -5047,7 +5042,7 @@ design rules under a new name.</description>
 <element name="D19" library="diode" package="SOT23" value="BAT54A" x="26.924" y="21.209" rot="R270"/>
 <element name="D20" library="diode" package="SOT23" value="BAT54A" x="43.688" y="61.849" rot="R270"/>
 <element name="D21" library="diode" package="SOT23" value="BAT54A" x="44.45" y="21.209" rot="R270"/>
-<element name="JP1" library="SparkFun-Connectors" package="1X09_LOCK_LONGPADS" value="" x="18.034" y="80.264"/>
+<element name="JP1" library="SparkFun-Connectors" package="1X09_LOCK_LONGPADS" value="M09LOCK-LONGPADS" x="18.034" y="80.264"/>
 <element name="H1" library="holes" package="2,8-PAD" value="MOUNT-PAD-ROUND2.8" x="3.302" y="79.756"/>
 <element name="H2" library="holes" package="2,8-PAD" value="MOUNT-PAD-ROUND2.8" x="3.302" y="41.529"/>
 <element name="H3" library="holes" package="2,8-PAD" value="MOUNT-PAD-ROUND2.8" x="3.302" y="3.302"/>
@@ -6262,576 +6257,6 @@ design rules under a new name.</description>
 </signal>
 </signals>
 <errors>
-<approved hash="4,1,638cdc5f94353c1b"/>
-<approved hash="4,1,638cdc5f94353c1b"/>
-<approved hash="4,1,04f4dc6f94055b63"/>
-<approved hash="4,1,04f4dc6f94055b63"/>
-<approved hash="4,1,cf44dc4f942590d3"/>
-<approved hash="4,1,cf44dc4f942590d3"/>
-<approved hash="4,1,b93cdc5f9434e6aa"/>
-<approved hash="4,1,b93cdc5f9434e6aa"/>
-<approved hash="4,1,3c50146c9407cbc6"/>
-<approved hash="4,1,3c50146c9407cbc6"/>
-<approved hash="4,1,5b28145c9437acbe"/>
-<approved hash="4,1,5b28145c9437acbe"/>
-<approved hash="4,1,3efd699a66038697"/>
-<approved hash="4,1,74334c6cf4097ba5"/>
-<approved hash="4,1,134b4c5cf4391cdd"/>
-<approved hash="4,16,b5e93e466b03423b"/>
-<approved hash="4,16,b5e93e466b03423b"/>
-<approved hash="4,16,efe7d9fb660bf470"/>
-<approved hash="4,16,efe7d9fb660bf470"/>
-<approved hash="4,16,d59d3893e222a90b"/>
-<approved hash="4,16,d59d3893e222a90b"/>
-<approved hash="4,16,c71dcbfe2305a9fd"/>
-<approved hash="4,16,c71dcbfe2305a9fd"/>
-<approved hash="4,16,086990fd18884e6f"/>
-<approved hash="4,16,086990fd18884e6f"/>
-<approved hash="4,16,689ed3606b0ebd09"/>
-<approved hash="4,16,689ed3606b0ebd09"/>
-<approved hash="2,20,39fec204d9c1223b"/>
-<approved hash="2,20,20d6db2cd1c12a3b"/>
-<approved hash="2,20,359ece64d6012dfb"/>
-<approved hash="2,20,29fed204d5c12e3b"/>
-<approved hash="2,20,1216e9ecd6c12d3b"/>
-<approved hash="2,20,2706dcfcd9c1223b"/>
-<approved hash="2,20,231ed8e4d5812e7b"/>
-<approved hash="2,20,2b66d09cd5012efb"/>
-<approved hash="2,20,c9e3321935d4ce2e"/>
-<approved hash="2,20,f20b09f136d4cd2e"/>
-<approved hash="2,20,d5832e793614cdee"/>
-<approved hash="2,20,c71b3ce139d4c22e"/>
-<approved hash="2,20,c30338f93594ce6e"/>
-<approved hash="2,20,d9e3221939d4c22e"/>
-<approved hash="2,20,c0cb3b3131d4ca2e"/>
-<approved hash="2,20,cb7b30813514ceee"/>
-<approved hash="2,20,99ee621479d7822d"/>
-<approved hash="2,20,830e78f475978e6d"/>
-<approved hash="2,20,b20649fc76d78d2d"/>
-<approved hash="2,20,8b76708c75178eed"/>
-<approved hash="2,20,80c67b3c71d78a2d"/>
-<approved hash="2,20,87167cec79d7822d"/>
-<approved hash="2,20,89ee721475d78e2d"/>
-<approved hash="2,20,958e6e7476178ded"/>
-<approved hash="2,20,9f00430c467c9a70"/>
-<approved hash="2,20,a7d47bd845749978"/>
-<approved hash="2,20,82005e0c461c9a10"/>
-<approved hash="2,20,92144e1846449a48"/>
-<approved hash="2,20,9ce040ec455c9950"/>
-<approved hash="2,20,8f20532c567c8a70"/>
-<approved hash="2,20,97d44bd841749d78"/>
-<approved hash="2,20,93144f1845649968"/>
-<approved hash="2,20,4f2d132116774a7b"/>
-<approved hash="2,20,5ced00e10557595b"/>
-<approved hash="2,20,67d93bd5057f5973"/>
-<approved hash="2,20,53190f15056f5963"/>
-<approved hash="2,20,57d90bd5017f5d73"/>
-<approved hash="2,20,52190e15064f5a43"/>
-<approved hash="2,20,5f0d030106775a7b"/>
-<approved hash="2,20,420d1e0106175a1b"/>
-<approved hash="4,16,142de51731e77a92"/>
-<approved hash="4,16,142de51731e77a92"/>
-<approved hash="4,16,4d4696747502e07e"/>
-<approved hash="4,16,4d4696747502e07e"/>
-<approved hash="4,16,fee8fec6919b415a"/>
-<approved hash="4,16,fee8fec6919b415a"/>
-<approved hash="4,16,aa1f37bed506c043"/>
-<approved hash="4,16,aa1f37bed506c043"/>
-<approved hash="2,20,4f3d733176644a68"/>
-<approved hash="2,20,57c96bc5616c5d60"/>
-<approved hash="2,20,421d7e1166045a08"/>
-<approved hash="2,20,5f1d631166645a68"/>
-<approved hash="2,20,67c95bc5656c5960"/>
-<approved hash="2,20,52096e05665c5a50"/>
-<approved hash="2,20,5cfd60f165445948"/>
-<approved hash="2,20,53096f05657c5970"/>
-<approved hash="2,20,d3ccefc0ee9fd293"/>
-<approved hash="2,20,e388df84e16bdd67"/>
-<approved hash="2,20,24481844e41bd817"/>
-<approved hash="2,20,de8ce280e46fd863"/>
-<approved hash="2,20,d3ccefc0e86fd463"/>
-<approved hash="2,20,d388ef84e96bd567"/>
-<approved hash="2,20,c04cfc40e1ffddf3"/>
-<approved hash="2,20,d348ef44e57bd977"/>
-<approved hash="2,20,9491f89dfe7e9272"/>
-<approved hash="2,20,99d1f5ddf48e9882"/>
-<approved hash="2,20,6e550259fe0a9206"/>
-<approved hash="2,20,a995c599fb7a9776"/>
-<approved hash="2,20,8a51e65dfbee97e2"/>
-<approved hash="2,20,9995f599f37a9f76"/>
-<approved hash="2,20,9955f559ff6a9366"/>
-<approved hash="2,20,99d1f5ddf27e9e72"/>
-<approved hash="2,20,17d0f3dcf477107b"/>
-<approved hash="2,20,1754f358f9631d6f"/>
-<approved hash="2,20,17d0f3dcf287168b"/>
-<approved hash="2,20,2794c398fd73197f"/>
-<approved hash="2,20,1a90fe9cf8771c7b"/>
-<approved hash="2,20,0450e05cfde719eb"/>
-<approved hash="2,20,1794f398f573117f"/>
-<approved hash="2,20,e0540458f8031c0f"/>
-<approved hash="4,1,1b3fb0315cb3fdb9"/>
-<approved hash="4,1,dcaf77819b033bc9"/>
-<approved hash="4,1,3c1ddeaf6787dafd"/>
-<approved hash="4,1,bccb1fcdb91679d9"/>
-<approved hash="8,16,5d34e3d72fc0cead"/>
-<approved hash="8,16,d0b8819fc18de00c"/>
-<approved hash="8,16,6fabe7845199eebe"/>
-<approved hash="2,20,94dfef25d1b1aa4b"/>
-<approved hash="2,20,aad7d12dd609adf3"/>
-<approved hash="2,20,a407dffdd8f9a303"/>
-<approved hash="2,20,509f2b65d591ae6b"/>
-<approved hash="2,20,b6a7cd5dd059aba3"/>
-<approved hash="2,20,a3dfd825d531aecb"/>
-<approved hash="2,20,a61fdde5d8d1a32b"/>
-<approved hash="2,20,b817c3edcac9b133"/>
-<approved hash="2,20,8bc342394f2386d9"/>
-<approved hash="2,20,900b59f150db9921"/>
-<approved hash="2,20,bcc375394ba38259"/>
-<approved hash="2,20,8c1b45e142eb8b11"/>
-<approved hash="2,20,9ebb57414a4b83b1"/>
-<approved hash="2,20,82cb4b314c1b85e1"/>
-<approved hash="2,20,8e0347f942c38b39"/>
-<approved hash="2,20,7883b1794f838679"/>
-<approved hash="2,20,b20351f954cdb737"/>
-<approved hash="2,20,a2bb41415c45bfbf"/>
-<approved hash="2,20,4483a779598dba77"/>
-<approved hash="2,20,becb5d315a15b9ef"/>
-<approved hash="2,20,80c363395dadbe57"/>
-<approved hash="2,20,b01b53e154e5b71f"/>
-<approved hash="2,20,b7c35439592dbad7"/>
-<approved hash="2,20,ac0b4ff146d5a52f"/>
-<approved hash="4,1,32635ebc32e033df"/>
-<approved hash="4,1,4c3943092f39c064"/>
-<approved hash="4,1,d7bd1c6cbc581f2f"/>
-<approved hash="4,1,a6c35baf235fb3d3"/>
-<approved hash="4,1,b6bc263525bbbad8"/>
-<approved hash="4,1,06c372b7b657d7d2"/>
-<approved hash="4,1,1a62ffb457f8a7df"/>
-<approved hash="4,1,3b152af216fde777"/>
-<approved hash="4,1,c21c493a1ff39b3f"/>
-<approved hash="4,1,26d1f65c03dcbbf7"/>
-<approved hash="4,16,b6bc263525bbbad8"/>
-<approved hash="4,16,a6c35baf235fb3d3"/>
-<approved hash="4,16,4c3943092f39c064"/>
-<approved hash="4,16,32635ebc32e033df"/>
-<approved hash="4,16,d7bd1c6cbc581f2f"/>
-<approved hash="4,16,1a62ffb457f8a7df"/>
-<approved hash="4,16,06c372b7b657d7d2"/>
-<approved hash="4,16,8504e450136ea6b7"/>
-<approved hash="4,16,8504e450136ea6b7"/>
-<approved hash="4,16,a1a75472817d17b7"/>
-<approved hash="4,16,a1a75472817d17b7"/>
-<approved hash="19,16,b1913f98416f4746"/>
-<approved hash="19,16,a73289f20c156475"/>
-<approved hash="19,16,2ebe55fb5d04ae69"/>
-<approved hash="19,16,39e8e9b1b86c2e95"/>
-<approved hash="4,16,26d1f65c03dcbbf7"/>
-<approved hash="4,16,3b152af216fde777"/>
-<approved hash="4,16,c21c493a1ff39b3f"/>
-<approved hash="19,16,30654eee375043e7"/>
-<approved hash="19,16,51a7abedcd43c321"/>
-<approved hash="2,20,1883908f889d0091"/>
-<approved hash="2,20,0897809b88c500c9"/>
-<approved hash="2,20,05838d8f88fd00f1"/>
-<approved hash="2,20,3d57b55b8bf503f9"/>
-<approved hash="2,20,06638e6f8bdd03d1"/>
-<approved hash="2,20,15a39daf98fd10f1"/>
-<approved hash="2,20,0d57855b8ff507f9"/>
-<approved hash="2,20,0997819b8be503e9"/>
-<approved hash="2,20,d35477587dfcd9f0"/>
-<approved hash="2,20,e354475879fcddf0"/>
-<approved hash="2,20,cba06fac6af4cef8"/>
-<approved hash="2,20,d8607c6c79d4ddd8"/>
-<approved hash="2,20,db807f8c7af4def8"/>
-<approved hash="2,20,d794739879ecdde0"/>
-<approved hash="2,20,c680628c7a94de98"/>
-<approved hash="2,20,d69472987accdec0"/>
-<approved hash="2,20,2881688d70a430a8"/>
-<approved hash="2,20,0d554d5973cc33c0"/>
-<approved hash="2,20,3581758d70c430c8"/>
-<approved hash="2,20,25a165ad60c420c8"/>
-<approved hash="2,20,3895789970fc30f0"/>
-<approved hash="2,20,3d557d5977cc37c0"/>
-<approved hash="2,20,3661766d73e433e8"/>
-<approved hash="2,20,3995799973dc33d0"/>
-<approved hash="19,16,9ac4bdb6350b867f"/>
-<approved hash="19,16,9865f7474e7b859f"/>
-<approved hash="19,16,7ed6bdb6b5fa98dc"/>
-<approved hash="19,16,dae1fe16f15d41ac"/>
-<approved hash="19,16,da80bb6788ed4dcc"/>
-<approved hash="19,16,40d287c93fc3169e"/>
-<approved hash="19,16,6ecaadf433b81ec0"/>
-<approved hash="19,16,2c644328fa94311e"/>
-<approved hash="19,16,eb04b574761d7663"/>
-<approved hash="19,16,4cd18b0bad01849d"/>
-<approved hash="19,16,b08ed1cab2c07742"/>
-<approved hash="19,16,844ca099606b7566"/>
-<approved hash="19,16,22d4e15f7c1351de"/>
-<approved hash="19,16,68640799cf25041e"/>
-<approved hash="19,16,7943a27ea37f7448"/>
-<approved hash="19,16,48d38f61426b6b9f"/>
-<approved hash="19,16,86c4a1424afff97f"/>
-<approved hash="19,16,508131b447be824d"/>
-<approved hash="19,16,a6f7ece5ea99a08b"/>
-<approved hash="19,16,8ee7ab2c1767a6aa"/>
-<approved hash="19,16,d73ebe72234d83ed"/>
-<approved hash="19,16,da3ff7a36afd82cd"/>
-<approved hash="19,16,a71d6982f61dbdde"/>
-<approved hash="19,16,72d02811858f1ae2"/>
-<approved hash="19,16,73d160a0c03f1aa2"/>
-<approved hash="19,16,ad721d9c11b32401"/>
-<approved hash="19,16,a31c6dc36c5c27df"/>
-<approved hash="19,16,d630bf118fae2f63"/>
-<approved hash="19,16,ac3181c8b7165f43"/>
-<approved hash="19,16,b971095f5b706e02"/>
-<approved hash="19,16,92d1810ba5147f22"/>
-<approved hash="19,16,1ff745ecb7d22831"/>
-<approved hash="19,16,010ecf6961f62acd"/>
-<approved hash="19,16,a636cfae6811c865"/>
-<approved hash="19,16,e542c357cd18efa7"/>
-<approved hash="19,16,3f718f34941ba102"/>
-<approved hash="19,16,04302954030aebc2"/>
-<approved hash="19,16,d6d1c575526a8822"/>
-<approved hash="19,16,4b57c0b14d1ac7bc"/>
-<approved hash="19,16,60d03ad69a4805e2"/>
-<approved hash="8,16,937a808a1a06143b"/>
-<approved hash="8,16,b17d36e94f350e6f"/>
-<approved hash="8,16,f08cb83884d95e17"/>
-<approved hash="4,16,fe11b05c02e88310"/>
-<approved hash="4,16,fe11b05c02e88310"/>
-<approved hash="4,16,abbf39222b4a7800"/>
-<approved hash="4,16,abbf39222b4a7800"/>
-<approved hash="8,16,466adde4ef11f84e"/>
-<approved hash="8,16,58b3c5b2d2ea5bb8"/>
-<approved hash="19,16,1f3688200429933f"/>
-<approved hash="19,16,b5a43b42b6e8394e"/>
-<approved hash="19,16,7d69f55345744b78"/>
-<approved hash="8,16,810e9f1341590001"/>
-<approved hash="19,16,cd584b8b98781743"/>
-<approved hash="19,16,6b77c0b14caae76c"/>
-<approved hash="4,16,b1dc4e92fe3e0f59"/>
-<approved hash="8,16,8d5bc7b2c44cbbe6"/>
-<approved hash="8,16,814b894c9d4cbc56"/>
-<approved hash="8,16,d36551ac69f95f3b"/>
-<approved hash="2,20,6883edf9f59a70e0"/>
-<approved hash="2,20,7a1bff61fa5a7f20"/>
-<approved hash="2,20,74e3f199f65a7320"/>
-<approved hash="2,20,4f0bca71f55a7020"/>
-<approved hash="2,20,7e03fb79f61a7360"/>
-<approved hash="2,20,64e3e199fa5a7f20"/>
-<approved hash="2,20,767bf301f69a73e0"/>
-<approved hash="2,20,7dcbf8b1f25a7720"/>
-<approved hash="2,20,bfca24b02e53b529"/>
-<approved hash="2,20,a6e23d982653bd29"/>
-<approved hash="2,20,b47a2f002a93b1e9"/>
-<approved hash="2,20,bc0227782a13b169"/>
-<approved hash="2,20,8d0a16702953b229"/>
-<approved hash="2,20,b6e22d982a53b129"/>
-<approved hash="2,20,b81a23602653bd29"/>
-<approved hash="2,20,aa8231f82993b2e9"/>
-<approved hash="2,20,de1d6767625edb24"/>
-<approved hash="2,20,eb0d52776d5ed424"/>
-<approved hash="2,20,d0e5699f6e5ed724"/>
-<approved hash="2,20,cc8575ff6d9ed4e4"/>
-<approved hash="2,20,d27d6b076e9ed7e4"/>
-<approved hash="2,20,c0e5799f625edb24"/>
-<approved hash="2,20,d9cd60b76a5ed324"/>
-<approved hash="2,20,da05637f6e1ed764"/>
-<approved hash="19,16,92d454c2d8cc1eda"/>
-<approved hash="19,16,da4510339c3d564b"/>
-<approved hash="4,16,e8f9b1aceab2950f"/>
-<approved hash="4,16,e8f9b1aceab2950f"/>
-<approved hash="19,16,b90345c5c9dd351b"/>
-<approved hash="4,16,1231c3285efc4bb2"/>
-<approved hash="4,16,1231c3285efc4bb2"/>
-<approved hash="4,16,922b66176017803f"/>
-<approved hash="4,16,922b66176017803f"/>
-<approved hash="4,16,893f5d9168ca68eb"/>
-<approved hash="4,16,893f5d9168ca68eb"/>
-<approved hash="4,16,fc5f131aa4b61091"/>
-<approved hash="4,16,fc5f131aa4b61091"/>
-<approved hash="4,16,591c19296eeeedf1"/>
-<approved hash="4,16,274e5f6c26398051"/>
-<approved hash="4,16,591c19296eeeedf1"/>
-<approved hash="4,16,274e5f6c26398051"/>
-<approved hash="19,16,10688e1e02199c6f"/>
-<approved hash="19,16,58f9caef46e8d4fe"/>
-<approved hash="19,16,0764e3a26fbc8b7a"/>
-<approved hash="19,16,5b45c7834b9ed758"/>
-<approved hash="19,16,fda032d6bed071a6"/>
-<approved hash="19,16,8de37eecf0a9047e"/>
-<approved hash="19,16,81a11d67917a0dbc"/>
-<approved hash="19,16,9b43e835643c174a"/>
-<approved hash="19,16,65dbc6cd4af6e9e0"/>
-<approved hash="19,16,30eab22c3e26bce0"/>
-<approved hash="19,16,be096d7fe179320f"/>
-<approved hash="19,16,3c11b1d73dd0b016"/>
-<approved hash="4,16,fa826b784e7e10fe"/>
-<approved hash="4,16,fa826b784e7e10fe"/>
-<approved hash="19,16,011d9d0b11348d22"/>
-<approved hash="4,16,ddbce35d3f58504e"/>
-<approved hash="4,16,50433432034f33de"/>
-<approved hash="4,16,ddbce35d3f58504e"/>
-<approved hash="4,16,50433432034f33de"/>
-<approved hash="19,16,5eca400ccc03d2c5"/>
-<approved hash="19,16,6c3cc34a4f55e023"/>
-<approved hash="19,16,823517f39bed0e2b"/>
-<approved hash="19,16,4f3edb2856d1c2c7"/>
-<approved hash="8,16,53190438b413aaeb"/>
-<approved hash="8,16,7994f2ac5e8f4b95"/>
-<approved hash="8,16,5af4d6d86639eb72"/>
-<approved hash="8,16,16b11bae231512b4"/>
-<approved hash="19,16,f9f802bf8eb575f2"/>
-<approved hash="19,16,b3d8e49f68963fd1"/>
-<approved hash="19,16,295295816e18d194"/>
-<approved hash="19,16,c29c9a275af664f5"/>
-<approved hash="19,16,79ce9d058a595214"/>
-<approved hash="19,16,2f9cd544a246225e"/>
-<approved hash="5,16,058e731cabf6b504"/>
-<approved hash="19,1,84102057d17b8bfc"/>
-<approved hash="19,1,033aba08438bf3b5"/>
-<approved hash="19,1,c30de78218b7c2f8"/>
-<approved hash="19,1,bb44757282e845d2"/>
-<approved hash="19,1,43908a9535dd3fca"/>
-<approved hash="19,1,cdc8c7037057b98e"/>
-<approved hash="19,1,ed670c2df2df1a71"/>
-<approved hash="19,1,87e06ba79a968811"/>
-<approved hash="19,1,2f3f03b0fc852eca"/>
-<approved hash="19,1,bd5f6bf99b0f444d"/>
-<approved hash="19,1,3233537de634a270"/>
-<approved hash="19,1,302a75bac8f7a86d"/>
-<approved hash="19,16,783bfe7c7272f435"/>
-<approved hash="19,16,be694eaec2a43263"/>
-<approved hash="19,16,c59c25aba9b04987"/>
-<approved hash="19,16,d21d405acc545e13"/>
-<approved hash="19,16,f449a88e24877840"/>
-<approved hash="19,16,abfb43cccfd527e2"/>
-<approved hash="19,16,67de87e90bf3ebc4"/>
-<approved hash="19,16,a18c584bd4412d86"/>
-<approved hash="19,16,0917af5023578510"/>
-<approved hash="19,16,2d39fd0e7108a13f"/>
-<approved hash="19,16,ff6cb2ab3ea47363"/>
-<approved hash="19,16,a3f311b49d8b2fcc"/>
-<approved hash="19,16,b07592421e4b3c7c"/>
-<approved hash="19,16,ae2903ee8fe8222f"/>
-<approved hash="19,16,bd6e2879a4603177"/>
-<approved hash="19,16,6636b3713f4cea0b"/>
-<approved hash="19,16,f6522865a46a7a5d"/>
-<approved hash="19,16,c4147dd3f1cd480a"/>
-<approved hash="19,16,534cce5b4245df52"/>
-<approved hash="19,16,39ee74a9f8a0b5e7"/>
-<approved hash="8,16,dfeaaa3253225dd0"/>
-<approved hash="4,16,c04aa1dfdc9e0e06"/>
-<approved hash="4,16,c04aa1dfdc9e0e06"/>
-<approved hash="8,16,80439849e522a5bd"/>
-<approved hash="4,16,4b4312632bbf5533"/>
-<approved hash="4,16,4b4312632bbf5533"/>
-<approved hash="4,16,eb5309718e97b9cb"/>
-<approved hash="4,16,eb5309718e97b9cb"/>
-<approved hash="8,16,d7bead204b5241f3"/>
-<approved hash="8,16,7f87b8497b5d47ba"/>
-<approved hash="8,16,c1e3591f2a86bf96"/>
-<approved hash="4,16,823ba89fba45f380"/>
-<approved hash="4,16,03e14f744d521cbb"/>
-<approved hash="4,16,823ba89fba45f380"/>
-<approved hash="4,16,03e14f744d521cbb"/>
-<approved hash="8,16,a14459c5307a57c9"/>
-<approved hash="8,1,2c6d38924f9f3a0c"/>
-<approved hash="8,16,e4598a7576147e20"/>
-<approved hash="8,16,026232c318e0d603"/>
-<approved hash="8,16,77479e6b77af204e"/>
-<approved hash="4,16,f31dfc49d5771999"/>
-<approved hash="4,16,f1271acff452b3f2"/>
-<approved hash="4,16,7fb7540e720cbfde"/>
-<approved hash="4,16,f31dfc49d5771999"/>
-<approved hash="4,16,f1271acff452b3f2"/>
-<approved hash="4,16,7fb7540e720cbfde"/>
-<approved hash="19,1,5d88a203d6db364a"/>
-<approved hash="19,1,5cbbbd6bdfaf2165"/>
-<approved hash="19,1,e0a9640b87d6d276"/>
-<approved hash="19,1,d6a982e6773ff272"/>
-<approved hash="19,1,a4b3037a2f2430e2"/>
-<approved hash="19,1,03d823fc19ab8180"/>
-<approved hash="4,1,db417b65154f7102"/>
-<approved hash="4,1,db417b65154f7102"/>
-<approved hash="4,1,9f13e961e00d533a"/>
-<approved hash="4,1,9f13e961e00d533a"/>
-<approved hash="4,1,81f9588e3cabee95"/>
-<approved hash="4,1,4d188de1fecf0ed9"/>
-<approved hash="4,1,81f9588e3cabee95"/>
-<approved hash="4,1,4d188de1fecf0ed9"/>
-<approved hash="19,1,c3cb7575cbade5ea"/>
-<approved hash="19,1,d6d7c6846fa3e709"/>
-<approved hash="19,1,c389265b549f9e4f"/>
-<approved hash="19,1,5dab8ee4ea241669"/>
-<approved hash="19,1,234cc7eab52e7e8a"/>
-<approved hash="19,1,7d6aae2bcaeb36a8"/>
-<approved hash="19,16,c7da0b80138cdfd6"/>
-<approved hash="19,16,432a0bb013b95b23"/>
-<approved hash="19,16,59ed36572e4d41f7"/>
-<approved hash="4,16,8a8fdfd7cce64bac"/>
-<approved hash="4,16,8a8fdfd7cce64bac"/>
-<approved hash="4,16,65f7dcf45701bcb2"/>
-<approved hash="4,16,65f7dcf45701bcb2"/>
-<approved hash="19,16,46c0e57b74efac5d"/>
-<approved hash="4,16,0707a0f64210abf9"/>
-<approved hash="4,16,399b61b20fdf6f87"/>
-<approved hash="4,16,399b61b20fdf6f87"/>
-<approved hash="4,16,0707a0f64210abf9"/>
-<approved hash="19,16,c1fce9a6f1a9d9f3"/>
-<approved hash="4,16,f9d029c5ae59b780"/>
-<approved hash="4,16,859a5f0f7de69710"/>
-<approved hash="4,16,71269f0c0f2c6c25"/>
-<approved hash="4,16,9f2170de9c395be9"/>
-<approved hash="4,16,64202902f50f40ce"/>
-<approved hash="4,16,e79298c43662243b"/>
-<approved hash="4,16,71269f0c0f2c6c25"/>
-<approved hash="4,16,9f2170de9c395be9"/>
-<approved hash="4,16,64202902f50f40ce"/>
-<approved hash="4,16,e79298c43662243b"/>
-<approved hash="4,16,f9d029c5ae59b780"/>
-<approved hash="4,16,859a5f0f7de69710"/>
-<approved hash="19,16,8f95dff7dfb18fd3"/>
-<approved hash="19,16,810abd90a595990f"/>
-<approved hash="19,16,8234ab878c56fa54"/>
-<approved hash="19,16,d42ee28a79d9f67d"/>
-<approved hash="19,16,ba281a87bb28dcd6"/>
-<approved hash="19,16,fc3be0bac57089d3"/>
-<approved hash="19,16,4741dd1fdf33e219"/>
-<approved hash="19,16,1834945e8b9b98c7"/>
-<approved hash="19,16,ec94637f27a4bc37"/>
-<approved hash="19,16,d7460b1e3899ddd5"/>
-<approved hash="19,16,32d1d237d326553a"/>
-<approved hash="19,16,6aeb8878597b07e9"/>
-<approved hash="19,16,5b8bd431cc2b4391"/>
-<approved hash="19,16,f7ae9814800eefb4"/>
-<approved hash="19,16,eecccc56d45ff6c5"/>
-<approved hash="19,16,1c77112d09d5048f"/>
-<approved hash="19,16,c149cef3d6f4d94e"/>
-<approved hash="19,16,e42dc6b7deb8fc22"/>
-<approved hash="19,16,96949fce87f18eab"/>
-<approved hash="19,16,e60647bc5fb1fe0b"/>
-<approved hash="19,16,3b76ffece7f5236f"/>
-<approved hash="19,16,a29ebba4a3beba84"/>
-<approved hash="19,16,c953c209da31d16b"/>
-<approved hash="4,16,89db89c8892447c8"/>
-<approved hash="4,16,89db89c8892447c8"/>
-<approved hash="4,16,e707e4debfad9c90"/>
-<approved hash="4,16,047ab4f9a627990c"/>
-<approved hash="4,16,d2557db36149c11a"/>
-<approved hash="4,16,d2557db36149c11a"/>
-<approved hash="4,16,e707e4debfad9c90"/>
-<approved hash="4,16,047ab4f9a627990c"/>
-<approved hash="19,16,d02385999d96c82c"/>
-<approved hash="19,16,3154f1cee9d7294d"/>
-<approved hash="19,16,a0bcd986c198b8a2"/>
-<approved hash="19,16,4a8161db79de5284"/>
-<approved hash="8,16,a0c086d263b7257a"/>
-<approved hash="8,16,8c04332c0b148828"/>
-<approved hash="8,1,111387a38d0737e2"/>
-<approved hash="8,16,737038c0b0269c47"/>
-<approved hash="8,1,15e1a38e0c7c3f3f"/>
-<approved hash="8,1,461ff71bfb024608"/>
-<approved hash="8,16,65ab38fce43980da"/>
-<approved hash="8,16,5946499ff9def78b"/>
-<approved hash="8,16,35bdca9ad6e34fa8"/>
-<approved hash="2,20,7e7e3484343a7ec0"/>
-<approved hash="2,20,61862b7c2e5264a8"/>
-<approved hash="2,20,622628dc2e1264e8"/>
-<approved hash="2,20,438e0974368a7c70"/>
-<approved hash="2,20,77063dfc3e927468"/>
-<approved hash="2,20,60de2a24293a63c0"/>
-<approved hash="2,20,74263edc33d27928"/>
-<approved hash="2,20,7cce3634332a79d0"/>
-<approved hash="2,20,3c385ec253c0313a"/>
-<approved hash="2,20,29984b624e402cba"/>
-<approved hash="2,20,3f185de25e803c7a"/>
-<approved hash="2,20,28c04a3a49282bd2"/>
-<approved hash="2,20,34d0562a533831c2"/>
-<approved hash="2,20,3660549a542836d2"/>
-<approved hash="2,20,2a3848c24e002cfa"/>
-<approved hash="2,20,0b90696a56983462"/>
-<approved hash="2,20,fc1f6ee563e2f118"/>
-<approved hash="2,20,cbb7594d66baf440"/>
-<approved hash="2,20,ea1f78e57e22ecd8"/>
-<approved hash="2,20,e8e77a1d790aebf0"/>
-<approved hash="2,20,f64764bd640af6f0"/>
-<approved hash="2,20,e9bf7b457e62ec98"/>
-<approved hash="2,20,f4f7660d631af1e0"/>
-<approved hash="2,20,ff3f6dc56ea2fc58"/>
-<approved hash="19,1,68f7b2008bba524f"/>
-<approved hash="19,1,57c68833b0d66c21"/>
-<approved hash="19,1,aa2b74ca292d72ce"/>
-<approved hash="19,1,765c2bbf7795af74"/>
-<approved hash="19,1,50ca8daa558e08e9"/>
-<approved hash="19,1,375c6c3eb4126f77"/>
-<approved hash="4,1,0eb96592753ce870"/>
-<approved hash="4,1,0eb96592753ce870"/>
-<approved hash="19,1,6dadb4b950923487"/>
-<approved hash="19,1,0acd68db8cfe53e9"/>
-<approved hash="19,1,ed5207bd0f97e67a"/>
-<approved hash="19,1,ecdc06330f19e6f4"/>
-<approved hash="19,1,fa4b15a61d8af165"/>
-<approved hash="19,1,facb15261d02f1ed"/>
-<approved hash="19,16,19e4ec59e45011ed"/>
-<approved hash="19,16,2e165fcb57c7261a"/>
-<approved hash="19,16,f384b529bd33fb9e"/>
-<approved hash="19,16,a2da16528973b145"/>
-<approved hash="19,16,07c6f27bfa770fca"/>
-<approved hash="4,16,190c1f3cc8682af3"/>
-<approved hash="4,16,190c1f3cc8682af3"/>
-<approved hash="19,16,1e72a30aa1851cfd"/>
-<approved hash="19,16,a03171ec79e4a839"/>
-<approved hash="19,16,df30c40f92479e47"/>
-<approved hash="19,16,16348b42cbe43e55"/>
-<approved hash="19,16,cbad593dc6d9e228"/>
-<approved hash="19,16,801d3799474affd1"/>
-<approved hash="19,16,3dac185b7b4c79ce"/>
-<approved hash="19,16,3ecd72eb71a03e09"/>
-<approved hash="19,16,756c53e84153e6b3"/>
-<approved hash="19,16,ee03d14df07c7d0b"/>
-<approved hash="19,16,540f187283594a8c"/>
-<approved hash="19,16,1dcf0b95fe473906"/>
-<approved hash="19,16,39e20f4f075531f8"/>
-<approved hash="19,16,75c3336e3b707ddd"/>
-<approved hash="19,16,78f7012a092270ff"/>
-<approved hash="19,16,1a4e7af372f6124b"/>
-<approved hash="19,16,bb20ed8de589b324"/>
-<approved hash="19,16,ea1223cf2bc7e21a"/>
-<approved hash="19,16,78ab881680297094"/>
-<approved hash="19,16,266cb8c1b0c92e64"/>
-<approved hash="19,16,fd50948d9c8bf556"/>
-<approved hash="19,16,0a973afa32e0028d"/>
-<approved hash="19,16,b26de2d0eaefba52"/>
-<approved hash="4,16,1628ae3b2a7942b2"/>
-<approved hash="4,16,1628ae3b2a7942b2"/>
-<approved hash="19,16,c44a9ae792e9cc44"/>
-<approved hash="19,16,5f6d26b02eae5773"/>
-<approved hash="19,16,40b280df88c648ab"/>
-<approved hash="19,16,a9b7690a6102a1bf"/>
-<approved hash="19,16,015181c7b54c742a"/>
-<approved hash="19,16,638990f198f16b89"/>
-<approved hash="19,16,8efcbef1837c58c4"/>
-<approved hash="19,16,c3d4b42f84cf2306"/>
-<approved hash="19,16,8f59d18fccd19708"/>
-<approved hash="19,16,be3a4b82525ad237"/>
-<approved hash="19,16,a3c019c45ada81ad"/>
-<approved hash="19,16,b90444184cd8bd61"/>
-<approved hash="19,16,a5aca1be6a4ed821"/>
-<approved hash="19,16,17e695cd734fcd2a"/>
-<approved hash="19,16,2c40530479e585e3"/>
-<approved hash="19,16,4188e03634cb16b6"/>
-<approved hash="8,16,ea26d7466339bb3f"/>
-<approved hash="8,1,c4068b3a932c581d"/>
-<approved hash="8,16,7e924692e62ebed1"/>
-<approved hash="8,16,2fb8a4859091558e"/>
-<approved hash="8,1,ee13b280789cfa12"/>
-<approved hash="4,1,9426e20be43cf6e9"/>
-<approved hash="4,1,9426e20be43cf6e9"/>
-<approved hash="4,16,e29d9db54e712779"/>
-<approved hash="4,16,e29d9db54e712779"/>
-<approved hash="4,16,95b42dbfae71404f"/>
-<approved hash="4,16,95b42dbfae71404f"/>
 <approved hash="8,16,ec171a0fb60e2408"/>
 <approved hash="8,16,606d822048cd3b9a"/>
 <approved hash="8,16,5b0ede0351842678"/>
@@ -6871,9 +6296,10 @@ design rules under a new name.</description>
 <approved hash="2,20,3c45d6bfd397396d"/>
 <approved hash="2,20,3209d8f3def7340d"/>
 <approved hash="2,20,3205d8ffd6f73c0d"/>
-<approved hash="18,29,c454c222c20ac47c"/>
+<approved hash="7,39,1046794fcb51d0c6"/>
 <approved hash="18,29,c454c222c20ac47c"/>
 <approved hash="18,29,84e04296428a84fc"/>
+<approved hash="18,29,c454c222c20ac47c"/>
 <approved hash="18,29,24bf42df4cf820dc"/>
 <approved hash="18,29,f97c24bf42b365e9"/>
 <approved hash="18,29,5fccfc45799794e4"/>
@@ -6883,77 +6309,74 @@ design rules under a new name.</description>
 <approved hash="18,29,3f3da627a7dedef8"/>
 <approved hash="18,29,81968731db2ba95f"/>
 <approved hash="18,29,29dac6c51166f5c2"/>
-<approved hash="18,29,28b1dcfb0cf32bf0"/>
-<approved hash="18,29,d38d960070477d97"/>
 <approved hash="18,29,30afa8767695bf3e"/>
+<approved hash="18,29,d38d960070477d97"/>
+<approved hash="18,29,28b1dcfb0cf32bf0"/>
 <approved hash="18,29,d27e7bc195d5a673"/>
 <approved hash="18,29,6a1d6719a6d8f7cd"/>
 <approved hash="18,29,b4f3b67dc00c28e0"/>
 <approved hash="18,29,e6599fe52f93446d"/>
 <approved hash="18,29,2405d0800342a213"/>
-<approved hash="18,29,aaeacfe005695faa"/>
 <approved hash="18,29,8e031fb86c781e9c"/>
+<approved hash="18,29,aaeacfe005695faa"/>
 <approved hash="18,29,61fffc0dfce36111"/>
+<approved hash="18,29,5d87ad587e942e24"/>
+<approved hash="18,29,2eb0fe03ade5dd35"/>
 <approved hash="18,29,6c87ae3840b420e4"/>
 <approved hash="18,29,14906e626e8e147c"/>
 <approved hash="18,29,2eb0fe03ade5dd35"/>
 <approved hash="18,29,5d87ad587e942e24"/>
-<approved hash="18,29,14906e626e8e147c"/>
-<approved hash="18,29,2eb0fe03ade5dd35"/>
-<approved hash="18,29,5d87ad587e942e24"/>
 <approved hash="18,29,6c87ae3840b420e4"/>
-<approved hash="18,29,27e082d282ae279c"/>
-<approved hash="18,29,e6f803ca0397e6a5"/>
+<approved hash="18,29,14906e626e8e147c"/>
 <approved hash="18,29,6718022a02666754"/>
 <approved hash="18,29,e6f803ca0397e6a5"/>
 <approved hash="18,29,27e082d282ae279c"/>
 <approved hash="18,29,6718022a02666754"/>
+<approved hash="18,29,27e082d282ae279c"/>
+<approved hash="18,29,e6f803ca0397e6a5"/>
+<approved hash="18,29,a237f03a08d85d3b"/>
+<approved hash="18,29,a237f03a08d85d3b"/>
+<approved hash="18,29,d38ff434b38293f4"/>
+<approved hash="18,29,d38c348d738893e9"/>
 <approved hash="18,29,d38c348d738893e9"/>
 <approved hash="18,29,d38ff434b38293f4"/>
-<approved hash="18,29,a237f03a08d85d3b"/>
-<approved hash="18,29,d38c348d738893e9"/>
-<approved hash="18,29,d38ff434b38293f4"/>
-<approved hash="18,29,a237f03a08d85d3b"/>
 <approved hash="18,29,1de4aa16aa0d1dff"/>
 <approved hash="18,29,1de4aa16aa0d1dff"/>
-<approved hash="18,29,530793c8429420e4"/>
-<approved hash="18,29,5e87ae487c942d24"/>
 <approved hash="18,29,15006ff26f8e157c"/>
 <approved hash="18,29,2ed0fe83ade5dd15"/>
 <approved hash="18,29,5e87ae487c942d24"/>
+<approved hash="18,29,5e87ae487c942d24"/>
+<approved hash="18,29,530793c8429420e4"/>
+<approved hash="18,29,2ed0fe83ade5dd15"/>
 <approved hash="18,29,530793c8429420e4"/>
 <approved hash="18,29,15006ff26f8e157c"/>
-<approved hash="18,29,2ed0fe83ade5dd15"/>
+<approved hash="18,29,2730820283ae269c"/>
 <approved hash="18,29,6738020a02f667c4"/>
 <approved hash="18,29,6738020a02f667c4"/>
-<approved hash="18,29,e718022a0267e755"/>
-<approved hash="18,29,2730820283ae269c"/>
 <approved hash="18,29,2730820283ae269c"/>
 <approved hash="18,29,e718022a0267e755"/>
-<approved hash="18,29,d28ff544b5b293a4"/>
+<approved hash="18,29,e718022a0267e755"/>
 <approved hash="18,29,9fc7cfba08d85f1b"/>
 <approved hash="18,29,d30c34ed73a893e9"/>
-<approved hash="18,29,9fc7cfba08d85f1b"/>
 <approved hash="18,29,d28ff544b5b293a4"/>
+<approved hash="18,29,d28ff544b5b293a4"/>
+<approved hash="18,29,9fc7cfba08d85f1b"/>
 <approved hash="18,29,d30c34ed73a893e9"/>
 <approved hash="18,29,1dd4aa26ad8d1a7f"/>
 <approved hash="18,29,1dd4aa26ad8d1a7f"/>
 <approved hash="18,29,3c784a0a4a4a3c38"/>
-<approved hash="18,29,c14648e52f1154cc"/>
-<approved hash="18,29,c14648e52f1154cc"/>
-<approved hash="18,29,3d3d529daeab3db9"/>
-<approved hash="19,1,76ddae3973522eb7"/>
 <approved hash="19,1,33d56833b5de6b39"/>
-<approved hash="19,1,b1df613221277ec9"/>
+<approved hash="19,1,76ddae3973522eb7"/>
 <approved hash="19,1,715228bd68a2be4e"/>
+<approved hash="19,1,b1df613221277ec9"/>
 <approved hash="19,1,7859a53061c230a9"/>
 <approved hash="19,1,28507f3bbb02606b"/>
 <approved hash="19,1,b5509bbb6b82326c"/>
 <approved hash="19,1,2a5975b08545ada9"/>
 <approved hash="19,1,dc4b34a2389dd568"/>
-<approved hash="19,1,e2c10a280713eae6"/>
 <approved hash="19,1,ef4a04a10942e7b5"/>
 <approved hash="19,1,efb6045d08bee649"/>
+<approved hash="19,1,e2c10a280713eae6"/>
 <approved hash="19,16,889838cf30c78090"/>
 <approved hash="19,16,0c8b827c8a700487"/>
 <approved hash="19,16,0714da23d2260f11"/>
@@ -6969,8 +6392,8 @@ design rules under a new name.</description>
 <approved hash="19,16,600251cad8ece58f"/>
 <approved hash="19,16,4ed3f7569ccd15e9"/>
 <approved hash="19,16,abad75f1c8fbdb43"/>
-<approved hash="19,16,1354f1a9c6617ce6"/>
 <approved hash="19,16,7e22121fe58f6abc"/>
+<approved hash="19,16,1354f1a9c6617ce6"/>
 <approved hash="19,16,b96ae45dec43b174"/>
 <approved hash="19,16,9d49b07eb878954f"/>
 <approved hash="19,16,52764c8144855a72"/>

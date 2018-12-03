@@ -26546,14 +26546,12 @@ LETTER landscape</description>
 <wire x1="2.15" y1="1.3" x2="2.15" y2="-1.3" width="0.2032" layer="51"/>
 <wire x1="2.15" y1="-1.3" x2="-2.15" y2="-1.3" width="0.2032" layer="51"/>
 <wire x1="-2.15" y1="-1.3" x2="-2.15" y2="1.3" width="0.2032" layer="51"/>
-<wire x1="-3.789" y1="-1.6" x2="-3.789" y2="1.6" width="0.127" layer="21"/>
-<wire x1="-3.789" y1="1.6" x2="3.816" y2="1.6" width="0.127" layer="21"/>
-<wire x1="3.816" y1="1.6" x2="3.816" y2="-1.6" width="0.127" layer="21"/>
-<wire x1="3.816" y1="-1.6" x2="-3.789" y2="-1.6" width="0.127" layer="21"/>
-<wire x1="-0.3175" y1="-0.4445" x2="-0.3175" y2="0.4445" width="0.127" layer="21"/>
-<wire x1="-0.3175" y1="0.4445" x2="-0.6985" y2="0" width="0.127" layer="21"/>
-<wire x1="-0.6985" y1="0" x2="-0.3175" y2="-0.4445" width="0.127" layer="21"/>
-<wire x1="-0.6985" y1="-0.4445" x2="-0.6985" y2="0.4445" width="0.127" layer="21"/>
+<wire x1="-3.789" y1="1.6" x2="3.816" y2="1.6" width="0.3048" layer="21"/>
+<wire x1="3.816" y1="-1.6" x2="-3.789" y2="-1.6" width="0.3048" layer="21"/>
+<wire x1="0.6985" y1="-0.9525" x2="0.6985" y2="0.9525" width="0.3048" layer="21"/>
+<wire x1="0.6985" y1="0.9525" x2="-0.4445" y2="0" width="0.3048" layer="21"/>
+<wire x1="-0.4445" y1="0" x2="0.6985" y2="-0.9525" width="0.3048" layer="21"/>
+<wire x1="-0.4445" y1="-0.9525" x2="-0.4445" y2="0" width="0.3048" layer="21"/>
 <smd name="C" x="-3.3655" y="0" dx="3.048" dy="2.54" layer="1" roundness="50"/>
 <smd name="A" x="3.3655" y="0" dx="3.048" dy="2.54" layer="1" roundness="50" rot="R180"/>
 <text x="-2.54" y="1.905" size="0.4064" layer="25" font="vector">&gt;NAME</text>
@@ -26561,6 +26559,7 @@ LETTER landscape</description>
 <rectangle x1="-2.825" y1="-1.1" x2="-2.175" y2="1.1" layer="51"/>
 <rectangle x1="2.175" y1="-1.1" x2="2.825" y2="1.1" layer="51" rot="R180"/>
 <rectangle x1="-1.75" y1="-1.225" x2="-1.075" y2="1.225" layer="51"/>
+<wire x1="-0.4445" y1="0" x2="-0.4445" y2="0.9525" width="0.3048" layer="21"/>
 </package>
 <package name="SOD-323">
 <wire x1="-0.85" y1="0.65" x2="0.85" y2="0.65" width="0.127" layer="21"/>
@@ -27329,33 +27328,29 @@ We've spent an enormous amount of time creating and checking these footprints an
 <rectangle x1="20.066" y1="-0.254" x2="20.574" y2="0.254" layer="51"/>
 </package>
 <package name="1X09_LOCK_LONGPADS">
-<wire x1="1.524" y1="0" x2="1.016" y2="0" width="0.2032" layer="21"/>
-<wire x1="4.064" y1="0" x2="3.556" y2="0" width="0.2032" layer="21"/>
-<wire x1="6.604" y1="0" x2="6.096" y2="0" width="0.2032" layer="21"/>
-<wire x1="9.144" y1="0" x2="8.636" y2="0" width="0.2032" layer="21"/>
-<wire x1="11.684" y1="0" x2="11.176" y2="0" width="0.2032" layer="21"/>
-<wire x1="-1.27" y1="0" x2="-1.016" y2="0" width="0.2032" layer="21"/>
-<wire x1="-1.27" y1="0" x2="-1.27" y2="0.9906" width="0.2032" layer="21"/>
-<wire x1="-1.27" y1="0.9906" x2="-0.9906" y2="1.27" width="0.2032" layer="21"/>
-<wire x1="-1.27" y1="0" x2="-1.27" y2="-0.9906" width="0.2032" layer="21"/>
-<wire x1="-1.27" y1="-0.9906" x2="-0.9906" y2="-1.27" width="0.2032" layer="21"/>
-<wire x1="14.224" y1="0" x2="13.716" y2="0" width="0.2032" layer="21"/>
-<wire x1="16.764" y1="0" x2="16.256" y2="0" width="0.2032" layer="21"/>
-<wire x1="19.304" y1="0" x2="18.796" y2="0" width="0.2032" layer="21"/>
-<wire x1="21.59" y1="0" x2="21.59" y2="-0.9906" width="0.2032" layer="21"/>
-<wire x1="21.59" y1="-0.9906" x2="21.3106" y2="-1.27" width="0.2032" layer="21"/>
-<wire x1="21.59" y1="0" x2="21.59" y2="0.9906" width="0.2032" layer="21"/>
-<wire x1="21.59" y1="0.9906" x2="21.3106" y2="1.27" width="0.2032" layer="21"/>
-<wire x1="21.59" y1="0" x2="21.336" y2="0" width="0.2032" layer="21"/>
-<pad name="1" x="0" y="0.127" drill="1.016" shape="long" rot="R90"/>
-<pad name="2" x="2.54" y="-0.127" drill="1.016" shape="long" rot="R90"/>
-<pad name="3" x="5.08" y="0.127" drill="1.016" shape="long" rot="R90"/>
-<pad name="4" x="7.62" y="-0.127" drill="1.016" shape="long" rot="R90"/>
-<pad name="5" x="10.16" y="0.127" drill="1.016" shape="long" rot="R90"/>
-<pad name="6" x="12.7" y="-0.127" drill="1.016" shape="long" rot="R90"/>
-<pad name="7" x="15.24" y="0.127" drill="1.016" shape="long" rot="R90"/>
-<pad name="8" x="17.78" y="-0.127" drill="1.016" shape="long" rot="R90"/>
-<pad name="9" x="20.32" y="0.127" drill="1.016" shape="long" rot="R90"/>
+<wire x1="1.397" y1="0" x2="1.143" y2="0" width="0.2032" layer="21"/>
+<wire x1="3.937" y1="0" x2="3.683" y2="0" width="0.2032" layer="21"/>
+<wire x1="6.477" y1="0" x2="6.223" y2="0" width="0.2032" layer="21"/>
+<wire x1="9.017" y1="0" x2="8.763" y2="0" width="0.2032" layer="21"/>
+<wire x1="11.557" y1="0" x2="11.303" y2="0" width="0.2032" layer="21"/>
+<wire x1="-1.27" y1="-0.9906" x2="-1.27" y2="1.2446" width="0.2032" layer="21"/>
+<wire x1="-1.27" y1="1.2446" x2="-0.9906" y2="1.778" width="0.2032" layer="21"/>
+<wire x1="-1.27" y1="-0.9906" x2="-0.9906" y2="-1.524" width="0.2032" layer="21"/>
+<wire x1="14.097" y1="0" x2="13.843" y2="0" width="0.2032" layer="21"/>
+<wire x1="16.637" y1="0" x2="16.383" y2="0" width="0.2032" layer="21"/>
+<wire x1="19.177" y1="0" x2="18.923" y2="0" width="0.2032" layer="21"/>
+<wire x1="21.59" y1="-0.9906" x2="21.3106" y2="-1.524" width="0.2032" layer="21"/>
+<wire x1="21.59" y1="-0.9906" x2="21.59" y2="1.2446" width="0.2032" layer="21"/>
+<wire x1="21.59" y1="1.2446" x2="21.3106" y2="1.778" width="0.2032" layer="21"/>
+<pad name="1" x="0" y="0.127" drill="1.016" diameter="1.6764" shape="long" rot="R90"/>
+<pad name="2" x="2.54" y="-0.127" drill="1.016" diameter="1.6764" shape="long" rot="R90"/>
+<pad name="3" x="5.08" y="0.127" drill="1.016" diameter="1.6764" shape="long" rot="R90"/>
+<pad name="4" x="7.62" y="-0.127" drill="1.016" diameter="1.6764" shape="long" rot="R90"/>
+<pad name="5" x="10.16" y="0.127" drill="1.016" diameter="1.6764" shape="long" rot="R90"/>
+<pad name="6" x="12.7" y="-0.127" drill="1.016" diameter="1.6764" shape="long" rot="R90"/>
+<pad name="7" x="15.24" y="0.127" drill="1.016" diameter="1.6764" shape="long" rot="R90"/>
+<pad name="8" x="17.78" y="-0.127" drill="1.016" diameter="1.6764" shape="long" rot="R90"/>
+<pad name="9" x="20.32" y="0.127" drill="1.016" diameter="1.6764" shape="long" rot="R90"/>
 <text x="-1.27" y="1.905" size="1.27" layer="25" font="vector">&gt;NAME</text>
 <text x="-1.27" y="-3.175" size="1.27" layer="27" font="vector">&gt;VALUE</text>
 <rectangle x1="-0.2921" y1="-0.2921" x2="0.2921" y2="0.2921" layer="51"/>
@@ -27382,28 +27377,6 @@ We've spent an enormous amount of time creating and checking these footprints an
 <pad name="9" x="20.32" y="0" drill="1.1176" diameter="1.8796" shape="long" rot="R90"/>
 <text x="-1.3462" y="2.4638" size="1.27" layer="25" ratio="10">&gt;NAME</text>
 <text x="-1.27" y="-3.81" size="1.27" layer="27">&gt;VALUE</text>
-<rectangle x1="14.986" y1="-0.254" x2="15.494" y2="0.254" layer="51"/>
-<rectangle x1="12.446" y1="-0.254" x2="12.954" y2="0.254" layer="51"/>
-<rectangle x1="9.906" y1="-0.254" x2="10.414" y2="0.254" layer="51"/>
-<rectangle x1="7.366" y1="-0.254" x2="7.874" y2="0.254" layer="51"/>
-<rectangle x1="4.826" y1="-0.254" x2="5.334" y2="0.254" layer="51"/>
-<rectangle x1="2.286" y1="-0.254" x2="2.794" y2="0.254" layer="51"/>
-<rectangle x1="-0.254" y1="-0.254" x2="0.254" y2="0.254" layer="51"/>
-<rectangle x1="17.526" y1="-0.254" x2="18.034" y2="0.254" layer="51"/>
-<rectangle x1="20.066" y1="-0.254" x2="20.574" y2="0.254" layer="51"/>
-</package>
-<package name="1X09_NO_SILK">
-<pad name="1" x="0" y="0" drill="1.016" diameter="1.8796" rot="R90"/>
-<pad name="2" x="2.54" y="0" drill="1.016" diameter="1.8796" rot="R90"/>
-<pad name="3" x="5.08" y="0" drill="1.016" diameter="1.8796" rot="R90"/>
-<pad name="4" x="7.62" y="0" drill="1.016" diameter="1.8796" rot="R90"/>
-<pad name="5" x="10.16" y="0" drill="1.016" diameter="1.8796" rot="R90"/>
-<pad name="6" x="12.7" y="0" drill="1.016" diameter="1.8796" rot="R90"/>
-<pad name="7" x="15.24" y="0" drill="1.016" diameter="1.8796" rot="R90"/>
-<pad name="8" x="17.78" y="0" drill="1.016" diameter="1.8796" rot="R90"/>
-<pad name="9" x="20.32" y="0" drill="1.016" diameter="1.8796" rot="R90"/>
-<text x="-1.3462" y="1.8288" size="1.27" layer="25" ratio="10">&gt;NAME</text>
-<text x="-1.27" y="-3.175" size="1.27" layer="27">&gt;VALUE</text>
 <rectangle x1="14.986" y1="-0.254" x2="15.494" y2="0.254" layer="51"/>
 <rectangle x1="12.446" y1="-0.254" x2="12.954" y2="0.254" layer="51"/>
 <rectangle x1="9.906" y1="-0.254" x2="10.414" y2="0.254" layer="51"/>
@@ -27444,7 +27417,7 @@ We've spent an enormous amount of time creating and checking these footprints an
 </symbol>
 </symbols>
 <devicesets>
-<deviceset name="M09" prefix="J" uservalue="yes">
+<deviceset name="M09" prefix="JP">
 <description>&lt;b&gt;Header 9&lt;/b&gt;
 Standard 9-pin 0.1" header. Use with straight break away headers (SKU : PRT-00116), right angle break away headers (PRT-00553), swiss pins (PRT-00743), machine pins (PRT-00117), and female headers (PRT-00115).</description>
 <gates>
@@ -27500,22 +27473,6 @@ Standard 9-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 </technologies>
 </device>
 <device name="LONGPADS" package="1X09_LONGPADS">
-<connects>
-<connect gate="G$1" pin="1" pad="1"/>
-<connect gate="G$1" pin="2" pad="2"/>
-<connect gate="G$1" pin="3" pad="3"/>
-<connect gate="G$1" pin="4" pad="4"/>
-<connect gate="G$1" pin="5" pad="5"/>
-<connect gate="G$1" pin="6" pad="6"/>
-<connect gate="G$1" pin="7" pad="7"/>
-<connect gate="G$1" pin="8" pad="8"/>
-<connect gate="G$1" pin="9" pad="9"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-<device name="NO_SILK" package="1X09_NO_SILK">
 <connects>
 <connect gate="G$1" pin="1" pad="1"/>
 <connect gate="G$1" pin="2" pad="2"/>
@@ -33591,7 +33548,7 @@ Source: AVX .. aphvc.pdf</description>
 <plain>
 <text x="149.86" y="30.48" size="3.81" layer="91" ratio="12">snc98 3x4 Switch-block</text>
 <text x="149.86" y="25.4" size="2.54" layer="91" ratio="12">by Jens Grabner</text>
-<text x="238.76" y="7.62" size="2.54" layer="91" ratio="12">0.3</text>
+<text x="238.76" y="7.62" size="2.54" layer="91" ratio="12">0.4</text>
 <text x="5.08" y="10.16" size="2.1844" layer="91" ratio="10">snc98 3x4 Switch-block Rev. 0.3 by Jens Grabner is licensed under</text>
 <text x="5.08" y="15.24" size="3.81" layer="91" ratio="12">Copyright CERN 2013</text>
 <text x="5.08" y="5.08" size="2.1844" layer="91" ratio="10">the CERN OHL v.1.2 or later. (http://ohwr.org/cernohl)</text>

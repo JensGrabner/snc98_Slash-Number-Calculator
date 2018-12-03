@@ -90,8 +90,11 @@
 <layer number="111" name="LPC17xx" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="112" name="tSilk" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="113" name="ReferenceLS" color="7" fill="1" visible="no" active="no"/>
+<layer number="114" name="Badge_Outline" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="115" name="ReferenceISLANDS" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="116" name="Patch_BOT" color="9" fill="4" visible="yes" active="yes"/>
 <layer number="118" name="Rect_Pads" color="7" fill="1" visible="no" active="no"/>
+<layer number="120" name="TOPSILK" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="121" name="_tsilk" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="122" name="_bsilk" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="123" name="tTestmark" color="7" fill="1" visible="yes" active="yes"/>
@@ -101,9 +104,11 @@
 <layer number="127" name="_tValues" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="128" name="_bValues" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="129" name="Mask" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="130" name="COMMENTS_STOP_MASK_BOTTOM_SIDE" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="131" name="tAdjust" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="132" name="bAdjust" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="144" name="Drill_legend" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="147" name="COMMENTS_OUTLINE_AND_DRILLING_PLAN" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="150" name="Notes" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="151" name="HeatSink" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="152" name="_bDocu" color="7" fill="1" visible="yes" active="yes"/>
@@ -26798,11 +26803,11 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <wire x1="5.08" y1="-3.81" x2="-4.318" y2="-3.81" width="0.254" layer="21"/>
 <wire x1="-4.318" y1="-3.81" x2="-4.318" y2="3.81" width="0.254" layer="21"/>
 <wire x1="-4.318" y1="3.81" x2="5.08" y2="3.81" width="0.254" layer="21"/>
-<wire x1="-2.54" y1="0" x2="3.81" y2="0" width="0.4064" layer="49"/>
+<wire x1="-2.413" y1="0" x2="3.937" y2="0" width="0.4064" layer="49"/>
 <wire x1="-5.08" y1="5.08" x2="5.08" y2="5.08" width="0.127" layer="51"/>
 <wire x1="-5.08" y1="-5.08" x2="5.08" y2="-5.08" width="0.127" layer="51"/>
-<pad name="P1" x="-2.54" y="0" drill="1.6" shape="long" rot="R90"/>
-<pad name="P2" x="3.81" y="0" drill="1.6" shape="long" rot="R90"/>
+<pad name="P1" x="-2.413" y="0" drill="1.6" shape="long" rot="R90"/>
+<pad name="P2" x="3.937" y="0" drill="1.6" shape="long" rot="R90"/>
 <pad name="P3" x="2.032" y="0" drill="1.6" shape="long" rot="R90"/>
 <pad name="P4" x="-4.318" y="0" drill="1.6" shape="long" rot="R90"/>
 </package>
@@ -26818,11 +26823,11 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <wire x1="-5.08" y1="3.81" x2="4.318" y2="3.81" width="0.254" layer="21"/>
 <wire x1="4.318" y1="3.81" x2="4.318" y2="-3.81" width="0.254" layer="21"/>
 <wire x1="4.318" y1="-3.81" x2="-5.08" y2="-3.81" width="0.254" layer="21"/>
-<wire x1="2.54" y1="0" x2="-3.81" y2="0" width="0.4064" layer="49"/>
+<wire x1="2.413" y1="0" x2="-3.937" y2="0" width="0.4064" layer="49"/>
 <wire x1="5.08" y1="-5.08" x2="-5.08" y2="-5.08" width="0.127" layer="51"/>
 <wire x1="5.08" y1="5.08" x2="-5.08" y2="5.08" width="0.127" layer="51"/>
-<pad name="M1" x="-3.81" y="0" drill="1.6" shape="long" rot="R270"/>
-<pad name="M2" x="2.54" y="0" drill="1.6" shape="long" rot="R270"/>
+<pad name="M1" x="-3.937" y="0" drill="1.6" shape="long" rot="R270"/>
+<pad name="M2" x="2.413" y="0" drill="1.6" shape="long" rot="R270"/>
 <pad name="M3" x="4.318" y="0" drill="1.6" shape="long" rot="R270"/>
 <pad name="M4" x="-2.032" y="0" drill="1.6" shape="long" rot="R270"/>
 </package>
