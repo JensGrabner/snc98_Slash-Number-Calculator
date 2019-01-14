@@ -27618,6 +27618,26 @@ Standard 9-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <circle x="0" y="0" radius="2.85" width="0.1524" layer="21"/>
 <pad name="B5,5" x="0" y="0" drill="5.5" diameter="9"/>
 </package>
+<package name="2,5-PAD">
+<wire x1="0" y1="2.921" x2="0" y2="2.667" width="0.0508" layer="21"/>
+<wire x1="0" y1="-2.667" x2="0" y2="-2.921" width="0.0508" layer="21"/>
+<circle x="0" y="0" radius="2.921" width="0.1524" layer="21"/>
+<circle x="0" y="0" radius="1.35" width="0.2032" layer="21"/>
+<pad name="B2,8" x="0" y="0" drill="2.5" diameter="5.334"/>
+</package>
+<package name="2,3-PAD">
+<wire x1="0" y1="2.921" x2="0" y2="2.667" width="0.0508" layer="21"/>
+<wire x1="0" y1="-2.667" x2="0" y2="-2.921" width="0.0508" layer="21"/>
+<wire x1="-1.778" y1="0" x2="0" y2="-1.778" width="2.286" layer="51" curve="90" cap="flat"/>
+<wire x1="0" y1="1.778" x2="1.778" y2="0" width="2.286" layer="51" curve="-90" cap="flat"/>
+<circle x="0" y="0" radius="0.635" width="0.4572" layer="51"/>
+<circle x="0" y="0" radius="2.921" width="0.1524" layer="21"/>
+<circle x="0" y="0" radius="3.175" width="0.8128" layer="39"/>
+<circle x="0" y="0" radius="3.175" width="0.8128" layer="40"/>
+<circle x="0" y="0" radius="3.175" width="0.8128" layer="43"/>
+<circle x="0" y="0" radius="1.5" width="0.2032" layer="21"/>
+<pad name="B2,8" x="0" y="0" drill="2.3" diameter="5.334"/>
+</package>
 </packages>
 <symbols>
 <symbol name="MOUNT-PAD">
@@ -27713,6 +27733,22 @@ Standard 9-pin 0.1" header. Use with straight break away headers (SKU : PRT-0011
 <device name="5.5" package="5,5-PAD">
 <connects>
 <connect gate="G$1" pin="MOUNT" pad="B5,5"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="2.5" package="2,5-PAD">
+<connects>
+<connect gate="G$1" pin="MOUNT" pad="B2,8"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="2.3" package="2,3-PAD">
+<connects>
+<connect gate="G$1" pin="MOUNT" pad="B2,8"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -33459,37 +33495,161 @@ Source: AVX .. aphvc.pdf</description>
 </classes>
 <parts>
 <part name="FRAME1" library="frames" deviceset="LETTER_L" device="" value="frame"/>
-<part name="LOGO1" library="ohw-logo" deviceset="OSHW_LOGO_8MIL" device="X0150-NT" value="OSHW_LOGO_8MILX0150-NT"/>
-<part name="D29" library="BaseApp" deviceset="DIODE" device="SMA-WIDE" value="SD103CW"/>
-<part name="S1" library="SmartPrj" deviceset="TACTILE_SWITCH" device="TACTILE_SWITCH_PTH-12MM" value="B3F-4150"/>
-<part name="S2" library="SmartPrj" deviceset="TACTILE_SWITCH" device="TACTILE_SWITCH_PTH-12MM" value="B3F-4150"/>
-<part name="S3" library="SmartPrj" deviceset="TACTILE_SWITCH" device="TACTILE_SWITCH_PTH-12MM" value="B3F-4150"/>
-<part name="S4" library="SmartPrj" deviceset="TACTILE_SWITCH" device="TACTILE_SWITCH_PTH-12MM" value="B3F-4150"/>
-<part name="S5" library="SmartPrj" deviceset="TACTILE_SWITCH" device="TACTILE_SWITCH_PTH-12MM" value="B3F-4150"/>
-<part name="S6" library="SmartPrj" deviceset="TACTILE_SWITCH" device="TACTILE_SWITCH_PTH-12MM" value="B3F-4150"/>
-<part name="S7" library="SmartPrj" deviceset="TACTILE_SWITCH" device="TACTILE_SWITCH_PTH-12MM" value="B3F-4150"/>
-<part name="S8" library="SmartPrj" deviceset="TACTILE_SWITCH" device="TACTILE_SWITCH_PTH-12MM" value="B3F-4150"/>
-<part name="S12" library="SmartPrj" deviceset="TACTILE_SWITCH" device="TACTILE_SWITCH_PTH-12MM" value="B3F-4150"/>
-<part name="S11" library="SmartPrj" deviceset="TACTILE_SWITCH" device="TACTILE_SWITCH_PTH-12MM" value="B3F-4150"/>
-<part name="S10" library="SmartPrj" deviceset="TACTILE_SWITCH" device="TACTILE_SWITCH_PTH-12MM" value="B3F-4150"/>
-<part name="S9" library="SmartPrj" deviceset="TACTILE_SWITCH" device="TACTILE_SWITCH_PTH-12MM" value="B3F-4150"/>
-<part name="D1" library="BaseApp" deviceset="DIODE" device="SMA-WIDE" value="SD103CW"/>
-<part name="D2" library="BaseApp" deviceset="DIODE" device="SMA-WIDE" value="SD103CW"/>
-<part name="D3" library="BaseApp" deviceset="DIODE" device="SMA-WIDE" value="SD103CW"/>
-<part name="D4" library="BaseApp" deviceset="DIODE" device="SMA-WIDE" value="SD103CW"/>
-<part name="D5" library="BaseApp" deviceset="DIODE" device="SMA-WIDE" value="SD103CW"/>
-<part name="D10" library="BaseApp" deviceset="DIODE" device="SMA-WIDE" value="SD103CW"/>
-<part name="D11" library="BaseApp" deviceset="DIODE" device="SMA-WIDE" value="SD103CW"/>
-<part name="D12" library="BaseApp" deviceset="DIODE" device="SMA-WIDE" value="SD103CW"/>
-<part name="D13" library="BaseApp" deviceset="DIODE" device="SMA-WIDE" value="SD103CW"/>
-<part name="D14" library="BaseApp" deviceset="DIODE" device="SMA-WIDE" value="SD103CW"/>
-<part name="D15" library="BaseApp" deviceset="DIODE" device="SMA-WIDE" value="SD103CW"/>
-<part name="D16" library="diode" deviceset="BAT54A" device=""/>
-<part name="D17" library="diode" deviceset="BAT54A" device=""/>
-<part name="D18" library="diode" deviceset="BAT54A" device=""/>
-<part name="D19" library="diode" deviceset="BAT54A" device=""/>
-<part name="D20" library="diode" deviceset="BAT54A" device=""/>
-<part name="D21" library="diode" deviceset="BAT54A" device=""/>
+<part name="LOGO1" library="ohw-logo" deviceset="OSHW_LOGO_8MIL" device="X0150-NT" value="OSHW_LOGO_8MILX0150-NT">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
+<part name="D29" library="BaseApp" deviceset="DIODE" device="SMA-WIDE" value="SD103CW">
+<attribute name="MF" value="MULTICOMP"/>
+<attribute name="MPN" value="SD103CW-7-F"/>
+<attribute name="OC_FARNELL" value="2306221"/>
+</part>
+<part name="S1" library="SmartPrj" deviceset="TACTILE_SWITCH" device="TACTILE_SWITCH_PTH-12MM" value="B3F-4150">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
+<part name="S2" library="SmartPrj" deviceset="TACTILE_SWITCH" device="TACTILE_SWITCH_PTH-12MM" value="B3F-4150">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
+<part name="S3" library="SmartPrj" deviceset="TACTILE_SWITCH" device="TACTILE_SWITCH_PTH-12MM" value="B3F-4150">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
+<part name="S4" library="SmartPrj" deviceset="TACTILE_SWITCH" device="TACTILE_SWITCH_PTH-12MM" value="B3F-4150">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
+<part name="S5" library="SmartPrj" deviceset="TACTILE_SWITCH" device="TACTILE_SWITCH_PTH-12MM" value="B3F-4150">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
+<part name="S6" library="SmartPrj" deviceset="TACTILE_SWITCH" device="TACTILE_SWITCH_PTH-12MM" value="B3F-4150">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
+<part name="S7" library="SmartPrj" deviceset="TACTILE_SWITCH" device="TACTILE_SWITCH_PTH-12MM" value="B3F-4150">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
+<part name="S8" library="SmartPrj" deviceset="TACTILE_SWITCH" device="TACTILE_SWITCH_PTH-12MM" value="B3F-4150">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
+<part name="S12" library="SmartPrj" deviceset="TACTILE_SWITCH" device="TACTILE_SWITCH_PTH-12MM" value="B3F-4150">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
+<part name="S11" library="SmartPrj" deviceset="TACTILE_SWITCH" device="TACTILE_SWITCH_PTH-12MM" value="B3F-4150">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
+<part name="S10" library="SmartPrj" deviceset="TACTILE_SWITCH" device="TACTILE_SWITCH_PTH-12MM" value="B3F-4150">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
+<part name="S9" library="SmartPrj" deviceset="TACTILE_SWITCH" device="TACTILE_SWITCH_PTH-12MM" value="B3F-4150">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
+<part name="D1" library="BaseApp" deviceset="DIODE" device="SMA-WIDE" value="SD103CW">
+<attribute name="MF" value="MULTICOMP"/>
+<attribute name="MPN" value="SD103CW-7-F"/>
+<attribute name="OC_FARNELL" value="2306221"/>
+</part>
+<part name="D2" library="BaseApp" deviceset="DIODE" device="SMA-WIDE" value="SD103CW">
+<attribute name="MF" value="MULTICOMP"/>
+<attribute name="MPN" value="SD103CW-7-F"/>
+<attribute name="OC_FARNELL" value="2306221"/>
+</part>
+<part name="D3" library="BaseApp" deviceset="DIODE" device="SMA-WIDE" value="SD103CW">
+<attribute name="MF" value="MULTICOMP"/>
+<attribute name="MPN" value="SD103CW-7-F"/>
+<attribute name="OC_FARNELL" value="2306221"/>
+</part>
+<part name="D4" library="BaseApp" deviceset="DIODE" device="SMA-WIDE" value="SD103CW">
+<attribute name="MF" value="MULTICOMP"/>
+<attribute name="MPN" value="SD103CW-7-F"/>
+<attribute name="OC_FARNELL" value="2306221"/>
+</part>
+<part name="D5" library="BaseApp" deviceset="DIODE" device="SMA-WIDE" value="SD103CW">
+<attribute name="MF" value="MULTICOMP"/>
+<attribute name="MPN" value="SD103CW-7-F"/>
+<attribute name="OC_FARNELL" value="2306221"/>
+</part>
+<part name="D10" library="BaseApp" deviceset="DIODE" device="SMA-WIDE" value="SD103CW">
+<attribute name="MF" value="MULTICOMP"/>
+<attribute name="MPN" value="SD103CW-7-F"/>
+<attribute name="OC_FARNELL" value="2306221"/>
+</part>
+<part name="D11" library="BaseApp" deviceset="DIODE" device="SMA-WIDE" value="SD103CW">
+<attribute name="MF" value="MULTICOMP"/>
+<attribute name="MPN" value="SD103CW-7-F"/>
+<attribute name="OC_FARNELL" value="2306221"/>
+</part>
+<part name="D12" library="BaseApp" deviceset="DIODE" device="SMA-WIDE" value="SD103CW">
+<attribute name="MF" value="MULTICOMP"/>
+<attribute name="MPN" value="SD103CW-7-F"/>
+<attribute name="OC_FARNELL" value="2306221"/>
+</part>
+<part name="D13" library="BaseApp" deviceset="DIODE" device="SMA-WIDE" value="SD103CW">
+<attribute name="MF" value="MULTICOMP"/>
+<attribute name="MPN" value="SD103CW-7-F"/>
+<attribute name="OC_FARNELL" value="2306221"/>
+</part>
+<part name="D14" library="BaseApp" deviceset="DIODE" device="SMA-WIDE" value="SD103CW">
+<attribute name="MF" value="MULTICOMP"/>
+<attribute name="MPN" value="SD103CW-7-F"/>
+<attribute name="OC_FARNELL" value="2306221"/>
+</part>
+<part name="D15" library="BaseApp" deviceset="DIODE" device="SMA-WIDE" value="SD103CW">
+<attribute name="MF" value="MULTICOMP"/>
+<attribute name="MPN" value="SD103CW-7-F"/>
+<attribute name="OC_FARNELL" value="2306221"/>
+</part>
+<part name="D16" library="diode" deviceset="BAT54A" device="">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
+<part name="D17" library="diode" deviceset="BAT54A" device="">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
+<part name="D18" library="diode" deviceset="BAT54A" device="">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
+<part name="D19" library="diode" deviceset="BAT54A" device="">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
+<part name="D20" library="diode" deviceset="BAT54A" device="">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
+<part name="D21" library="diode" deviceset="BAT54A" device="">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
 <part name="SUPPLY1" library="supply2" deviceset="GND" device=""/>
 <part name="SUPPLY2" library="supply2" deviceset="GND" device=""/>
 <part name="SUPPLY3" library="supply2" deviceset="GND" device=""/>
@@ -33502,46 +33662,190 @@ Source: AVX .. aphvc.pdf</description>
 <part name="SUPPLY10" library="supply2" deviceset="GND" device=""/>
 <part name="SUPPLY11" library="supply2" deviceset="GND" device=""/>
 <part name="SUPPLY12" library="supply2" deviceset="GND" device=""/>
-<part name="JP1" library="SparkFun-Connectors" deviceset="M09" device="LOCK-LONGPADS"/>
+<part name="JP1" library="SparkFun-Connectors" deviceset="M09" device="LOCK-LONGPADS">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
 <part name="SUPPLY14" library="supply2" deviceset="GND" device=""/>
-<part name="H1" library="holes" deviceset="MOUNT-PAD-ROUND" device="2.8"/>
-<part name="H2" library="holes" deviceset="MOUNT-PAD-ROUND" device="2.8"/>
-<part name="H3" library="holes" deviceset="MOUNT-PAD-ROUND" device="2.8"/>
-<part name="H4" library="holes" deviceset="MOUNT-PAD-ROUND" device="2.8"/>
-<part name="H5" library="holes" deviceset="MOUNT-PAD-ROUND" device="2.8"/>
-<part name="H6" library="holes" deviceset="MOUNT-PAD-ROUND" device="2.8"/>
-<part name="H7" library="holes" deviceset="MOUNT-PAD-ROUND" device="2.8"/>
-<part name="H8" library="holes" deviceset="MOUNT-PAD-ROUND" device="2.8"/>
-<part name="H9" library="holes" deviceset="MOUNT-PAD-ROUND" device="2.8"/>
-<part name="H10" library="holes" deviceset="MOUNT-PAD-ROUND" device="2.8"/>
-<part name="D6" library="BaseApp" deviceset="DIODE" device="280MIL-TH" value="SD103C"/>
-<part name="D7" library="BaseApp" deviceset="DIODE" device="280MIL-TH" value="SD103C"/>
-<part name="D8" library="BaseApp" deviceset="DIODE" device="280MIL-TH" value="SD103C"/>
-<part name="D9" library="BaseApp" deviceset="DIODE" device="280MIL-TH" value="SD103C"/>
-<part name="D22" library="BaseApp" deviceset="DIODE" device="280MIL-TH" value="SD103C"/>
-<part name="D23" library="BaseApp" deviceset="DIODE" device="280MIL-TH" value="SD103C"/>
-<part name="D24" library="BaseApp" deviceset="DIODE" device="280MIL-TH" value="SD103C"/>
-<part name="D25" library="BaseApp" deviceset="DIODE" device="280MIL-TH" value="SD103C"/>
-<part name="D26" library="BaseApp" deviceset="DIODE" device="280MIL-TH" value="SD103C"/>
-<part name="D27" library="BaseApp" deviceset="DIODE" device="280MIL-TH" value="SD103C"/>
-<part name="R23" library="rcl" deviceset="R-EU_" device="0204/5" value="27k"/>
-<part name="R24" library="rcl" deviceset="R-EU_" device="0204/5" value="6k8"/>
-<part name="C10" library="rcl" deviceset="C-EU" device="C1206K" value="15n"/>
+<part name="H1" library="holes" deviceset="MOUNT-PAD-ROUND" device="2.8">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
+<part name="H2" library="holes" deviceset="MOUNT-PAD-ROUND" device="2.3" value="MOUNT-PAD-ROUND2.3">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
+<part name="H3" library="holes" deviceset="MOUNT-PAD-ROUND" device="2.3" value="MOUNT-PAD-ROUND2.3">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
+<part name="H4" library="holes" deviceset="MOUNT-PAD-ROUND" device="2.8">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
+<part name="H5" library="holes" deviceset="MOUNT-PAD-ROUND" device="2.8">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
+<part name="H6" library="holes" deviceset="MOUNT-PAD-ROUND" device="2.8">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
+<part name="H7" library="holes" deviceset="MOUNT-PAD-ROUND" device="2.8">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
+<part name="H8" library="holes" deviceset="MOUNT-PAD-ROUND" device="2.8">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
+<part name="H9" library="holes" deviceset="MOUNT-PAD-ROUND" device="2.3" value="MOUNT-PAD-ROUND2.3">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
+<part name="H10" library="holes" deviceset="MOUNT-PAD-ROUND" device="2.3" value="MOUNT-PAD-ROUND2.3">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
+<part name="D6" library="BaseApp" deviceset="DIODE" device="280MIL-TH" value="SD103C">
+<attribute name="MF" value="MULTICOMP"/>
+<attribute name="MPN" value="SD103CW-7-F"/>
+<attribute name="OC_FARNELL" value="2306221"/>
+</part>
+<part name="D7" library="BaseApp" deviceset="DIODE" device="280MIL-TH" value="SD103C">
+<attribute name="MF" value="MULTICOMP"/>
+<attribute name="MPN" value="SD103CW-7-F"/>
+<attribute name="OC_FARNELL" value="2306221"/>
+</part>
+<part name="D8" library="BaseApp" deviceset="DIODE" device="280MIL-TH" value="SD103C">
+<attribute name="MF" value="MULTICOMP"/>
+<attribute name="MPN" value="SD103CW-7-F"/>
+<attribute name="OC_FARNELL" value="2306221"/>
+</part>
+<part name="D9" library="BaseApp" deviceset="DIODE" device="280MIL-TH" value="SD103C">
+<attribute name="MF" value="MULTICOMP"/>
+<attribute name="MPN" value="SD103CW-7-F"/>
+<attribute name="OC_FARNELL" value="2306221"/>
+</part>
+<part name="D22" library="BaseApp" deviceset="DIODE" device="280MIL-TH" value="SD103C">
+<attribute name="MF" value="MULTICOMP"/>
+<attribute name="MPN" value="SD103CW-7-F"/>
+<attribute name="OC_FARNELL" value="2306221"/>
+</part>
+<part name="D23" library="BaseApp" deviceset="DIODE" device="280MIL-TH" value="SD103C">
+<attribute name="MF" value="MULTICOMP"/>
+<attribute name="MPN" value="SD103CW-7-F"/>
+<attribute name="OC_FARNELL" value="2306221"/>
+</part>
+<part name="D24" library="BaseApp" deviceset="DIODE" device="280MIL-TH" value="SD103C">
+<attribute name="MF" value="MULTICOMP"/>
+<attribute name="MPN" value="SD103CW-7-F"/>
+<attribute name="OC_FARNELL" value="2306221"/>
+</part>
+<part name="D25" library="BaseApp" deviceset="DIODE" device="280MIL-TH" value="SD103C">
+<attribute name="MF" value="MULTICOMP"/>
+<attribute name="MPN" value="SD103CW-7-F"/>
+<attribute name="OC_FARNELL" value="2306221"/>
+</part>
+<part name="D26" library="BaseApp" deviceset="DIODE" device="280MIL-TH" value="SD103C">
+<attribute name="MF" value="MULTICOMP"/>
+<attribute name="MPN" value="SD103CW-7-F"/>
+<attribute name="OC_FARNELL" value="2306221"/>
+</part>
+<part name="D27" library="BaseApp" deviceset="DIODE" device="280MIL-TH" value="SD103C">
+<attribute name="MF" value="MULTICOMP"/>
+<attribute name="MPN" value="SD103CW-7-F"/>
+<attribute name="OC_FARNELL" value="2306221"/>
+</part>
+<part name="R23" library="rcl" deviceset="R-EU_" device="0204/5" value="27k">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
+<part name="R24" library="rcl" deviceset="R-EU_" device="0204/5" value="6k8">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
+<part name="C10" library="rcl" deviceset="C-EU" device="C1206K" value="15n">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
 <part name="GND12" library="SparkFun" deviceset="GND" device=""/>
-<part name="R25" library="rcl" deviceset="R-EU_" device="0204/5" value="27k"/>
-<part name="R26" library="rcl" deviceset="R-EU_" device="0204/5" value="6k8"/>
-<part name="C11" library="rcl" deviceset="C-EU" device="C1206K" value="15n"/>
+<part name="R25" library="rcl" deviceset="R-EU_" device="0204/5" value="27k">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
+<part name="R26" library="rcl" deviceset="R-EU_" device="0204/5" value="6k8">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
+<part name="C11" library="rcl" deviceset="C-EU" device="C1206K" value="15n">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
 <part name="GND13" library="SparkFun" deviceset="GND" device=""/>
-<part name="R27" library="rcl" deviceset="R-EU_" device="0204/5" value="27k"/>
-<part name="R28" library="rcl" deviceset="R-EU_" device="0204/5" value="6k8"/>
-<part name="C12" library="rcl" deviceset="C-EU" device="C1206K" value="15n"/>
+<part name="R27" library="rcl" deviceset="R-EU_" device="0204/5" value="27k">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
+<part name="R28" library="rcl" deviceset="R-EU_" device="0204/5" value="6k8">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
+<part name="C12" library="rcl" deviceset="C-EU" device="C1206K" value="15n">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
 <part name="GND14" library="SparkFun" deviceset="GND" device=""/>
-<part name="R1" library="rcl" deviceset="R-EU_" device="R1206" value="6k8"/>
-<part name="R2" library="rcl" deviceset="R-EU_" device="R1206" value="6k8"/>
-<part name="R3" library="rcl" deviceset="R-EU_" device="R1206" value="6k8"/>
-<part name="R4" library="rcl" deviceset="R-EU_" device="R1206" value="27k"/>
-<part name="R5" library="rcl" deviceset="R-EU_" device="R1206" value="27k"/>
-<part name="R6" library="rcl" deviceset="R-EU_" device="R1206" value="27k"/>
+<part name="R1" library="rcl" deviceset="R-EU_" device="R1206" value="6k8">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
+<part name="R2" library="rcl" deviceset="R-EU_" device="R1206" value="6k8">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
+<part name="R3" library="rcl" deviceset="R-EU_" device="R1206" value="6k8">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
+<part name="R4" library="rcl" deviceset="R-EU_" device="R1206" value="27k">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
+<part name="R5" library="rcl" deviceset="R-EU_" device="R1206" value="27k">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
+<part name="R6" library="rcl" deviceset="R-EU_" device="R1206" value="27k">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
 </parts>
 <sheets>
 <sheet>
@@ -33556,37 +33860,161 @@ Source: AVX .. aphvc.pdf</description>
 <instances>
 <instance part="FRAME1" gate="G$1" x="0" y="0"/>
 <instance part="FRAME1" gate="G$2" x="147.32" y="0"/>
-<instance part="LOGO1" gate="G$1" x="89.154" y="17.272"/>
-<instance part="D29" gate="G$1" x="171.45" y="96.52" rot="R180"/>
-<instance part="S1" gate="S" x="157.48" y="152.4"/>
-<instance part="S2" gate="S" x="157.48" y="124.46"/>
-<instance part="S3" gate="S" x="157.48" y="96.52"/>
-<instance part="S4" gate="S" x="157.48" y="68.58"/>
-<instance part="S5" gate="S" x="189.23" y="152.4"/>
-<instance part="S6" gate="S" x="189.23" y="124.46"/>
-<instance part="S7" gate="S" x="189.23" y="96.52"/>
-<instance part="S8" gate="S" x="189.23" y="68.58"/>
-<instance part="S12" gate="S" x="220.98" y="67.31"/>
-<instance part="S11" gate="S" x="220.98" y="95.25"/>
-<instance part="S10" gate="S" x="220.98" y="123.19"/>
-<instance part="S9" gate="S" x="220.98" y="152.4"/>
-<instance part="D1" gate="G$1" x="171.45" y="68.58" rot="R180"/>
-<instance part="D2" gate="G$1" x="203.2" y="68.58" rot="R180"/>
-<instance part="D3" gate="G$1" x="234.95" y="67.31" rot="R180"/>
-<instance part="D4" gate="G$1" x="234.95" y="95.25" rot="R180"/>
-<instance part="D5" gate="G$1" x="203.2" y="96.52" rot="R180"/>
-<instance part="D10" gate="G$1" x="234.95" y="123.19" rot="R180"/>
-<instance part="D11" gate="G$1" x="203.2" y="124.46" rot="R180"/>
-<instance part="D12" gate="G$1" x="171.45" y="124.46" rot="R180"/>
-<instance part="D13" gate="G$1" x="171.45" y="154.94" rot="R180"/>
-<instance part="D14" gate="G$1" x="203.2" y="154.94" rot="R180"/>
-<instance part="D15" gate="G$1" x="234.95" y="154.94" rot="R180"/>
-<instance part="D16" gate="G$1" x="170.18" y="137.16" rot="R270"/>
-<instance part="D17" gate="G$1" x="170.18" y="81.28" rot="R270"/>
-<instance part="D18" gate="G$1" x="201.93" y="137.16" rot="R270"/>
-<instance part="D19" gate="G$1" x="201.93" y="81.28" rot="R270"/>
-<instance part="D20" gate="G$1" x="233.68" y="135.89" rot="R270"/>
-<instance part="D21" gate="G$1" x="233.68" y="80.01" rot="R270"/>
+<instance part="LOGO1" gate="G$1" x="89.154" y="17.272">
+<attribute name="OC_FARNELL" x="89.154" y="17.272" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="89.154" y="17.272" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="89.154" y="17.272" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="D29" gate="G$1" x="171.45" y="96.52" rot="R180">
+<attribute name="OC_FARNELL" x="171.45" y="96.52" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="171.45" y="96.52" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="171.45" y="96.52" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="S1" gate="S" x="157.48" y="152.4">
+<attribute name="OC_FARNELL" x="157.48" y="152.4" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="157.48" y="152.4" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="157.48" y="152.4" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="S2" gate="S" x="157.48" y="124.46">
+<attribute name="OC_FARNELL" x="157.48" y="124.46" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="157.48" y="124.46" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="157.48" y="124.46" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="S3" gate="S" x="157.48" y="96.52">
+<attribute name="OC_FARNELL" x="157.48" y="96.52" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="157.48" y="96.52" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="157.48" y="96.52" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="S4" gate="S" x="157.48" y="68.58">
+<attribute name="OC_FARNELL" x="157.48" y="68.58" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="157.48" y="68.58" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="157.48" y="68.58" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="S5" gate="S" x="189.23" y="152.4">
+<attribute name="OC_FARNELL" x="189.23" y="152.4" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="189.23" y="152.4" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="189.23" y="152.4" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="S6" gate="S" x="189.23" y="124.46">
+<attribute name="OC_FARNELL" x="189.23" y="124.46" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="189.23" y="124.46" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="189.23" y="124.46" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="S7" gate="S" x="189.23" y="96.52">
+<attribute name="OC_FARNELL" x="189.23" y="96.52" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="189.23" y="96.52" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="189.23" y="96.52" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="S8" gate="S" x="189.23" y="68.58">
+<attribute name="OC_FARNELL" x="189.23" y="68.58" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="189.23" y="68.58" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="189.23" y="68.58" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="S12" gate="S" x="220.98" y="67.31">
+<attribute name="OC_FARNELL" x="220.98" y="67.31" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="220.98" y="67.31" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="220.98" y="67.31" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="S11" gate="S" x="220.98" y="95.25">
+<attribute name="OC_FARNELL" x="220.98" y="95.25" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="220.98" y="95.25" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="220.98" y="95.25" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="S10" gate="S" x="220.98" y="123.19">
+<attribute name="OC_FARNELL" x="220.98" y="123.19" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="220.98" y="123.19" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="220.98" y="123.19" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="S9" gate="S" x="220.98" y="152.4">
+<attribute name="OC_FARNELL" x="220.98" y="152.4" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="220.98" y="152.4" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="220.98" y="152.4" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="D1" gate="G$1" x="171.45" y="68.58" rot="R180">
+<attribute name="OC_FARNELL" x="171.45" y="68.58" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="171.45" y="68.58" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="171.45" y="68.58" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="D2" gate="G$1" x="203.2" y="68.58" rot="R180">
+<attribute name="OC_FARNELL" x="203.2" y="68.58" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="203.2" y="68.58" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="203.2" y="68.58" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="D3" gate="G$1" x="234.95" y="67.31" rot="R180">
+<attribute name="OC_FARNELL" x="234.95" y="67.31" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="234.95" y="67.31" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="234.95" y="67.31" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="D4" gate="G$1" x="234.95" y="95.25" rot="R180">
+<attribute name="OC_FARNELL" x="234.95" y="95.25" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="234.95" y="95.25" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="234.95" y="95.25" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="D5" gate="G$1" x="203.2" y="96.52" rot="R180">
+<attribute name="OC_FARNELL" x="203.2" y="96.52" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="203.2" y="96.52" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="203.2" y="96.52" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="D10" gate="G$1" x="234.95" y="123.19" rot="R180">
+<attribute name="OC_FARNELL" x="234.95" y="123.19" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="234.95" y="123.19" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="234.95" y="123.19" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="D11" gate="G$1" x="203.2" y="124.46" rot="R180">
+<attribute name="OC_FARNELL" x="203.2" y="124.46" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="203.2" y="124.46" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="203.2" y="124.46" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="D12" gate="G$1" x="171.45" y="124.46" rot="R180">
+<attribute name="OC_FARNELL" x="171.45" y="124.46" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="171.45" y="124.46" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="171.45" y="124.46" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="D13" gate="G$1" x="171.45" y="154.94" rot="R180">
+<attribute name="OC_FARNELL" x="171.45" y="154.94" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="171.45" y="154.94" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="171.45" y="154.94" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="D14" gate="G$1" x="203.2" y="154.94" rot="R180">
+<attribute name="OC_FARNELL" x="203.2" y="154.94" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="203.2" y="154.94" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="203.2" y="154.94" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="D15" gate="G$1" x="234.95" y="154.94" rot="R180">
+<attribute name="OC_FARNELL" x="234.95" y="154.94" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="234.95" y="154.94" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="234.95" y="154.94" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="D16" gate="G$1" x="170.18" y="137.16" rot="R270">
+<attribute name="OC_FARNELL" x="170.18" y="137.16" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="170.18" y="137.16" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="170.18" y="137.16" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="D17" gate="G$1" x="170.18" y="81.28" rot="R270">
+<attribute name="OC_FARNELL" x="170.18" y="81.28" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="170.18" y="81.28" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="170.18" y="81.28" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="D18" gate="G$1" x="201.93" y="137.16" rot="R270">
+<attribute name="OC_FARNELL" x="201.93" y="137.16" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="201.93" y="137.16" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="201.93" y="137.16" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="D19" gate="G$1" x="201.93" y="81.28" rot="R270">
+<attribute name="OC_FARNELL" x="201.93" y="81.28" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="201.93" y="81.28" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="201.93" y="81.28" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="D20" gate="G$1" x="233.68" y="135.89" rot="R270">
+<attribute name="OC_FARNELL" x="233.68" y="135.89" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="233.68" y="135.89" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="233.68" y="135.89" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="D21" gate="G$1" x="233.68" y="80.01" rot="R270">
+<attribute name="OC_FARNELL" x="233.68" y="80.01" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="233.68" y="80.01" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="233.68" y="80.01" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
 <instance part="SUPPLY1" gate="GND" x="147.32" y="127"/>
 <instance part="SUPPLY2" gate="GND" x="147.32" y="99.06"/>
 <instance part="SUPPLY3" gate="GND" x="147.32" y="154.94"/>
@@ -33599,52 +34027,196 @@ Source: AVX .. aphvc.pdf</description>
 <instance part="SUPPLY10" gate="GND" x="210.82" y="125.73"/>
 <instance part="SUPPLY11" gate="GND" x="210.82" y="97.79"/>
 <instance part="SUPPLY12" gate="GND" x="210.82" y="69.85"/>
-<instance part="JP1" gate="G$1" x="25.4" y="172.72" rot="R270"/>
+<instance part="JP1" gate="G$1" x="25.4" y="172.72" rot="R270">
+<attribute name="OC_FARNELL" x="25.4" y="172.72" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="25.4" y="172.72" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="25.4" y="172.72" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
 <instance part="SUPPLY14" gate="GND" x="15.24" y="121.92"/>
-<instance part="H1" gate="G$1" x="62.23" y="97.79"/>
-<instance part="H2" gate="G$1" x="62.23" y="85.09"/>
-<instance part="H3" gate="G$1" x="62.23" y="72.39"/>
-<instance part="H4" gate="G$1" x="62.23" y="59.69"/>
-<instance part="H5" gate="G$1" x="62.23" y="46.99"/>
-<instance part="H6" gate="G$1" x="17.78" y="97.79"/>
-<instance part="H7" gate="G$1" x="17.78" y="85.09"/>
-<instance part="H8" gate="G$1" x="17.78" y="72.39"/>
-<instance part="H9" gate="G$1" x="17.78" y="59.69"/>
-<instance part="H10" gate="G$1" x="17.78" y="46.99"/>
-<instance part="D6" gate="G$1" x="234.95" y="165.1" rot="R180"/>
-<instance part="D7" gate="G$1" x="234.95" y="114.3" rot="R180"/>
-<instance part="D8" gate="G$1" x="234.95" y="101.6" rot="R180"/>
-<instance part="D9" gate="G$1" x="234.95" y="55.88" rot="R180"/>
-<instance part="D22" gate="G$1" x="203.2" y="55.88" rot="R180"/>
-<instance part="D23" gate="G$1" x="171.45" y="55.88" rot="R180"/>
-<instance part="D24" gate="G$1" x="171.45" y="102.87" rot="R180"/>
-<instance part="D25" gate="G$1" x="203.2" y="102.87" rot="R180"/>
-<instance part="D26" gate="G$1" x="203.2" y="114.3" rot="R180"/>
-<instance part="D27" gate="G$1" x="171.45" y="114.3" rot="R180"/>
-<instance part="R23" gate="G$1" x="121.92" y="165.1" rot="R90"/>
-<instance part="R24" gate="G$1" x="111.76" y="154.94"/>
-<instance part="C10" gate="G$1" x="121.92" y="149.86"/>
+<instance part="H1" gate="G$1" x="62.23" y="97.79">
+<attribute name="OC_FARNELL" x="62.23" y="97.79" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="62.23" y="97.79" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="62.23" y="97.79" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="H2" gate="G$1" x="62.23" y="85.09">
+<attribute name="OC_FARNELL" x="62.23" y="85.09" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="62.23" y="85.09" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="62.23" y="85.09" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="H3" gate="G$1" x="62.23" y="72.39">
+<attribute name="OC_FARNELL" x="62.23" y="72.39" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="62.23" y="72.39" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="62.23" y="72.39" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="H4" gate="G$1" x="62.23" y="59.69">
+<attribute name="OC_FARNELL" x="62.23" y="59.69" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="62.23" y="59.69" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="62.23" y="59.69" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="H5" gate="G$1" x="62.23" y="46.99">
+<attribute name="OC_FARNELL" x="62.23" y="46.99" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="62.23" y="46.99" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="62.23" y="46.99" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="H6" gate="G$1" x="17.78" y="97.79">
+<attribute name="OC_FARNELL" x="17.78" y="97.79" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="17.78" y="97.79" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="17.78" y="97.79" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="H7" gate="G$1" x="17.78" y="85.09">
+<attribute name="OC_FARNELL" x="17.78" y="85.09" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="17.78" y="85.09" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="17.78" y="85.09" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="H8" gate="G$1" x="17.78" y="72.39">
+<attribute name="OC_FARNELL" x="17.78" y="72.39" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="17.78" y="72.39" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="17.78" y="72.39" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="H9" gate="G$1" x="17.78" y="59.69">
+<attribute name="OC_FARNELL" x="17.78" y="59.69" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="17.78" y="59.69" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="17.78" y="59.69" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="H10" gate="G$1" x="17.78" y="46.99">
+<attribute name="OC_FARNELL" x="17.78" y="46.99" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="17.78" y="46.99" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="17.78" y="46.99" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="D6" gate="G$1" x="234.95" y="165.1" rot="R180">
+<attribute name="OC_FARNELL" x="234.95" y="165.1" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="234.95" y="165.1" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="234.95" y="165.1" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="D7" gate="G$1" x="234.95" y="114.3" rot="R180">
+<attribute name="OC_FARNELL" x="234.95" y="114.3" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="234.95" y="114.3" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="234.95" y="114.3" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="D8" gate="G$1" x="234.95" y="101.6" rot="R180">
+<attribute name="OC_FARNELL" x="234.95" y="101.6" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="234.95" y="101.6" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="234.95" y="101.6" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="D9" gate="G$1" x="234.95" y="55.88" rot="R180">
+<attribute name="OC_FARNELL" x="234.95" y="55.88" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="234.95" y="55.88" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="234.95" y="55.88" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="D22" gate="G$1" x="203.2" y="55.88" rot="R180">
+<attribute name="OC_FARNELL" x="203.2" y="55.88" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="203.2" y="55.88" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="203.2" y="55.88" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="D23" gate="G$1" x="171.45" y="55.88" rot="R180">
+<attribute name="OC_FARNELL" x="171.45" y="55.88" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="171.45" y="55.88" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="171.45" y="55.88" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="D24" gate="G$1" x="171.45" y="102.87" rot="R180">
+<attribute name="OC_FARNELL" x="171.45" y="102.87" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="171.45" y="102.87" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="171.45" y="102.87" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="D25" gate="G$1" x="203.2" y="102.87" rot="R180">
+<attribute name="OC_FARNELL" x="203.2" y="102.87" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="203.2" y="102.87" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="203.2" y="102.87" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="D26" gate="G$1" x="203.2" y="114.3" rot="R180">
+<attribute name="OC_FARNELL" x="203.2" y="114.3" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="203.2" y="114.3" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="203.2" y="114.3" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="D27" gate="G$1" x="171.45" y="114.3" rot="R180">
+<attribute name="OC_FARNELL" x="171.45" y="114.3" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="171.45" y="114.3" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="171.45" y="114.3" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="R23" gate="G$1" x="121.92" y="165.1" rot="R90">
+<attribute name="OC_FARNELL" x="121.92" y="165.1" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="121.92" y="165.1" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="121.92" y="165.1" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="R24" gate="G$1" x="111.76" y="154.94">
+<attribute name="OC_FARNELL" x="111.76" y="154.94" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="111.76" y="154.94" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="111.76" y="154.94" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="C10" gate="G$1" x="121.92" y="149.86">
+<attribute name="OC_FARNELL" x="121.92" y="149.86" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="121.92" y="149.86" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="121.92" y="149.86" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
 <instance part="GND12" gate="1" x="121.92" y="139.7" smashed="yes">
 <attribute name="VALUE" x="119.38" y="137.16" size="1.778" layer="96"/>
 </instance>
-<instance part="R25" gate="G$1" x="121.92" y="118.11" rot="R90"/>
-<instance part="R26" gate="G$1" x="111.76" y="107.95"/>
-<instance part="C11" gate="G$1" x="121.92" y="102.87"/>
+<instance part="R25" gate="G$1" x="121.92" y="118.11" rot="R90">
+<attribute name="OC_FARNELL" x="121.92" y="118.11" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="121.92" y="118.11" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="121.92" y="118.11" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="R26" gate="G$1" x="111.76" y="107.95">
+<attribute name="OC_FARNELL" x="111.76" y="107.95" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="111.76" y="107.95" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="111.76" y="107.95" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="C11" gate="G$1" x="121.92" y="102.87">
+<attribute name="OC_FARNELL" x="121.92" y="102.87" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="121.92" y="102.87" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="121.92" y="102.87" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
 <instance part="GND13" gate="1" x="121.92" y="92.71" smashed="yes">
 <attribute name="VALUE" x="119.38" y="90.17" size="1.778" layer="96"/>
 </instance>
-<instance part="R27" gate="G$1" x="121.92" y="71.12" rot="R90"/>
-<instance part="R28" gate="G$1" x="111.76" y="60.96"/>
-<instance part="C12" gate="G$1" x="121.92" y="55.88"/>
+<instance part="R27" gate="G$1" x="121.92" y="71.12" rot="R90">
+<attribute name="OC_FARNELL" x="121.92" y="71.12" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="121.92" y="71.12" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="121.92" y="71.12" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="R28" gate="G$1" x="111.76" y="60.96">
+<attribute name="OC_FARNELL" x="111.76" y="60.96" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="111.76" y="60.96" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="111.76" y="60.96" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="C12" gate="G$1" x="121.92" y="55.88">
+<attribute name="OC_FARNELL" x="121.92" y="55.88" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="121.92" y="55.88" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="121.92" y="55.88" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
 <instance part="GND14" gate="1" x="121.92" y="45.72" smashed="yes">
 <attribute name="VALUE" x="119.38" y="43.18" size="1.778" layer="96"/>
 </instance>
-<instance part="R1" gate="G$1" x="111.76" y="146.05"/>
-<instance part="R2" gate="G$1" x="111.76" y="99.06"/>
-<instance part="R3" gate="G$1" x="111.76" y="50.8"/>
-<instance part="R4" gate="G$1" x="113.03" y="165.1" rot="R90"/>
-<instance part="R5" gate="G$1" x="113.03" y="118.11" rot="R90"/>
-<instance part="R6" gate="G$1" x="113.03" y="71.12" rot="R90"/>
+<instance part="R1" gate="G$1" x="111.76" y="146.05">
+<attribute name="OC_FARNELL" x="111.76" y="146.05" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="111.76" y="146.05" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="111.76" y="146.05" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="R2" gate="G$1" x="111.76" y="99.06">
+<attribute name="OC_FARNELL" x="111.76" y="99.06" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="111.76" y="99.06" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="111.76" y="99.06" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="R3" gate="G$1" x="111.76" y="50.8">
+<attribute name="OC_FARNELL" x="111.76" y="50.8" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="111.76" y="50.8" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="111.76" y="50.8" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="R4" gate="G$1" x="113.03" y="165.1" rot="R90">
+<attribute name="OC_FARNELL" x="113.03" y="165.1" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="113.03" y="165.1" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="113.03" y="165.1" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="R5" gate="G$1" x="113.03" y="118.11" rot="R90">
+<attribute name="OC_FARNELL" x="113.03" y="118.11" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="113.03" y="118.11" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="113.03" y="118.11" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="R6" gate="G$1" x="113.03" y="71.12" rot="R90">
+<attribute name="OC_FARNELL" x="113.03" y="71.12" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="113.03" y="71.12" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="113.03" y="71.12" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
 </instances>
 <busses>
 </busses>

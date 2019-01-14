@@ -2,31 +2,35 @@
 
    Project:   snc98 - Slash Number Calculator
 
-   Developer: Jens Grabner
-   Email:     jens@grabner-online.org
-   Date:      Sep 2018
+   MIT License
 
-   Copyright CERN 2013.
-   This documentation describes Open Hardware and is licensed
-   under the CERN OHL v. 1.2 or later.
+   Copyright (c) 2019 Jens Grabner
 
-   You may redistribute and modify this documentation under
-   the terms of the CERN Open Hardware Licence v.1.2.
-   (http://ohwr.org/cernohl).
+   Permission is hereby granted, free of charge, to any person obtaining 
+   a copy of this software and associated documentation files 
+   (the "Software"), to deal in the Software without restriction, 
+   including without limitation the rights to use, copy, modify, merge, 
+   publish, distribute, sublicense, and/or sell copies of the Software, 
+   and to permit persons to whom the Software is furnished to do so, 
+   subject to the following conditions:
 
-   This documentation is distributed
-   WITHOUT ANY EXPRESS OR IMPLIED WARRANTY, INCLUDING OF
-   MERCHANTABILITY, SATISFACTORY QUALITY AND FITNESS FOR A
-   PARTICULAR PURPOSE.
+   The above copyright notice and this permission notice shall be 
+   included in all copies or substantial portions of the Software.
 
-   Please see the CERN OHL v.1.2 for applicable conditions.
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
+   IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
+   CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
+   TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
+   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 **********************************************************************/
 
 /*                          HEADER
 
   *********************************************************************
-  * Program for my "Retro Calculator with 15 Digit"                   *
+  * Program for my "snc98 - Slash Number Calculator"                   *
   * If you do/have/found any updates, modifications, suggestions,     *
   * comments, ideas, bugs, flaws or anything else - contact me        *
   *                                                                   *
@@ -39,18 +43,6 @@
   *   own version, you CAN say, I did it (well, after hours of        *
   *   troubleshooting and screaming).                                 *
   *********************************************************************
-
-  Changes:
-  2015_02_20  -  V 0.1  - Initial Release
-                          Display and Switches will work - (Debug_Level 5)
-  2015_03_13  -  V 0.1a - Pendulum will work - (Debug_Level 6)
-  2015_04_08  -  V 0.1b - Change to Arduino 1.6.2
-                          Software Switch off - Hardware Rev. 0.4
-  2015_07_08  -  V 0.1e - get_Expo - (Debug_Level 7) EE+3 and EE-3
-  2015_08_06  -  V 0.1f - Display_Number - (Debug_Level 9)
-  2015_10_22  -  V 0.1g - Hardware Rev. 0.6
-  2015_12_18  -  V 0.2a - x^2 Test - (Debug_Level 10)
-  2016_01_25  -  V 0.2b - Memory_Plus Test - (Debug_Level 12)
 
 */
 
@@ -120,6 +112,8 @@
                        // 33 - log2 Test out -> 0,00000000100 .. 320
                        // 34 - factorial Test 0 .. 71.00 Step +0.005
                        // 35 - DS18B20 (0x28) Digital Thermometer, 12bit
+                       // 36 - tanh Test 0.000010 .. 100.
+                       // 37 - tanh Test -22.000 .. +22.001 Step 0.003.
 
 uint8_t mem_pointer        =  1;   //     mem_stack 0 .. 19
 #define mem_stack_max_c       39   // 39  Variable in calculate
@@ -276,6 +270,7 @@ AVRational_32       temp_32_e     = {0, int32_max, int32_max, 0};
 AVRational_32       temp_32_e_mul = {0, int32_max, int32_max, 0};
 AVRational_32       test_32       = {0, int32_max, int32_max, 0};
 AVRational_32       temp_32       = {0, int32_max, int32_max, 0};
+AVRational_32       temp_32_exp   = {0, int32_max, int32_max, 0};
 AVRational_32       temp_32_a     = {0, int32_max, int32_max, 0};
 AVRational_32       temp_32_b     = {0, int32_max, int32_max, 0};
 AVRational_32       temp_32_a1    = {0, int32_max, int32_max, 0};
@@ -360,6 +355,10 @@ static const AVRational_32 sqrt_10_minus = {1, sqrt_10_denom, sqrt_10_num, 0};
 #define denum_exp2_1_32   2147302912  // 1/32
 static const AVRational_32 exp2_1_32   = { -1, num_exp2_1_32, denum_exp2_1_32, 0};
 
+#define num_exp2_0_1     2147302920
+#define denum_exp2_0_1   2147302920   // 1/1
+static const AVRational_32 exp2_0_1   = { 0, num_exp2_0_1, denum_exp2_0_1, 0};
+
 #define num_exp2_2_1     2147302920
 #define denum_exp2_2_1   1073651460   // 2/1
 static const AVRational_32 exp2_2_1   = { 0, num_exp2_2_1, denum_exp2_2_1, 0};
@@ -389,9 +388,8 @@ static const AVRational_32 log_to_10   = { 0, num_log_to_10, denum_log_to_10, 0}
 // ---  log()_Konstante  ---
 #define int32_max_125   1717842336     // = int32_max / 1.25
 #define int32_max_25     858921168     // = int32_max / 2.5
-#define int32_max_20    1073651460     // = int32_max / 2
 #define num_log1e_2      -59102552
-#define int32_max_16    1288381752
+#define int32_max_16    1288381752     // = int32_max * 0.6
 #define denum_log1e_2    128339561
 #define num_log1e1      1784326399
 #define denum_log1e1     774923109     // -6,8e-20
@@ -399,9 +397,8 @@ static const AVRational_32 log_to_10   = { 0, num_log_to_10, denum_log_to_10, 0}
 #define denum_log5e8     220581553
 #define num_log1e9      -265961484
 #define denum_log1e9     128339561
-static const AVRational_32 mul_0_500 = { 0, int32_max_20, int32_max, 0};
-static const AVRational_32 mul_5_0 =   { 1, int32_max_20, int32_max, 0};
-static const AVRational_32 mul_6_0 =   { 1, int32_max_16, int32_max, 0};
+static const AVRational_32 mul_5_0   = { 1, int30_max, int32_max, 0};
+static const AVRational_32 mul_6_0   = { 1, int32_max_16, int32_max, 0};
 static const AVRational_32 log_1e0   = { 0, int32_max, int32_max, 0};
 static const AVRational_32 log_1e1   = { 0, num_log1e1, denum_log1e1, 0};
 static const AVRational_32 log_5e8   = { 1, num_log5e8, denum_log5e8, 0};
@@ -426,18 +423,6 @@ AVRational_32  temp_32_corr_0_1  = {0, int32_max, int32_max, 0};
 static const AVRational_32 cbrt_10_plus   = { 0, cbrt_10_num, cbrt_10_denom, 0};
 static const AVRational_32 cbrt_100_plus  = { 1, cbrt_100_num, cbrt_100_denom, 0};
 
-// ---  _1_25_Konstante (1.25) ---
-#define _1_25_expo                0       
-#define _1_25_num        2147302920  // 
-#define _1_25_denom      1717842336  // 
-static const AVRational_32   _1_25 = {_1_25_expo, _1_25_num, _1_25_denom, 0};
-
-// ---  _15_Konstante (15) ---
-#define _15_expo                1       
-#define _15_num        2147302920  // 
-#define _15_denom      1431535280  // 
-static const AVRational_32   _15 = {_15_expo, _15_num, _15_denom, 0};
-
 // ---  Tau_Konstante (2_Pi) ---
 #define Tau_expo                1       
 #define Tau_num        1135249722  // 
@@ -460,103 +445,56 @@ static const AVRational_32  Pi_2 = {Pi_2_expo, Pi_2_num, Pi_2_denom, 0};
 #define e_expo                  0
 #define e_num           848456353
 #define e_denom         312129649  // Fehler .. -6.03e-19
-static const AVRational_32  one_e = {e_expo, e_denom, e_num, 0};
+static const AVRational_32  one_e = {e_expo, e_num, e_denom, 0};
 
-// ---  sqrt_2pi_Konstante  ---
-#define sqrt_2pi_expo                0
-#define sqrt_2pi_num         597537004
-#define sqrt_2pi_denom       238382775  // Fehler .. -3,32e-18
-static const AVRational_32  sqrt_2pi = {sqrt_2pi_expo, sqrt_2pi_num, sqrt_2pi_denom, 0};
-
-// ---  fa_60_Konstante  ---
-#define fa_60_expo                2
-#define fa_60_num        1288381752
-#define fa_60_denom      2147302920  // 
-static const AVRational_32  fa_60 = {fa_60_expo, fa_60_num, fa_60_denom, 0};
-
-// ---  fa_37_Konstante  ---
-#define fa_37_expo                2
-#define fa_37_num         794502073
-#define fa_37_denom      2147302900  // 
-static const AVRational_32  fa_37 = {fa_37_expo, fa_37_num, fa_37_denom, 0};
-
-// ---  fa_7_Konstante  ---
-#define fa_7_expo                1
-#define fa_7_num       -1503112044
-#define fa_7_denom      2147302920  // 
-static const AVRational_32  fa_7 = {fa_7_expo, fa_7_num, fa_7_denom, 0};
-
-// ---  fa_1_24_Konstante  ---
-#define fa_1_24_expo            -2
-#define fa_1_24_num    -2147302900
-#define fa_1_24_denom    515352696 // 
-static const AVRational_32  fa_1_24 = {fa_1_24_expo, fa_1_24_num, fa_1_24_denom, 0};
-
-// ---  fa_0_Konstante  ---
+// http://www.luschny.de/math/factorial/approx/SimpleCases.html
+// used --> "A higher precision approximation"
+// http://www.luschny.de/math/factorial/approx/
+// Approximations%20for%20the%20Factorial%20Function.pdf  page 8
+// StieltjesLnFactorial(z)
+// ---  fa_0_Konstante  ---     1/12
 #define fa_0_expo            -1
-#define fa_0_num     1789419100
+#define fa_0_num     1789419100 
 #define fa_0_denom   2147302920 // 
 static const AVRational_32  fa_0 = {fa_0_expo, fa_0_num, fa_0_denom, 0};
 
-// ---  fa_1_Konstante  ---
+// ---  fa_1_Konstante  ---     1/30
 #define fa_1_expo            -1
 #define fa_1_num      715767640
 #define fa_1_denom   2147302920 // 
 static const AVRational_32  fa_1 = {fa_1_expo, fa_1_num, fa_1_denom, 0};
 
-// ---  fa_2_Konstante  ---
+// ---  fa_2_Konstante  ---     53/210
 #define fa_2_expo            -1
 #define fa_2_num     2147302897
 #define fa_2_denom    850818129 // 
 static const AVRational_32  fa_2 = {fa_2_expo, fa_2_num, fa_2_denom, 0};
 
-// ---  fa_3_Konstante  ---
+// ---  fa_3_Konstante  ---     195/371
 #define fa_3_expo             0
 #define fa_3_num     1128636210
 #define fa_3_denom   2147302738 // 
 static const AVRational_32  fa_3 = {fa_3_expo, fa_3_num, fa_3_denom, 0};
 
-// ---  fa_4_Konstante  ---
+// ---  fa_4_Konstante  ---     22999/22737
 #define fa_4_expo             0
 #define fa_4_num     2147301635
 #define fa_4_denom   2122840005 // 
 static const AVRational_32  fa_4 = {fa_4_expo, fa_4_num, fa_4_denom, 0};
 
-// ---  fa_5_Konstante  ---
+// ---  fa_5_Konstante  ---     29944523/19733142
 #define fa_5_expo             0
 #define fa_5_num     2126061133
 #define fa_5_denom   1401053082 // 
 static const AVRational_32  fa_5 = {fa_5_expo, fa_5_num, fa_5_denom, 0};
 
-// ---  fa_6_Konstante  ---    
-#define fa_6_expo             0 
-#define fa_6_num     2137446445
-#define fa_6_denom    941818387 //
-static const AVRational_32  fa_6 = {fa_6_expo, fa_6_num, fa_6_denom, 0};
+// ---  fa_6_Konstante  ---     109535241009/48264275462  ..  not used
 
 // ---  fa_ln_2pi_2_Konstante  ---
 #define fa_ln_2pi_2_expo             0
 #define fa_ln_2pi_2_num     1474345081
 #define fa_ln_2pi_2_denom   1604400107 // Fehler .. +1,17e-19 
 static const AVRational_32  fa_ln_2pi_2 = {fa_ln_2pi_2_expo, fa_ln_2pi_2_num, fa_ln_2pi_2_denom, 0};
-
-// ---  fa_a_Konstante  ---
-#define fa_a_expo            -1
-#define fa_a_num     2147302575
-#define fa_a_denom   1999531215 // 
-static const AVRational_32  fa_a = {fa_a_expo, fa_a_num, fa_a_denom, 0};
-
-// ---  fa_b_Konstante  ---
-#define fa_b_expo            -3
-#define fa_b_num     1474982124
-#define fa_b_denom   2146925396 // 
-static const AVRational_32  fa_b = {fa_b_expo, fa_b_num, fa_b_denom, 0};
-
-// ---  fa_c_Konstante  ---
-#define fa_c_expo            -2
-#define fa_c_num     2147233869
-#define fa_c_denom    997094378 // 
-static const AVRational_32  fa_c = {fa_c_expo, fa_c_num, fa_c_denom, 0};
 
 // ---  ln2_Konstante  ---
 #define ln2_expo                0
@@ -739,6 +677,8 @@ static const AVRational_32 to_xx[14] = {
 static const char mem_str_1[]     = "##########111111111122222222223333333333";
 static const char mem_str_0[]     = "#123456789012345678901234567890123456789";
 
+static const char Error_String_txt[]   = "0IuX[U^";
+
 uint8_t mem_extra_pointer  =   0;   // mem_extra  MR 0 .. MR 9
 uint8_t extra_test_13      =   0;
 uint8_t mem_extra_test     =   0;   // mem_extra  MR 0 .. MR 9
@@ -747,6 +687,7 @@ uint8_t fix_extra_test     =   5;   // FIX_2  ..  FIX8
 #define mem_extra_max         10    // mem_extra  MS 0 .. MS 9
 #define mem_extra_max_4       13    // mem_extra  MS 0 .. MS 9
 uint8_t to_extra_test      =   0;   // mem_extra  to_0 .. to_9
+boolean to_temperature     = false;
 boolean to_extra           = false;
 boolean expo_exchange      = false;
 boolean mem_exchange       = false;
@@ -1351,8 +1292,8 @@ void Print_Operation(uint8_t Switch_up) {
       case 170:                //    Int
         Serial.print("(Int)");
         break;
-
-      case 171:                //    Frac
+ 
+      case 171:               //    Frac
         Serial.print("Frac");
         break;
 
@@ -1743,7 +1684,7 @@ void Memory_to_Input_Operation() {
       else {
         mem_stack_input[ mem_pointer ].op += 'x';
       }
-      Display_Number();
+      Display_Number(mem_stack_input[mem_pointer]);
       Mantisse_change = false;
       Expo_change = false;
       Init_expo = false;
@@ -2800,7 +2741,7 @@ void Get_Expo_change() {
   Expo_change = false;
 }
 
-void Display_Number() {
+void Display_Number(AVRational_32 Display_Input) {
 /*
  *   Round "half towards zero"
  *   https://en.wikipedia.org/wiki/Rounding#Round_half_towards_zero
@@ -2809,6 +2750,12 @@ void Display_Number() {
  *   23.50001 -->  24
  *  -23.50001 --> -24
  */
+
+  int8_t temp_denom = -120;
+  
+  if ( Display_Input.denom < 9 ) {
+  	temp_denom = Display_Input.denom;    
+  }
 
   uint8_t temp_char = display_string[Operation];
   Point_pos = 0;
@@ -2819,28 +2766,38 @@ void Display_Number() {
     Serial.println("'");
   }
 
-  if ( mem_stack_input[mem_pointer].denom < 0 ) {
-    mem_stack_input[mem_pointer].num   *= -1;
-    mem_stack_input[mem_pointer].denom *= -1;
-  }
-  display_expo = mem_stack_input[mem_pointer].expo;
-  if ( abs(mem_stack_input[mem_pointer].num) != 0 ) {
-    display_big = abs(mem_stack_input[mem_pointer].num);
-  }
-  else {
-    display_big = abs(mem_stack_input[mem_pointer].denom);
+  if ( Display_Input.denom < 0 ) {
+    Display_Input.num   *= -1;
+    Display_Input.denom *= -1;
   }
 
-  if ( display_big > abs(mem_stack_input[mem_pointer].denom) ) {
+  if ( to_temperature == true ) {
+    if ( Display_Input.num >= 0 ) {
+      Display_Input = add(Display_Input, exp2_0_1, 1);
+    }
+    else {
+      Display_Input = add(Display_Input, min_x(exp2_0_1), 1);
+    }
+  }
+
+  display_expo = Display_Input.expo;
+  if ( abs(Display_Input.num) != 0 ) {
+    display_big = abs(Display_Input.num);
+  }
+  else {
+    display_big = abs(Display_Input.denom);
+  }
+
+  if ( display_big > abs(Display_Input.denom) ) {
     display_big *= expo_10[display_digit -1];
     ++display_expo;
   }
   else {
     display_big *= expo_10[display_digit];
   }
-  display_big += (abs(mem_stack_input[mem_pointer].denom) / 2);
+  display_big += (abs(Display_Input.denom) / 2);
   display_big -= 1;
-  display_number = display_big / mem_stack_input[mem_pointer].denom;
+  display_number = display_big / Display_Input.denom;
 
   if (abs(display_number) == expo_10[display_digit]) {
     display_number = expo_10[display_digit - 1];
@@ -2848,7 +2805,7 @@ void Display_Number() {
   }
   strcpy( display_string, string_start );
 
-  if (mem_stack_input[mem_pointer].num < 0) {
+  if (Display_Input.num < 0) {
     display_number *= -1;;
   }
   ltoa(display_number, display_string, 10);
@@ -2938,7 +2895,7 @@ void Display_Number() {
   if ( Start_input >= Input_Memory ) {       // Input / Operation Display
     if ( Start_input < Display_Error ) {
       if ( Display_Status_new != 40 ) {
-        display_string[Operation]  = mem_stack_input[mem_pointer].op;
+        display_string[Operation]  = Display_Input.op;
         display_string[Operation] -= temp_op_;
       }
       if ( Start_input > Input_Operation_0 ) {
@@ -2960,7 +2917,7 @@ void Display_Number() {
     ++Cursor_pos;
   }
 
-  if ( abs(mem_stack_input[mem_pointer].num) == 0 ) {
+  if ( abs(Display_Input.num) == 0 ) {
     display_string[Mantisse_0] = '.';
     display_string[Mantisse_1] = '0';
     Zero_count = display_digit;
@@ -2976,24 +2933,8 @@ void Display_Number() {
     ++Zero_index;
   }
 
-  if ( mem_stack_input[mem_pointer].denom == 0 ) {
-    Error_String('0');  
-  }
-
-  if ( mem_stack_input[mem_pointer].denom == 1 ) {
-    Error_String('I');  
-  }
-
-  if ( mem_stack_input[mem_pointer].denom == 2 ) {
-    Error_String('u');  
-  }
-
-  if ( mem_stack_input[mem_pointer].denom == 3 ) {
-    Error_String('X');  
-  }
-
-  if ( mem_stack_input[mem_pointer].denom == 4 ) {
-    Error_String('[');  
+  if ( temp_denom >= 0 ) {
+    Error_String(Error_String_txt[temp_denom]);
   }
 
   if ( Display_Status_new == 40 ) {
@@ -3004,6 +2945,11 @@ void Display_Number() {
     display_string[Operation] = ' ';
   }
 
+  if ( to_temperature == true ) {
+    display_string[2] -= 1;
+  }
+  to_temperature   = false;
+
   if ( Debug_Level == 9 ) {
     Serial.print("'");
     Serial.print(display_string);
@@ -3013,6 +2959,7 @@ void Display_Number() {
     Serial.println(display_expo_mod);
     Serial.println(Zero_count);
   }
+  
   temp_Memory_1[0] = display_string[Memory_1];
   temp_Memory_0[0] = display_string[Memory_0];
 }
@@ -3489,20 +3436,22 @@ AVRational_32 add(AVRational_32 a, AVRational_32 b, uint8_t c) {
     a.expo = b.expo;
   }
 
+  temp_32.op      = a.op;   // Spezial for Temperature
+
   expo_temp_16    = a.expo;
   expo_temp_16   -= b.expo;
 
   if ( expo_temp_16 > 18  ) {
-    temp_32.num   = a.num;
-    temp_32.denom = a.denom;
-    temp_32.expo  = a.expo;
-    return temp_32;
+    if ( c == 2 ) {
+      return mul( a, exp2_1_2 );
+    }
+    return a;
   }
   if ( expo_temp_16 < -18 ) {
-    temp_32.num   = b.num;
-    temp_32.denom = b.denom;
-    temp_32.expo  = b.expo;
-    return temp_32;
+    if ( c == 2 ) {
+      return mul( b, exp2_1_2 );
+    }
+    return b;
   }
 
   gcd_temp_32 = gcd_iter_32(a.num, a.denom);
@@ -3661,7 +3610,7 @@ AVRational_32 abs_x(AVRational_32 a) {
 }
 
 AVRational_32 input_x(AVRational_32 a) {
-  temp_32.expo = a.expo;
+  temp_32.expo  = a.expo;
   temp_32.num   = a.num;
   temp_32.denom = a.denom;
   return temp_32;
@@ -3673,22 +3622,20 @@ AVRational_32 floor_(AVRational_32 a, int8_t expo_test) {
   temp_32.expo    = a.expo;
 
   if ( a.expo > expo_test ) {
+    a.denom = 6;
     if ( a.num < 0 ) {
-      Error_String('U');
+      a.denom = 5;
     }
-    else {
-      Error_String('^');
-    }
+    a.num   = 7;
     return a;
   }
   if ( a.expo == expo_test ) {
   	if (abs(a.num) >= abs(a.denom)) {
+      a.denom = 6;
       if ( a.num < 0 ) {
-        Error_String('U');
+        a.denom = 5;
       }
-      else {
-        Error_String('^');
-      }
+     	a.num   = 7;
       return a;
   	}
   }
@@ -3749,8 +3696,11 @@ AVRational_32 clone(AVRational_32 a) {
 
 AVRational_32 frac(AVRational_32 a) {
 // returns the fractional part of x
-  temp_32 = add(a, min_x(floor_(a, 8)), 1);
-  return temp_32;
+  temp_32 = floor_(a, 8);
+  if ( temp_32.denom < 9 ) {
+    return temp_32;
+  }
+  return add(a, min_x(temp_32), 1);
 }
 
 int8_t compare(Rational_32 a, Rational_32 b) {
@@ -3955,7 +3905,18 @@ void calc_stack(uint8_t count_stack) {
             break;
 
           case 88:  //    _y_expo
-          	number_stack[ count_stack ] = powx(number_stack[ count_stack     ], number_stack[ count_stack + 1 ]);
+          	if ( number_stack[ count_stack ].num >= 0 ) {
+          	  number_stack[ count_stack ] = powx(number_stack[ count_stack     ], number_stack[ count_stack + 1 ]);
+          	}
+          	else {
+          		temp_32 = frac( mul(number_stack[ count_stack + 1 ], exp2_1_2) );
+           	  if ( temp_32.num == 0 ) {
+                number_stack[ count_stack ] = abs_x(powx(min_x(number_stack[ count_stack     ]), number_stack[ count_stack + 1 ]));
+         	    }
+           	  else {
+                number_stack[ count_stack ] = min_x(powx(min_x(number_stack[ count_stack     ]), number_stack[ count_stack + 1 ]));
+              }
+          	}          	
             break;
 
           case 89:  //    _y_root
@@ -3971,7 +3932,18 @@ void calc_stack(uint8_t count_stack) {
             break;
 
           case 217: //    _y_expo y_expo_
-          	number_stack[ count_stack ] = powx(number_stack[ count_stack + 1 ], number_stack[ count_stack     ]);
+          	if ( number_stack[ count_stack + 1 ].num >= 0 ) {
+          	  number_stack[ count_stack ] = powx(number_stack[ count_stack + 1 ], number_stack[ count_stack     ]);
+          	}
+          	else {
+          		temp_32 = frac(mul(number_stack[ count_stack ], exp2_1_2));
+          		if ( temp_32.num == 0 ) {
+                number_stack[ count_stack ] = abs_x(powx(min_x(number_stack[ count_stack + 1 ]), number_stack[ count_stack     ]));
+          		}
+          		else {
+                  number_stack[ count_stack ] = min_x(powx(min_x(number_stack[ count_stack + 1 ]), number_stack[ count_stack     ]));
+          		}
+          	}          	
             break;
 
           case 218: //    _y_root y_root_
@@ -4250,20 +4222,27 @@ AVRational_32 cbrt(AVRational_32 a) {
 }
 
 AVRational_32 factorial(AVRational_32 a) {
-// info --> http://dx.doi.org/10.3247/sl2math08.005
-// 2008_MTH_Nemes_GammaApproximationUpdate.pdf .. Formula (4.1) 
-// http://www.luschny.de/math/factorial/approx/SimpleCases.html
-// used --> "A higher precision approximation"
-
+/*
+ * The following function, abgam() is based on a continued fraction numerical
+ * method found in Abremowitz and Stegun, Handbook of Mathematical Functions
+ *
+ * http://www.realtimerendering.com/resources/GraphicsGems/gemsiii/sqfinal.c
+ * 
+ * https://infogalactic.com/info/Factorial#Approximations_of_factorial
+ * 
+ * info --> http://dx.doi.org/10.3247/sl2math08.005
+ * 2008_MTH_Nemes_GammaApproximationUpdate.pdf .. Formula (4.1) 
+ * http://www.luschny.de/math/factorial/approx/SimpleCases.html
+ * used --> "A higher precision approximation"
+ * http://www.luschny.de/math/factorial/approx/
+ * Approximations%20for%20the%20Factorial%20Function.pdf  page 8
+ */
   uint8_t  fac_test     = 10;
   uint8_t  fac_count    = 10;
 
   if ( a.expo == 0 ) { //  input = 1.000 or 0.000
     if ( (a.num == a.denom) || (a.num == 0) ) {
-      temp_32_corr.num   = int32_max;
-      temp_32_corr.denom = int32_max;
-      temp_32_corr.expo  = 0;
-      return temp_32_corr;
+      return log_1e0;
     }
   }
 
@@ -4352,19 +4331,46 @@ AVRational_32 factorial(AVRational_32 a) {
 
 }
 
+AVRational_32 sinh(AVRational_32 a) {
+  temp_32_exp = exp(a);
+  return add( temp_32_exp, min_x(div_x( temp_32_exp )), 2);
+}
+
+AVRational_32 cosh(AVRational_32 a) {
+  temp_32_exp = exp(a);
+  return add( temp_32_exp, div_x( temp_32_exp ), 2);
+}
+
+AVRational_32 tanh(AVRational_32 a) {
+  if ( a.expo == 1 ) { //  input >= 12.000 
+    if ( ( abs( a.num ) / 6 ) >= ( a.denom / 5 ) ) {
+      if ( a.num > 0 ) {
+        return log_1e0;
+      }
+      else {
+        return min_x( log_1e0 );
+      }
+    }
+  }
+  if ( a.expo > 1 ) { //  input >= 30.000 
+    if ( a.num > 0 ) {
+      return log_1e0;
+    }
+    else {
+      return min_x( log_1e0 );
+    }
+  }
+  temp_32_exp = exp(a);
+  return mul(add( temp_32_exp, min_x(div_x( temp_32_exp )), 1), div_x( add( temp_32_exp, div_x( temp_32_exp ), 1)) );
+}
+
 AVRational_32 exp(AVRational_32 a) {
   if ( a.expo == 0 ) { //  input = 1.000 or -1.000
     if ( a.num == a.denom ) {
-      temp_32_log.num   = e_num;
-      temp_32_log.denom = e_denom;
-      temp_32_log.expo  = e_expo;
-      return temp_32_log;
+      return one_e;
     }
     if ( -(a.num) == a.denom ) {
-      temp_32_log.num   = e_denom;
-      temp_32_log.denom = e_num;
-      temp_32_log.expo  = e_expo;
-      return temp_32_log;
+      return div_x( one_e );
     }
   }
   return exp2( mul(div_x( ln2 ), a ));
@@ -4383,24 +4389,15 @@ AVRational_32 exp2(AVRational_32 a) {
   }
 
   if ( test_signum_log == 0 ) { //  input =   0.000
-    temp_32_log.num   = int32_max;
-    temp_32_log.denom = int32_max;
-    temp_32_log.expo  = 0;
-    return temp_32_log;
+    return log_1e0;
   }
 
   if ( a.expo ==  0 ) { //  input = 1.000 or -1.000
     if ( a.num == a.denom ) {
-      temp_32_log.num   = int32_max;
-      temp_32_log.denom = int30_max;
-      temp_32_log.expo  = 0;
-      return temp_32_log;
+      return div_x( exp2_1_2 );
     }
     if ( -(a.num) == a.denom ) {
-      temp_32_log.num   = int30_max;
-      temp_32_log.denom = int32_max;
-      temp_32_log.expo  = 0;
-      return temp_32_log;
+      return exp2_1_2;
     }
   }
 
@@ -4510,15 +4507,13 @@ AVRational_32 exp2(AVRational_32 a) {
 
 AVRational_32 exp10(AVRational_32 a) {
   if ( a.expo == 0 ) { //  input = 1.000 or -1.000
+    temp_32_log.num   = int32_max;
+    temp_32_log.denom = int32_max;
     if ( a.num == a.denom ) {
-      temp_32_log.num   = int32_max;
-      temp_32_log.denom = int32_max;
       temp_32_log.expo  = 1;
       return temp_32_log;
     }
     if ( -(a.num) == a.denom ) {
-      temp_32_log.num   = int32_max;
-      temp_32_log.denom = int32_max;
       temp_32_log.expo  = -1;
       return temp_32_log;
     }
@@ -4540,7 +4535,7 @@ AVRational_32 powx(AVRational_32 a, AVRational_32 b) {
       	return a;
       }
     }
-    temp_32_pow = mul(log2(a), b);
+    temp_32_pow = mul( log2(a), b );
     temp_32_ext = mul( log_1e0, temp_32_pow );
     
     temp_32_pow = abs_x(temp_32_pow);
@@ -4807,12 +4802,20 @@ void add_operation_to_mem( uint8_t deep_step, char op_add ) {
             else {
               display_string[Expo_point] = ' ';
             }
-            display_string[Memory_1] = mem_str_1[mem_pointer];
-            display_string[Memory_0] = mem_str_0[mem_pointer];
+            if ( display_string[Memory_1] != 'O' ) {
+              display_string[Memory_1] = mem_str_1[mem_pointer];
+              display_string[Memory_0] = mem_str_0[mem_pointer];
+            }
           }
           else {
             mem_stack_input[ mem_pointer ].op = op_add;
-            Display_Number();
+            if ( display_string[Memory_1] == 'O' ) {
+            	display_string[Operation] = op_add;
+            	display_string[Expo_point] = ' ';
+            }
+            else {
+              Display_Number(mem_stack_input[mem_pointer]);
+            }
             display_string[Operation_point] = '.';
           }
         }
@@ -4829,7 +4832,7 @@ void add_operation_to_mem( uint8_t deep_step, char op_add ) {
           else {
             mem_stack_input[ mem_pointer ].op  = temp_op_;
             mem_stack_input[ mem_pointer ].op += 'x';
-            Display_Number();
+            Display_Number(mem_stack_input[mem_pointer]);
           }
         }
       }
@@ -5271,6 +5274,153 @@ void Test_all_function() {
       Serial.print(temp_32_xxx.expo);
       Serial.println(" -> ");
 
+    }
+    test_index = false;
+    time_end = millis();
+    time_diff = time_end - time_start;
+    Serial.print("Time: ");
+    Serial.println(time_diff);
+  }
+  if ( Debug_Level == 36 ) {
+    time_start = millis();
+
+    calc_32.expo    = -5;
+    num_temp_u32_   = 10;
+    denom_temp_u32_ = 10;
+    Serial.println(" ");                        // Step    4
+    for ( uint16_t index = 1; index <= 641; index += 1 ) {
+      Serial.print(index);
+      Serial.print("  ");
+      num_temp_u32   = num_temp_u32_;
+      denom_temp_u32 = denom_temp_u32_;
+      Expand_Number();
+
+      calc_32.num   = num_temp_u32;
+      calc_32.denom = denom_temp_u32;
+     /*
+      Serial.print(calc_32.num);
+      Serial.print("  ");
+      Serial.print(calc_32.denom);
+      Serial.print("  ");
+      Serial.print(calc_32.expo);
+      Serial.println("  ");
+     */
+      test_32 = tanh(calc_32);
+      Serial.print(test_32.num);
+      Serial.print("  ");
+      Serial.print(test_32.denom);
+      Serial.print("  ");
+      Serial.print(test_32.expo);
+      Serial.println(" -> ");
+
+      num_temp_u32_  += 1;
+      
+      if ( num_temp_u32_ == 30 ) {
+        calc_32.expo    += 1;
+        denom_temp_u32_ *= 10;
+      }
+      
+      if ( num_temp_u32_ == denom_temp_u32_ ) {
+      	if ( calc_32.expo < 1 ) {
+          num_temp_u32_   = 10;
+          denom_temp_u32_ = 10;
+      	}
+      }
+    }
+    test_index = false;
+    time_end = millis();
+    time_diff = time_end - time_start;
+    Serial.print("Time: ");
+    Serial.println(time_diff);
+  }
+  if ( Debug_Level == 37 ) {
+    time_start = millis();
+
+    calc_32.expo    =     1;
+    denom_temp_u32_ = 10000;
+    Serial.println(" ");                        // Step    4
+    for ( int16_t index = -22000; index <= 22001; index += 3 ) {
+      Serial.print(index);
+      Serial.print("  ");
+      num_temp_u32   = abs(index);
+      denom_temp_u32 = denom_temp_u32_;
+
+      Expand_Number();
+
+      calc_32.num   = num_temp_u32;
+      calc_32.denom = denom_temp_u32;
+      if ( index < 0 ) {
+        calc_32.num  *= -1;
+      }
+     /*
+      Serial.print(calc_32.num);
+      Serial.print("  ");
+      Serial.print(calc_32.denom);
+      Serial.print("  ");
+      Serial.print(calc_32.expo);
+      Serial.println("  ");
+     */
+      test_32 = sinh(calc_32);
+      Serial.print(test_32.num);
+      Serial.print("  ");
+      Serial.print(test_32.denom);
+      Serial.print("  ");
+      Serial.print(test_32.expo);
+      Serial.println(" -> ");
+
+      if ( index == -3001 ) {
+        calc_32.expo    =    0;
+        denom_temp_u32_ = 1000;
+      }
+
+      if ( index == -301 ) {
+        calc_32.expo    =  -1;
+        denom_temp_u32_ = 100;
+      }
+
+      if ( index == -31 ) {
+        calc_32.expo    = -2;
+        denom_temp_u32_ = 10;
+      }
+
+      if ( index == -4 ) {
+        calc_32.expo    = -3;
+        denom_temp_u32_ =  1;
+      }
+
+      if ( index == 2 ) {
+        calc_32.expo    = -2;
+        denom_temp_u32_ = 10;
+      }
+
+      if ( index == 29 ) {
+        calc_32.expo    =  -1;
+        denom_temp_u32_ = 100;
+      }
+
+      if ( index == 299 ) {
+        calc_32.expo    =    0;
+        denom_temp_u32_ = 1000;
+      }
+
+      if ( index == 2999 ) {
+        calc_32.expo    =     1;
+        denom_temp_u32_ = 10000;
+      }
+
+     /*      
+      if ( num_temp_u32_ == 30 ) {
+        calc_32.expo    += 1;
+        denom_temp_u32_ *= 10;
+      }
+ 
+      if ( num_temp_u32_ == denom_temp_u32_ ) {
+      	if ( calc_32.expo < 1 ) {
+          num_temp_u32_   = 10;
+          denom_temp_u32_ = 10;
+      	}
+      }
+     */
     }
     test_index = false;
     time_end = millis();
@@ -6400,7 +6550,7 @@ void Function_2_display() {
     mem_pointer = mem_stack_count;
     copy_input_left_right( mem_stack_count, 0 );
   }
-  Display_Number();
+  Display_Number(mem_stack_input[mem_pointer]);
 }
 
 void Function_1_number() {	
@@ -6436,6 +6586,18 @@ void Function_1_number() {
 
     	case 112:                //    _log_
     	  mem_stack_input[ mem_pointer ] = log(mem_stack_input[ mem_pointer ]);
+    	  break;
+    	  
+      case 71:                 //    _sinh_
+    	  mem_stack_input[ mem_pointer ] = sinh(mem_stack_input[ mem_pointer ]);
+    	  break;
+
+      case 72:                 //    _cosh_
+    	  mem_stack_input[ mem_pointer ] = cosh(mem_stack_input[ mem_pointer ]);
+    	  break;
+
+    	case 73:                 //    _tanh_
+    	  mem_stack_input[ mem_pointer ] = tanh(mem_stack_input[ mem_pointer ]);
     	  break;
     	  
       case 113:                //    e^x
@@ -6696,6 +6858,9 @@ void loop() {
 
         case 33:                 //    _1/x_
         case 34:                 //    _log2_
+        case 71:                 //    sinh(x)
+        case 72:                 //    cosh(x)
+        case 73:                 //    tanh(x)
         case 112:                //    log(x)
         case 113:                //    e^x
         case 114:                //    2^x
@@ -6738,7 +6903,7 @@ void loop() {
 
             display_digit_temp = display_digit;
             display_digit = 8;
-            Display_Number();
+            Display_Number(mem_stack_input[mem_pointer]);
             display_string[Cursor_pos] = '.';
             display_digit = display_digit_temp;
           }
@@ -6811,7 +6976,7 @@ void loop() {
                 mem_pointer = mem_stack_count;
                 if ( Start_input != Display_Error ) {
                   mem_pointer = 0;
-                  Display_Number();
+                  Display_Number(mem_stack_input[mem_pointer]);
                 }
               }
             }
@@ -7123,7 +7288,7 @@ void loop() {
             Init_expo = false;
             display_digit_temp = display_digit;
             display_digit = 8;
-            Display_Number();
+            Display_Number(mem_stack_input[mem_pointer]);
             display_string[Cursor_pos] = '.';
             display_digit = display_digit_temp;
             max_input = false;
@@ -7273,7 +7438,7 @@ void loop() {
               mem_pointer = 0;
               mem_stack_count = 1;
               calc_stack(mem_stack_test);
-              Display_Number();
+              Display_Number(mem_stack_input[mem_pointer]);
               mem_extra_test = 0;
               max_input = false;
               Beep__on();
@@ -7319,7 +7484,7 @@ void loop() {
                 mem_pointer = mem_stack_count;
                 if ( Start_input != Display_Error ) {
                   mem_pointer = 0;
-                  Display_Number();
+                  Display_Number(mem_stack_input[mem_pointer]);
                 }
               }
             }
@@ -7352,15 +7517,6 @@ void loop() {
           break;
 
         case 70:                 //    atan()
-          break;
-
-        case 71:                 //    sinh()
-          break;
-
-        case 72:                 //    cosh()
-          break;
-
-        case 73:                 //    tanh()
           break;
 
         case 74:                 //    asinh()
@@ -7475,7 +7631,7 @@ void loop() {
               display_digit = 8;
               mem_stack_input[ mem_pointer ].op = temp_op;
               max_input = false;
-              Display_Number();
+              Display_Number(mem_stack_input[mem_pointer]);
               display_string[Cursor_pos] = '.';
               while ( display_string[Cursor_pos - 1] == '0' ) {
                 display_string[Cursor_pos] = '#';
@@ -7538,7 +7694,7 @@ void loop() {
           }
           mem_pointer = 0;                           // Display Number
           display_digit = fix_extra_test;
-          Display_Number();
+          Display_Number(mem_stack_input[mem_pointer]);
           display_string[Memory_1] = Display_Memory_1[5];
           display_string[Memory_0] = Display_Memory_0[5];
           break;
@@ -7590,7 +7746,7 @@ void loop() {
             Error_Test();
             if ( Start_input != Display_Error ) {
               mem_extra_left_right( mem_extra_test, 0 );
-              Display_Number();
+              Display_Number(mem_stack_input[mem_pointer]);
               Display_Memory_Plus();
             }
             else {
@@ -7798,7 +7954,7 @@ void loop() {
               mem_stack_input[ mem_pointer ].op += 'x';
             }
             Start_input = Input_Memory;
-            Display_Number();
+            Display_Number(mem_stack_input[mem_pointer]);
             mem_save = true;
             display_string[Memory_1] = Display_Memory_1[3];  // m
             display_string[Memory_0] = '0' + mem_extra_test;
@@ -7889,7 +8045,7 @@ void loop() {
               else {
                 mem_stack_input[ mem_pointer ].op += 'x';
               }
-              Display_Number();
+              Display_Number(mem_stack_input[mem_pointer]);
               mem_exchange = true;
               mem_save = false;
               display_string[Memory_1] = Display_Memory_1[4];  // E
@@ -7927,10 +8083,19 @@ void loop() {
             mem_pointer = mem_stack_count;
             if ( Start_input != Display_Error ) {
               mem_pointer = 0;
+              to_temperature = false;
               if ( to_extra_test < 8 ) {
                 mem_stack_input[ mem_pointer ] = mul(mem_stack_input[ mem_pointer ], to_xx[ to_extra_test ]);
               } else {
                 mem_stack_input[ mem_pointer ] = add(to_xx[ to_extra_test + 2 ], mul(to_xx[ to_extra_test ], mem_stack_input[ mem_pointer ]), 1);
+                if ( mem_stack_input[ mem_pointer ].expo == 0 ) {
+                  if ( abs(mem_stack_input[ mem_pointer ].num) < abs(mem_stack_input[ mem_pointer ].denom) ) {
+                    to_temperature = true; 
+                  }
+                }
+                if ( mem_stack_input[ mem_pointer ].expo < 0 ) {
+                  to_temperature = true;
+                }
               }
              
               Error_Test();
@@ -7944,9 +8109,20 @@ void loop() {
                 else {
                   mem_stack_input[ mem_pointer ].op += 'x';
                 }
-                Display_Number();
-                display_string[Memory_1] = Display_Memory_1[12];  // =
+                Display_Number(mem_stack_input[mem_pointer]);
+                if ( to_extra_test < 8 ) {
+                  display_string[Memory_1] = Display_Memory_1[12];  // =
+                }
+                else {
+                  display_string[Memory_1] = 'O';
+                }
                 display_string[Memory_0] = '0' + to_extra_test;
+                if ( to_extra_test == 8 ) {
+                  display_string[Memory_0] = 'C';
+                }
+                if ( to_extra_test == 9 ) {
+                  display_string[Memory_0] = 'F';
+                }
                 to_extra = true;
               }
             }
