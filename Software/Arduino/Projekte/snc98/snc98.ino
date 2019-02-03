@@ -636,8 +636,8 @@ uint32_t calc_temp_u32   = 1;
 
   int8_t  test_signum_8  = 0;
 
-uint8_t display_digit      =  5;
-uint8_t display_digit_temp =  5;
+ int8_t display_digit      = -5;
+ int8_t display_digit_temp = -5;
 
 volatile uint8_t mem_stack_count    =  1;   // actual - mem_stack 1 .. 19
 volatile uint8_t temp_operation     =  0;
@@ -696,7 +696,7 @@ boolean Mr_0_test          = false;
 boolean test_index         = true;
 boolean Test_to_Result     = true;
 
-AVRational_32 mem_extra_stack[ mem_extra_max_4 + 1 ] = {
+AVRational_32 mem_extra_stack[ mem_extra_max_4 + 2 ] = {
   { expo_min_input, int32_max, int32_max, 0 },    // MR  0
   { 0, 2147395599, 2147395599, 0 },    // MR  1
   { 0, 2147395598, 1073697799, 0 },    // MR  2
@@ -709,8 +709,9 @@ AVRational_32 mem_extra_stack[ mem_extra_max_4 + 1 ] = {
   { 1, 1932656031, 2147395590, 0 },    // MR  9
   { Pi_expo, Pi_num, Pi_denom, 0 },    // const Pi
   { Tau_expo, Tau_num, Tau_denom, 0 }, // const Tau
-  { expo_min_input, int32_max, int32_max, 0 },    // MR 10
-  { expo_min_input, int32_max, int32_max, 0 }     // MR 11  M_Plus_temp
+  { expo_min_input, int32_max, int32_max, 0 },    // MR 10 (12)
+  { expo_min_input, int32_max, int32_max, 0 },    // MR 11  M_Plus_temp
+  { 0, 0, int32_max, 0 }               // MR  0  Std_mode  (14)
 };
 
 #define led_bright_min    4
@@ -793,9 +794,9 @@ static const uint8_t led_font[count_ascii] = {
     0, 107,  34,   0, 109,  18,  97,   2,  70, 112,  92,  70,  12,  64, 128,  82,     //  ¦ !"#$%&'()*+,-./¦
    63,   6,  91,  79, 102, 109, 124,   7, 127, 103,   4,  20,  88,  72,  76,  83,     //  ¦0123456789:;<=>?¦
   123, 119, 127,  57,  15, 121, 113,  61, 118,  48,  30, 122,  56,  85,  55,  99,     //  ¦@ABCDEFGHIJKLMNO¦
-  115, 103,  49,  45,   7,  28,  34,  60,  73, 110,  27,  57, 100,  15,  35,   8,     //  ¦PQRSTUVWXYZ[\]^_¦
+   83, 103,  49,  45,   7,  28,  34,  60,  73, 110,  27,  57, 100,  15,  35,   8,     //  ¦PQRSTUVWXYZ[\]^_¦
    32,  95, 124,  88,  94, 123,  43, 111, 116,  16,  14, 120,  24,  21,  84,  92,     //  ¦`abcdefghijklmno¦
-   83,  53,  80, 108,  70,  29,  43, 106,   9, 102,   3,  24,  17,   5,   1,  54};    //  ¦pqrstuvwxyz{|}~ ¦
+   83,  53,  80, 108,  70,  29,  43, 106,   9, 102,   3,  24,  29,   5,   1,  54};    //  ¦pqrstuvwxyz{|}~ ¦
    
 uint8_t count_led[8] = {      // 1 .. 7
   0
@@ -897,7 +898,7 @@ auto bit_6 = toBitRef( Display_Status_new, 6 );  // ( "M+" )
 uint8_t Display_Memory = 0;    // 0 .. 12
                                          //01234567890123456789
 static const char    Display_Memory_1[] = "  mmE]{F mFm=O_X}";
-static const char    Display_Memory_0[] = "1 r__[zn=+Fc_V,_|";
+static const char    Display_Memory_0[] = "1 r__[zn=+Fc_V,_m";
 
 boolean max_input = false;
 boolean Mantisse_change = false;
@@ -1661,7 +1662,12 @@ void Memory_to_Input_Operation() {
   }
   if ( Start_input < Input_Operation_0 ) {      // Input Number
     if ( mem_extra_test == 0 ) {
-      left_right_mem_extra( 0, 12 );
+      if ( Std_mode == true ) {
+        left_right_mem_extra( 0, 14 );
+      }
+      else {
+        left_right_mem_extra( 0, 12 );
+      }      
     }
     else {
       left_right_mem_extra( 0, mem_extra_test );
@@ -1671,7 +1677,12 @@ void Memory_to_Input_Operation() {
   if ( Start_input == Input_Memory ) {
     if ( mem_pointer > 0 ) {
   	  if ( mem_extra_test == 0 ) {
-    	  left_right_mem_extra( mem_pointer, 12 );
+        if ( Std_mode == true ) {
+          left_right_mem_extra( mem_pointer, 14 );
+        }
+        else {
+      	  left_right_mem_extra( mem_pointer, 12 );
+      	}
       }
       else {
         left_right_mem_extra( mem_pointer, mem_extra_test );
@@ -1946,11 +1957,11 @@ void Error_Test() {
   }
   if ( mem_stack_input[mem_pointer].expo == expo_min ) {
     if ( abs(mem_stack_input[mem_pointer].num) < abs(mem_stack_input[mem_pointer].denom) ) {
-      Error_String('U');
+      Error_String('U');  // expo < -99
     }
   }
   if ( mem_stack_input[mem_pointer].expo < expo_min ) {
-    Error_String('U');
+    Error_String('U');  // expo < -99
   }
 }
 
@@ -2750,8 +2761,9 @@ void Display_Number(AVRational_32 Display_Input) {
  *   23.50001 -->  24
  *  -23.50001 --> -24
  */
-
-  int8_t temp_denom = -120;
+ 
+   int8_t temp_denom         = -120;
+  uint8_t display_digit_abs  = abs(display_digit);
   
   if ( Display_Input.denom < 9 ) {
   	temp_denom = Display_Input.denom;    
@@ -2789,18 +2801,18 @@ void Display_Number(AVRational_32 Display_Input) {
   }
 
   if ( display_big > abs(Display_Input.denom) ) {
-    display_big *= expo_10[display_digit -1];
+    display_big *= expo_10[display_digit_abs -1];
     ++display_expo;
   }
   else {
-    display_big *= expo_10[display_digit];
+    display_big *= expo_10[display_digit_abs];
   }
   display_big += (abs(Display_Input.denom) / 2);
   display_big -= 1;
   display_number = display_big / Display_Input.denom;
 
-  if (abs(display_number) == expo_10[display_digit]) {
-    display_number = expo_10[display_digit - 1];
+  if (abs(display_number) == expo_10[display_digit_abs]) {
+    display_number = expo_10[display_digit_abs - 1];
     ++display_expo;
   }
   strcpy( display_string, string_start );
@@ -2846,8 +2858,8 @@ void Display_Number(AVRational_32 Display_Input) {
     display_string[Plus_Minus_Expo] = '#';
     display_string[Plus_Minus_Expo__] = ' ';
   }
-  display_string[display_digit + 2] = '.';
-  Point_pos = display_digit;
+  display_string[display_digit_abs + 2] = '.';
+  Point_pos = display_digit_abs;
   Point_pos += 2;
 
   if ( display_expo_mod <= 0 ) {
@@ -2860,8 +2872,8 @@ void Display_Number(AVRational_32 Display_Input) {
     Serial.println("'");
   }
 
-  if ( display_expo_mod < display_digit ) {
-    for ( index_a = display_digit + 1; index_a > (display_expo_mod + 2); index_a -= 1 ) {
+  if ( display_expo_mod < display_digit_abs ) {
+    for ( index_a = display_digit_abs + 1; index_a > (display_expo_mod + 2); index_a -= 1 ) {
       display_string[index_a + 1] = display_string[index_a];
     }
     display_string[index_a + 1] = display_string[index_a];
@@ -2869,7 +2881,7 @@ void Display_Number(AVRational_32 Display_Input) {
     Point_pos = index_a;
   }
 
-  if ( (display_digit == 2) && (display_expo_mod == 3) ) {
+  if ( (display_digit_abs == 2) && (display_expo_mod == 3) ) {
     display_string[4] = '0';
     display_string[5] = '.';
     Point_pos = 5;
@@ -2909,8 +2921,8 @@ void Display_Number(AVRational_32 Display_Input) {
   }
 
   Point_pos = display_expo_mod + 2;
-  Number_count = display_digit;
-  Cursor_pos = display_digit + 3;
+  Number_count = display_digit_abs;
+  Cursor_pos = display_digit_abs + 3;
 
   if ( display_string[Cursor_pos] == '.' ) {
     ++Number_count;
@@ -2920,7 +2932,7 @@ void Display_Number(AVRational_32 Display_Input) {
   if ( abs(Display_Input.num) == 0 ) {
     display_string[Mantisse_0] = '.';
     display_string[Mantisse_1] = '0';
-    Zero_count = display_digit;
+    Zero_count = display_digit_abs;
     --Point_pos;
   }
 
@@ -2949,6 +2961,21 @@ void Display_Number(AVRational_32 Display_Input) {
     display_string[2] -= 1;
   }
   to_temperature   = false;
+  
+  if ( display_digit < 0 ) {
+  	display_digit_abs += 2;
+    while ( display_string[display_digit_abs] == '0' ) {
+    	if ( display_digit_abs > 3 ) {
+    		if ( Point_pos < display_digit_abs ) {
+        	display_string[display_digit_abs] = '#';
+          --Number_count;
+          --Cursor_pos;
+          --Zero_count;
+    		}
+    	}
+      --display_digit_abs;
+    }
+  }
 
   if ( Debug_Level == 9 ) {
     Serial.print("'");
@@ -2958,6 +2985,7 @@ void Display_Number(AVRational_32 Display_Input) {
     Serial.println(display_expo);
     Serial.println(display_expo_mod);
     Serial.println(Zero_count);
+    Serial.println(display_digit_abs);
   }
   
   temp_Memory_1[0] = display_string[Memory_1];
@@ -4332,16 +4360,25 @@ AVRational_32 factorial(AVRational_32 a) {
 }
 
 AVRational_32 sinh(AVRational_32 a) {
+  if ( a.expo < -8 ) { //  input <= abs(3.000e-9) 
+    return a;
+  }  
   temp_32_exp = exp(a);
   return add( temp_32_exp, min_x(div_x( temp_32_exp )), 2);
 }
 
 AVRational_32 cosh(AVRational_32 a) {
+  if ( a.expo < -8 ) { //  input <= abs(3.000e-9) 
+    return log_1e0;
+  }  
   temp_32_exp = exp(a);
   return add( temp_32_exp, div_x( temp_32_exp ), 2);
 }
 
 AVRational_32 tanh(AVRational_32 a) {
+  if ( a.expo < -8 ) { //  input <= abs(3.000e-9) 
+    return a;
+  }  
   if ( a.expo == 1 ) { //  input >= 12.000 
     if ( ( abs( a.num ) / 6 ) >= ( a.denom / 5 ) ) {
       if ( a.num > 0 ) {
@@ -7448,6 +7485,15 @@ void loop() {
           mem_extra_stack[ 12 ].denom = mem_extra_stack[ 0 ].denom;
           mem_extra_stack[ 12 ].expo = mem_extra_stack[ 0 ].expo;
           mem_extra_stack[ 12 ].op = mem_extra_stack[ 0 ].op;
+          if ( Std_mode == true ) {
+            if ( Display_Status_new == 32 ) {
+              mem_extra_stack[ 14 ].num = mem_extra_stack[ 0 ].num;
+              mem_extra_stack[ 14 ].denom = mem_extra_stack[ 0 ].denom;
+              mem_extra_stack[ 14 ].expo = mem_extra_stack[ 0 ].expo;
+              mem_extra_stack[ 14 ].op = mem_extra_stack[ 0 ].op;
+            }
+          }
+
           if ( Debug_Level == 21 ) {
             Serial.print("mem_stack_count =  ");
             Serial.print(mem_stack_count);
@@ -7693,7 +7739,13 @@ void loop() {
             Get_Number( 0 );
           }
           mem_pointer = 0;                           // Display Number
-          display_digit = fix_extra_test;
+          if ( abs(display_digit) == fix_extra_test ) {
+            display_digit *= -1;
+          }
+          else {
+            display_digit  = fix_extra_test;
+          }
+          
           Display_Number(mem_stack_input[mem_pointer]);
           display_string[Memory_1] = Display_Memory_1[5];
           display_string[Memory_0] = Display_Memory_0[5];
@@ -7712,7 +7764,7 @@ void loop() {
         case 110:                //   _M_plus(8)
         case 111:                //   _M_plus(9)
           mem_extra_test = Switch_Code - M_plus_0;
-          mem_plus_test  = Switch_Code - M_plus_0;
+          mem_plus_test  = mem_extra_test;
           if ( (Start_input == Input_Mantisse) || (Start_input == Input_Expo) || (Start_input == Input_Operation_0) ) {
             if ( Start_input == Input_Operation_0 ) {
               mem_save = false;
@@ -7867,6 +7919,9 @@ void loop() {
           Std_mode_string[6] = display_string[7];
           if ( Std_mode == false ) {
             Std_mode = true;
+            if ( display_digit > 0 ) {
+              display_digit *= -1;
+            }
             mem_stack_max = 2;
             display_string[3] = 'k';
             display_string[4] = 'd';
@@ -7874,11 +7929,15 @@ void loop() {
           }
           else {
             Std_mode = false;
+            if ( display_digit < 0 ) {
+              display_digit *= -1;
+            }
             mem_stack_max = mem_stack_max_c;
             display_string[3] = 'c';
             display_string[4] = 'i';
             display_string[MR_point] = ' ';
           }
+          display_digit_temp = display_digit;
           display_string[1] = '_';
           display_string[2] = '5';
           display_string[5] = '_';

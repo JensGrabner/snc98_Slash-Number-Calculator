@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="yes"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.05" altunitdist="inch" altunit="inch"/>
+<grid distance="50" unitdist="mil" unit="mil" style="lines" multiple="1" display="yes" altdistance="0.05" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -33856,6 +33856,12 @@ Source: AVX .. aphvc.pdf</description>
 <text x="5.08" y="10.16" size="2.1844" layer="91" ratio="10">snc98 3x4 Switch-block Rev. 0.3 by Jens Grabner is licensed under</text>
 <text x="5.08" y="15.24" size="3.81" layer="91" ratio="12">Copyright CERN 2013</text>
 <text x="5.08" y="5.08" size="2.1844" layer="91" ratio="10">the CERN OHL v.1.2 or later. (http://ohwr.org/cernohl)</text>
+<text x="165.1" y="137.16" size="1.6764" layer="91" ratio="12" rot="R90" align="bottom-center">BAS70-06</text>
+<text x="196.85" y="137.16" size="1.6764" layer="91" ratio="12" rot="R90" align="bottom-center">BAS70-06</text>
+<text x="228.6" y="135.89" size="1.6764" layer="91" ratio="12" rot="R90" align="bottom-center">BAS70-06</text>
+<text x="228.6" y="80.01" size="1.6764" layer="91" ratio="12" rot="R90" align="bottom-center">BAS70-06</text>
+<text x="196.85" y="81.28" size="1.6764" layer="91" ratio="12" rot="R90" align="bottom-center">BAS70-06</text>
+<text x="165.1" y="81.28" size="1.6764" layer="91" ratio="12" rot="R90" align="bottom-center">BAS70-06</text>
 </plain>
 <instances>
 <instance part="FRAME1" gate="G$1" x="0" y="0"/>
