@@ -114,6 +114,7 @@
                        // 35 - DS18B20 (0x28) Digital Thermometer, 12bit
                        // 36 - tanh Test 0.000010 .. 100.
                        // 37 - tanh Test -22.000 .. +22.001 Step 0.003.
+                       // 38 - atanh Test 0.0 to 1.0    10 x 540  
 
 uint8_t mem_pointer        =  1;   //     mem_stack 0 .. 19
 #define mem_stack_max_c       39   // 39  Variable in calculate
@@ -375,6 +376,10 @@ static const AVRational_32 exp2_1_8   = { -1, num_exp2_1_8, denum_exp2_1_8, 0};
 #define denum_exp2_1_2   2147302920   // 1/2
 static const AVRational_32 exp2_1_2   = { 0, num_exp2_1_2, denum_exp2_1_2, 0};
 
+#define num_exp2_1_3      715767640
+#define denum_exp2_1_3   2147302920   // 1/3
+static const AVRational_32 exp2_1_3   = { 0, num_exp2_1_3, denum_exp2_1_3, 0};
+
 // ---  log2()_Konstante  ---
 #define num_log_to_2      717140287
 #define denum_log_to_2    497083768   // Fehler ..  2,92e-19
@@ -399,6 +404,7 @@ static const AVRational_32 log_to_10   = { 0, num_log_to_10, denum_log_to_10, 0}
 #define denum_log1e9     128339561
 static const AVRational_32 mul_5_0   = { 1, int30_max, int32_max, 0};
 static const AVRational_32 mul_6_0   = { 1, int32_max_16, int32_max, 0};
+static const AVRational_32 __1e90    = { 90, int32_max, int32_max, 0};
 static const AVRational_32 log_1e0   = { 0, int32_max, int32_max, 0};
 static const AVRational_32 log_1e1   = { 0, num_log1e1, denum_log1e1, 0};
 static const AVRational_32 log_5e8   = { 1, num_log5e8, denum_log5e8, 0};
@@ -509,7 +515,7 @@ static const AVRational_32  ln2 = {ln2_expo, ln2_num, ln2_denom, 0};
 static const AVRational_32  log_2 = {log_2_expo, log_2_num, log_2_denom, 0};
 
 char    expo_temp_str[]    = "#00";
-int8_t  expo_temp_8        =  1;
+int8_t  expo_temp_8        =  1;   // atanh()
 
 char    Expo_string_temp[] = "###" ;
  int16_t expo_temp_16           = 0;
@@ -676,8 +682,8 @@ static const AVRational_32 to_xx[14] = {
 
 static const char mem_str_1[]     = "##########111111111122222222223333333333";
 static const char mem_str_0[]     = "#123456789012345678901234567890123456789";
-
-static const char Error_String_txt[]   = "0IuX[U^";
+                                       // 01234567
+static const char Error_String_txt[]   = "0IuX[U^V";
 
 uint8_t mem_extra_pointer  =   0;   // mem_extra  MR 0 .. MR 9
 uint8_t extra_test_13      =   0;
@@ -794,7 +800,7 @@ static const uint8_t led_font[count_ascii] = {
     0, 107,  34,   0, 109,  18,  97,   2,  70, 112,  92,  70,  12,  64, 128,  82,     //  ¦ !"#$%&'()*+,-./¦
    63,   6,  91,  79, 102, 109, 124,   7, 127, 103,   4,  20,  88,  72,  76,  83,     //  ¦0123456789:;<=>?¦
   123, 119, 127,  57,  15, 121, 113,  61, 118,  48,  30, 122,  56,  85,  55,  99,     //  ¦@ABCDEFGHIJKLMNO¦
-   83, 103,  49,  45,   7,  28,  34,  60,  73, 110,  27,  57, 100,  15,  35,   8,     //  ¦PQRSTUVWXYZ[\]^_¦
+   83, 103,  49,  45,   7,  28,  43,  60,  73, 110,  27,  57, 100,  15,  35,   8,     //  ¦PQRSTUVWXYZ[\]^_¦
    32,  95, 124,  88,  94, 123,  43, 111, 116,  16,  14, 120,  24,  21,  84,  92,     //  ¦`abcdefghijklmno¦
    83,  53,  80, 108,  70,  29,  43, 106,   9, 102,   3,  24,  29,   5,   1,  54};    //  ¦pqrstuvwxyz{|}~ ¦
    
@@ -2714,8 +2720,8 @@ void Reduce_Number() {
 }
 
 void Expand_Number() {
-  gcd_temp_32 = gcd_iter_32(num_temp_u32, denom_temp_u32);
-  num_temp_u32 /= gcd_temp_32;
+  gcd_temp_32     = gcd_iter_32(num_temp_u32, denom_temp_u32);
+  num_temp_u32   /= gcd_temp_32;
   denom_temp_u32 /= gcd_temp_32;
   if ( num_temp_u32 > 0 ) {
     mul_temp_u32  = int32_max;
@@ -2725,7 +2731,7 @@ void Expand_Number() {
     else {
       mul_temp_u32 /= denom_temp_u32;
     }
-    num_temp_u32 *= mul_temp_u32;
+    num_temp_u32   *= mul_temp_u32;
     denom_temp_u32 *= mul_temp_u32;
   }
   if ( num_temp_u32 == 0 ) {
@@ -3150,8 +3156,8 @@ void Expand_Reduce_add() {
       }
 
       Reduce_Number();              // reduce
-      temp_32.num = num_temp_u32;
-      temp_32.num *= test_signum_8;
+      temp_32.num   = num_temp_u32;
+      temp_32.num  *= test_signum_8;
       temp_32.denom = denom_temp_u32;
     }
     else {
@@ -4276,7 +4282,7 @@ AVRational_32 factorial(AVRational_32 a) {
 
   if ( a.num > 0 ) {
     if ( a.expo > 2 ) { //  input > 300
-      Error_String('['); 
+      a.denom = 4; // Error_String('['); 
       return a;
     }
     if ( a.expo == 2 ) { //  input > 71.00
@@ -4285,8 +4291,7 @@ AVRational_32 factorial(AVRational_32 a) {
       num_temp_u64   *= 100;
       denom_temp_u64 *=  71;
     	if ( num_temp_u64 > denom_temp_u64 ) {
-    		a.denom = 4;
-        Error_String('['); 
+    		a.denom = 4; // Error_String('['); 
         return a;
     	}
     }
@@ -4351,8 +4356,7 @@ AVRational_32 factorial(AVRational_32 a) {
     return temp_32_mul;
   }
   else {
-  	a.denom = 2;
-    Error_String('u');  // input <= 0	      
+  	a.denom = 2; // Error_String('u');  // input <= 0	      
     return a;
   }
   return a;
@@ -4399,6 +4403,70 @@ AVRational_32 tanh(AVRational_32 a) {
   }
   temp_32_exp = exp(a);
   return mul(add( temp_32_exp, min_x(div_x( temp_32_exp )), 1), div_x( add( temp_32_exp, div_x( temp_32_exp ), 1)) );
+}
+
+AVRational_32 atanh(AVRational_32 a) {
+  if ( a.expo < -6 ) { //  input <= abs(3.000e-7) 
+    return a;
+  }  
+  if ( a.expo < -4 ) { //  input <= abs(3.000e-6) 
+    return add( a, mul( cubic( a ), exp2_1_3 ), 1 );
+  }  
+  if ( a.expo == 0 ) { //  input  = 1.000 
+    if ( abs( a.num ) == a.denom ) {
+      if ( a.num > 0 ) {
+        return __1e90;
+      }
+      else {
+        return min_x( __1e90 );
+      }
+    }
+    if ( abs( a.num ) > a.denom ) {
+      if ( a.num > 0 ) {
+        a.denom = 6;  // Error_String('^');  input >  1
+        return a;
+      }
+      else {
+        a.denom = 5;  // Error_String('U');  input < -1
+        return a;
+      }  
+    }  
+  }
+  if ( a.expo > 0 ) {  //  input >= 3.000 
+    if ( a.num > 0 ) {
+      a.denom = 6;  // Error_String('^');  input >  3
+      return a;
+    }
+    else {
+      a.denom = 5;  // Error_String('U');  input < -3
+      return a;
+    }
+  }
+  
+  expo_temp_8        = 0;
+  calc_temp_64_a_abs = abs(a.num);
+  denom_temp_u64     = abs(a.denom);
+  denom_temp_u64    *= expo_10[abs(a.expo)];
+  num_temp_u64       = denom_temp_u64;
+  num_temp_u64      += calc_temp_64_a_abs;
+  denom_temp_u64    -= calc_temp_64_a_abs;
+  denom_temp_u64    *= 3;
+  while ( num_temp_u64 >= denom_temp_u64 ) {
+    denom_temp_u64 *= expo_10[1];
+    expo_temp_8 += 1;
+  }
+  num_temp_u64 *= 3;
+  
+  Reduce_Number();              // reduce
+  temp_32.num   = num_temp_u32;
+  temp_32.denom = denom_temp_u32;
+  temp_32.expo  = expo_temp_8;
+
+  temp_32_exp = mul( log( temp_32 ), exp2_1_2 );
+  if ( a.num < 0 ) {
+    return min_x( temp_32_exp );
+  }
+  return temp_32_exp;
 }
 
 AVRational_32 exp(AVRational_32 a) {
@@ -4646,8 +4714,7 @@ AVRational_32 log2(AVRational_32 a) {
     return temp_32;
   }
   else {
-  	a.denom = 2;
-    Error_String('u');  // input <= 0
+  	a.denom = 2;  // Error_String('u');  input <= 0
     return a;
   }
 }
@@ -4658,8 +4725,7 @@ AVRational_32 log10(AVRational_32 a) {
     return temp_32;
   }
   else {
-  	a.denom = 2;
-    Error_String('u');  // input <= 0	      
+  	a.denom = 2; // Error_String('u');  input <= 0	      
     return a;
   }
 }
@@ -4720,8 +4786,7 @@ AVRational_32 log(AVRational_32 a) {
     return div_u32( add(mul( log_1e1, calc_32 ), temp_32_log, 1 ), denom_x );
   }
   else {
-  	a.denom = 2;
-    Error_String('u');  // input <= 0	      
+  	a.denom = 2;  // Error_String('u');  input <= 0	      
     return a;
   }
 }
@@ -5459,6 +5524,244 @@ void Test_all_function() {
       }
      */
     }
+    test_index = false;
+    time_end = millis();
+    time_diff = time_end - time_start;
+    Serial.print("Time: ");
+    Serial.println(time_diff);
+  }
+  if ( Debug_Level == 38 ) {
+    time_start = millis();
+    int8_t expo_test = -9;
+
+    calc_32.expo    = expo_test;
+    denom_temp_u32_ =   200;
+    Serial.println(" ");
+     
+    while ( expo_test < -4 ) {
+      for ( int16_t index = 60; index < 600; index += 1 ) {
+        num_temp_u32   = index;
+        denom_temp_u32 = denom_temp_u32_;
+
+        Expand_Number();
+
+        calc_32.num   = num_temp_u32;
+        calc_32.denom = denom_temp_u32;
+        calc_32.expo  = expo_test;
+
+        if ( expo_test == 0 ) {
+          if ( num_temp_u32 < denom_temp_u32 ) {
+           /*
+            Serial.print(calc_32.num);
+            Serial.print("  ");
+            Serial.print(calc_32.denom);
+            Serial.print("  ");
+            Serial.print(calc_32.expo);
+            Serial.println("  ");
+           */
+            test_32 = atanh(calc_32);
+            Serial.print(test_32.num);
+            Serial.print("  ");
+            Serial.print(test_32.denom);
+            Serial.print("  ");
+            Serial.print(test_32.expo);
+            Serial.println(" -> ");       	
+          }
+        }
+        else {
+         /*
+          Serial.print(calc_32.num);
+          Serial.print("  ");
+          Serial.print(calc_32.denom);
+          Serial.print("  ");
+          Serial.print(calc_32.expo);
+          Serial.println("  "); 
+         */    	
+          test_32 = atanh(calc_32);
+          Serial.print(test_32.num);
+          Serial.print("  ");
+          Serial.print(test_32.denom);
+          Serial.print("  ");
+          Serial.print(test_32.expo);
+          Serial.println(" -> ");       	
+        }
+      }
+    	expo_test += 1;
+    } 
+                        
+    expo_test    = 0;
+   /*
+    denom_temp_u32_ = 20000;
+    denom_temp_u32  = 20000;
+      for ( uint32_t index = 19901; index < 19991; index += 1 ) {
+        num_temp_u32   = index;
+
+        Expand_Number();
+
+        calc_32.num   = num_temp_u32;
+        calc_32.denom = denom_temp_u32;
+
+        Serial.print(calc_32.num);
+        Serial.print("  ");
+        Serial.print(calc_32.denom);
+        Serial.print("  ");
+        Serial.print(calc_32.expo);
+        Serial.println("  "); 
+    	
+        test_32 = atanh(calc_32);
+        Serial.print(test_32.num);
+        Serial.print("  ");
+        Serial.print(test_32.denom);
+        Serial.print("  ");
+        Serial.print(test_32.expo);
+        Serial.println(" -> ");       	
+
+        denom_temp_u32  = denom_temp_u32_;
+      }
+
+    denom_temp_u32_ = 200000;
+    denom_temp_u32  = 200000;
+      for ( uint32_t index = 199901; index < 199991; index += 1 ) {
+        num_temp_u32   = index;
+
+        Expand_Number();
+
+        calc_32.num   = num_temp_u32;
+        calc_32.denom = denom_temp_u32;
+
+        Serial.print(calc_32.num);
+        Serial.print("  ");
+        Serial.print(calc_32.denom);
+        Serial.print("  ");
+        Serial.print(calc_32.expo);
+        Serial.println("  "); 
+    	
+        test_32 = atanh(calc_32);
+        Serial.print(test_32.num);
+        Serial.print("  ");
+        Serial.print(test_32.denom);
+        Serial.print("  ");
+        Serial.print(test_32.expo);
+        Serial.println(" -> ");       	
+
+        denom_temp_u32  = denom_temp_u32_;
+      }
+
+    denom_temp_u32_ = 2000000;
+    denom_temp_u32  = 2000000;
+      for ( uint32_t index = 1999901; index < 1999991; index += 1 ) {
+        num_temp_u32   = index;
+
+        Expand_Number();
+
+        calc_32.num   = num_temp_u32;
+        calc_32.denom = denom_temp_u32;
+
+        Serial.print(calc_32.num);
+        Serial.print("  ");
+        Serial.print(calc_32.denom);
+        Serial.print("  ");
+        Serial.print(calc_32.expo);
+        Serial.println("  "); 
+    	
+        test_32 = atanh(calc_32);
+        Serial.print(test_32.num);
+        Serial.print("  ");
+        Serial.print(test_32.denom);
+        Serial.print("  ");
+        Serial.print(test_32.expo);
+        Serial.println(" -> ");       	
+
+        denom_temp_u32  = denom_temp_u32_;
+      }
+
+    denom_temp_u32_ = 20000000;
+    denom_temp_u32  = 20000000;
+      for ( uint32_t index = 19999901; index < 19999991; index += 1 ) {
+        num_temp_u32   = index;
+
+        Expand_Number();
+
+        calc_32.num   = num_temp_u32;
+        calc_32.denom = denom_temp_u32;
+
+        Serial.print(calc_32.num);
+        Serial.print("  ");
+        Serial.print(calc_32.denom);
+        Serial.print("  ");
+        Serial.print(calc_32.expo);
+        Serial.println("  "); 
+     	
+        test_32 = atanh(calc_32);
+        Serial.print(test_32.num);
+        Serial.print("  ");
+        Serial.print(test_32.denom);
+        Serial.print("  ");
+        Serial.print(test_32.expo);
+        Serial.println(" -> ");       	
+
+        denom_temp_u32  = denom_temp_u32_;
+      }
+
+    denom_temp_u32_ = 200000000;
+    denom_temp_u32  = 200000000;
+      for ( uint32_t index = 199999901; index < 199999991; index += 1 ) {
+        num_temp_u32   = index;
+
+        Expand_Number();
+
+        calc_32.num   = num_temp_u32;
+        calc_32.denom = denom_temp_u32;
+
+        Serial.print(calc_32.num);
+        Serial.print("  ");
+        Serial.print(calc_32.denom);
+        Serial.print("  ");
+        Serial.print(calc_32.expo);
+        Serial.println("  "); 
+    	
+        test_32 = atanh(calc_32);
+        Serial.print(test_32.num);
+        Serial.print("  ");
+        Serial.print(test_32.denom);
+        Serial.print("  ");
+        Serial.print(test_32.expo);
+        Serial.println(" -> ");       	
+
+        denom_temp_u32  = denom_temp_u32_;
+      }
+    */
+   /*
+    denom_temp_u32_ = 2000000000;
+    denom_temp_u32  = 2000000000;
+    expo_test       = 0;
+      for ( uint32_t index = 1999999901; index <= 1999999999; index += 1 ) {
+        num_temp_u32  = index;
+        calc_32.expo  = expo_test;
+
+        Expand_Number();
+
+        calc_32.num   = num_temp_u32;
+        calc_32.denom = denom_temp_u32;
+
+        Serial.print(calc_32.num);
+        Serial.print("  ");
+        Serial.print(calc_32.denom);
+        Serial.print("  ");
+        Serial.print(calc_32.expo);
+        Serial.print("  "); 
+     	
+        test_32 = atanh(calc_32);
+        Serial.print(test_32.num);
+        Serial.print("  ");
+        Serial.print(test_32.denom);
+        Serial.print("  ");
+        Serial.print(test_32.expo);
+        Serial.println(" -> ");       	
+
+        denom_temp_u32  = denom_temp_u32_;
+      }
+   */
     test_index = false;
     time_end = millis();
     time_diff = time_end - time_start;
@@ -6637,6 +6940,10 @@ void Function_1_number() {
     	  mem_stack_input[ mem_pointer ] = tanh(mem_stack_input[ mem_pointer ]);
     	  break;
     	  
+      case 76:                 //    _atanh_
+      	mem_stack_input[ mem_pointer ] = atanh(mem_stack_input[ mem_pointer ]);
+        break;
+
       case 113:                //    e^x
     	  mem_stack_input[ mem_pointer ] = exp(mem_stack_input[ mem_pointer ]);
     	  break;
@@ -6727,7 +7034,7 @@ static const unsigned char PS_128 = (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);
 // the setup routine runs once when you press reset:
 void setup() {
  
-  pinMode(On_Off_PIN, INPUT_PULLUP);
+  // pinMode(On_Off_PIN, INPUT_PULLUP);
   pinMode(On_Off_PIN, OUTPUT);
   digitalWrite(On_Off_PIN, LOW);
 
@@ -6898,6 +7205,7 @@ void loop() {
         case 71:                 //    sinh(x)
         case 72:                 //    cosh(x)
         case 73:                 //    tanh(x)
+        case 76:                 //    atanh(x)
         case 112:                //    log(x)
         case 113:                //    e^x
         case 114:                //    2^x
@@ -7569,9 +7877,6 @@ void loop() {
           break;
 
         case 75:                 //    acosh()
-          break;
-
-        case 76:                 //    atanh()
           break;
 
         case 77:                 //   _MR(0)

@@ -170,6 +170,12 @@ class TimerOne
     static const byte ratio = (F_CPU)/ ( 1000000 );
 	
 #elif defined(__AVR__)
+
+#if defined (__AVR_ATmega8__)
+  //in some io definitions for older microcontrollers TIMSK is used instead of TIMSK1
+  #define TIMSK1 TIMSK
+#endif
+	
   public:
     //****************************
     //  Configuration
@@ -180,7 +186,7 @@ class TimerOne
 	setPeriod(microseconds);
     }
     void setPeriod(unsigned long microseconds) __attribute__((always_inline)) {
-	const unsigned long cycles = (F_CPU / 2000000) * microseconds;
+	const unsigned long cycles = ((F_CPU/100000 * microseconds) / 20);
 	if (cycles < TIMER1_RESOLUTION) {
 		clockSelectBits = _BV(CS10);
 		pwmPeriod = cycles;
@@ -269,6 +275,7 @@ class TimerOne
     //****************************
     //  Interrupt Function
     //****************************
+	
     void attachInterrupt(void (*isr)()) __attribute__((always_inline)) {
 	isrCallback = isr;
 	TIMSK1 = _BV(TOIE1);
@@ -300,6 +307,14 @@ class TimerOne
 #elif defined(KINETISL)
 #define F_TIMER (F_PLL/2)
 #endif
+
+// Use only 15 bit resolution.  From K66 reference manual, 45.5.7 page 1200:
+//   The CPWM pulse width (duty cycle) is determined by 2 x (CnV - CNTIN) and the
+//   period is determined by 2 x (MOD - CNTIN). See the following figure. MOD must be
+//   kept in the range of 0x0001 to 0x7FFF because values outside this range can produce
+//   ambiguous results.
+#undef TIMER1_RESOLUTION
+#define TIMER1_RESOLUTION 32768
 
   public:
     //****************************

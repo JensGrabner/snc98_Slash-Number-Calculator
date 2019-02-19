@@ -48,7 +48,7 @@
   #define TIMER3_A_PIN   32
   #define TIMER3_B_PIN   25
   #define TIMER3_ICP_PIN 32
-  
+
 // Teensy 3.5 / Teensy 3.6
 //
 #elif defined(__MK64FX512__) || defined(__MK66FX1M0__)
@@ -58,7 +58,7 @@
   #define TIMER3_A_PIN   29
   #define TIMER3_B_PIN   30
   #define TIMER3_ICP_PIN 29
-  
+
 // Teensy-LC
 //
 #elif defined(__MKL26Z64__)
@@ -101,11 +101,19 @@
 
 //  Uno, Duemilanove, LilyPad, etc
 //
-#elif defined (__AVR_ATmega168__) || defined (__AVR_ATmega328P__) || defined (__AVR_ATmega328__)
+#elif defined (__AVR_ATmega168__) || defined (__AVR_ATmega328P__) || defined (__AVR_ATmega328__) ||  defined (__AVR_ATmega8__)
   #define TIMER1_A_PIN   9
   #define TIMER1_B_PIN   10
   #define TIMER1_ICP_PIN 8
   #define TIMER1_CLK_PIN 5
+
+  //  attiny167
+//
+#elif defined (__AVR_ATtiny167__)
+  #define TIMER1_A_PIN   14
+  #define TIMER1_B_PIN   11
+  //#define TIMER1_ICP_PIN 8
+  //#define TIMER1_CLK_PIN 5
 
 // Sanguino
 //
@@ -138,7 +146,7 @@
 
 // Mighty-1284 - Maniacbug
 //
-#elif defined(__AVR_ATmega1284P__)
+#elif defined(__AVR_ATmega1284P__) || defined(__AVR_ATmega1284__)
   #define TIMER1_A_PIN   12  // PD5
   #define TIMER1_B_PIN   13  // PD4
   #define TIMER1_ICP_PIN 14  // PD6
