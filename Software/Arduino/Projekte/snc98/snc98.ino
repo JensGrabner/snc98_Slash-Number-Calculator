@@ -6160,6 +6160,7 @@ void Test_Switch_up_down() {
               break;
 
             case 1:
+            case 3:
               Switch_Code = 202;  //           new  EE(1)
               break;
 
@@ -6207,6 +6208,7 @@ void Test_Switch_up_down() {
               break;
 
             case 1:
+            case 3:
               Switch_Code = 203;  //           new  EE(2)
               break;
 
@@ -6255,6 +6257,7 @@ void Test_Switch_up_down() {
               break;
 
             case 1:
+            case 3:
               Switch_Code = 204;  //           new  EE(3)
               break;
 
@@ -6303,6 +6306,7 @@ void Test_Switch_up_down() {
               break;
 
             case 1:
+            case 3:
               Switch_Code = 205;  //           new  EE(4)
               break;
 
@@ -6350,6 +6354,7 @@ void Test_Switch_up_down() {
               break;
 
             case 1:
+            case 3:
               Switch_Code = 206;  //           new  EE(5)
               break;
 
@@ -6398,6 +6403,7 @@ void Test_Switch_up_down() {
               break;
 
             case 1:
+            case 3:
               Switch_Code = 207;  //           new  EE(6)
               break;
 
@@ -6446,6 +6452,7 @@ void Test_Switch_up_down() {
               break;
 
             case 1:
+            case 3:
               Switch_Code = 208;  //           new  EE(7)
               break;
 
@@ -6493,6 +6500,7 @@ void Test_Switch_up_down() {
               break;
 
             case 1:
+            case 3:
               Switch_Code = 209;  //           new  EE(8)
               break;
 
@@ -6541,6 +6549,7 @@ void Test_Switch_up_down() {
               break;
 
             case 1:
+            case 3:
               Switch_Code = 210;  //           new  EE(9)
               break;
 
@@ -9453,8 +9462,17 @@ void loop() {
           break;
 
         case 3:       // °"
-          display_string[Memory_1] = Display_Memory_1[13];
-          display_string[Memory_0] = Display_Memory_0[13];
+        	if ( Start_input == Input_Expo ) {  // EE to ..
+            display_string[Memory_1] = Display_Memory_1[15];
+            display_string[Memory_0] = Display_Memory_0[15];
+          }
+          else {
+            display_string[Memory_1] = Display_Memory_1[13];
+            display_string[Memory_0] = Display_Memory_0[13];
+          }
+          if ( expo_exchange == true ) {
+            display_string[Memory_0] = '0' + to_extra_test;
+          }
           break;
 
         case 6:       // _,_/

@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="yes"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="5" unitdist="mil" unit="mil" style="lines" multiple="1" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -34,8 +34,8 @@
 <layer number="24" name="bOrigins" color="15" fill="1" visible="yes" active="yes"/>
 <layer number="25" name="tNames" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="26" name="bNames" color="7" fill="1" visible="yes" active="yes"/>
-<layer number="27" name="tValues" color="7" fill="1" visible="yes" active="yes"/>
-<layer number="28" name="bValues" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="27" name="tValues" color="7" fill="1" visible="no" active="yes"/>
+<layer number="28" name="bValues" color="7" fill="1" visible="no" active="yes"/>
 <layer number="29" name="tStop" color="7" fill="3" visible="yes" active="yes"/>
 <layer number="30" name="bStop" color="7" fill="6" visible="yes" active="yes"/>
 <layer number="31" name="tCream" color="7" fill="4" visible="yes" active="yes"/>
@@ -94,6 +94,7 @@
 <layer number="115" name="ReferenceISLANDS" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="116" name="Patch_BOT" color="9" fill="4" visible="yes" active="yes"/>
 <layer number="118" name="Rect_Pads" color="7" fill="1" visible="no" active="no"/>
+<layer number="120" name="TOPSILK" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="121" name="_tsilk" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="122" name="_bsilk" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="123" name="tTestmark" color="7" fill="1" visible="yes" active="yes"/>
@@ -103,9 +104,11 @@
 <layer number="127" name="_tValues" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="128" name="_bValues" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="129" name="Mask" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="130" name="COMMENTS_STOP_MASK_BOTTOM_SIDE" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="131" name="tAdjust" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="132" name="bAdjust" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="144" name="Drill_legend" color="7" fill="1" visible="yes" active="yes"/>
+<layer number="147" name="COMMENTS_OUTLINE_AND_DRILLING_PLAN" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="150" name="Notes" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="151" name="HeatSink" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="152" name="_bDocu" color="7" fill="1" visible="yes" active="yes"/>
@@ -4794,13 +4797,13 @@ for trimmer refence see : &lt;u&gt;www.electrospec-inc.com/cross_references/trim
 <wire x1="2.473" y1="0.983" x2="2.473" y2="-0.983" width="0.0508" layer="39"/>
 <wire x1="2.473" y1="-0.983" x2="-2.473" y2="-0.983" width="0.0508" layer="39"/>
 <wire x1="-2.473" y1="-0.983" x2="-2.473" y2="0.983" width="0.0508" layer="39"/>
-<smd name="2" x="1.422" y="0" dx="1.6" dy="1.803" layer="1" roundness="30"/>
-<smd name="1" x="-1.422" y="0" dx="1.6" dy="1.803" layer="1" roundness="30"/>
-<text x="-1.27" y="1.27" size="1.27" layer="25">&gt;NAME</text>
-<text x="-1.27" y="-2.54" size="1.27" layer="27">&gt;VALUE</text>
 <rectangle x1="-1.6891" y1="-0.8763" x2="-0.9525" y2="0.8763" layer="51"/>
 <rectangle x1="0.9525" y1="-0.8763" x2="1.6891" y2="0.8763" layer="51"/>
 <rectangle x1="-0.3" y1="-0.7" x2="0.3" y2="0.7" layer="35"/>
+<smd name="1" x="-1.422" y="0" dx="1.6" dy="1.803" layer="1" roundness="30"/>
+<smd name="2" x="1.422" y="0" dx="1.6" dy="1.803" layer="1" roundness="30"/>
+<text x="-1.27" y="1.27" size="1.27" layer="25">&gt;NAME</text>
+<text x="-1.27" y="-2.54" size="1.27" layer="27">&gt;VALUE</text>
 </package>
 <package name="0204/5">
 <description>&lt;b&gt;RESISTOR&lt;/b&gt;&lt;p&gt;
@@ -4823,12 +4826,12 @@ type 0204, grid 5 mm</description>
 <wire x1="1.524" y1="0.889" x2="1.27" y2="0.889" width="0.1524" layer="21"/>
 <wire x1="1.524" y1="-0.889" x2="1.27" y2="-0.889" width="0.1524" layer="21"/>
 <wire x1="1.778" y1="-0.635" x2="1.778" y2="0.635" width="0.1524" layer="51"/>
+<rectangle x1="-2.032" y1="-0.254" x2="-1.778" y2="0.254" layer="51"/>
+<rectangle x1="1.778" y1="-0.254" x2="2.032" y2="0.254" layer="51"/>
 <pad name="1" x="-2.54" y="0" drill="0.8128" shape="octagon"/>
 <pad name="2" x="2.54" y="0" drill="0.8128" shape="octagon"/>
 <text x="-2.0066" y="1.1684" size="0.9906" layer="25" ratio="10">&gt;NAME</text>
 <text x="-2.1336" y="-2.3114" size="0.9906" layer="27" ratio="10">&gt;VALUE</text>
-<rectangle x1="-2.032" y1="-0.254" x2="-1.778" y2="0.254" layer="51"/>
-<rectangle x1="1.778" y1="-0.254" x2="2.032" y2="0.254" layer="51"/>
 </package>
 <package name="C1206K">
 <description>&lt;b&gt;Ceramic Chip Capacitor KEMET 1206 reflow solder&lt;/b&gt;&lt;p&gt;
@@ -4841,6 +4844,23 @@ Metric Code Size 3216</description>
 <text x="-1.6" y="-2.1" size="1.016" layer="27">&gt;VALUE</text>
 <rectangle x1="-1.6" y1="-0.8" x2="-1.1" y2="0.8" layer="51"/>
 <rectangle x1="1.1" y1="-0.8" x2="1.6" y2="0.8" layer="51"/>
+</package>
+<package name="M0805">
+<description>&lt;b&gt;RESISTOR&lt;/b&gt;&lt;p&gt;
+MELF 0.10 W</description>
+<wire x1="-1.973" y1="0.983" x2="1.973" y2="0.983" width="0.0508" layer="39"/>
+<wire x1="1.973" y1="-0.983" x2="-1.973" y2="-0.983" width="0.0508" layer="39"/>
+<wire x1="-1.973" y1="-0.983" x2="-1.973" y2="0.983" width="0.0508" layer="39"/>
+<wire x1="1.973" y1="0.983" x2="1.973" y2="-0.983" width="0.0508" layer="39"/>
+<wire x1="0.7112" y1="0.635" x2="-0.7112" y2="0.635" width="0.1524" layer="51"/>
+<wire x1="0.7112" y1="-0.635" x2="-0.7112" y2="-0.635" width="0.1524" layer="51"/>
+<rectangle x1="-1.0414" y1="-0.7112" x2="-0.6858" y2="0.7112" layer="51"/>
+<rectangle x1="0.6858" y1="-0.7112" x2="1.0414" y2="0.7112" layer="51"/>
+<rectangle x1="-0.1999" y1="-0.5999" x2="0.1999" y2="0.5999" layer="35"/>
+<smd name="1" x="-1.016" y="0" dx="1.3" dy="1.6" layer="1" roundness="25"/>
+<smd name="2" x="1.016" y="0" dx="1.3" dy="1.6" layer="1" roundness="25"/>
+<text x="-1.27" y="1.27" size="1.27" layer="25">&gt;NAME</text>
+<text x="-1.27" y="-2.54" size="1.27" layer="27">&gt;VALUE</text>
 </package>
 </packages>
 </library>
@@ -5038,61 +5058,73 @@ design rules under a new name.</description>
 <attribute name="OC_FARNELL" value="unknown" x="10.414" y="72.009" size="1.778" layer="27" display="off"/>
 <attribute name="MF" value="" x="10.414" y="72.009" size="1.778" layer="27" display="off"/>
 <attribute name="MPN" value="" x="10.414" y="72.009" size="1.778" layer="27" display="off"/>
+<attribute name="TME_EU" value="B3F-4050" x="10.414" y="72.009" size="1.778" layer="27" display="off"/>
 </element>
 <element name="S2" library="SmartPrj" package="TACTILE-PTH-12MM" value="B3F-4150" x="10.414" y="51.689">
 <attribute name="OC_FARNELL" value="unknown" x="10.414" y="51.689" size="1.778" layer="27" display="off"/>
 <attribute name="MF" value="" x="10.414" y="51.689" size="1.778" layer="27" display="off"/>
 <attribute name="MPN" value="" x="10.414" y="51.689" size="1.778" layer="27" display="off"/>
+<attribute name="TME_EU" value="B3F-4050" x="10.414" y="51.689" size="1.778" layer="27" display="off"/>
 </element>
 <element name="S3" library="SmartPrj" package="TACTILE-PTH-12MM" value="B3F-4150" x="10.414" y="31.369">
 <attribute name="OC_FARNELL" value="unknown" x="10.414" y="31.369" size="1.778" layer="27" display="off"/>
 <attribute name="MF" value="" x="10.414" y="31.369" size="1.778" layer="27" display="off"/>
 <attribute name="MPN" value="" x="10.414" y="31.369" size="1.778" layer="27" display="off"/>
+<attribute name="TME_EU" value="B3F-4050" x="10.414" y="31.369" size="1.778" layer="27" display="off"/>
 </element>
 <element name="S4" library="SmartPrj" package="TACTILE-PTH-12MM" value="B3F-4150" x="10.414" y="11.049">
 <attribute name="OC_FARNELL" value="unknown" x="10.414" y="11.049" size="1.778" layer="27" display="off"/>
 <attribute name="MF" value="" x="10.414" y="11.049" size="1.778" layer="27" display="off"/>
 <attribute name="MPN" value="" x="10.414" y="11.049" size="1.778" layer="27" display="off"/>
+<attribute name="TME_EU" value="B3F-4050" x="10.414" y="11.049" size="1.778" layer="27" display="off"/>
 </element>
 <element name="S5" library="SmartPrj" package="TACTILE-PTH-12MM" value="B3F-4150" x="28.194" y="72.009">
 <attribute name="OC_FARNELL" value="unknown" x="28.194" y="72.009" size="1.778" layer="27" display="off"/>
 <attribute name="MF" value="" x="28.194" y="72.009" size="1.778" layer="27" display="off"/>
 <attribute name="MPN" value="" x="28.194" y="72.009" size="1.778" layer="27" display="off"/>
+<attribute name="TME_EU" value="B3F-4050" x="28.194" y="72.009" size="1.778" layer="27" display="off"/>
 </element>
 <element name="S6" library="SmartPrj" package="TACTILE-PTH-12MM" value="B3F-4150" x="28.194" y="51.689">
 <attribute name="OC_FARNELL" value="unknown" x="28.194" y="51.689" size="1.778" layer="27" display="off"/>
 <attribute name="MF" value="" x="28.194" y="51.689" size="1.778" layer="27" display="off"/>
 <attribute name="MPN" value="" x="28.194" y="51.689" size="1.778" layer="27" display="off"/>
+<attribute name="TME_EU" value="B3F-4050" x="28.194" y="51.689" size="1.778" layer="27" display="off"/>
 </element>
 <element name="S7" library="SmartPrj" package="TACTILE-PTH-12MM" value="B3F-4150" x="28.194" y="31.369">
 <attribute name="OC_FARNELL" value="unknown" x="28.194" y="31.369" size="1.778" layer="27" display="off"/>
 <attribute name="MF" value="" x="28.194" y="31.369" size="1.778" layer="27" display="off"/>
 <attribute name="MPN" value="" x="28.194" y="31.369" size="1.778" layer="27" display="off"/>
+<attribute name="TME_EU" value="B3F-4050" x="28.194" y="31.369" size="1.778" layer="27" display="off"/>
 </element>
 <element name="S8" library="SmartPrj" package="TACTILE-PTH-12MM" value="B3F-4150" x="28.194" y="11.049">
 <attribute name="OC_FARNELL" value="unknown" x="28.194" y="11.049" size="1.778" layer="27" display="off"/>
 <attribute name="MF" value="" x="28.194" y="11.049" size="1.778" layer="27" display="off"/>
 <attribute name="MPN" value="" x="28.194" y="11.049" size="1.778" layer="27" display="off"/>
+<attribute name="TME_EU" value="B3F-4050" x="28.194" y="11.049" size="1.778" layer="27" display="off"/>
 </element>
 <element name="S12" library="SmartPrj" package="TACTILE-PTH-12MM" value="B3F-4150" x="45.974" y="11.049">
 <attribute name="OC_FARNELL" value="unknown" x="45.974" y="11.049" size="1.778" layer="27" display="off"/>
 <attribute name="MF" value="" x="45.974" y="11.049" size="1.778" layer="27" display="off"/>
 <attribute name="MPN" value="" x="45.974" y="11.049" size="1.778" layer="27" display="off"/>
+<attribute name="TME_EU" value="B3F-4050" x="45.974" y="11.049" size="1.778" layer="27" display="off"/>
 </element>
 <element name="S11" library="SmartPrj" package="TACTILE-PTH-12MM" value="B3F-4150" x="45.974" y="31.369">
 <attribute name="OC_FARNELL" value="unknown" x="45.974" y="31.369" size="1.778" layer="27" display="off"/>
 <attribute name="MF" value="" x="45.974" y="31.369" size="1.778" layer="27" display="off"/>
 <attribute name="MPN" value="" x="45.974" y="31.369" size="1.778" layer="27" display="off"/>
+<attribute name="TME_EU" value="B3F-4050" x="45.974" y="31.369" size="1.778" layer="27" display="off"/>
 </element>
 <element name="S10" library="SmartPrj" package="TACTILE-PTH-12MM" value="B3F-4150" x="45.974" y="51.689">
 <attribute name="OC_FARNELL" value="unknown" x="45.974" y="51.689" size="1.778" layer="27" display="off"/>
 <attribute name="MF" value="" x="45.974" y="51.689" size="1.778" layer="27" display="off"/>
 <attribute name="MPN" value="" x="45.974" y="51.689" size="1.778" layer="27" display="off"/>
+<attribute name="TME_EU" value="B3F-4050" x="45.974" y="51.689" size="1.778" layer="27" display="off"/>
 </element>
 <element name="S9" library="SmartPrj" package="TACTILE-PTH-12MM" value="B3F-4150" x="45.974" y="72.009">
 <attribute name="OC_FARNELL" value="unknown" x="45.974" y="72.009" size="1.778" layer="27" display="off"/>
 <attribute name="MF" value="" x="45.974" y="72.009" size="1.778" layer="27" display="off"/>
 <attribute name="MPN" value="" x="45.974" y="72.009" size="1.778" layer="27" display="off"/>
+<attribute name="TME_EU" value="B3F-4050" x="45.974" y="72.009" size="1.778" layer="27" display="off"/>
 </element>
 <element name="D1" library="BaseApp" package="SMADIODE-WIDE" value="SD103CW" x="8.128" y="18.669" rot="MR0">
 <attribute name="OC_FARNELL" value="2306221" x="8.128" y="18.669" size="1.778" layer="28" rot="MR0" display="off"/>
@@ -5153,31 +5185,37 @@ design rules under a new name.</description>
 <attribute name="OC_FARNELL" value="unknown" x="8.255" y="61.849" size="1.778" layer="27" rot="R270" display="off"/>
 <attribute name="MF" value="" x="8.255" y="61.849" size="1.778" layer="27" rot="R270" display="off"/>
 <attribute name="MPN" value="" x="8.255" y="61.849" size="1.778" layer="27" rot="R270" display="off"/>
+<attribute name="TME_EU" value="BAT54A-DIO" x="8.255" y="61.849" size="1.778" layer="27" rot="R270" display="off"/>
 </element>
 <element name="D17" library="diode" package="SOT23" value="BAT54A" x="7.874" y="21.209" rot="R270">
 <attribute name="OC_FARNELL" value="unknown" x="7.874" y="21.209" size="1.778" layer="27" rot="R270" display="off"/>
 <attribute name="MF" value="" x="7.874" y="21.209" size="1.778" layer="27" rot="R270" display="off"/>
 <attribute name="MPN" value="" x="7.874" y="21.209" size="1.778" layer="27" rot="R270" display="off"/>
+<attribute name="TME_EU" value="BAT54A-DIO" x="7.874" y="21.209" size="1.778" layer="27" rot="R270" display="off"/>
 </element>
 <element name="D18" library="diode" package="SOT23" value="BAT54A" x="28.067" y="61.849" rot="R270">
 <attribute name="OC_FARNELL" value="unknown" x="28.067" y="61.849" size="1.778" layer="27" rot="R270" display="off"/>
 <attribute name="MF" value="" x="28.067" y="61.849" size="1.778" layer="27" rot="R270" display="off"/>
 <attribute name="MPN" value="" x="28.067" y="61.849" size="1.778" layer="27" rot="R270" display="off"/>
+<attribute name="TME_EU" value="BAT54A-DIO" x="28.067" y="61.849" size="1.778" layer="27" rot="R270" display="off"/>
 </element>
 <element name="D19" library="diode" package="SOT23" value="BAT54A" x="26.924" y="21.209" rot="R270">
 <attribute name="OC_FARNELL" value="unknown" x="26.924" y="21.209" size="1.778" layer="27" rot="R270" display="off"/>
 <attribute name="MF" value="" x="26.924" y="21.209" size="1.778" layer="27" rot="R270" display="off"/>
 <attribute name="MPN" value="" x="26.924" y="21.209" size="1.778" layer="27" rot="R270" display="off"/>
+<attribute name="TME_EU" value="BAT54A-DIO" x="26.924" y="21.209" size="1.778" layer="27" rot="R270" display="off"/>
 </element>
 <element name="D20" library="diode" package="SOT23" value="BAT54A" x="43.688" y="61.849" rot="R270">
 <attribute name="OC_FARNELL" value="unknown" x="43.688" y="61.849" size="1.778" layer="27" rot="R270" display="off"/>
 <attribute name="MF" value="" x="43.688" y="61.849" size="1.778" layer="27" rot="R270" display="off"/>
 <attribute name="MPN" value="" x="43.688" y="61.849" size="1.778" layer="27" rot="R270" display="off"/>
+<attribute name="TME_EU" value="BAT54A-DIO" x="43.688" y="61.849" size="1.778" layer="27" rot="R270" display="off"/>
 </element>
 <element name="D21" library="diode" package="SOT23" value="BAT54A" x="44.45" y="21.209" rot="R270">
 <attribute name="OC_FARNELL" value="unknown" x="44.45" y="21.209" size="1.778" layer="27" rot="R270" display="off"/>
 <attribute name="MF" value="" x="44.45" y="21.209" size="1.778" layer="27" rot="R270" display="off"/>
 <attribute name="MPN" value="" x="44.45" y="21.209" size="1.778" layer="27" rot="R270" display="off"/>
+<attribute name="TME_EU" value="BAT54A-DIO" x="44.45" y="21.209" size="1.778" layer="27" rot="R270" display="off"/>
 </element>
 <element name="JP1" library="SparkFun-Connectors" package="1X09_LOCK_LONGPADS" value="M09LOCK-LONGPADS" x="18.034" y="80.264">
 <attribute name="OC_FARNELL" value="unknown" x="18.034" y="80.264" size="1.778" layer="27" display="off"/>
@@ -5298,6 +5336,7 @@ design rules under a new name.</description>
 <attribute name="OC_FARNELL" value="unknown" x="1.778" y="58.293" size="1.778" layer="27" rot="R270" display="off"/>
 <attribute name="MF" value="" x="1.778" y="58.293" size="1.778" layer="27" rot="R270" display="off"/>
 <attribute name="MPN" value="" x="1.778" y="58.293" size="1.778" layer="27" rot="R270" display="off"/>
+<attribute name="TME_EU" value="CC0805KRX7R9153" x="1.778" y="58.293" size="1.778" layer="27" rot="R270" display="off"/>
 </element>
 <element name="R25" library="rcl" package="0204/5" value="27k" x="54.991" y="17.907" rot="R90">
 <attribute name="OC_FARNELL" value="unknown" x="54.991" y="17.907" size="1.778" layer="27" rot="R90" display="off"/>
@@ -5313,6 +5352,7 @@ design rules under a new name.</description>
 <attribute name="OC_FARNELL" value="unknown" x="37.084" y="16.764" size="1.778" layer="27" rot="R180" display="off"/>
 <attribute name="MF" value="" x="37.084" y="16.764" size="1.778" layer="27" rot="R180" display="off"/>
 <attribute name="MPN" value="" x="37.084" y="16.764" size="1.778" layer="27" rot="R180" display="off"/>
+<attribute name="TME_EU" value="CC0805KRX7R9153" x="37.084" y="16.764" size="1.778" layer="27" rot="R180" display="off"/>
 </element>
 <element name="R27" library="rcl" package="0204/5" value="27k" x="54.991" y="24.511" rot="R270">
 <attribute name="OC_FARNELL" value="unknown" x="54.991" y="24.511" size="1.778" layer="27" rot="R270" display="off"/>
@@ -5328,11 +5368,14 @@ design rules under a new name.</description>
 <attribute name="OC_FARNELL" value="unknown" x="45.339" y="42.418" size="1.778" layer="27" rot="R180" display="off"/>
 <attribute name="MF" value="" x="45.339" y="42.418" size="1.778" layer="27" rot="R180" display="off"/>
 <attribute name="MPN" value="" x="45.339" y="42.418" size="1.778" layer="27" rot="R180" display="off"/>
+<attribute name="TME_EU" value="CC0805KRX7R9153" x="45.339" y="42.418" size="1.778" layer="27" rot="R180" display="off"/>
 </element>
-<element name="R1" library="rcl" package="R1206" value="6k8" x="2.159" y="64.262" rot="R270">
+<element name="R1" library="rcl" package="R1206" value="6k8" x="2.159" y="64.262" locked="yes" smashed="yes" rot="R270">
 <attribute name="OC_FARNELL" value="unknown" x="2.159" y="64.262" size="1.778" layer="27" rot="R270" display="off"/>
 <attribute name="MF" value="" x="2.159" y="64.262" size="1.778" layer="27" rot="R270" display="off"/>
 <attribute name="MPN" value="" x="2.159" y="64.262" size="1.778" layer="27" rot="R270" display="off"/>
+<attribute name="NAME" x="3.429" y="65.532" size="1.27" layer="25" rot="R270"/>
+<attribute name="VALUE" x="-0.381" y="65.532" size="1.27" layer="27" rot="R270"/>
 </element>
 <element name="R2" library="rcl" package="R1206" value="6k8" x="14.732" y="21.082" rot="R90">
 <attribute name="OC_FARNELL" value="unknown" x="14.732" y="21.082" size="1.778" layer="27" rot="R90" display="off"/>
@@ -5358,6 +5401,54 @@ design rules under a new name.</description>
 <attribute name="OC_FARNELL" value="unknown" x="54.991" y="24.511" size="1.778" layer="27" rot="R270" display="off"/>
 <attribute name="MF" value="" x="54.991" y="24.511" size="1.778" layer="27" rot="R270" display="off"/>
 <attribute name="MPN" value="" x="54.991" y="24.511" size="1.778" layer="27" rot="R270" display="off"/>
+</element>
+<element name="R33" library="rcl" package="M0805" value="6k8" x="2.159" y="64.262" locked="yes" smashed="yes" rot="R270">
+<attribute name="TME_EU" value="RC0805FR-076K8" x="2.159" y="64.262" size="1.778" layer="27" font="vector" ratio="12" rot="R270" display="off"/>
+<attribute name="MPN" value="" x="2.159" y="64.262" size="1.778" layer="27" font="vector" ratio="12" rot="R270" display="off"/>
+<attribute name="MF" value="" x="2.159" y="64.262" size="1.778" layer="27" font="vector" ratio="12" rot="R270" display="off"/>
+<attribute name="OC_FARNELL" value="unknown" x="2.159" y="64.262" size="1.778" layer="27" font="vector" ratio="12" rot="R270" display="off"/>
+<attribute name="NAME" x="3.556" y="62.992" size="1.016" layer="25" ratio="15" rot="R270"/>
+<attribute name="VALUE" x="-0.381" y="65.532" size="1.27" layer="27" rot="R270"/>
+</element>
+<element name="R7" library="rcl" package="M0805" value="6k8" x="14.732" y="21.082" locked="yes" smashed="yes" rot="R90">
+<attribute name="TME_EU" value="RC0805FR-076K8" x="14.732" y="21.082" size="1.778" layer="27" font="vector" ratio="12" rot="R90" display="off"/>
+<attribute name="MPN" value="" x="14.732" y="21.082" size="1.778" layer="27" font="vector" ratio="12" rot="R90" display="off"/>
+<attribute name="MF" value="" x="14.732" y="21.082" size="1.778" layer="27" font="vector" ratio="12" rot="R90" display="off"/>
+<attribute name="OC_FARNELL" value="unknown" x="14.732" y="21.082" size="1.778" layer="27" font="vector" ratio="12" rot="R90" display="off"/>
+<attribute name="NAME" x="13.589" y="17.145" size="1.016" layer="25" ratio="15" rot="R90"/>
+<attribute name="VALUE" x="17.272" y="19.812" size="1.27" layer="27" rot="R90"/>
+</element>
+<element name="R8" library="rcl" package="M0805" value="6k8" x="52.451" y="21.082" locked="yes" smashed="yes" rot="R90">
+<attribute name="TME_EU" value="RC0805FR-076K8" x="52.451" y="21.082" size="1.778" layer="27" font="vector" ratio="12" rot="R90" display="off"/>
+<attribute name="MPN" value="" x="52.451" y="21.082" size="1.778" layer="27" font="vector" ratio="12" rot="R90" display="off"/>
+<attribute name="MF" value="" x="52.451" y="21.082" size="1.778" layer="27" font="vector" ratio="12" rot="R90" display="off"/>
+<attribute name="OC_FARNELL" value="unknown" x="52.451" y="21.082" size="1.778" layer="27" font="vector" ratio="12" rot="R90" display="off"/>
+<attribute name="NAME" x="51.181" y="19.812" size="1.016" layer="25" ratio="15" rot="R90"/>
+<attribute name="VALUE" x="54.991" y="19.812" size="1.27" layer="27" rot="R90"/>
+</element>
+<element name="R9" library="rcl" package="M0805" value="27k" x="14.605" y="61.722" locked="yes" smashed="yes" rot="R270">
+<attribute name="TME_EU" value="RC0805FR-0727K" x="14.605" y="61.722" size="1.778" layer="27" font="vector" ratio="12" rot="R270" display="off"/>
+<attribute name="MPN" value="" x="14.605" y="61.722" size="1.778" layer="27" font="vector" ratio="12" rot="R270" display="off"/>
+<attribute name="MF" value="" x="14.605" y="61.722" size="1.778" layer="27" font="vector" ratio="12" rot="R270" display="off"/>
+<attribute name="OC_FARNELL" value="unknown" x="14.605" y="61.722" size="1.778" layer="27" font="vector" ratio="12" rot="R270" display="off"/>
+<attribute name="NAME" x="15.875" y="62.992" size="1.27" layer="25" rot="R270"/>
+<attribute name="VALUE" x="12.065" y="62.992" size="1.27" layer="27" rot="R270"/>
+</element>
+<element name="R10" library="rcl" package="M0805" value="27k" x="54.991" y="17.907" locked="yes" smashed="yes" rot="R90">
+<attribute name="TME_EU" value="RC0805FR-0727K" x="54.991" y="17.907" size="1.778" layer="27" font="vector" ratio="12" rot="R90" display="off"/>
+<attribute name="MPN" value="" x="54.991" y="17.907" size="1.778" layer="27" font="vector" ratio="12" rot="R90" display="off"/>
+<attribute name="MF" value="" x="54.991" y="17.907" size="1.778" layer="27" font="vector" ratio="12" rot="R90" display="off"/>
+<attribute name="OC_FARNELL" value="unknown" x="54.991" y="17.907" size="1.778" layer="27" font="vector" ratio="12" rot="R90" display="off"/>
+<attribute name="NAME" x="53.721" y="16.637" size="1.016" layer="25" ratio="15" rot="R90"/>
+<attribute name="VALUE" x="57.531" y="16.637" size="1.27" layer="27" rot="R90"/>
+</element>
+<element name="R11" library="rcl" package="M0805" value="27k" x="54.991" y="24.511" locked="yes" smashed="yes" rot="R270">
+<attribute name="TME_EU" value="RC0805FR-0727K" x="54.991" y="24.511" size="1.778" layer="27" font="vector" ratio="12" rot="R270" display="off"/>
+<attribute name="MPN" value="" x="54.991" y="24.511" size="1.778" layer="27" font="vector" ratio="12" rot="R270" display="off"/>
+<attribute name="MF" value="" x="54.991" y="24.511" size="1.778" layer="27" font="vector" ratio="12" rot="R270" display="off"/>
+<attribute name="OC_FARNELL" value="unknown" x="54.991" y="24.511" size="1.778" layer="27" font="vector" ratio="12" rot="R270" display="off"/>
+<attribute name="NAME" x="53.721" y="24.765" size="1.016" layer="25" ratio="12" rot="R90"/>
+<attribute name="VALUE" x="52.451" y="25.781" size="1.27" layer="27" rot="R270"/>
 </element>
 </elements>
 <signals>
@@ -5825,6 +5916,10 @@ design rules under a new name.</description>
 <wire x1="52.451" y1="23.622" x2="52.182984375" y2="23.76715625" width="0.8128" layer="16"/>
 <wire x1="52.745178125" y1="24.805178125" x2="52.7557875" y2="23.6247375" width="0.8128" layer="16"/>
 <wire x1="52.451" y1="23.622" x2="52.7557875" y2="23.6247375" width="0.8128" layer="16"/>
+<contactref element="R8" pad="2"/>
+<wire x1="52.451" y1="22.098" x2="52.451" y2="23.622" width="0.6096" layer="1"/>
+<contactref element="R11" pad="1"/>
+<wire x1="54.991" y1="25.527" x2="54.991" y2="27.051" width="0.6096" layer="1"/>
 </signal>
 <signal name="N$21">
 <contactref element="D4" pad="C"/>
@@ -6120,6 +6215,10 @@ design rules under a new name.</description>
 <wire x1="14.732" y1="23.622" x2="14.5772" y2="23.8845625" width="0.8128" layer="16"/>
 <wire x1="15.59410625" y1="24.48410625" x2="14.9945625" y2="23.4672" width="0.8128" layer="16"/>
 <wire x1="14.732" y1="23.622" x2="14.9945625" y2="23.4672" width="0.8128" layer="16"/>
+<contactref element="R7" pad="2"/>
+<wire x1="14.732" y1="22.098" x2="14.732" y2="23.622" width="0.6096" layer="1"/>
+<contactref element="R10" pad="1"/>
+<wire x1="54.991" y1="16.891" x2="54.991" y2="15.367" width="0.6096" layer="1"/>
 </signal>
 <signal name="N$30">
 <contactref element="D2" pad="C"/>
@@ -6262,6 +6361,10 @@ design rules under a new name.</description>
 <wire x1="2.159" y1="61.722" x2="2.415528125" y2="61.5573875" width="0.8128" layer="1"/>
 <wire x1="1.778" y1="60.563859375" x2="1.85484375" y2="61.741840625" width="0.8128" layer="1"/>
 <wire x1="2.159" y1="61.722" x2="1.85484375" y2="61.741840625" width="0.8128" layer="1"/>
+<contactref element="R33" pad="2"/>
+<wire x1="2.159" y1="63.246" x2="2.159" y2="61.722" width="0.6096" layer="1"/>
+<contactref element="R9" pad="1"/>
+<wire x1="14.605" y1="62.738" x2="14.605" y2="64.262" width="0.6096" layer="1"/>
 </signal>
 <signal name="GND">
 <contactref element="JP1" pad="1"/>
@@ -6559,6 +6662,12 @@ design rules under a new name.</description>
 <wire x1="54.991" y1="21.971" x2="55.294596875" y2="21.9439625" width="0.8128" layer="1"/>
 <wire x1="55.1898875" y1="20.76813125" x2="54.7122625" y2="21.847675" width="0.8128" layer="1"/>
 <wire x1="54.991" y1="21.971" x2="54.7122625" y2="21.847675" width="0.8128" layer="1"/>
+<contactref element="R9" pad="2"/>
+<contactref element="R10" pad="2"/>
+<contactref element="R11" pad="2"/>
+<wire x1="14.605" y1="60.706" x2="14.605" y2="59.182" width="0.6096" layer="1"/>
+<wire x1="54.991" y1="18.923" x2="54.991" y2="20.447" width="0.6096" layer="1"/>
+<wire x1="54.991" y1="23.495" x2="54.991" y2="21.971" width="0.6096" layer="1"/>
 </signal>
 <signal name="A_1">
 <contactref element="R24" pad="1"/>
@@ -6649,6 +6758,8 @@ design rules under a new name.</description>
 <wire x1="2.159" y1="66.802" x2="2.30415625" y2="67.0700125" width="0.8128" layer="16"/>
 <wire x1="3.342178125" y1="66.507821875" x2="2.1617375" y2="66.497209375" width="0.8128" layer="16"/>
 <wire x1="2.159" y1="66.802" x2="2.1617375" y2="66.497209375" width="0.8128" layer="16"/>
+<contactref element="R33" pad="1"/>
+<wire x1="2.159" y1="65.278" x2="2.159" y2="66.802" width="0.6096" layer="1"/>
 </signal>
 <signal name="A_2">
 <contactref element="R26" pad="1"/>
@@ -6747,6 +6858,8 @@ design rules under a new name.</description>
 <wire x1="14.732" y1="18.542" x2="14.808203125" y2="18.83711875" width="0.8128" layer="1"/>
 <wire x1="15.951203125" y1="18.542" x2="14.808203125" y2="18.246878125" width="0.8128" layer="1"/>
 <wire x1="14.732" y1="18.542" x2="14.808203125" y2="18.246878125" width="0.8128" layer="1"/>
+<contactref element="R7" pad="1"/>
+<wire x1="14.732" y1="20.066" x2="14.732" y2="18.542" width="0.6096" layer="1"/>
 </signal>
 <signal name="A_3">
 <contactref element="R28" pad="1"/>
@@ -6811,6 +6924,8 @@ design rules under a new name.</description>
 <wire x1="52.451" y1="18.542" x2="52.14780625" y2="18.5107375" width="0.8128" layer="1"/>
 <wire x1="52.026734375" y1="19.685" x2="52.70115625" y2="18.716134375" width="0.8128" layer="1"/>
 <wire x1="52.451" y1="18.542" x2="52.70115625" y2="18.716134375" width="0.8128" layer="1"/>
+<contactref element="R8" pad="1"/>
+<wire x1="52.451" y1="20.066" x2="52.451" y2="18.542" width="0.6096" layer="1"/>
 </signal>
 <signal name="N$8">
 <wire x1="11.303" y1="18.288" x2="11.303" y2="18.415" width="0.8128" layer="16"/>
@@ -6855,22 +6970,59 @@ design rules under a new name.</description>
 <approved hash="2,20,3c45d6bfd397396d"/>
 <approved hash="2,20,3209d8f3def7340d"/>
 <approved hash="2,20,3205d8ffd6f73c0d"/>
+<approved hash="7,39,602525a6268a1bfc"/>
+<approved hash="7,39,602d567ed5749b7c"/>
+<approved hash="7,39,ce981ee01ee4ce9c"/>
+<approved hash="7,39,9f6b220d24b6e125"/>
+<approved hash="7,39,9fe351ded7c861ae"/>
+<approved hash="7,39,b29864e064e4b29c"/>
+<approved hash="7,39,77e3469a1bd05342"/>
+<approved hash="7,39,a7696e3c942b2495"/>
+<approved hash="7,39,ca7814001404ca7c"/>
+<approved hash="7,39,766353d68f1ad2da"/>
+<approved hash="7,39,a6d17b5100d9a52c"/>
+<approved hash="7,39,8df8180018448dbc"/>
+<approved hash="7,39,78422346172b343a"/>
+<approved hash="7,39,78c20e0aba61b442"/>
+<approved hash="7,39,a4f007e7196ec26c"/>
+<approved hash="7,39,a4682a4ab43c42f5"/>
+<approved hash="7,39,0a78160016030a7b"/>
+<approved hash="7,39,cef814001444cebc"/>
 <approved hash="7,39,1046794fcb51d0c6"/>
+<approved hash="7,39,1046794fcb51d0c6"/>
+<approved hash="7,39,a27806000644a23c"/>
+<approved hash="7,39,66c210b2e899e602"/>
+<approved hash="7,39,bf683002e7b41035"/>
+<approved hash="7,39,66423dfe45d3667a"/>
+<approved hash="7,39,bff01daf4ae690ac"/>
+<approved hash="7,39,3279e401e445323d"/>
+<approved hash="7,39,2e7c2e042dcb2db3"/>
+<approved hash="7,39,d0455600bd23c37b"/>
+<approved hash="7,39,9feb61a43fe339b1"/>
+<approved hash="7,39,d1c5b7cd5ce0c303"/>
+<approved hash="7,39,9e6b8195de203835"/>
+<approved hash="7,39,2e782e002e452e3d"/>
+<approved hash="7,39,d07c9a85f1af437c"/>
+<approved hash="7,39,9ff2ad39734fb9ae"/>
+<approved hash="7,39,d3febac4d1ee40f2"/>
+<approved hash="7,39,9c708d78530eba20"/>
+<approved hash="7,39,227804000445223d"/>
+<approved hash="7,39,227c040407cb21b3"/>
 <approved hash="18,29,c454c222c20ac47c"/>
 <approved hash="18,29,84e04296428a84fc"/>
 <approved hash="18,29,c454c222c20ac47c"/>
-<approved hash="18,29,24bf42df4cf820dc"/>
 <approved hash="18,29,f97c24bf42b365e9"/>
+<approved hash="18,29,24bf42df4cf820dc"/>
 <approved hash="18,29,5fccfc45799794e4"/>
 <approved hash="18,29,26db0eb21361dfa5"/>
 <approved hash="18,29,1909abbb86222af0"/>
 <approved hash="18,29,18c15362819473cc"/>
-<approved hash="18,29,3f3da627a7dedef8"/>
 <approved hash="18,29,81968731db2ba95f"/>
+<approved hash="18,29,3f3da627a7dedef8"/>
 <approved hash="18,29,29dac6c51166f5c2"/>
-<approved hash="18,29,28b1dcfb0cf32bf0"/>
 <approved hash="18,29,30afa8767695bf3e"/>
 <approved hash="18,29,d38d960070477d97"/>
+<approved hash="18,29,28b1dcfb0cf32bf0"/>
 <approved hash="18,29,d27e7bc195d5a673"/>
 <approved hash="18,29,6a1d6719a6d8f7cd"/>
 <approved hash="18,29,b4f3b67dc00c28e0"/>
@@ -6879,63 +7031,87 @@ design rules under a new name.</description>
 <approved hash="18,29,aaeacfe005695faa"/>
 <approved hash="18,29,8e031fb86c781e9c"/>
 <approved hash="18,29,61fffc0dfce36111"/>
-<approved hash="18,29,6c87ae3840b420e4"/>
-<approved hash="18,29,6c87ae3840b420e4"/>
+<approved hash="18,29,14906e626e8e147c"/>
+<approved hash="18,29,5d87ad587e942e24"/>
+<approved hash="18,29,2eb0fe03ade5dd35"/>
 <approved hash="18,29,5d87ad587e942e24"/>
 <approved hash="18,29,14906e626e8e147c"/>
 <approved hash="18,29,2eb0fe03ade5dd35"/>
-<approved hash="18,29,5d87ad587e942e24"/>
-<approved hash="18,29,2eb0fe03ade5dd35"/>
-<approved hash="18,29,14906e626e8e147c"/>
-<approved hash="18,29,27e082d282ae279c"/>
-<approved hash="18,29,6718022a02666754"/>
-<approved hash="18,29,e6f803ca0397e6a5"/>
+<approved hash="18,29,6c87ae3840b420e4"/>
+<approved hash="18,29,6c87ae3840b420e4"/>
 <approved hash="18,29,e6f803ca0397e6a5"/>
 <approved hash="18,29,6718022a02666754"/>
+<approved hash="18,29,e6f803ca0397e6a5"/>
 <approved hash="18,29,27e082d282ae279c"/>
-<approved hash="18,29,d38c348d738893e9"/>
-<approved hash="18,29,d38ff434b38293f4"/>
+<approved hash="18,29,27e082d282ae279c"/>
+<approved hash="18,29,6718022a02666754"/>
 <approved hash="18,29,a237f03a08d85d3b"/>
 <approved hash="18,29,d38c348d738893e9"/>
 <approved hash="18,29,d38ff434b38293f4"/>
+<approved hash="18,29,d38c348d738893e9"/>
 <approved hash="18,29,a237f03a08d85d3b"/>
+<approved hash="18,29,d38ff434b38293f4"/>
 <approved hash="18,29,1de4aa16aa0d1dff"/>
 <approved hash="18,29,1de4aa16aa0d1dff"/>
-<approved hash="18,29,2ed0fe83ade5dd15"/>
+<approved hash="18,29,5e87ae487c942d24"/>
 <approved hash="18,29,15006ff26f8e157c"/>
 <approved hash="18,29,530793c8429420e4"/>
-<approved hash="18,29,15006ff26f8e157c"/>
 <approved hash="18,29,2ed0fe83ade5dd15"/>
 <approved hash="18,29,5e87ae487c942d24"/>
-<approved hash="18,29,5e87ae487c942d24"/>
+<approved hash="18,29,15006ff26f8e157c"/>
+<approved hash="18,29,2ed0fe83ade5dd15"/>
 <approved hash="18,29,530793c8429420e4"/>
-<approved hash="18,29,6738020a02f667c4"/>
-<approved hash="18,29,2730820283ae269c"/>
 <approved hash="18,29,e718022a0267e755"/>
 <approved hash="18,29,6738020a02f667c4"/>
 <approved hash="18,29,e718022a0267e755"/>
+<approved hash="18,29,6738020a02f667c4"/>
+<approved hash="18,29,2730820283ae269c"/>
 <approved hash="18,29,2730820283ae269c"/>
 <approved hash="18,29,9fc7cfba08d85f1b"/>
-<approved hash="18,29,d30c34ed73a893e9"/>
+<approved hash="18,29,d28ff544b5b293a4"/>
 <approved hash="18,29,d28ff544b5b293a4"/>
 <approved hash="18,29,9fc7cfba08d85f1b"/>
 <approved hash="18,29,d30c34ed73a893e9"/>
-<approved hash="18,29,d28ff544b5b293a4"/>
+<approved hash="18,29,d30c34ed73a893e9"/>
 <approved hash="18,29,1dd4aa26ad8d1a7f"/>
 <approved hash="18,29,1dd4aa26ad8d1a7f"/>
 <approved hash="18,29,3c784a0a4a4a3c38"/>
-<approved hash="19,1,33d56833b5de6b39"/>
+<approved hash="19,1,c2e8bdf88c976378"/>
 <approved hash="19,1,76ddae3973522eb7"/>
+<approved hash="19,1,6b9afc74cc36cb27"/>
+<approved hash="19,1,33d56833b5de6b39"/>
+<approved hash="5,1,46ac811ef60d65c4"/>
+<approved hash="5,1,b00cf8f4dbfbc778"/>
+<approved hash="19,1,046be178fd799993"/>
 <approved hash="19,1,715228bd68a2be4e"/>
+<approved hash="19,1,9e3882d59dcf00db"/>
 <approved hash="19,1,b1df613221277ec9"/>
-<approved hash="19,1,28507f3bbb02606b"/>
+<approved hash="5,1,7b99450d7dc59322"/>
+<approved hash="5,1,625ab27e5aca5a9d"/>
+<approved hash="19,1,0d8fe9e5f75f6b4c"/>
 <approved hash="19,1,7859a53061c230a9"/>
-<approved hash="19,1,2a5975b08545ada9"/>
+<approved hash="19,1,605b844f9c0e0063"/>
+<approved hash="19,1,28507f3bbb02606b"/>
+<approved hash="5,1,bba91cfd9a4a60ef"/>
+<approved hash="5,1,8fcae54c3ec709b0"/>
+<approved hash="19,1,07d31b30cd71616c"/>
 <approved hash="19,1,b5509bbb6b82326c"/>
+<approved hash="19,1,6d70b96d69d00d33"/>
+<approved hash="19,1,2a5975b08545ada9"/>
+<approved hash="5,1,4cd1484dbd4a8857"/>
+<approved hash="5,1,da32128cd7372e08"/>
+<approved hash="19,1,e2f6050b9541425c"/>
 <approved hash="19,1,ef4a04a10942e7b5"/>
-<approved hash="19,1,dc4b34a2389dd568"/>
+<approved hash="19,1,6d3b4238d3dbcc38"/>
 <approved hash="19,1,e2c10a280713eae6"/>
+<approved hash="19,1,71705e73cd1cd2ff"/>
+<approved hash="19,1,dc4b34a2389dd568"/>
+<approved hash="19,1,c33d24c0ab007c1d"/>
 <approved hash="19,1,efb6045d08bee649"/>
+<approved hash="5,1,5d84390cd64d46bf"/>
+<approved hash="5,1,76a6a0b4ba4a9822"/>
+<approved hash="5,1,5767a0b6bbb6b81d"/>
+<approved hash="5,1,8247068ee9cf997c"/>
 <approved hash="19,16,889838cf30c78090"/>
 <approved hash="19,16,0c8b827c8a700487"/>
 <approved hash="19,16,0714da23d2260f11"/>

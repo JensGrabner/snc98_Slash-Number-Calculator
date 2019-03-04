@@ -2982,14 +2982,14 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <pad name="4" x="7.62" y="-0.254" drill="1.016" shape="long" rot="R90"/>
 <pad name="5" x="10.16" y="0" drill="1.016" shape="long" rot="R90"/>
 <pad name="6" x="12.7" y="-0.254" drill="1.016" shape="long" rot="R90"/>
-<text x="-1.27" y="1.778" size="1.27" layer="25" font="vector">&gt;NAME</text>
-<text x="-1.27" y="-3.302" size="1.27" layer="27" font="vector">&gt;VALUE</text>
 <smd name="P$1" x="0" y="-2.794" dx="1.651" dy="1.016" layer="1" roundness="30" rot="R90"/>
 <smd name="P$2" x="2.54" y="-2.921" dx="1.397" dy="1.016" layer="1" roundness="30" rot="R90"/>
 <smd name="P$3" x="5.08" y="-2.794" dx="1.651" dy="1.016" layer="1" roundness="30" rot="R90"/>
 <smd name="P$4" x="7.62" y="-2.921" dx="1.397" dy="1.016" layer="1" roundness="30" rot="R90"/>
 <smd name="P$5" x="10.16" y="-2.794" dx="1.651" dy="1.016" layer="1" roundness="30" rot="R90"/>
 <smd name="P$6" x="12.7" y="-2.921" dx="1.397" dy="1.016" layer="1" roundness="30" rot="R90"/>
+<text x="-1.27" y="1.778" size="1.27" layer="25" font="vector">&gt;NAME</text>
+<text x="-1.27" y="-3.302" size="1.27" layer="27" font="vector">&gt;VALUE</text>
 </package>
 <package name="MOLEX-1X6">
 <wire x1="-1.27" y1="3.048" x2="-1.27" y2="-2.54" width="0.127" layer="21"/>
@@ -3718,7 +3718,9 @@ Standard 0603 ceramic capacitor, and 0.1" leaded capacitor.</description>
 <connect gate="G$1" pin="2" pad="4"/>
 </connects>
 <technologies>
-<technology name=""/>
+<technology name="">
+<attribute name="TME_EU" value="CC0805KPX7R7224" constant="no"/>
+</technology>
 </technologies>
 </device>
 <device name="PTH" package="CAP-PTH-SMALL">
@@ -3754,7 +3756,9 @@ These are standard SMD and PTH capacitors. Normally 10uF, 47uF, and 100uF in ele
 <connect gate="G$1" pin="-" pad="C"/>
 </connects>
 <technologies>
-<technology name=""/>
+<technology name="">
+<attribute name="TME_EU" value="GRM31MR71C105KA" constant="no"/>
+</technology>
 </technologies>
 </device>
 <device name="3528" package="EIA3528">
@@ -30865,7 +30869,9 @@ This is the "EZ" version, which has limited top masking for improved ease of ass
 <connect gate="G$1" pin="S" pad="2"/>
 </connects>
 <technologies>
-<technology name=""/>
+<technology name="">
+<attribute name="TME_EU" value="DMG2305UX-7" constant="no"/>
+</technology>
 </technologies>
 </device>
 </devices>
@@ -31164,7 +31170,9 @@ Spark Fun Electronics SKU : Comp-Buzzer</description>
 <connect gate="G$1" pin="+" pad="P1 P2 P3 P4"/>
 </connects>
 <technologies>
-<technology name=""/>
+<technology name="">
+<attribute name="TME_EU" value="BC-0401" constant="no"/>
+</technology>
 </technologies>
 </device>
 </devices>
@@ -36702,7 +36710,9 @@ Source: http://www.vishay.com/docs/10129/hpc0201a.pdf</description>
 <connect gate="G$1" pin="2" pad="2"/>
 </connects>
 <technologies>
-<technology name=""/>
+<technology name="">
+<attribute name="TME_EU" value="GRM31MR71C105KA" constant="no"/>
+</technology>
 </technologies>
 </device>
 <device name="C1210" package="C1210">
@@ -36983,7 +36993,9 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <connect gate="G$1" pin="VSS" pad="8"/>
 </connects>
 <technologies>
-<technology name=""/>
+<technology name="">
+<attribute name="TME_EU" value="4HC4051D.652" constant="no"/>
+</technology>
 </technologies>
 </device>
 </devices>
@@ -37091,7 +37103,9 @@ www.irf.com / irlml5203.pdf</description>
 <connect gate="G$1" pin="S" pad="2"/>
 </connects>
 <technologies>
-<technology name=""/>
+<technology name="">
+<attribute name="TME_EU" value="DMG2302U-7" constant="no"/>
+</technology>
 </technologies>
 </device>
 </devices>
@@ -38105,14 +38119,14 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/22049b.pdf</description>
 <library name="HT7333_SOT89">
 <packages>
 <package name="SOT89">
-<smd name="GND" x="-1.4986" y="-0.5969" dx="0.5588" dy="1.1938" layer="1"/>
-<smd name="VIN" x="0" y="-0.5969" dx="0.5588" dy="1.1938" layer="1"/>
-<smd name="VOUT" x="1.4986" y="-0.5969" dx="0.5588" dy="1.1938" layer="1"/>
 <wire x1="-2.2987" y1="0" x2="2.2987" y2="0" width="0.127" layer="24"/>
 <wire x1="-2.2987" y1="0" x2="-2.2987" y2="2.5908" width="0.127" layer="24"/>
 <wire x1="2.2987" y1="0" x2="2.2987" y2="2.5908" width="0.127" layer="24"/>
 <wire x1="-2.2987" y1="2.5908" x2="2.2987" y2="2.5908" width="0.127" layer="24"/>
+<smd name="GND" x="-1.4986" y="-0.5969" dx="0.5588" dy="1.1938" layer="1"/>
 <smd name="P$4" x="0" y="2.7432" dx="1.8288" dy="0.4572" layer="1" rot="R180"/>
+<smd name="VIN" x="0" y="-0.5969" dx="0.5588" dy="1.1938" layer="1"/>
+<smd name="VOUT" x="1.4986" y="-0.5969" dx="0.5588" dy="1.1938" layer="1"/>
 </package>
 </packages>
 <symbols>
@@ -38121,8 +38135,8 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/22049b.pdf</description>
 <wire x1="10.16" y1="5.08" x2="10.16" y2="-5.08" width="0.254" layer="94"/>
 <wire x1="10.16" y1="-5.08" x2="-10.16" y2="-5.08" width="0.254" layer="94"/>
 <wire x1="-10.16" y1="-5.08" x2="-10.16" y2="5.08" width="0.254" layer="94"/>
-<pin name="VIN" x="-15.24" y="0" length="middle"/>
 <pin name="GND" x="0" y="-10.16" length="middle" rot="R90"/>
+<pin name="VIN" x="-15.24" y="0" length="middle"/>
 <pin name="VOUT" x="15.24" y="0" length="middle" rot="R180"/>
 </symbol>
 </symbols>
@@ -38139,7 +38153,9 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/22049b.pdf</description>
 <connect gate="G$1" pin="VOUT" pad="VOUT"/>
 </connects>
 <technologies>
-<technology name=""/>
+<technology name="">
+<attribute name="TME_EU" value="TS9011SCY" constant="no"/>
+</technology>
 </technologies>
 </device>
 </devices>
@@ -38372,7 +38388,9 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/22049b.pdf</description>
 <connect gate="A" pin="9" pad="9"/>
 </connects>
 <technologies>
-<technology name=""/>
+<technology name="">
+<attribute name="TME_EU" value="ZL231-14PG" constant="no"/>
+</technology>
 </technologies>
 </device>
 <device name="/90" package="2X07/90">
@@ -38476,7 +38494,9 @@ Source: http://ww1.microchip.com/downloads/en/DeviceDoc/22049b.pdf</description>
 <connect gate="T$1" pin="E" pad="E"/>
 </connects>
 <technologies>
-<technology name=""/>
+<technology name="">
+<attribute name="TME_EU" value="MUN2214T1G" constant="no"/>
+</technology>
 </technologies>
 </device>
 </devices>
@@ -38583,11 +38603,6 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <description>&lt;b&gt;Small Outline Transistor; 3 leads,&lt;/b&gt; 2.9mm*2.4mm, reflow soldering&lt;p&gt;
 INFINEON http://www.infineon.com/upload/Image/Packages/hlgf1014.gif&lt;br&gt;
 INFINEON http://www.infineon.com/upload/Image/Packages/hlgf1015.gif</description>
-<smd name="1" x="-1" y="-1.1" dx="0.8" dy="0.9" layer="1"/>
-<smd name="2" x="1" y="-1.1" dx="0.8" dy="0.9" layer="1"/>
-<smd name="3" x="0" y="1.1" dx="0.8" dy="0.9" layer="1"/>
-<text x="-1.9" y="1.9" size="1.27" layer="25">&gt;NAME</text>
-<text x="-1.9" y="-3.2" size="1.27" layer="27">&gt;VALUE</text>
 <wire x1="1.4224" y1="0.6604" x2="1.4224" y2="-0.6604" width="0.127" layer="51"/>
 <wire x1="1.4224" y1="-0.6604" x2="-1.4224" y2="-0.6604" width="0.127" layer="51"/>
 <wire x1="-1.4224" y1="-0.6604" x2="-1.4224" y2="0.6604" width="0.127" layer="51"/>
@@ -38595,121 +38610,131 @@ INFINEON http://www.infineon.com/upload/Image/Packages/hlgf1015.gif</description
 <rectangle x1="-0.2286" y1="0.7112" x2="0.2286" y2="1.2954" layer="51"/>
 <rectangle x1="0.7112" y1="-1.2954" x2="1.1684" y2="-0.7112" layer="51"/>
 <rectangle x1="-1.1684" y1="-1.2954" x2="-0.7112" y2="-0.7112" layer="51"/>
+<smd name="1" x="-1" y="-1.1" dx="0.8" dy="0.9" layer="1"/>
+<smd name="2" x="1" y="-1.1" dx="0.8" dy="0.9" layer="1"/>
+<smd name="3" x="0" y="1.1" dx="0.8" dy="0.9" layer="1"/>
 <smd name="B" x="-0.95" y="-1.143" dx="1.143" dy="1.524" layer="1" roundness="30"/>
 <smd name="C" x="0" y="1.143" dx="1.143" dy="1.524" layer="1" roundness="30"/>
 <smd name="E" x="0.95" y="-1.143" dx="1.143" dy="1.524" layer="1" roundness="30"/>
+<text x="-1.9" y="1.9" size="1.27" layer="25">&gt;NAME</text>
+<text x="-1.9" y="-3.2" size="1.27" layer="27">&gt;VALUE</text>
 </package>
 <package name="SOT23-W_INFINEON">
 <description>&lt;b&gt;Small Outline Transistor; 3 leads,&lt;/b&gt; 2.9mm*2.4mm, wave soldering&lt;p&gt;
 INFINEON http://www.infineon.com/upload/Image/Packages/hlgf1014.gif&lt;br&gt;
 INFINEON http://www.infineon.com/upload/Image/Packages/hlgf1016.gif</description>
+<circle x="-0.8" y="-0.3" radius="0.15" width="0" layer="21"/>
 <wire x1="-1.4" y1="-0.635" x2="1.4" y2="-0.635" width="0.127" layer="51"/>
 <wire x1="-1.4" y1="0.635" x2="1.4" y2="0.635" width="0.127" layer="51"/>
 <wire x1="-1.4" y1="0.635" x2="-1.4" y2="-0.635" width="0.127" layer="21"/>
 <wire x1="1.4" y1="0.635" x2="1.4" y2="-0.635" width="0.127" layer="21"/>
-<circle x="-0.8" y="-0.3" radius="0.15" width="0" layer="21"/>
+<rectangle x1="-1.15" y1="-1.27" x2="-0.75" y2="-0.635" layer="51"/>
+<rectangle x1="0.75" y1="-1.27" x2="1.15" y2="-0.635" layer="51"/>
+<rectangle x1="-0.2" y1="0.635" x2="0.2" y2="1.27" layer="51"/>
 <smd name="1" x="-1" y="-1.5" dx="0.8" dy="1.4" layer="1"/>
 <smd name="2" x="1" y="-1.5" dx="0.8" dy="1.4" layer="1"/>
 <smd name="3" x="0" y="1.5" dx="0.8" dy="1.4" layer="1"/>
 <text x="-1.9" y="2.55" size="1.27" layer="25">&gt;NAME</text>
 <text x="-1.9" y="-3.85" size="1.27" layer="27">&gt;VALUE</text>
-<rectangle x1="-1.15" y1="-1.27" x2="-0.75" y2="-0.635" layer="51"/>
-<rectangle x1="0.75" y1="-1.27" x2="1.15" y2="-0.635" layer="51"/>
-<rectangle x1="-0.2" y1="0.635" x2="0.2" y2="1.27" layer="51"/>
-</package>
-<package name="SC75_INFINEON">
-<description>&lt;b&gt;Small Outline Transistor; 3 leads,&lt;/b&gt; 1.6mm*1.6mm, reflow soldering&lt;p&gt;
-INFINEON, http://www.infineon.com/upload/Image/Packages/gps05996.gif&lt;br&gt;
-INFINEON, http://www.infineon.com/upload/Image/Packages/hlg05999.gif</description>
-<wire x1="-0.75" y1="-0.4" x2="0.75" y2="-0.4" width="0.127" layer="51"/>
-<wire x1="-0.75" y1="0.4" x2="0.75" y2="0.4" width="0.127" layer="51"/>
-<wire x1="-0.75" y1="-0.4" x2="-0.75" y2="0.4" width="0.127" layer="21"/>
-<wire x1="0.75" y1="-0.4" x2="0.75" y2="0.4" width="0.127" layer="21"/>
-<circle x="-0.5" y="-0.2" radius="0.12" width="0" layer="21"/>
-<smd name="1" x="-0.5" y="-0.575" dx="0.4" dy="0.65" layer="1"/>
-<smd name="2" x="0.5" y="-0.575" dx="0.4" dy="0.65" layer="1"/>
-<smd name="3" x="0" y="0.575" dx="0.4" dy="0.65" layer="1"/>
-<text x="-0.8" y="1.1" size="1.27" layer="25">&gt;NAME</text>
-<text x="-0.8" y="-2.4" size="1.27" layer="27">&gt;VALUE</text>
-<rectangle x1="-0.6" y1="-0.8" x2="-0.4" y2="-0.4" layer="51"/>
-<rectangle x1="0.4" y1="-0.8" x2="0.6" y2="-0.4" layer="51"/>
-<rectangle x1="-0.1" y1="0.4" x2="0.1" y2="0.8" layer="51"/>
-</package>
-<package name="SC75-W_INFINEON">
-<description>&lt;b&gt;Small Outline Transistor; 3 leads,&lt;/b&gt; 1.6mm*1.6mm, wave soldering&lt;p&gt;
-INFINEON, http://www.infineon.com/upload/Image/Packages/gps05996.gif&lt;br&gt;
-INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1184.gif</description>
-<wire x1="-0.75" y1="-0.4" x2="0.75" y2="-0.4" width="0.127" layer="51"/>
-<wire x1="-0.75" y1="0.4" x2="0.75" y2="0.4" width="0.127" layer="51"/>
-<wire x1="-0.75" y1="-0.4" x2="-0.75" y2="0.4" width="0.127" layer="21"/>
-<wire x1="0.75" y1="-0.4" x2="0.75" y2="0.4" width="0.127" layer="21"/>
-<circle x="-0.5" y="-0.2" radius="0.12" width="0" layer="21"/>
-<smd name="1" x="-0.5" y="-0.925" dx="0.4" dy="0.95" layer="1"/>
-<smd name="2" x="0.5" y="-0.925" dx="0.4" dy="0.95" layer="1"/>
-<smd name="3" x="0" y="0.925" dx="0.4" dy="0.95" layer="1"/>
-<text x="-0.8" y="1.55" size="1.27" layer="25">&gt;NAME</text>
-<text x="-0.8" y="-2.85" size="1.27" layer="27">&gt;VALUE</text>
-<rectangle x1="-0.6" y1="-0.8" x2="-0.4" y2="-0.4" layer="51"/>
-<rectangle x1="0.4" y1="-0.8" x2="0.6" y2="-0.4" layer="51"/>
-<rectangle x1="-0.1" y1="0.4" x2="0.1" y2="0.8" layer="51"/>
-</package>
-<package name="SOT323-R_INFINEON">
-<description>&lt;b&gt;Small Outline Transistor; 3 leads,&lt;/b&gt; 2.0mm*2.1mm, reflow soldering&lt;p&gt;
-INFINEON http://www.infineon.com/upload/Image/Packages/gso05561.gif&lt;br&gt;
-INFINEON http://www.infineon.com/upload/Image/Packages/hlg05822.gif</description>
-<wire x1="-0.95" y1="0.6" x2="0.95" y2="0.6" width="0.127" layer="51"/>
-<wire x1="-0.95" y1="-0.6" x2="0.95" y2="-0.6" width="0.127" layer="51"/>
-<wire x1="-0.95" y1="0.6" x2="-0.95" y2="-0.6" width="0.127" layer="21"/>
-<wire x1="0.95" y1="0.6" x2="0.95" y2="-0.6" width="0.127" layer="21"/>
-<circle x="-0.65" y="-0.25" radius="0.15" width="0" layer="21"/>
-<smd name="1" x="-0.65" y="-0.8" dx="0.6" dy="0.8" layer="1"/>
-<smd name="2" x="0.65" y="-0.8" dx="0.6" dy="0.8" layer="1"/>
-<smd name="3" x="0" y="0.8" dx="0.6" dy="0.8" layer="1"/>
-<text x="-1.9" y="1.5" size="1.27" layer="25">&gt;NAME</text>
-<text x="-1.9" y="-2.75" size="1.27" layer="27">&gt;VALUE</text>
-<rectangle x1="-0.8" y1="-1.05" x2="-0.5" y2="-0.6" layer="51"/>
-<rectangle x1="0.5" y1="-1.05" x2="0.8" y2="-0.6" layer="51"/>
-<rectangle x1="-0.15" y1="0.6" x2="0.15" y2="1.05" layer="51"/>
-</package>
-<package name="SOT323-W_INFINEON">
-<description>&lt;b&gt;Small Outline Transistor; 3 leads,&lt;/b&gt; 2.0mm*2.1mm, wave soldering&lt;p&gt;
-INFINEON http://www.infineon.com/upload/Image/Packages/gso05561.gif&lt;br&gt;
-INFINEON http://www.infineon.com/upload/Image/Packages/hlg05823.gif</description>
-<wire x1="-0.95" y1="0.6" x2="0.95" y2="0.6" width="0.127" layer="51"/>
-<wire x1="-0.95" y1="-0.6" x2="0.95" y2="-0.6" width="0.127" layer="51"/>
-<wire x1="-0.95" y1="0.6" x2="-0.95" y2="-0.6" width="0.127" layer="21"/>
-<wire x1="0.95" y1="0.6" x2="0.95" y2="-0.6" width="0.127" layer="21"/>
-<circle x="-0.65" y="-0.25" radius="0.15" width="0" layer="21"/>
-<smd name="1" x="-0.65" y="-1.125" dx="0.6" dy="1.3" layer="1"/>
-<smd name="2" x="0.65" y="-1.125" dx="0.6" dy="1.3" layer="1"/>
-<smd name="3" x="0" y="1.125" dx="0.6" dy="1.3" layer="1"/>
-<text x="-1.9" y="2.05" size="1.27" layer="25">&gt;NAME</text>
-<text x="-1.9" y="-3.3" size="1.27" layer="27">&gt;VALUE</text>
-<rectangle x1="-0.8" y1="-1.05" x2="-0.5" y2="-0.6" layer="51"/>
-<rectangle x1="0.5" y1="-1.05" x2="0.8" y2="-0.6" layer="51"/>
-<rectangle x1="-0.15" y1="0.6" x2="0.15" y2="1.05" layer="51"/>
 </package>
 <package name="TSFP-3_INFINEON">
 <description>&lt;b&gt;Thin Small Flatlead Package; 3 leads,&lt;/b&gt; 1.2mm*1.2mm, reflow soldering&lt;p&gt;
 INFINEON, http://www.infineon.com/upload/Image/Packages/gpx01042.gif&lt;br&gt;
 INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</description>
+<circle x="-0.32" y="-0.15" radius="0.1" width="0" layer="21"/>
 <wire x1="-0.55" y1="-0.35" x2="0.55" y2="-0.35" width="0.127" layer="51"/>
 <wire x1="-0.55" y1="0.35" x2="0.55" y2="0.35" width="0.127" layer="51"/>
 <wire x1="-0.55" y1="-0.35" x2="-0.55" y2="0.35" width="0.127" layer="21"/>
 <wire x1="0.55" y1="-0.35" x2="0.55" y2="0.35" width="0.127" layer="21"/>
-<circle x="-0.32" y="-0.15" radius="0.1" width="0" layer="21"/>
+<rectangle x1="-0.5" y1="-0.6" x2="-0.3" y2="-0.4" layer="51"/>
+<rectangle x1="0.3" y1="-0.6" x2="0.5" y2="-0.4" layer="51"/>
+<rectangle x1="-0.1" y1="0.4" x2="0.1" y2="0.6" layer="51"/>
 <smd name="1" x="-0.4" y="-0.525" dx="0.4" dy="0.45" layer="1"/>
 <smd name="2" x="0.4" y="-0.525" dx="0.4" dy="0.45" layer="1"/>
 <smd name="3" x="0" y="0.525" dx="0.4" dy="0.45" layer="1"/>
 <text x="-0.8" y="1.1" size="1.27" layer="25">&gt;NAME</text>
 <text x="-0.8" y="-2.4" size="1.27" layer="27">&gt;VALUE</text>
-<rectangle x1="-0.5" y1="-0.6" x2="-0.3" y2="-0.4" layer="51"/>
-<rectangle x1="0.3" y1="-0.6" x2="0.5" y2="-0.4" layer="51"/>
-<rectangle x1="-0.1" y1="0.4" x2="0.1" y2="0.6" layer="51"/>
+</package>
+<package name="SC75_INFINEON">
+<description>&lt;b&gt;Small Outline Transistor; 3 leads,&lt;/b&gt; 1.6mm*1.6mm, reflow soldering&lt;p&gt;
+INFINEON, http://www.infineon.com/upload/Image/Packages/gps05996.gif&lt;br&gt;
+INFINEON, http://www.infineon.com/upload/Image/Packages/hlg05999.gif</description>
+<circle x="-0.5" y="-0.2" radius="0.12" width="0" layer="21"/>
+<wire x1="-0.75" y1="-0.4" x2="0.75" y2="-0.4" width="0.127" layer="51"/>
+<wire x1="-0.75" y1="0.4" x2="0.75" y2="0.4" width="0.127" layer="51"/>
+<wire x1="-0.75" y1="-0.4" x2="-0.75" y2="0.4" width="0.127" layer="21"/>
+<wire x1="0.75" y1="-0.4" x2="0.75" y2="0.4" width="0.127" layer="21"/>
+<rectangle x1="-0.6" y1="-0.8" x2="-0.4" y2="-0.4" layer="51"/>
+<rectangle x1="0.4" y1="-0.8" x2="0.6" y2="-0.4" layer="51"/>
+<rectangle x1="-0.1" y1="0.4" x2="0.1" y2="0.8" layer="51"/>
+<smd name="1" x="-0.5" y="-0.575" dx="0.4" dy="0.65" layer="1"/>
+<smd name="2" x="0.5" y="-0.575" dx="0.4" dy="0.65" layer="1"/>
+<smd name="3" x="0" y="0.575" dx="0.4" dy="0.65" layer="1"/>
+<text x="-0.8" y="1.1" size="1.27" layer="25">&gt;NAME</text>
+<text x="-0.8" y="-2.4" size="1.27" layer="27">&gt;VALUE</text>
+</package>
+<package name="SC75-W_INFINEON">
+<description>&lt;b&gt;Small Outline Transistor; 3 leads,&lt;/b&gt; 1.6mm*1.6mm, wave soldering&lt;p&gt;
+INFINEON, http://www.infineon.com/upload/Image/Packages/gps05996.gif&lt;br&gt;
+INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1184.gif</description>
+<circle x="-0.5" y="-0.2" radius="0.12" width="0" layer="21"/>
+<wire x1="-0.75" y1="-0.4" x2="0.75" y2="-0.4" width="0.127" layer="51"/>
+<wire x1="-0.75" y1="0.4" x2="0.75" y2="0.4" width="0.127" layer="51"/>
+<wire x1="-0.75" y1="-0.4" x2="-0.75" y2="0.4" width="0.127" layer="21"/>
+<wire x1="0.75" y1="-0.4" x2="0.75" y2="0.4" width="0.127" layer="21"/>
+<rectangle x1="-0.6" y1="-0.8" x2="-0.4" y2="-0.4" layer="51"/>
+<rectangle x1="0.4" y1="-0.8" x2="0.6" y2="-0.4" layer="51"/>
+<rectangle x1="-0.1" y1="0.4" x2="0.1" y2="0.8" layer="51"/>
+<smd name="1" x="-0.5" y="-0.925" dx="0.4" dy="0.95" layer="1"/>
+<smd name="2" x="0.5" y="-0.925" dx="0.4" dy="0.95" layer="1"/>
+<smd name="3" x="0" y="0.925" dx="0.4" dy="0.95" layer="1"/>
+<text x="-0.8" y="1.55" size="1.27" layer="25">&gt;NAME</text>
+<text x="-0.8" y="-2.85" size="1.27" layer="27">&gt;VALUE</text>
+</package>
+<package name="SOT323-R_INFINEON">
+<description>&lt;b&gt;Small Outline Transistor; 3 leads,&lt;/b&gt; 2.0mm*2.1mm, reflow soldering&lt;p&gt;
+INFINEON http://www.infineon.com/upload/Image/Packages/gso05561.gif&lt;br&gt;
+INFINEON http://www.infineon.com/upload/Image/Packages/hlg05822.gif</description>
+<circle x="-0.65" y="-0.25" radius="0.15" width="0" layer="21"/>
+<wire x1="-0.95" y1="0.6" x2="0.95" y2="0.6" width="0.127" layer="51"/>
+<wire x1="-0.95" y1="-0.6" x2="0.95" y2="-0.6" width="0.127" layer="51"/>
+<wire x1="-0.95" y1="0.6" x2="-0.95" y2="-0.6" width="0.127" layer="21"/>
+<wire x1="0.95" y1="0.6" x2="0.95" y2="-0.6" width="0.127" layer="21"/>
+<rectangle x1="-0.8" y1="-1.05" x2="-0.5" y2="-0.6" layer="51"/>
+<rectangle x1="0.5" y1="-1.05" x2="0.8" y2="-0.6" layer="51"/>
+<rectangle x1="-0.15" y1="0.6" x2="0.15" y2="1.05" layer="51"/>
+<smd name="1" x="-0.65" y="-0.8" dx="0.6" dy="0.8" layer="1"/>
+<smd name="2" x="0.65" y="-0.8" dx="0.6" dy="0.8" layer="1"/>
+<smd name="3" x="0" y="0.8" dx="0.6" dy="0.8" layer="1"/>
+<text x="-1.9" y="1.5" size="1.27" layer="25">&gt;NAME</text>
+<text x="-1.9" y="-2.75" size="1.27" layer="27">&gt;VALUE</text>
+</package>
+<package name="SOT323-W_INFINEON">
+<description>&lt;b&gt;Small Outline Transistor; 3 leads,&lt;/b&gt; 2.0mm*2.1mm, wave soldering&lt;p&gt;
+INFINEON http://www.infineon.com/upload/Image/Packages/gso05561.gif&lt;br&gt;
+INFINEON http://www.infineon.com/upload/Image/Packages/hlg05823.gif</description>
+<circle x="-0.65" y="-0.25" radius="0.15" width="0" layer="21"/>
+<wire x1="-0.95" y1="0.6" x2="0.95" y2="0.6" width="0.127" layer="51"/>
+<wire x1="-0.95" y1="-0.6" x2="0.95" y2="-0.6" width="0.127" layer="51"/>
+<wire x1="-0.95" y1="0.6" x2="-0.95" y2="-0.6" width="0.127" layer="21"/>
+<wire x1="0.95" y1="0.6" x2="0.95" y2="-0.6" width="0.127" layer="21"/>
+<rectangle x1="-0.8" y1="-1.05" x2="-0.5" y2="-0.6" layer="51"/>
+<rectangle x1="0.5" y1="-1.05" x2="0.8" y2="-0.6" layer="51"/>
+<rectangle x1="-0.15" y1="0.6" x2="0.15" y2="1.05" layer="51"/>
+<smd name="1" x="-0.65" y="-1.125" dx="0.6" dy="1.3" layer="1"/>
+<smd name="2" x="0.65" y="-1.125" dx="0.6" dy="1.3" layer="1"/>
+<smd name="3" x="0" y="1.125" dx="0.6" dy="1.3" layer="1"/>
+<text x="-1.9" y="2.05" size="1.27" layer="25">&gt;NAME</text>
+<text x="-1.9" y="-3.3" size="1.27" layer="27">&gt;VALUE</text>
 </package>
 </packages>
 <symbols>
 <symbol name="DIGITRANS-PNP-10K-47K">
+<circle x="0" y="0" radius="0.1796" width="0.254" layer="94"/>
+<circle x="5.08" y="5.08" radius="0.1796" width="0.254" layer="94"/>
+<circle x="0" y="0" radius="0.381" width="0.254" layer="94"/>
+<circle x="5.08" y="5.08" radius="0.381" width="0.254" layer="94"/>
+<rectangle x1="2.286" y1="-2.54" x2="3.048" y2="2.54" layer="94"/>
 <wire x1="5.08" y1="-2.54" x2="3.048" y2="-1.524" width="0.1524" layer="94"/>
 <wire x1="0" y1="0" x2="0" y2="1.016" width="0.1524" layer="94"/>
 <wire x1="0" y1="4.064" x2="0" y2="5.08" width="0.1524" layer="94"/>
@@ -38726,18 +38751,13 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <wire x1="-0.635" y1="1.016" x2="-0.635" y2="4.064" width="0.1524" layer="94"/>
 <wire x1="5.08" y1="5.08" x2="5.08" y2="2.54" width="0.1524" layer="94"/>
 <wire x1="5.08" y1="2.54" x2="3.048" y2="1.524" width="0.1524" layer="94"/>
-<circle x="0" y="0" radius="0.1796" width="0.254" layer="94"/>
-<circle x="5.08" y="5.08" radius="0.1796" width="0.254" layer="94"/>
-<circle x="0" y="0" radius="0.381" width="0.254" layer="94"/>
-<circle x="5.08" y="5.08" radius="0.381" width="0.254" layer="94"/>
+<pin name="B" x="-7.62" y="0" visible="off" length="short" direction="pas"/>
+<pin name="C" x="5.08" y="-5.08" visible="off" length="short" direction="pas" rot="R90"/>
+<pin name="E" x="5.08" y="7.62" visible="off" length="short" direction="pas" rot="R270"/>
 <text x="-7.239" y="6.35" size="1.778" layer="95">&gt;NAME</text>
 <text x="-6.985" y="-5.588" size="1.778" layer="96">&gt;VALUE</text>
 <text x="-5.08" y="-2.54" size="1.27" layer="94">10k</text>
 <text x="-1.27" y="1.27" size="1.27" layer="94" rot="R90">47k</text>
-<rectangle x1="2.286" y1="-2.54" x2="3.048" y2="2.54" layer="94"/>
-<pin name="B" x="-7.62" y="0" visible="off" length="short" direction="pas"/>
-<pin name="E" x="5.08" y="7.62" visible="off" length="short" direction="pas" rot="R270"/>
-<pin name="C" x="5.08" y="-5.08" visible="off" length="short" direction="pas" rot="R90"/>
 <polygon width="0.1524" layer="94">
 <vertex x="3.81" y="2.54"/>
 <vertex x="4.318" y="1.524"/>
@@ -38759,10 +38779,22 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <connect gate="T$1" pin="E" pad="E"/>
 </connects>
 <technologies>
-<technology name=""/>
+<technology name="">
+<attribute name="TME_EU" value="BCR185E6327" constant="no"/>
+</technology>
 </technologies>
 </device>
 <device name="-W" package="SOT23-W_INFINEON">
+<connects>
+<connect gate="T$1" pin="B" pad="1"/>
+<connect gate="T$1" pin="C" pad="3"/>
+<connect gate="T$1" pin="E" pad="2"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="F" package="TSFP-3_INFINEON">
 <connects>
 <connect gate="T$1" pin="B" pad="1"/>
 <connect gate="T$1" pin="C" pad="3"/>
@@ -38812,16 +38844,6 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <technology name=""/>
 </technologies>
 </device>
-<device name="F" package="TSFP-3_INFINEON">
-<connects>
-<connect gate="T$1" pin="B" pad="1"/>
-<connect gate="T$1" pin="C" pad="3"/>
-<connect gate="T$1" pin="E" pad="2"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
 </devices>
 </deviceset>
 </devicesets>
@@ -38849,15 +38871,17 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <attribute name="MPN" value=""/>
 <attribute name="OC_FARNELL" value="unknown"/>
 </part>
-<part name="C7" library="_jc" deviceset="C-US" device="C0805K" value="15pF">
+<part name="C7" library="_jc" deviceset="C-US" device="C0805K" value="22pF">
 <attribute name="MF" value=""/>
 <attribute name="MPN" value=""/>
 <attribute name="OC_FARNELL" value="unknown"/>
+<attribute name="TME_EU" value="CL21C220JBANNNC"/>
 </part>
-<part name="C8" library="_jc" deviceset="C-US" device="C0805K" value="15pF">
+<part name="C8" library="_jc" deviceset="C-US" device="C0805K" value="22pF">
 <attribute name="MF" value=""/>
 <attribute name="MPN" value=""/>
 <attribute name="OC_FARNELL" value="unknown"/>
+<attribute name="TME_EU" value="CL21C220JBANNNC"/>
 </part>
 <part name="P+5" library="SparkFun" deviceset="VCC" device=""/>
 <part name="JP6" library="SparkFun" deviceset="M06" device="LOCK" value="FTDI">
@@ -38882,6 +38906,7 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <attribute name="MF" value="INFINEON"/>
 <attribute name="MPN" value="IRLML2244TRPBF"/>
 <attribute name="OC_FARNELL" value="2468051"/>
+<attribute name="TME_EU" value="DMG2305UX-7"/>
 </part>
 <part name="FRAME2" library="frames" deviceset="LETTER_L" device="" value="frame"/>
 <part name="D4" library="BaseApp" deviceset="DIODE" device="SMA" value="SD103CW">
@@ -38898,11 +38923,13 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <attribute name="MF" value=""/>
 <attribute name="MPN" value=""/>
 <attribute name="OC_FARNELL" value="unknown"/>
+<attribute name="TME_EU" value="RC0805FR-076K8"/>
 </part>
 <part name="R22" library="rcl" deviceset="R-EU_" device="R1206" value="6k8">
 <attribute name="MF" value=""/>
 <attribute name="MPN" value=""/>
 <attribute name="OC_FARNELL" value="unknown"/>
+<attribute name="TME_EU" value="RC0805FR-076K8"/>
 </part>
 <part name="C14" library="rcl" deviceset="C-EU" device="C1206K" value="1µ">
 <attribute name="MF" value=""/>
@@ -38923,11 +38950,13 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <attribute name="MF" value=""/>
 <attribute name="MPN" value=""/>
 <attribute name="OC_FARNELL" value="unknown"/>
+<attribute name="TME_EU" value="CRCW0805150RJNTABC"/>
 </part>
 <part name="R32" library="rcl" deviceset="R-EU_" device="R1206" value="150">
 <attribute name="MF" value=""/>
 <attribute name="MPN" value=""/>
 <attribute name="OC_FARNELL" value="unknown"/>
+<attribute name="TME_EU" value="CRCW0805150RJNTABC"/>
 </part>
 <part name="U1" library="SparkFun-AnalogIC" deviceset="74HC4051_MUX" device="" value="74HC4051_MUX">
 <attribute name="MF" value=""/>
@@ -38954,6 +38983,7 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <attribute name="MF" value=""/>
 <attribute name="MPN" value=""/>
 <attribute name="OC_FARNELL" value="unknown"/>
+<attribute name="TME_EU" value="CC0805KPX7R7224"/>
 </part>
 <part name="U3" library="Atmel_By_element14_Batch_1-00" deviceset="ATMEGA1284P-PU" device="">
 <attribute name="MF" value="MICROCHIP"/>
@@ -38962,36 +38992,43 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <attribute name="MF" value=""/>
 <attribute name="MPN" value=""/>
 <attribute name="OC_FARNELL" value="unknown"/>
+<attribute name="TME_EU" value="RC0805FR-076K8"/>
 </part>
 <part name="R1" library="rcl" deviceset="R-EU_" device="R1206" value="47k">
 <attribute name="MF" value=""/>
 <attribute name="MPN" value=""/>
 <attribute name="OC_FARNELL" value="unknown"/>
+<attribute name="TME_EU" value="CRCW080547K0FKTABC"/>
 </part>
 <part name="R4" library="rcl" deviceset="R-EU_" device="R1206" value="100">
 <attribute name="MF" value=""/>
 <attribute name="MPN" value=""/>
 <attribute name="OC_FARNELL" value="unknown"/>
+<attribute name="TME_EU" value="WF08P-100R-5%"/>
 </part>
 <part name="R51" library="rcl" deviceset="R-EU_" device="R1206" value="3k3">
 <attribute name="MF" value=""/>
 <attribute name="MPN" value=""/>
 <attribute name="OC_FARNELL" value="unknown"/>
+<attribute name="TME_EU" value="RC0805FR-073K3"/>
 </part>
 <part name="R34" library="rcl" deviceset="R-EU_" device="R1206" value="6k8">
 <attribute name="MF" value=""/>
 <attribute name="MPN" value=""/>
 <attribute name="OC_FARNELL" value="unknown"/>
+<attribute name="TME_EU" value="RC0805FR-076K8"/>
 </part>
 <part name="R48" library="rcl" deviceset="R-EU_" device="R1206" value="3k3">
 <attribute name="MF" value=""/>
 <attribute name="MPN" value=""/>
 <attribute name="OC_FARNELL" value="unknown"/>
+<attribute name="TME_EU" value="RC0805FR-073K3"/>
 </part>
 <part name="R35" library="rcl" deviceset="R-EU_" device="R1206" value="3k3">
 <attribute name="MF" value=""/>
 <attribute name="MPN" value=""/>
 <attribute name="OC_FARNELL" value="unknown"/>
+<attribute name="TME_EU" value="RC0805FR-073K3"/>
 </part>
 <part name="R33" library="rcl" deviceset="R-EU_" device="R1206" value="6k8">
 <attribute name="MF" value=""/>
@@ -39003,7 +39040,7 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <attribute name="MPN" value=""/>
 <attribute name="OC_FARNELL" value="unknown"/>
 </part>
-<part name="C20" library="SparkFun" deviceset="CAP_POL" device="1206" value="4.7uF">
+<part name="C20" library="SparkFun" deviceset="CAP_POL" device="1206" value="1uF">
 <attribute name="MF" value=""/>
 <attribute name="MPN" value=""/>
 <attribute name="OC_FARNELL" value="unknown"/>
@@ -39015,7 +39052,7 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <attribute name="MPN" value=""/>
 <attribute name="OC_FARNELL" value="unknown"/>
 </part>
-<part name="C21" library="SparkFun" deviceset="CAP_POL" device="1206" value="4.7uF">
+<part name="C21" library="SparkFun" deviceset="CAP_POL" device="1206" value="1uF">
 <attribute name="MF" value=""/>
 <attribute name="MPN" value=""/>
 <attribute name="OC_FARNELL" value="unknown"/>
@@ -39036,6 +39073,7 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <attribute name="MF" value=""/>
 <attribute name="MPN" value=""/>
 <attribute name="OC_FARNELL" value="unknown"/>
+<attribute name="TME_EU" value="BC-0401"/>
 </part>
 <part name="BH10" library="SparkFun-Electromechanical" deviceset="HOLDER_AAA_RIGHT" device="">
 <attribute name="MF" value=""/>
@@ -39056,6 +39094,7 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <attribute name="MF" value=""/>
 <attribute name="MPN" value=""/>
 <attribute name="OC_FARNELL" value="unknown"/>
+<attribute name="TME_EU" value="CC0805KRX7R9153"/>
 </part>
 <part name="S3" library="SmartPrj" deviceset="TACTILE_SWITCH" device="TACTILE_SWITCH_PTH-12MM" value="B3F-4150">
 <attribute name="MF" value="OMRON"/>
@@ -39066,6 +39105,7 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <attribute name="MF" value=""/>
 <attribute name="MPN" value=""/>
 <attribute name="OC_FARNELL" value="unknown"/>
+<attribute name="TME_EU" value="RC0805FR-076K8"/>
 </part>
 <part name="C11" library="SparkFun" deviceset="CAP" device="0805" value="1n">
 <attribute name="MF" value=""/>
@@ -39093,14 +39133,16 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <attribute name="MF" value=""/>
 <attribute name="MPN" value=""/>
 <attribute name="OC_FARNELL" value="unknown"/>
+<attribute name="TME_EU" value="RC0805FR-076K8"/>
 </part>
 <part name="GND1" library="SparkFun" deviceset="GND" device=""/>
 <part name="C5" library="rcl" deviceset="C-EU" device="C1206K" value="47n">
 <attribute name="MF" value=""/>
 <attribute name="MPN" value=""/>
 <attribute name="OC_FARNELL" value="unknown"/>
+<attribute name="TME_EU" value="CC0805KRX7R9473"/>
 </part>
-<part name="R25" library="rcl" deviceset="R-EU_" device="R1206" value="100">
+<part name="R25" library="rcl" deviceset="R-EU_" device="R1206" value="47">
 <attribute name="MF" value=""/>
 <attribute name="MPN" value=""/>
 <attribute name="OC_FARNELL" value="unknown"/>
@@ -39140,6 +39182,7 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <attribute name="MF" value=""/>
 <attribute name="MPN" value=""/>
 <attribute name="OC_FARNELL" value="unknown"/>
+<attribute name="TME_EU" value="CC0805KRX7R9153"/>
 </part>
 <part name="GND2" library="SparkFun" deviceset="GND" device=""/>
 <part name="D12" library="BaseApp" deviceset="DIODE" device="SMA" value="SD103CW">
@@ -39151,6 +39194,7 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <attribute name="MF" value=""/>
 <attribute name="MPN" value=""/>
 <attribute name="OC_FARNELL" value="unknown"/>
+<attribute name="TME_EU" value="RC0805FR-076K8"/>
 </part>
 <part name="M2" library="IRLML6402" deviceset="IRLML6402" device="" value="IRLML2244">
 <attribute name="MF" value="INFINEON"/>
@@ -39161,11 +39205,13 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <attribute name="MF" value=""/>
 <attribute name="MPN" value=""/>
 <attribute name="OC_FARNELL" value="unknown"/>
+<attribute name="TME_EU" value="CRCW080547K0FKTABC"/>
 </part>
 <part name="R44" library="rcl" deviceset="R-EU_" device="R1206" value="22k">
 <attribute name="MF" value=""/>
 <attribute name="MPN" value=""/>
 <attribute name="OC_FARNELL" value="unknown"/>
+<attribute name="TME_EU" value="CRCW080522K0FKTABC"/>
 </part>
 <part name="FRAME4" library="frames" deviceset="LETTER_L" device="" value="frame"/>
 <part name="U$1" library="diy-modules" deviceset="BATTERY-CHARGER-LI-PROT" device="">
@@ -39199,11 +39245,13 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <attribute name="MF" value=""/>
 <attribute name="MPN" value=""/>
 <attribute name="OC_FARNELL" value="unknown"/>
+<attribute name="TME_EU" value="CRCW080547K0FKTABC"/>
 </part>
 <part name="R47" library="rcl" deviceset="R-EU_" device="R1206" value="22k">
 <attribute name="MF" value=""/>
 <attribute name="MPN" value=""/>
 <attribute name="OC_FARNELL" value="unknown"/>
+<attribute name="TME_EU" value="CRCW080522K0FKTABC"/>
 </part>
 <part name="IC1" library="linear" deviceset="MCP1703*" device="MB" technology="33">
 <attribute name="MF" value=""/>
@@ -39248,6 +39296,7 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <attribute name="MF" value=""/>
 <attribute name="MPN" value=""/>
 <attribute name="OC_FARNELL" value="unknown"/>
+<attribute name="TME_EU" value="CC0805KRX7R9473"/>
 </part>
 <part name="R5" library="rcl" deviceset="R-EU_" device="0207/10" value="150R">
 <attribute name="MF" value=""/>
@@ -39264,6 +39313,7 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <attribute name="MF" value=""/>
 <attribute name="MPN" value=""/>
 <attribute name="OC_FARNELL" value="unknown"/>
+<attribute name="TME_EU" value="CC0805KRX7R9153"/>
 </part>
 <part name="GND-ISO16" library="SparkFun-Aesthetics" deviceset="GND-ISO" device=""/>
 <part name="T1" library="digital-transistors" deviceset="BCR135" device="">
@@ -39275,6 +39325,7 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <attribute name="MF" value=""/>
 <attribute name="MPN" value=""/>
 <attribute name="OC_FARNELL" value="unknown"/>
+<attribute name="TME_EU" value="CRCW080522K0FKTABC"/>
 </part>
 <part name="GND-ISO17" library="SparkFun-Aesthetics" deviceset="GND-ISO" device=""/>
 <part name="D1" library="BaseApp" deviceset="DIODE" device="SOD-323" value="SD103CW">
@@ -39286,6 +39337,7 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <attribute name="MF" value=""/>
 <attribute name="MPN" value=""/>
 <attribute name="OC_FARNELL" value="unknown"/>
+<attribute name="TME_EU" value="RC0805FR-076K8"/>
 </part>
 <part name="GND-ISO15" library="SparkFun-Aesthetics" deviceset="GND-ISO" device=""/>
 <part name="D2" library="BaseApp" deviceset="DIODE" device="SOD-123" value="SD103CW">
@@ -39315,6 +39367,23 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <attribute name="OC_FARNELL" value="unknown"/>
 </part>
 <part name="GND-ISO18" library="SparkFun-Aesthetics" deviceset="GND-ISO" device=""/>
+<part name="C17" library="rcl" deviceset="C-EU" device="C1206K" value="1µ">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
+<part name="GND7" library="SparkFun" deviceset="GND" device=""/>
+<part name="C19" library="rcl" deviceset="C-EU" device="C1206K" value="1µ">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
+<part name="GND9" library="SparkFun" deviceset="GND" device=""/>
+<part name="C23" library="SparkFun" deviceset="CAP" device="0805" value="220n">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+</part>
 </parts>
 <sheets>
 <sheet>
@@ -39347,6 +39416,7 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <attribute name="OC_FARNELL" x="142.24" y="123.19" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MF" x="142.24" y="123.19" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MPN" x="142.24" y="123.19" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="TME_EU" x="142.24" y="123.19" size="1.016" layer="96" display="off"/>
 </instance>
 <instance part="C8" gate="G$1" x="152.4" y="123.19" smashed="yes">
 <attribute name="NAME" x="153.924" y="118.237" size="1.778" layer="95"/>
@@ -39354,6 +39424,7 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <attribute name="OC_FARNELL" x="152.4" y="123.19" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MF" x="152.4" y="123.19" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MPN" x="152.4" y="123.19" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="TME_EU" x="152.4" y="123.19" size="1.016" layer="96" display="off"/>
 </instance>
 <instance part="P+2" gate="VCC" x="129.54" y="109.22" smashed="yes"/>
 <instance part="P+6" gate="VCC" x="210.82" y="69.85" smashed="yes"/>
@@ -39373,6 +39444,7 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <attribute name="OC_FARNELL" x="134.62" y="43.18" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MF" x="134.62" y="43.18" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MPN" x="134.62" y="43.18" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="TME_EU" x="134.62" y="43.18" size="1.016" layer="96" rot="MR180" display="off"/>
 </instance>
 <instance part="D4" gate="G$1" x="124.46" y="27.94" rot="R270">
 <attribute name="OC_FARNELL" x="124.46" y="27.94" size="1.016" layer="96" align="bottom-center" display="off"/>
@@ -39388,11 +39460,13 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <attribute name="OC_FARNELL" x="127" y="88.9" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MF" x="127" y="88.9" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MPN" x="127" y="88.9" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="TME_EU" x="127" y="88.9" size="1.016" layer="96" align="bottom-center" display="off"/>
 </instance>
 <instance part="R22" gate="G$1" x="127" y="81.28">
 <attribute name="OC_FARNELL" x="127" y="81.28" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MF" x="127" y="81.28" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MPN" x="127" y="81.28" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="TME_EU" x="127" y="81.28" size="1.016" layer="96" align="bottom-center" display="off"/>
 </instance>
 <instance part="C14" gate="G$1" x="124.46" y="148.59">
 <attribute name="OC_FARNELL" x="124.46" y="148.59" size="1.016" layer="96" align="bottom-center" display="off"/>
@@ -39413,11 +39487,13 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <attribute name="OC_FARNELL" x="115.57" y="158.75" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MF" x="115.57" y="158.75" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MPN" x="115.57" y="158.75" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="TME_EU" x="115.57" y="158.75" size="1.016" layer="96" align="bottom-center" display="off"/>
 </instance>
 <instance part="R32" gate="G$1" x="147.32" y="158.75">
 <attribute name="OC_FARNELL" x="147.32" y="158.75" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MF" x="147.32" y="158.75" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MPN" x="147.32" y="158.75" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="TME_EU" x="147.32" y="158.75" size="1.016" layer="96" align="bottom-center" display="off"/>
 </instance>
 <instance part="U3" gate="A" x="194.31" y="137.16">
 <attribute name="MF" x="194.31" y="137.16" size="1.016" layer="96" align="bottom-center" display="off"/>
@@ -39426,6 +39502,7 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <attribute name="OC_FARNELL" x="137.16" y="104.14" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MF" x="137.16" y="104.14" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MPN" x="137.16" y="104.14" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="TME_EU" x="137.16" y="104.14" size="1.016" layer="96" align="bottom-center" display="off"/>
 </instance>
 <instance part="C4" gate="G$1" x="147.32" y="99.06">
 <attribute name="OC_FARNELL" x="147.32" y="99.06" size="1.016" layer="96" align="bottom-center" display="off"/>
@@ -39438,7 +39515,7 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <attribute name="MPN" x="129.54" y="153.67" size="1.016" layer="96" align="bottom-center" display="off"/>
 </instance>
 <instance part="GND-ISO3" gate="G$1" x="165.1" y="91.44"/>
-<instance part="GND-ISO5" gate="G$1" x="124.46" y="22.86"/>
+<instance part="GND-ISO5" gate="G$1" x="124.46" y="20.32"/>
 <instance part="GND-ISO8" gate="G$1" x="129.54" y="58.42"/>
 <instance part="GND-ISO9" gate="G$1" x="147.32" y="91.44"/>
 <instance part="GND-ISO10" gate="G$1" x="210.82" y="43.18"/>
@@ -39453,6 +39530,7 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <attribute name="OC_FARNELL" x="233.68" y="152.4" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MF" x="233.68" y="152.4" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MPN" x="233.68" y="152.4" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="TME_EU" x="233.68" y="152.4" size="1.016" layer="96" rot="R90" align="bottom-center" display="off"/>
 </instance>
 <instance part="GND-ISO15" gate="G$1" x="223.52" y="91.44"/>
 <instance part="D2" gate="G$1" x="232.41" y="128.27" rot="R90">
@@ -39891,7 +39969,7 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <pinref part="M1" gate="G$1" pin="D"/>
 <wire x1="134.62" y1="38.1" x2="134.62" y2="35.56" width="0.1524" layer="91"/>
 <wire x1="134.62" y1="35.56" x2="124.46" y2="35.56" width="0.1524" layer="91"/>
-<label x="120.65" y="44.45" size="1.778" layer="95" rot="R180"/>
+<label x="120.65" y="39.37" size="1.778" layer="95" rot="R180"/>
 <pinref part="M1" gate="G$1" pin="G"/>
 <wire x1="129.54" y1="45.72" x2="124.46" y2="45.72" width="0.1524" layer="91"/>
 <wire x1="124.46" y1="45.72" x2="124.46" y2="35.56" width="0.1524" layer="91"/>
@@ -39953,6 +40031,7 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <segment>
 <pinref part="D4" gate="G$1" pin="C"/>
 <pinref part="GND-ISO5" gate="G$1" pin="GND-ISO"/>
+<wire x1="124.46" y1="22.86" x2="124.46" y2="25.4" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="D5" gate="G$1" pin="A"/>
@@ -40027,21 +40106,25 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <attribute name="OC_FARNELL" x="123.19" y="67.31" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MF" x="123.19" y="67.31" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MPN" x="123.19" y="67.31" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="TME_EU" x="125.73" y="71.12" size="1.6764" layer="96" ratio="12" rot="MR180" display="off"/>
 </instance>
 <instance part="R34" gate="G$1" x="109.22" y="78.74">
 <attribute name="OC_FARNELL" x="109.22" y="78.74" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MF" x="109.22" y="78.74" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MPN" x="109.22" y="78.74" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="TME_EU" x="109.22" y="78.74" size="1.016" layer="96" align="bottom-center" display="off"/>
 </instance>
 <instance part="R48" gate="G$1" x="77.47" y="78.74">
 <attribute name="OC_FARNELL" x="77.47" y="78.74" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MF" x="77.47" y="78.74" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MPN" x="77.47" y="78.74" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="TME_EU" x="77.47" y="78.74" size="1.016" layer="96" align="bottom-center" display="off"/>
 </instance>
 <instance part="R35" gate="G$1" x="92.71" y="69.85">
 <attribute name="OC_FARNELL" x="92.71" y="69.85" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MF" x="92.71" y="69.85" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MPN" x="92.71" y="69.85" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="TME_EU" x="92.71" y="69.85" size="1.016" layer="96" align="bottom-center" display="off"/>
 </instance>
 <instance part="R33" gate="G$1" x="146.05" y="68.58" rot="R90">
 <attribute name="OC_FARNELL" x="146.05" y="68.58" size="1.016" layer="96" align="bottom-center" display="off"/>
@@ -40062,6 +40145,7 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <attribute name="OC_FARNELL" x="25.4" y="85.09" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MF" x="25.4" y="85.09" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MPN" x="25.4" y="85.09" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="TME_EU" x="25.4" y="85.09" size="1.016" layer="96" rot="R180" display="off"/>
 </instance>
 <instance part="BH10" gate="G$1" x="57.15" y="104.14" rot="R180">
 <attribute name="OC_FARNELL" x="57.15" y="104.14" size="1.016" layer="96" align="bottom-center" display="off"/>
@@ -40647,28 +40731,31 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <attribute name="OC_FARNELL" x="147.32" y="83.82" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MF" x="147.32" y="83.82" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MPN" x="147.32" y="83.82" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="TME_EU" x="147.32" y="83.82" size="1.016" layer="96" rot="R180" align="bottom-center" display="off"/>
 </instance>
 <instance part="R1" gate="G$1" x="66.04" y="87.63" rot="R270">
 <attribute name="OC_FARNELL" x="66.04" y="87.63" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MF" x="66.04" y="87.63" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MPN" x="66.04" y="87.63" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="TME_EU" x="66.04" y="87.63" size="1.016" layer="96" rot="R270" align="bottom-center" display="off"/>
 </instance>
 <instance part="R51" gate="G$1" x="74.93" y="30.48" rot="R90">
 <attribute name="OC_FARNELL" x="74.93" y="30.48" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MF" x="74.93" y="30.48" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MPN" x="74.93" y="30.48" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="TME_EU" x="74.93" y="30.48" size="1.016" layer="96" rot="R90" align="bottom-center" display="off"/>
 </instance>
 <instance part="C16" gate="G$1" x="157.48" y="120.65">
 <attribute name="OC_FARNELL" x="157.48" y="120.65" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MF" x="157.48" y="120.65" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MPN" x="157.48" y="120.65" size="1.016" layer="96" align="bottom-center" display="off"/>
 </instance>
-<instance part="C20" gate="G$1" x="147.32" y="123.19">
-<attribute name="OC_FARNELL" x="147.32" y="123.19" size="1.016" layer="96" align="bottom-center" display="off"/>
-<attribute name="MF" x="147.32" y="123.19" size="1.016" layer="96" align="bottom-center" display="off"/>
-<attribute name="MPN" x="147.32" y="123.19" size="1.016" layer="96" align="bottom-center" display="off"/>
+<instance part="C20" gate="G$1" x="144.78" y="123.19">
+<attribute name="OC_FARNELL" x="144.78" y="123.19" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="144.78" y="123.19" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="144.78" y="123.19" size="1.016" layer="96" align="bottom-center" display="off"/>
 </instance>
-<instance part="GND25" gate="1" x="147.32" y="109.22"/>
+<instance part="GND25" gate="1" x="144.78" y="109.22"/>
 <instance part="GND26" gate="1" x="157.48" y="109.22"/>
 <instance part="U4" gate="G$1" x="116.84" y="124.46">
 <attribute name="OC_FARNELL" x="116.84" y="124.46" size="1.016" layer="96" align="bottom-center" display="off"/>
@@ -40691,6 +40778,7 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <attribute name="OC_FARNELL" x="67.31" y="163.83" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MF" x="67.31" y="163.83" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MPN" x="67.31" y="163.83" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="TME_EU" x="67.31" y="163.83" size="1.016" layer="96" rot="R90" align="bottom-center" display="off"/>
 </instance>
 <instance part="C11" gate="G$1" x="138.43" y="114.3">
 <attribute name="OC_FARNELL" x="138.43" y="114.3" size="1.016" layer="96" align="bottom-center" display="off"/>
@@ -40717,6 +40805,7 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <attribute name="OC_FARNELL" x="67.31" y="147.32" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MF" x="67.31" y="147.32" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MPN" x="67.31" y="147.32" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="TME_EU" x="67.31" y="147.32" size="1.016" layer="96" rot="R90" align="bottom-center" display="off"/>
 </instance>
 <instance part="GND1" gate="1" x="67.31" y="132.08" smashed="yes">
 <attribute name="VALUE" x="68.58" y="134.62" size="1.778" layer="96"/>
@@ -40760,6 +40849,7 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <attribute name="OC_FARNELL" x="82.55" y="127" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MF" x="82.55" y="127" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MPN" x="82.55" y="127" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="TME_EU" x="82.55" y="127" size="1.016" layer="96" rot="R90" align="bottom-center" display="off"/>
 </instance>
 <instance part="M2" gate="G$1" x="52.07" y="129.54" rot="MR180">
 <attribute name="OC_FARNELL" x="52.07" y="129.54" size="1.016" layer="96" align="bottom-center" display="off"/>
@@ -40770,11 +40860,13 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <attribute name="OC_FARNELL" x="44.45" y="139.7" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MF" x="44.45" y="139.7" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MPN" x="44.45" y="139.7" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="TME_EU" x="44.45" y="139.7" size="1.016" layer="96" rot="R270" align="bottom-center" display="off"/>
 </instance>
 <instance part="R44" gate="G$1" x="44.45" y="125.73" rot="R270">
 <attribute name="OC_FARNELL" x="44.45" y="125.73" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MF" x="44.45" y="125.73" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MPN" x="44.45" y="125.73" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="TME_EU" x="44.45" y="125.73" size="1.016" layer="96" rot="R270" align="bottom-center" display="off"/>
 </instance>
 <instance part="D9" gate="G$1" x="208.28" y="149.86">
 <attribute name="OC_FARNELL" x="208.28" y="149.86" size="1.016" layer="96" align="bottom-center" display="off"/>
@@ -40800,11 +40892,13 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <attribute name="OC_FARNELL" x="16.51" y="128.27" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MF" x="16.51" y="128.27" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MPN" x="16.51" y="128.27" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="TME_EU" x="16.51" y="128.27" size="1.016" layer="96" rot="R270" align="bottom-center" display="off"/>
 </instance>
 <instance part="R47" gate="G$1" x="16.51" y="113.03" rot="R270">
 <attribute name="OC_FARNELL" x="16.51" y="113.03" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MF" x="16.51" y="113.03" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MPN" x="16.51" y="113.03" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="TME_EU" x="16.51" y="113.03" size="1.016" layer="96" rot="R270" align="bottom-center" display="off"/>
 </instance>
 <instance part="IC1" gate="G$1" x="134.62" y="149.86">
 <attribute name="OC_FARNELL" x="134.62" y="149.86" size="1.016" layer="96" align="bottom-center" display="off"/>
@@ -40849,6 +40943,7 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <attribute name="OC_FARNELL" x="83.82" y="49.53" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MF" x="83.82" y="49.53" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MPN" x="83.82" y="49.53" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="TME_EU" x="83.82" y="49.53" size="1.016" layer="96" rot="R270" align="bottom-center" display="off"/>
 </instance>
 <instance part="GND-ISO17" gate="G$1" x="83.82" y="40.64"/>
 <instance part="T2" gate="T$1" x="152.4" y="158.75">
@@ -40862,6 +40957,23 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <attribute name="OC_FARNELL" x="78.74" y="64.77" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MF" x="78.74" y="64.77" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MPN" x="78.74" y="64.77" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="C17" gate="G$1" x="151.13" y="116.84">
+<attribute name="OC_FARNELL" x="151.13" y="116.84" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="151.13" y="116.84" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="151.13" y="116.84" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="GND7" gate="1" x="151.13" y="109.22"/>
+<instance part="C19" gate="G$1" x="92.71" y="104.14">
+<attribute name="OC_FARNELL" x="92.71" y="104.14" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="92.71" y="104.14" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="92.71" y="104.14" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="GND9" gate="1" x="92.71" y="93.98"/>
+<instance part="C23" gate="G$1" x="52.07" y="49.53">
+<attribute name="OC_FARNELL" x="52.07" y="49.53" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="52.07" y="49.53" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="52.07" y="49.53" size="1.016" layer="96" align="bottom-center" display="off"/>
 </instance>
 </instances>
 <busses>
@@ -40886,7 +40998,7 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <wire x1="138.43" y1="30.48" x2="138.43" y2="27.94" width="0.1524" layer="91"/>
 </segment>
 <segment>
-<wire x1="147.32" y1="111.76" x2="147.32" y2="118.11" width="0.1524" layer="91"/>
+<wire x1="144.78" y1="111.76" x2="144.78" y2="118.11" width="0.1524" layer="91"/>
 <pinref part="C20" gate="G$1" pin="-"/>
 <pinref part="GND25" gate="1" pin="GND"/>
 </segment>
@@ -40938,6 +41050,15 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <pinref part="C3" gate="G$1" pin="2"/>
 <pinref part="GND8" gate="1" pin="GND"/>
 <wire x1="167.64" y1="118.11" x2="167.64" y2="111.76" width="0.1524" layer="91"/>
+</segment>
+<segment>
+<pinref part="C17" gate="G$1" pin="2"/>
+<pinref part="GND7" gate="1" pin="GND"/>
+</segment>
+<segment>
+<pinref part="GND9" gate="1" pin="GND"/>
+<pinref part="C19" gate="G$1" pin="2"/>
+<wire x1="92.71" y1="96.52" x2="92.71" y2="99.06" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="EN" class="0">
@@ -41053,8 +41174,8 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <net name="D18_" class="0">
 <segment>
 <pinref part="R44" gate="G$1" pin="2"/>
-<wire x1="44.45" y1="120.65" x2="44.45" y2="115.57" width="0.1524" layer="91"/>
 <label x="45.72" y="115.57" size="1.778" layer="95"/>
+<wire x1="44.45" y1="120.65" x2="44.45" y2="115.57" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="VCC" class="0">
@@ -41076,14 +41197,15 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 </segment>
 <segment>
 <wire x1="124.46" y1="129.54" x2="127" y2="129.54" width="0.1524" layer="91"/>
-<wire x1="147.32" y1="129.54" x2="157.48" y2="129.54" width="0.1524" layer="91"/>
+<wire x1="144.78" y1="129.54" x2="151.13" y2="129.54" width="0.1524" layer="91"/>
+<wire x1="151.13" y1="129.54" x2="157.48" y2="129.54" width="0.1524" layer="91"/>
 <wire x1="157.48" y1="129.54" x2="157.48" y2="125.73" width="0.1524" layer="91"/>
 <pinref part="U4" gate="G$1" pin="OUT"/>
 <pinref part="C16" gate="G$1" pin="1"/>
 <pinref part="C20" gate="G$1" pin="+"/>
 <label x="168.91" y="129.54" size="1.778" layer="95"/>
 <pinref part="D7" gate="G$1" pin="A"/>
-<wire x1="147.32" y1="129.54" x2="147.32" y2="125.73" width="0.1524" layer="91"/>
+<wire x1="144.78" y1="129.54" x2="144.78" y2="125.73" width="0.1524" layer="91"/>
 <wire x1="120.65" y1="138.43" x2="127" y2="138.43" width="0.1524" layer="91"/>
 <wire x1="127" y1="138.43" x2="127" y2="129.54" width="0.1524" layer="91"/>
 <junction x="127" y="129.54"/>
@@ -41103,8 +41225,11 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <pinref part="T2" gate="T$1" pin="E"/>
 <wire x1="154.94" y1="151.13" x2="154.94" y2="149.86" width="0.1524" layer="91"/>
 <junction x="154.94" y="149.86"/>
-<wire x1="127" y1="129.54" x2="147.32" y2="129.54" width="0.1524" layer="91"/>
-<junction x="147.32" y="129.54"/>
+<wire x1="127" y1="129.54" x2="144.78" y2="129.54" width="0.1524" layer="91"/>
+<junction x="144.78" y="129.54"/>
+<pinref part="C17" gate="G$1" pin="1"/>
+<wire x1="151.13" y1="119.38" x2="151.13" y2="129.54" width="0.1524" layer="91"/>
+<junction x="151.13" y="129.54"/>
 </segment>
 <segment>
 <pinref part="M2" gate="G$1" pin="S"/>
@@ -41135,7 +41260,8 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <wire x1="101.6" y1="157.48" x2="101.6" y2="154.94" width="0.1524" layer="91"/>
 <pinref part="S3" gate="S" pin="2"/>
 <wire x1="101.6" y1="154.94" x2="104.14" y2="154.94" width="0.1524" layer="91"/>
-<wire x1="93.98" y1="129.54" x2="101.6" y2="129.54" width="0.1524" layer="91"/>
+<wire x1="93.98" y1="129.54" x2="99.06" y2="129.54" width="0.1524" layer="91"/>
+<wire x1="99.06" y1="129.54" x2="101.6" y2="129.54" width="0.1524" layer="91"/>
 <wire x1="101.6" y1="129.54" x2="106.68" y2="129.54" width="0.1524" layer="91"/>
 <wire x1="93.98" y1="127" x2="93.98" y2="129.54" width="0.1524" layer="91"/>
 <wire x1="93.98" y1="129.54" x2="88.9" y2="129.54" width="0.1524" layer="91"/>
@@ -41174,6 +41300,11 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <wire x1="142.24" y1="158.75" x2="139.7" y2="158.75" width="0.1524" layer="91"/>
 <wire x1="139.7" y1="158.75" x2="139.7" y2="163.83" width="0.1524" layer="91"/>
 <junction x="139.7" y="163.83"/>
+<pinref part="C19" gate="G$1" pin="1"/>
+<wire x1="92.71" y1="106.68" x2="92.71" y2="109.22" width="0.1524" layer="91"/>
+<wire x1="92.71" y1="109.22" x2="99.06" y2="109.22" width="0.1524" layer="91"/>
+<wire x1="99.06" y1="109.22" x2="99.06" y2="129.54" width="0.1524" layer="91"/>
+<junction x="99.06" y="129.54"/>
 </segment>
 <segment>
 <pinref part="U$1" gate="G$1" pin="OUT+"/>
@@ -41202,6 +41333,10 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <pinref part="R51" gate="G$1" pin="2"/>
 <label x="123.19" y="60.96" size="1.778" layer="95"/>
 <label x="74.93" y="38.1" size="1.778" layer="95"/>
+<pinref part="C23" gate="G$1" pin="2"/>
+<wire x1="52.07" y1="46.99" x2="52.07" y2="36.83" width="0.1524" layer="91"/>
+<wire x1="52.07" y1="36.83" x2="66.04" y2="36.83" width="0.1524" layer="91"/>
+<junction x="66.04" y="36.83"/>
 </segment>
 </net>
 <net name="A9" class="0">
@@ -41365,9 +41500,14 @@ INFINEON, http://www.infineon.com/upload/Image/Packages/hlgf1009.gif</descriptio
 <pinref part="C18" gate="G$1" pin="1"/>
 <pinref part="R1" gate="G$1" pin="2"/>
 <pinref part="T1" gate="T$1" pin="B"/>
-<wire x1="66.04" y1="81.28" x2="66.04" y2="54.61" width="0.1524" layer="91"/>
+<wire x1="66.04" y1="81.28" x2="66.04" y2="59.69" width="0.1524" layer="91"/>
+<wire x1="66.04" y1="59.69" x2="66.04" y2="54.61" width="0.1524" layer="91"/>
 <wire x1="71.12" y1="81.28" x2="66.04" y2="81.28" width="0.1524" layer="91"/>
 <junction x="66.04" y="81.28"/>
+<pinref part="C23" gate="G$1" pin="1"/>
+<wire x1="52.07" y1="54.61" x2="52.07" y2="59.69" width="0.1524" layer="91"/>
+<wire x1="52.07" y1="59.69" x2="66.04" y2="59.69" width="0.1524" layer="91"/>
+<junction x="66.04" y="59.69"/>
 </segment>
 </net>
 <net name="/RESET" class="0">

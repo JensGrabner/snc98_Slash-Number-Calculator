@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="yes"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="10" unitdist="mil" unit="mil" style="lines" multiple="1" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -523,14 +523,14 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <pad name="4" x="7.62" y="-0.254" drill="1.016" shape="long" rot="R90"/>
 <pad name="5" x="10.16" y="0" drill="1.016" shape="long" rot="R90"/>
 <pad name="6" x="12.7" y="-0.254" drill="1.016" shape="long" rot="R90"/>
-<text x="-1.27" y="1.778" size="1.27" layer="25" font="vector">&gt;NAME</text>
-<text x="-1.27" y="-3.302" size="1.27" layer="27" font="vector">&gt;VALUE</text>
 <smd name="P$1" x="0" y="-2.794" dx="1.651" dy="1.016" layer="1" roundness="30" rot="R90"/>
 <smd name="P$2" x="2.54" y="-2.921" dx="1.397" dy="1.016" layer="1" roundness="30" rot="R90"/>
 <smd name="P$3" x="5.08" y="-2.794" dx="1.651" dy="1.016" layer="1" roundness="30" rot="R90"/>
 <smd name="P$4" x="7.62" y="-2.921" dx="1.397" dy="1.016" layer="1" roundness="30" rot="R90"/>
 <smd name="P$5" x="10.16" y="-2.794" dx="1.651" dy="1.016" layer="1" roundness="30" rot="R90"/>
 <smd name="P$6" x="12.7" y="-2.921" dx="1.397" dy="1.016" layer="1" roundness="30" rot="R90"/>
+<text x="-1.27" y="1.778" size="1.27" layer="25" font="vector">&gt;NAME</text>
+<text x="-1.27" y="-3.302" size="1.27" layer="27" font="vector">&gt;VALUE</text>
 </package>
 <package name="0805">
 <wire x1="-0.925" y1="0.6" x2="0.925" y2="0.6" width="0.1016" layer="51"/>
@@ -5572,14 +5572,14 @@ Source: http://focus.ti.com/lit/ds/symlink/ua78l05.pdf</description>
 <library name="HT7333_SOT89">
 <packages>
 <package name="SOT89">
-<smd name="GND" x="-1.4986" y="-0.5969" dx="0.5588" dy="1.1938" layer="1"/>
-<smd name="VIN" x="0" y="-0.5969" dx="0.5588" dy="1.1938" layer="1"/>
-<smd name="VOUT" x="1.4986" y="-0.5969" dx="0.5588" dy="1.1938" layer="1"/>
 <wire x1="-2.2987" y1="0" x2="2.2987" y2="0" width="0.127" layer="24"/>
 <wire x1="-2.2987" y1="0" x2="-2.2987" y2="2.5908" width="0.127" layer="24"/>
 <wire x1="2.2987" y1="0" x2="2.2987" y2="2.5908" width="0.127" layer="24"/>
 <wire x1="-2.2987" y1="2.5908" x2="2.2987" y2="2.5908" width="0.127" layer="24"/>
+<smd name="GND" x="-1.4986" y="-0.5969" dx="0.5588" dy="1.1938" layer="1"/>
 <smd name="P$4" x="0" y="2.7432" dx="1.8288" dy="0.4572" layer="1" rot="R180"/>
+<smd name="VIN" x="0" y="-0.5969" dx="0.5588" dy="1.1938" layer="1"/>
+<smd name="VOUT" x="1.4986" y="-0.5969" dx="0.5588" dy="1.1938" layer="1"/>
 </package>
 </packages>
 </library>
@@ -5763,11 +5763,6 @@ You are welcome to use this library for commercial purposes. For attribution, we
 <description>&lt;b&gt;Small Outline Transistor; 3 leads,&lt;/b&gt; 2.9mm*2.4mm, reflow soldering&lt;p&gt;
 INFINEON http://www.infineon.com/upload/Image/Packages/hlgf1014.gif&lt;br&gt;
 INFINEON http://www.infineon.com/upload/Image/Packages/hlgf1015.gif</description>
-<smd name="1" x="-1" y="-1.1" dx="0.8" dy="0.9" layer="1"/>
-<smd name="2" x="1" y="-1.1" dx="0.8" dy="0.9" layer="1"/>
-<smd name="3" x="0" y="1.1" dx="0.8" dy="0.9" layer="1"/>
-<text x="-1.9" y="1.9" size="1.27" layer="25">&gt;NAME</text>
-<text x="-1.9" y="-3.2" size="1.27" layer="27">&gt;VALUE</text>
 <wire x1="1.4224" y1="0.6604" x2="1.4224" y2="-0.6604" width="0.127" layer="51"/>
 <wire x1="1.4224" y1="-0.6604" x2="-1.4224" y2="-0.6604" width="0.127" layer="51"/>
 <wire x1="-1.4224" y1="-0.6604" x2="-1.4224" y2="0.6604" width="0.127" layer="51"/>
@@ -5775,9 +5770,14 @@ INFINEON http://www.infineon.com/upload/Image/Packages/hlgf1015.gif</description
 <rectangle x1="-0.2286" y1="0.7112" x2="0.2286" y2="1.2954" layer="51"/>
 <rectangle x1="0.7112" y1="-1.2954" x2="1.1684" y2="-0.7112" layer="51"/>
 <rectangle x1="-1.1684" y1="-1.2954" x2="-0.7112" y2="-0.7112" layer="51"/>
+<smd name="1" x="-1" y="-1.1" dx="0.8" dy="0.9" layer="1"/>
+<smd name="2" x="1" y="-1.1" dx="0.8" dy="0.9" layer="1"/>
+<smd name="3" x="0" y="1.1" dx="0.8" dy="0.9" layer="1"/>
 <smd name="B" x="-0.95" y="-1.143" dx="1.143" dy="1.524" layer="1" roundness="30"/>
 <smd name="C" x="0" y="1.143" dx="1.143" dy="1.524" layer="1" roundness="30"/>
 <smd name="E" x="0.95" y="-1.143" dx="1.143" dy="1.524" layer="1" roundness="30"/>
+<text x="-1.9" y="1.9" size="1.27" layer="25">&gt;NAME</text>
+<text x="-1.9" y="-3.2" size="1.27" layer="27">&gt;VALUE</text>
 </package>
 </packages>
 </library>
@@ -5977,19 +5977,21 @@ design rules under a new name.</description>
 <attribute name="MF" value="" x="146.431" y="5.6134" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="MPN" value="" x="146.431" y="5.6134" size="1.778" layer="28" rot="MR180" display="off"/>
 </element>
-<element name="C7" library="_jc" package="C0805K" value="15pF" x="69.469" y="11.684" smashed="yes" rot="MR90">
+<element name="C7" library="_jc" package="C0805K" value="22pF" x="69.469" y="11.684" smashed="yes" rot="MR90">
 <attribute name="NAME" x="71.7536" y="11.7108" size="1.016" layer="26" ratio="16" rot="MR270"/>
 <attribute name="VALUE" x="66.969" y="10.184" size="0.8128" layer="28" ratio="16" rot="MR90"/>
 <attribute name="OC_FARNELL" value="unknown" x="69.469" y="11.684" size="1.778" layer="28" rot="MR90" display="off"/>
 <attribute name="MF" value="" x="69.469" y="11.684" size="1.778" layer="28" rot="MR90" display="off"/>
 <attribute name="MPN" value="" x="69.469" y="11.684" size="1.778" layer="28" rot="MR90" display="off"/>
+<attribute name="TME_EU" value="CL21C220JBANNNC" x="69.469" y="11.684" size="1.778" layer="28" rot="MR90" display="off"/>
 </element>
-<element name="C8" library="_jc" package="C0805K" value="15pF" x="67.691" y="12.319" smashed="yes" rot="MR90">
+<element name="C8" library="_jc" package="C0805K" value="22pF" x="67.691" y="12.319" smashed="yes" rot="MR90">
 <attribute name="NAME" x="67.1336" y="14.1464" size="1.016" layer="26" ratio="16" rot="MR90"/>
 <attribute name="VALUE" x="65.191" y="10.819" size="0.8128" layer="28" ratio="16" rot="MR90"/>
 <attribute name="OC_FARNELL" value="unknown" x="67.691" y="12.319" size="1.778" layer="28" rot="MR90" display="off"/>
 <attribute name="MF" value="" x="67.691" y="12.319" size="1.778" layer="28" rot="MR90" display="off"/>
 <attribute name="MPN" value="" x="67.691" y="12.319" size="1.778" layer="28" rot="MR90" display="off"/>
+<attribute name="TME_EU" value="CL21C220JBANNNC" x="67.691" y="12.319" size="1.778" layer="28" rot="MR90" display="off"/>
 </element>
 <element name="JP6" library="SparkFun" package="1X06_LOCK" value="FTDI" x="145.796" y="0.762" locked="yes" smashed="yes" rot="R18.5">
 <attribute name="VALUE" x="145.639375" y="-2.77233125" size="1.27" layer="27" font="vector" rot="R18.5"/>
@@ -6013,6 +6015,7 @@ design rules under a new name.</description>
 <attribute name="OC_FARNELL" value="2468051" x="128.778" y="3.937" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="MF" value="INFINEON" x="128.778" y="3.937" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="MPN" value="IRLML2244TRPBF" x="128.778" y="3.937" size="1.778" layer="28" rot="MR180" display="off"/>
+<attribute name="TME_EU" value="DMG2305UX-7" x="128.778" y="3.937" size="1.778" layer="28" rot="MR180" display="off"/>
 </element>
 <element name="D4" library="BaseApp" package="SMADIODE" value="SD103CW" x="131.064" y="7.874" locked="yes" smashed="yes" rot="MR0">
 <attribute name="NAME" x="133.096" y="9.525" size="1.016" layer="26" font="vector" ratio="16" rot="MR0"/>
@@ -6030,21 +6033,25 @@ design rules under a new name.</description>
 <attribute name="OC_FARNELL" value="unknown" x="54.356" y="4.318" size="1.778" layer="28" rot="MR270" display="off"/>
 <attribute name="MF" value="" x="54.356" y="4.318" size="1.778" layer="28" rot="MR270" display="off"/>
 <attribute name="MPN" value="" x="54.356" y="4.318" size="1.778" layer="28" rot="MR270" display="off"/>
+<attribute name="TME_EU" value="RC0805FR-076K8" x="54.356" y="4.318" size="1.778" layer="28" rot="MR270" display="off"/>
 </element>
 <element name="R22" library="rcl" package="R1206" value="6k8" x="56.642" y="4.318" rot="MR270">
 <attribute name="OC_FARNELL" value="unknown" x="56.642" y="4.318" size="1.778" layer="28" rot="MR270" display="off"/>
 <attribute name="MF" value="" x="56.642" y="4.318" size="1.778" layer="28" rot="MR270" display="off"/>
 <attribute name="MPN" value="" x="56.642" y="4.318" size="1.778" layer="28" rot="MR270" display="off"/>
+<attribute name="TME_EU" value="RC0805FR-076K8" x="56.642" y="4.318" size="1.778" layer="28" rot="MR270" display="off"/>
 </element>
 <element name="C14" library="rcl" package="C1206K" value="1µ" x="-3.175" y="4.826" rot="R90">
 <attribute name="OC_FARNELL" value="unknown" x="-3.175" y="4.826" size="1.778" layer="27" rot="R90" display="off"/>
 <attribute name="MF" value="" x="-3.175" y="4.826" size="1.778" layer="27" rot="R90" display="off"/>
 <attribute name="MPN" value="" x="-3.175" y="4.826" size="1.778" layer="27" rot="R90" display="off"/>
+<attribute name="TME_EU" value="GRM31MR71C105KA" x="-3.175" y="4.826" size="1.778" layer="27" rot="R90" display="off"/>
 </element>
 <element name="C15" library="rcl" package="C1206K" value="1µ" x="14.351" y="7.112" rot="R90">
 <attribute name="OC_FARNELL" value="unknown" x="14.351" y="7.112" size="1.778" layer="27" rot="R90" display="off"/>
 <attribute name="MF" value="" x="14.351" y="7.112" size="1.778" layer="27" rot="R90" display="off"/>
 <attribute name="MPN" value="" x="14.351" y="7.112" size="1.778" layer="27" rot="R90" display="off"/>
+<attribute name="TME_EU" value="GRM31MR71C105KA" x="14.351" y="7.112" size="1.778" layer="27" rot="R90" display="off"/>
 </element>
 <element name="SG1" library="SparkFun-Electromechanical" package="BUZZER-12MM-NS" value="SBT1205-3" x="4.699" y="5.207" rot="R180">
 <attribute name="OC_FARNELL" value="unknown" x="4.699" y="5.207" size="1.778" layer="27" rot="R180" display="off"/>
@@ -6055,26 +6062,31 @@ design rules under a new name.</description>
 <attribute name="OC_FARNELL" value="unknown" x="98.298" y="6.35" size="1.778" layer="28" rot="MR90" display="off"/>
 <attribute name="MF" value="" x="98.298" y="6.35" size="1.778" layer="28" rot="MR90" display="off"/>
 <attribute name="MPN" value="" x="98.298" y="6.35" size="1.778" layer="28" rot="MR90" display="off"/>
+<attribute name="TME_EU" value="CRCW0805150RJNTABC" x="98.298" y="6.35" size="1.778" layer="28" rot="MR90" display="off"/>
 </element>
 <element name="R32" library="rcl" package="R1206" value="150" x="87.4522" y="4.2164">
 <attribute name="OC_FARNELL" value="unknown" x="87.4522" y="4.2164" size="1.778" layer="27" display="off"/>
 <attribute name="MF" value="" x="87.4522" y="4.2164" size="1.778" layer="27" display="off"/>
 <attribute name="MPN" value="" x="87.4522" y="4.2164" size="1.778" layer="27" display="off"/>
+<attribute name="TME_EU" value="CRCW0805150RJNTABC" x="87.4522" y="4.2164" size="1.778" layer="27" display="off"/>
 </element>
 <element name="U1" library="SparkFun-AnalogIC" package="SO16" value="74HC4051_MUX" x="91.3638" y="7.239" rot="MR180">
 <attribute name="OC_FARNELL" value="unknown" x="91.3638" y="7.239" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="MF" value="" x="91.3638" y="7.239" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="MPN" value="" x="91.3638" y="7.239" size="1.778" layer="28" rot="MR180" display="off"/>
+<attribute name="TME_EU" value="4HC4051D.652" x="91.3638" y="7.239" size="1.778" layer="28" rot="MR180" display="off"/>
 </element>
 <element name="M3" library="IRLML6402" package="SOT-23" value="IRLML2244" x="45.593" y="10.668" rot="MR180">
 <attribute name="OC_FARNELL" value="2468051" x="45.593" y="10.668" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="MF" value="INFINEON" x="45.593" y="10.668" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="MPN" value="IRLML2244TRPBF" x="45.593" y="10.668" size="1.778" layer="28" rot="MR180" display="off"/>
+<attribute name="TME_EU" value="DMG2305UX-7" x="45.593" y="10.668" size="1.778" layer="28" rot="MR180" display="off"/>
 </element>
 <element name="U$2" library="transistor-power" package="SOT-23" value="IRLML6244" x="116.967" y="6.985" rot="MR180">
 <attribute name="OC_FARNELL" value="1864517" x="116.967" y="6.985" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="MF" value="INFINEON" x="116.967" y="6.985" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="MPN" value="IRLML6244TRPBF" x="116.967" y="6.985" size="1.778" layer="28" rot="MR180" display="off"/>
+<attribute name="TME_EU" value="DMG2302U-7" x="116.967" y="6.985" size="1.778" layer="28" rot="MR180" display="off"/>
 </element>
 <element name="D3" library="BaseApp" package="SMADIODE" value="SD103CW" x="14.351" y="6.223" rot="MR270">
 <attribute name="OC_FARNELL" value="2306221" x="14.351" y="6.223" size="1.778" layer="28" rot="MR270" display="off"/>
@@ -6085,6 +6097,7 @@ design rules under a new name.</description>
 <attribute name="OC_FARNELL" value="unknown" x="83.058" y="12.954" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="MF" value="" x="83.058" y="12.954" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="MPN" value="" x="83.058" y="12.954" size="1.778" layer="28" rot="MR180" display="off"/>
+<attribute name="TME_EU" value="CC0805KPX7R7224" x="83.058" y="12.954" size="1.778" layer="28" rot="MR180" display="off"/>
 </element>
 <element name="U3" library="Atmel_By_element14_Batch_1-00" package="DIP254P1524X483-40" value="ATMEGA1284P-PU" x="52.07" y="0.381" rot="R270">
 <attribute name="PACKAGE" value="PDIP-40" x="52.07" y="0.381" size="1.778" layer="27" font="vector" ratio="15" rot="R270" display="off"/>
@@ -6098,11 +6111,13 @@ design rules under a new name.</description>
 <attribute name="OC_FARNELL" value="unknown" x="122.9868" y="-0.4318" size="1.778" layer="28" rot="MR270" display="off"/>
 <attribute name="MF" value="" x="122.9868" y="-0.4318" size="1.778" layer="28" rot="MR270" display="off"/>
 <attribute name="MPN" value="" x="122.9868" y="-0.4318" size="1.778" layer="28" rot="MR270" display="off"/>
+<attribute name="TME_EU" value="RC0805FR-076K8" x="122.9868" y="-0.4318" size="1.778" layer="28" rot="MR270" display="off"/>
 </element>
 <element name="R1" library="rcl" package="R1206" value="47k" x="74.803" y="7.747" rot="MR90">
 <attribute name="OC_FARNELL" value="unknown" x="74.803" y="7.747" size="1.778" layer="28" rot="MR90" display="off"/>
 <attribute name="MF" value="" x="74.803" y="7.747" size="1.778" layer="28" rot="MR90" display="off"/>
 <attribute name="MPN" value="" x="74.803" y="7.747" size="1.778" layer="28" rot="MR90" display="off"/>
+<attribute name="TME_EU" value="CRCW080547K0FKTABC" x="74.803" y="7.747" size="1.778" layer="28" rot="MR90" display="off"/>
 </element>
 <element name="R4" library="rcl" package="R1206" value="100" x="56.769" y="10.16" locked="yes" smashed="yes" rot="MR180">
 <attribute name="NAME" x="55.753" y="8.382" size="1.27" layer="26" ratio="12" rot="MR180"/>
@@ -6110,26 +6125,31 @@ design rules under a new name.</description>
 <attribute name="OC_FARNELL" value="unknown" x="56.769" y="10.16" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="MF" value="" x="56.769" y="10.16" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="MPN" value="" x="56.769" y="10.16" size="1.778" layer="28" rot="MR180" display="off"/>
+<attribute name="TME_EU" value="WF08P-100R-5%" x="56.769" y="10.16" size="1.778" layer="28" rot="MR180" display="off"/>
 </element>
 <element name="R51" library="rcl" package="R1206" value="3k3" x="102.997" y="11.557" rot="MR270">
 <attribute name="OC_FARNELL" value="unknown" x="102.997" y="11.557" size="1.778" layer="28" rot="MR270" display="off"/>
 <attribute name="MF" value="" x="102.997" y="11.557" size="1.778" layer="28" rot="MR270" display="off"/>
 <attribute name="MPN" value="" x="102.997" y="11.557" size="1.778" layer="28" rot="MR270" display="off"/>
+<attribute name="TME_EU" value="RC0805FR-073K3" x="102.997" y="11.557" size="1.778" layer="28" rot="MR270" display="off"/>
 </element>
 <element name="R34" library="rcl" package="R1206" value="6k8" x="44.069" y="6.0452" rot="MR0">
 <attribute name="OC_FARNELL" value="unknown" x="44.069" y="6.0452" size="1.778" layer="28" rot="MR0" display="off"/>
 <attribute name="MF" value="" x="44.069" y="6.0452" size="1.778" layer="28" rot="MR0" display="off"/>
 <attribute name="MPN" value="" x="44.069" y="6.0452" size="1.778" layer="28" rot="MR0" display="off"/>
+<attribute name="TME_EU" value="RC0805FR-076K8" x="44.069" y="6.0452" size="1.778" layer="28" rot="MR0" display="off"/>
 </element>
 <element name="R48" library="rcl" package="R1206" value="3k3" x="53.975" y="12.446" rot="MR0">
 <attribute name="OC_FARNELL" value="unknown" x="53.975" y="12.446" size="1.778" layer="28" rot="MR0" display="off"/>
 <attribute name="MF" value="" x="53.975" y="12.446" size="1.778" layer="28" rot="MR0" display="off"/>
 <attribute name="MPN" value="" x="53.975" y="12.446" size="1.778" layer="28" rot="MR0" display="off"/>
+<attribute name="TME_EU" value="RC0805FR-073K3" x="53.975" y="12.446" size="1.778" layer="28" rot="MR0" display="off"/>
 </element>
 <element name="R35" library="rcl" package="R1206" value="3k3" x="49.022" y="13.335" rot="MR0">
 <attribute name="OC_FARNELL" value="unknown" x="49.022" y="13.335" size="1.778" layer="28" rot="MR0" display="off"/>
 <attribute name="MF" value="" x="49.022" y="13.335" size="1.778" layer="28" rot="MR0" display="off"/>
 <attribute name="MPN" value="" x="49.022" y="13.335" size="1.778" layer="28" rot="MR0" display="off"/>
+<attribute name="TME_EU" value="RC0805FR-073K3" x="49.022" y="13.335" size="1.778" layer="28" rot="MR0" display="off"/>
 </element>
 <element name="R33" library="rcl" package="R1206" value="6k8" x="44.069" y="14.605" rot="MR0">
 <attribute name="OC_FARNELL" value="unknown" x="44.069" y="14.605" size="1.778" layer="28" rot="MR0" display="off"/>
@@ -6140,26 +6160,30 @@ design rules under a new name.</description>
 <attribute name="OC_FARNELL" value="unknown" x="74.549" y="10.922" size="1.778" layer="28" rot="MR0" display="off"/>
 <attribute name="MF" value="" x="74.549" y="10.922" size="1.778" layer="28" rot="MR0" display="off"/>
 <attribute name="MPN" value="" x="74.549" y="10.922" size="1.778" layer="28" rot="MR0" display="off"/>
+<attribute name="TME_EU" value="CC0805KPX7R7224" x="74.549" y="10.922" size="1.778" layer="28" rot="MR0" display="off"/>
 </element>
-<element name="C20" library="SparkFun" package="EIA3216" value="4.7uF" x="90.2462" y="12.573" rot="MR180">
+<element name="C20" library="SparkFun" package="EIA3216" value="1uF" x="90.2462" y="12.573" rot="MR180">
 <attribute name="OC_FARNELL" value="unknown" x="90.2462" y="12.573" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="MF" value="" x="90.2462" y="12.573" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="MPN" value="" x="90.2462" y="12.573" size="1.778" layer="28" rot="MR180" display="off"/>
+<attribute name="TME_EU" value="GRM31MR71C105KA" x="90.2462" y="12.573" size="1.778" layer="28" rot="MR180" display="off"/>
 </element>
 <element name="U4" library="SparkFun" package="SOT23-5" value="TLV70033 / TC1185" x="107.061" y="12.065" rot="MR180">
 <attribute name="OC_FARNELL" value="unknown" x="107.061" y="12.065" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="MF" value="" x="107.061" y="12.065" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="MPN" value="" x="107.061" y="12.065" size="1.778" layer="28" rot="MR180" display="off"/>
 </element>
-<element name="C21" library="SparkFun" package="EIA3216" value="4.7uF" x="96.3168" y="12.954" rot="MR180">
+<element name="C21" library="SparkFun" package="EIA3216" value="1uF" x="96.3168" y="12.954" rot="MR180">
 <attribute name="OC_FARNELL" value="unknown" x="96.3168" y="12.954" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="MF" value="" x="96.3168" y="12.954" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="MPN" value="" x="96.3168" y="12.954" size="1.778" layer="28" rot="MR180" display="off"/>
+<attribute name="TME_EU" value="GRM31MR71C105KA" x="96.3168" y="12.954" size="1.778" layer="28" rot="MR180" display="off"/>
 </element>
 <element name="BH7" library="SparkFun-Electromechanical" package="BATTERY-AAA-LEFT" value="HOLDER_AAA_LEFT1" x="146.685" y="23.495" locked="yes" smashed="yes" rot="R180">
 <attribute name="OC_FARNELL" value="unknown" x="146.685" y="23.495" size="1.778" layer="27" rot="R180" display="off"/>
 <attribute name="MF" value="" x="146.685" y="23.495" size="1.778" layer="27" rot="R180" display="off"/>
 <attribute name="MPN" value="" x="146.685" y="23.495" size="1.778" layer="27" rot="R180" display="off"/>
+<attribute name="TME_EU" value="BC-0401" x="146.685" y="23.495" size="1.778" layer="27" rot="R180" display="off"/>
 </element>
 <element name="BH8" library="SparkFun-Electromechanical" package="BATTERY-AAA-RIGHT" value="HOLDER_AAA_RIGHT" x="8.255" y="23.495" locked="yes" smashed="yes" rot="R180">
 <attribute name="OC_FARNELL" value="unknown" x="8.255" y="23.495" size="1.778" layer="27" rot="R180" display="off"/>
@@ -6170,6 +6194,7 @@ design rules under a new name.</description>
 <attribute name="OC_FARNELL" value="unknown" x="108.331" y="23.495" size="1.778" layer="27" display="off"/>
 <attribute name="MF" value="" x="108.331" y="23.495" size="1.778" layer="27" display="off"/>
 <attribute name="MPN" value="" x="108.331" y="23.495" size="1.778" layer="27" display="off"/>
+<attribute name="TME_EU" value="BC-0401" x="108.331" y="23.495" size="1.778" layer="27" display="off"/>
 </element>
 <element name="BH10" library="SparkFun-Electromechanical" package="BATTERY-AAA-RIGHT" value="HOLDER_AAA_RIGHT" x="46.609" y="23.495" locked="yes" smashed="yes">
 <attribute name="OC_FARNELL" value="unknown" x="46.609" y="23.495" size="1.778" layer="27" display="off"/>
@@ -6180,6 +6205,7 @@ design rules under a new name.</description>
 <attribute name="OC_FARNELL" value="unknown" x="96.647" y="23.495" size="1.778" layer="27" rot="R180" display="off"/>
 <attribute name="MF" value="" x="96.647" y="23.495" size="1.778" layer="27" rot="R180" display="off"/>
 <attribute name="MPN" value="" x="96.647" y="23.495" size="1.778" layer="27" rot="R180" display="off"/>
+<attribute name="TME_EU" value="BC-0401" x="96.647" y="23.495" size="1.778" layer="27" rot="R180" display="off"/>
 </element>
 <element name="BH12" library="SparkFun-Electromechanical" package="BATTERY-AAA-RIGHT" value="HOLDER_AAA_RIGHT" x="58.293" y="23.495" locked="yes" smashed="yes" rot="R180">
 <attribute name="OC_FARNELL" value="unknown" x="58.293" y="23.495" size="1.778" layer="27" rot="R180" display="off"/>
@@ -6190,6 +6216,7 @@ design rules under a new name.</description>
 <attribute name="OC_FARNELL" value="unknown" x="50.038" y="7.112" size="1.778" layer="28" rot="MR0" display="off"/>
 <attribute name="MF" value="" x="50.038" y="7.112" size="1.778" layer="28" rot="MR0" display="off"/>
 <attribute name="MPN" value="" x="50.038" y="7.112" size="1.778" layer="28" rot="MR0" display="off"/>
+<attribute name="TME_EU" value="CC0805KRX7R9153" x="50.038" y="7.112" size="1.778" layer="28" rot="MR0" display="off"/>
 </element>
 <element name="S3" library="SmartPrj" package="TACTILE-PTH-12MM" value="B3F-4150" x="152.781" y="12.065" locked="yes" smashed="yes" rot="R180">
 <attribute name="NAME" x="151.917" y="5.573" size="1.016" layer="25" ratio="16" rot="R180"/>
@@ -6206,11 +6233,13 @@ design rules under a new name.</description>
 <attribute name="OC_FARNELL" value="unknown" x="138.176" y="9.652" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="MF" value="" x="138.176" y="9.652" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="MPN" value="" x="138.176" y="9.652" size="1.778" layer="28" rot="MR180" display="off"/>
+<attribute name="TME_EU" value="RC0805FR-076K8" x="138.176" y="9.652" size="1.778" layer="28" rot="MR180" display="off"/>
 </element>
 <element name="C11" library="SparkFun" package="0805" value="1n" x="110.363" y="11.811" rot="MR90">
 <attribute name="OC_FARNELL" value="unknown" x="110.363" y="11.811" size="1.778" layer="28" rot="MR90" display="off"/>
 <attribute name="MF" value="" x="110.363" y="11.811" size="1.778" layer="28" rot="MR90" display="off"/>
 <attribute name="MPN" value="" x="110.363" y="11.811" size="1.778" layer="28" rot="MR90" display="off"/>
+<attribute name="TME_EU" value="CC0805KPX7R7224" x="110.363" y="11.811" size="1.778" layer="28" rot="MR90" display="off"/>
 </element>
 <element name="D7" library="BaseApp" package="SMADIODE" value="SD103CW" x="80.772" y="7.239" rot="R180">
 <attribute name="OC_FARNELL" value="2306221" x="80.772" y="7.239" size="1.778" layer="27" rot="R180" display="off"/>
@@ -6231,6 +6260,7 @@ design rules under a new name.</description>
 <attribute name="OC_FARNELL" value="unknown" x="122.936" y="6.604" size="1.778" layer="28" rot="MR270" display="off"/>
 <attribute name="MF" value="" x="122.936" y="6.604" size="1.778" layer="28" rot="MR270" display="off"/>
 <attribute name="MPN" value="" x="122.936" y="6.604" size="1.778" layer="28" rot="MR270" display="off"/>
+<attribute name="TME_EU" value="RC0805FR-076K8" x="122.936" y="6.604" size="1.778" layer="28" rot="MR270" display="off"/>
 </element>
 <element name="C5" library="rcl" package="C1206K" value="47n" x="138.176" y="12.192" locked="yes" smashed="yes" rot="MR0">
 <attribute name="NAME" x="138.76" y="13.546" size="1.016" layer="26" ratio="16" rot="MR0"/>
@@ -6238,8 +6268,9 @@ design rules under a new name.</description>
 <attribute name="OC_FARNELL" value="unknown" x="138.176" y="12.192" size="1.778" layer="28" rot="MR0" display="off"/>
 <attribute name="MF" value="" x="138.176" y="12.192" size="1.778" layer="28" rot="MR0" display="off"/>
 <attribute name="MPN" value="" x="138.176" y="12.192" size="1.778" layer="28" rot="MR0" display="off"/>
+<attribute name="TME_EU" value="CC0805KRX7R9473" x="138.176" y="12.192" size="1.778" layer="28" rot="MR0" display="off"/>
 </element>
-<element name="R25" library="rcl" package="R1206" value="100" x="141.224" y="7.112" locked="yes" smashed="yes" rot="MR180">
+<element name="R25" library="rcl" package="R1206" value="47" x="141.224" y="7.112" locked="yes" smashed="yes" rot="MR180">
 <attribute name="NAME" x="139.7" y="5.842" size="1.016" layer="26" ratio="16" rot="MR180"/>
 <attribute name="VALUE" x="139.954" y="9.652" size="1.27" layer="28" rot="MR180"/>
 <attribute name="OC_FARNELL" value="unknown" x="141.224" y="7.112" size="1.778" layer="28" rot="MR180" display="off"/>
@@ -6250,16 +6281,19 @@ design rules under a new name.</description>
 <attribute name="OC_FARNELL" value="unknown" x="64.262" y="12.7" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="MF" value="" x="64.262" y="12.7" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="MPN" value="" x="64.262" y="12.7" size="1.778" layer="28" rot="MR180" display="off"/>
+<attribute name="TME_EU" value="GRM31MR71C105KA" x="64.262" y="12.7" size="1.778" layer="28" rot="MR180" display="off"/>
 </element>
 <element name="C9" library="rcl" package="C1206K" value="1µ" x="4.572" y="2.54" rot="MR180">
 <attribute name="OC_FARNELL" value="unknown" x="4.572" y="2.54" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="MF" value="" x="4.572" y="2.54" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="MPN" value="" x="4.572" y="2.54" size="1.778" layer="28" rot="MR180" display="off"/>
+<attribute name="TME_EU" value="GRM31MR71C105KA" x="4.572" y="2.54" size="1.778" layer="28" rot="MR180" display="off"/>
 </element>
 <element name="C12" library="SparkFun" package="0805" value="220n" x="125.984" y="1.016" rot="MR180">
 <attribute name="OC_FARNELL" value="unknown" x="125.984" y="1.016" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="MF" value="" x="125.984" y="1.016" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="MPN" value="" x="125.984" y="1.016" size="1.778" layer="28" rot="MR180" display="off"/>
+<attribute name="TME_EU" value="CC0805KPX7R7224" x="125.984" y="1.016" size="1.778" layer="28" rot="MR180" display="off"/>
 </element>
 <element name="D11" library="BaseApp" package="SMADIODE" value="SD103CW" x="111.633" y="-0.508" rot="MR0">
 <attribute name="OC_FARNELL" value="2306221" x="111.633" y="-0.508" size="1.778" layer="28" rot="MR0" display="off"/>
@@ -6270,6 +6304,7 @@ design rules under a new name.</description>
 <attribute name="OC_FARNELL" value="unknown" x="125.476" y="6.604" size="1.778" layer="28" rot="MR90" display="off"/>
 <attribute name="MF" value="" x="125.476" y="6.604" size="1.778" layer="28" rot="MR90" display="off"/>
 <attribute name="MPN" value="" x="125.476" y="6.604" size="1.778" layer="28" rot="MR90" display="off"/>
+<attribute name="TME_EU" value="CC0805KRX7R9153" x="125.476" y="6.604" size="1.778" layer="28" rot="MR90" display="off"/>
 </element>
 <element name="D12" library="BaseApp" package="SMADIODE" value="SD103CW" x="110.998" y="6.096" rot="MR0">
 <attribute name="OC_FARNELL" value="2306221" x="110.998" y="6.096" size="1.778" layer="28" rot="MR0" display="off"/>
@@ -6280,21 +6315,25 @@ design rules under a new name.</description>
 <attribute name="OC_FARNELL" value="unknown" x="120.7516" y="6.604" size="1.778" layer="28" rot="MR270" display="off"/>
 <attribute name="MF" value="" x="120.7516" y="6.604" size="1.778" layer="28" rot="MR270" display="off"/>
 <attribute name="MPN" value="" x="120.7516" y="6.604" size="1.778" layer="28" rot="MR270" display="off"/>
+<attribute name="TME_EU" value="RC0805FR-076K8" x="120.7516" y="6.604" size="1.778" layer="28" rot="MR270" display="off"/>
 </element>
 <element name="M2" library="IRLML6402" package="SOT-23" value="IRLML2244" x="61.722" y="3.937" rot="MR0">
 <attribute name="OC_FARNELL" value="2468051" x="61.722" y="3.937" size="1.778" layer="28" rot="MR0" display="off"/>
 <attribute name="MF" value="INFINEON" x="61.722" y="3.937" size="1.778" layer="28" rot="MR0" display="off"/>
 <attribute name="MPN" value="IRLML2244TRPBF" x="61.722" y="3.937" size="1.778" layer="28" rot="MR0" display="off"/>
+<attribute name="TME_EU" value="DMG2305UX-7" x="61.722" y="3.937" size="1.778" layer="28" rot="MR0" display="off"/>
 </element>
 <element name="R28" library="rcl" package="R1206" value="47k" x="62.484" y="9.779" rot="MR0">
 <attribute name="OC_FARNELL" value="unknown" x="62.484" y="9.779" size="1.778" layer="28" rot="MR0" display="off"/>
 <attribute name="MF" value="" x="62.484" y="9.779" size="1.778" layer="28" rot="MR0" display="off"/>
 <attribute name="MPN" value="" x="62.484" y="9.779" size="1.778" layer="28" rot="MR0" display="off"/>
+<attribute name="TME_EU" value="CRCW080547K0FKTABC" x="62.484" y="9.779" size="1.778" layer="28" rot="MR0" display="off"/>
 </element>
 <element name="R44" library="rcl" package="R1206" value="22k" x="58.928" y="4.318" rot="MR270">
 <attribute name="OC_FARNELL" value="unknown" x="58.928" y="4.318" size="1.778" layer="28" rot="MR270" display="off"/>
 <attribute name="MF" value="" x="58.928" y="4.318" size="1.778" layer="28" rot="MR270" display="off"/>
 <attribute name="MPN" value="" x="58.928" y="4.318" size="1.778" layer="28" rot="MR270" display="off"/>
+<attribute name="TME_EU" value="CRCW080522K0FKTABC" x="58.928" y="4.318" size="1.778" layer="28" rot="MR270" display="off"/>
 </element>
 <element name="U$1" library="diy-modules" package="BATTERY-CHARGER-LI-PROT" value="BATTERY-CHARGER-LI-PROT" x="7.366" y="7.493">
 <attribute name="OC_FARNELL" value="unknown" x="7.366" y="7.493" size="1.778" layer="27" display="off"/>
@@ -6320,16 +6359,19 @@ design rules under a new name.</description>
 <attribute name="OC_FARNELL" value="2468051" x="73.152" y="3.683" size="1.778" layer="28" rot="MR270" display="off"/>
 <attribute name="MF" value="INFINEON" x="73.152" y="3.683" size="1.778" layer="28" rot="MR270" display="off"/>
 <attribute name="MPN" value="IRLML2244TRPBF" x="73.152" y="3.683" size="1.778" layer="28" rot="MR270" display="off"/>
+<attribute name="TME_EU" value="DMG2305UX-7" x="73.152" y="3.683" size="1.778" layer="28" rot="MR270" display="off"/>
 </element>
 <element name="R46" library="rcl" package="R1206" value="47k" x="69.088" y="4.318" rot="MR270">
 <attribute name="OC_FARNELL" value="unknown" x="69.088" y="4.318" size="1.778" layer="28" rot="MR270" display="off"/>
 <attribute name="MF" value="" x="69.088" y="4.318" size="1.778" layer="28" rot="MR270" display="off"/>
 <attribute name="MPN" value="" x="69.088" y="4.318" size="1.778" layer="28" rot="MR270" display="off"/>
+<attribute name="TME_EU" value="CRCW080547K0FKTABC" x="69.088" y="4.318" size="1.778" layer="28" rot="MR270" display="off"/>
 </element>
 <element name="R47" library="rcl" package="R1206" value="22k" x="66.929" y="4.318" rot="MR90">
 <attribute name="OC_FARNELL" value="unknown" x="66.929" y="4.318" size="1.778" layer="28" rot="MR90" display="off"/>
 <attribute name="MF" value="" x="66.929" y="4.318" size="1.778" layer="28" rot="MR90" display="off"/>
 <attribute name="MPN" value="" x="66.929" y="4.318" size="1.778" layer="28" rot="MR90" display="off"/>
+<attribute name="TME_EU" value="CRCW080522K0FKTABC" x="66.929" y="4.318" size="1.778" layer="28" rot="MR90" display="off"/>
 </element>
 <element name="IC1" library="linear" package="SOT89" value="MCP170333MB" x="106.045" y="17.399" rot="MR0">
 <attribute name="OC_FARNELL" value="unknown" x="106.045" y="17.399" size="1.778" layer="28" rot="MR0" display="off"/>
@@ -6340,6 +6382,7 @@ design rules under a new name.</description>
 <attribute name="OC_FARNELL" value="unknown" x="106.045" y="16.002" size="1.778" layer="28" rot="MR0" display="off"/>
 <attribute name="MF" value="" x="106.045" y="16.002" size="1.778" layer="28" rot="MR0" display="off"/>
 <attribute name="MPN" value="" x="106.045" y="16.002" size="1.778" layer="28" rot="MR0" display="off"/>
+<attribute name="TME_EU" value="TS9011SCY" x="106.045" y="16.002" size="1.778" layer="28" rot="MR0" display="off"/>
 </element>
 <element name="JP3" library="adafruit" package="1X08-CLEANBIG" value="" x="38.735" y="3.048">
 <attribute name="OC_FARNELL" value="unknown" x="38.735" y="3.048" size="1.778" layer="27" display="off"/>
@@ -6357,13 +6400,15 @@ design rules under a new name.</description>
 <attribute name="OC_FARNELL" value="unknown" x="122.555" y="12.7" size="1.778" layer="27" display="off"/>
 <attribute name="MF" value="" x="122.555" y="12.7" size="1.778" layer="27" display="off"/>
 <attribute name="MPN" value="" x="122.555" y="12.7" size="1.778" layer="27" display="off"/>
+<attribute name="TME_EU" value="ZL231-14PG" x="122.555" y="12.7" size="1.778" layer="27" display="off"/>
 </element>
 <element name="JP14" library="pinhead" package="2X07" value="" x="32.385" y="12.7" locked="yes" smashed="yes">
-<attribute name="NAME" x="23.495" y="18.415" size="1.27" layer="25" ratio="10"/>
+<attribute name="NAME" x="31.115" y="18.415" size="1.27" layer="25" ratio="10"/>
 <attribute name="VALUE" x="23.495" y="5.715" size="1.27" layer="27"/>
 <attribute name="OC_FARNELL" value="unknown" x="32.385" y="12.7" size="1.778" layer="27" display="off"/>
 <attribute name="MF" value="" x="32.385" y="12.7" size="1.778" layer="27" display="off"/>
 <attribute name="MPN" value="" x="32.385" y="12.7" size="1.778" layer="27" display="off"/>
+<attribute name="TME_EU" value="ZL231-14PG" x="32.385" y="12.7" size="1.778" layer="27" display="off"/>
 </element>
 <element name="R2" library="rcl" package="0204/5" value="150R" x="-2.032" y="21.336" rot="R180">
 <attribute name="OC_FARNELL" value="unknown" x="-2.032" y="21.336" size="1.778" layer="27" rot="R180" display="off"/>
@@ -6374,6 +6419,7 @@ design rules under a new name.</description>
 <attribute name="OC_FARNELL" value="unknown" x="91.2114" y="9.0932" size="1.778" layer="27" rot="R180" display="off"/>
 <attribute name="MF" value="" x="91.2114" y="9.0932" size="1.778" layer="27" rot="R180" display="off"/>
 <attribute name="MPN" value="" x="91.2114" y="9.0932" size="1.778" layer="27" rot="R180" display="off"/>
+<attribute name="TME_EU" value="CC0805KRX7R9473" x="91.2114" y="9.0932" size="1.778" layer="27" rot="R180" display="off"/>
 </element>
 <element name="LOGO2" library="ohw-logo" package="OSHW_8X150_NOTEXT" value="OSHW_LOGO_8MILX0150-NT" x="158.3944" y="19.812" rot="R90"/>
 <element name="R5" library="rcl" package="0207/10" value="150R" x="-2.286" y="19.558" rot="R270">
@@ -6385,21 +6431,25 @@ design rules under a new name.</description>
 <attribute name="OC_FARNELL" value="unknown" x="109.855" y="17.272" size="1.778" layer="28" rot="MR270" display="off"/>
 <attribute name="MF" value="" x="109.855" y="17.272" size="1.778" layer="28" rot="MR270" display="off"/>
 <attribute name="MPN" value="" x="109.855" y="17.272" size="1.778" layer="28" rot="MR270" display="off"/>
+<attribute name="TME_EU" value="CC0805KPX7R7224" x="109.855" y="17.272" size="1.778" layer="28" rot="MR270" display="off"/>
 </element>
 <element name="C6" library="rcl" package="C1206K" value="15n" x="64.643" y="4.318" rot="MR90">
 <attribute name="OC_FARNELL" value="unknown" x="64.643" y="4.318" size="1.778" layer="28" rot="MR90" display="off"/>
 <attribute name="MF" value="" x="64.643" y="4.318" size="1.778" layer="28" rot="MR90" display="off"/>
 <attribute name="MPN" value="" x="64.643" y="4.318" size="1.778" layer="28" rot="MR90" display="off"/>
+<attribute name="TME_EU" value="CC0805KRX7R9153" x="64.643" y="4.318" size="1.778" layer="28" rot="MR90" display="off"/>
 </element>
 <element name="T1" library="digital-transistors" package="SOT23-BEC" value="BCR135" x="77.724" y="8.001" rot="MR180">
 <attribute name="OC_FARNELL" value="2443491RL" x="77.724" y="8.001" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="MF" value="INFINEON" x="77.724" y="8.001" size="1.778" layer="28" rot="MR180" display="off"/>
 <attribute name="MPN" value="BCR135E6327HTSA1" x="77.724" y="8.001" size="1.778" layer="28" rot="MR180" display="off"/>
+<attribute name="TME_EU" value="MUN2214T1G" x="77.724" y="8.001" size="1.778" layer="28" rot="MR180" display="off"/>
 </element>
 <element name="R6" library="rcl" package="R1206" value="22k" x="78.232" y="12.954" rot="MR0">
 <attribute name="OC_FARNELL" value="unknown" x="78.232" y="12.954" size="1.778" layer="28" rot="MR0" display="off"/>
 <attribute name="MF" value="" x="78.232" y="12.954" size="1.778" layer="28" rot="MR0" display="off"/>
 <attribute name="MPN" value="" x="78.232" y="12.954" size="1.778" layer="28" rot="MR0" display="off"/>
+<attribute name="TME_EU" value="CRCW080522K0FKTABC" x="78.232" y="12.954" size="1.778" layer="28" rot="MR0" display="off"/>
 </element>
 <element name="D1" library="BaseApp" package="SOD-323" value="SD103CW" x="60.96" y="16.637" rot="MR0">
 <attribute name="OC_FARNELL" value="2306221" x="60.96" y="16.637" size="1.778" layer="28" rot="MR0" display="off"/>
@@ -6410,6 +6460,7 @@ design rules under a new name.</description>
 <attribute name="OC_FARNELL" value="unknown" x="58.928" y="12.573" size="1.778" layer="28" rot="MR0" display="off"/>
 <attribute name="MF" value="" x="58.928" y="12.573" size="1.778" layer="28" rot="MR0" display="off"/>
 <attribute name="MPN" value="" x="58.928" y="12.573" size="1.778" layer="28" rot="MR0" display="off"/>
+<attribute name="TME_EU" value="RC0805FR-076K8" x="58.928" y="12.573" size="1.778" layer="28" rot="MR0" display="off"/>
 </element>
 <element name="D2" library="BaseApp" package="SOD-123" value="SD103CW" x="60.452" y="13.97">
 <attribute name="OC_FARNELL" value="2306221" x="60.452" y="13.97" size="1.778" layer="27" display="off"/>
@@ -6426,11 +6477,13 @@ design rules under a new name.</description>
 <attribute name="OC_FARNELL" value="2443491RL" x="101.473" y="18.669" size="1.778" layer="28" rot="MR270" display="off"/>
 <attribute name="MF" value="INFINEON" x="101.473" y="18.669" size="1.778" layer="28" rot="MR270" display="off"/>
 <attribute name="MPN" value="BCR135E6327HTSA1" x="101.473" y="18.669" size="1.778" layer="28" rot="MR270" display="off"/>
+<attribute name="TME_EU" value="MUN2214T1G" x="101.473" y="18.669" size="1.778" layer="28" rot="MR270" display="off"/>
 </element>
 <element name="T3" library="digital-transistors-1(1)" package="SOT23-R_INFINEON" value="BCR185" x="81.661" y="7.493" rot="MR90">
 <attribute name="OC_FARNELL" value="1680186" x="81.661" y="7.493" size="1.778" layer="28" rot="MR90" display="off"/>
 <attribute name="MF" value="ROHM" x="81.661" y="7.493" size="1.778" layer="28" rot="MR90" display="off"/>
 <attribute name="MPN" value="DTA114YKAT146" x="81.661" y="7.493" size="1.778" layer="28" rot="MR90" display="off"/>
+<attribute name="TME_EU" value="BCR185E6327" x="81.661" y="7.493" size="1.778" layer="28" rot="MR90" display="off"/>
 </element>
 <element name="JP1" library="_jc" package="2X3_SMD_VERTICAL" value="ICSP" x="133.731" y="-1.778" locked="yes" smashed="yes">
 <attribute name="NAME" x="135.509" y="1.905" size="1.016" layer="25" ratio="16"/>
@@ -6438,6 +6491,24 @@ design rules under a new name.</description>
 <attribute name="OC_FARNELL" value="unknown" x="133.731" y="-1.778" size="1.778" layer="27" display="off"/>
 <attribute name="MF" value="" x="133.731" y="-1.778" size="1.778" layer="27" display="off"/>
 <attribute name="MPN" value="" x="133.731" y="-1.778" size="1.778" layer="27" display="off"/>
+</element>
+<element name="C17" library="rcl" package="C1206K" value="1µ" x="90.2462" y="12.573" rot="MR180">
+<attribute name="MPN" value="" x="90.2462" y="12.573" size="1.778" layer="28" font="vector" ratio="12" rot="MR180" display="off"/>
+<attribute name="MF" value="" x="90.2462" y="12.573" size="1.778" layer="28" font="vector" ratio="12" rot="MR180" display="off"/>
+<attribute name="OC_FARNELL" value="unknown" x="90.2462" y="12.573" size="1.778" layer="28" font="vector" ratio="12" rot="MR180" display="off"/>
+<attribute name="TME_EU" value="GRM31MR71C105KA" x="90.2462" y="12.573" size="1.778" layer="28" rot="MR180" display="off"/>
+</element>
+<element name="C19" library="rcl" package="C1206K" value="1µ" x="96.3168" y="12.954" rot="MR180">
+<attribute name="MPN" value="" x="96.3168" y="12.954" size="1.778" layer="28" font="vector" ratio="12" rot="MR180" display="off"/>
+<attribute name="MF" value="" x="96.3168" y="12.954" size="1.778" layer="28" font="vector" ratio="12" rot="MR180" display="off"/>
+<attribute name="OC_FARNELL" value="unknown" x="96.3168" y="12.954" size="1.778" layer="28" font="vector" ratio="12" rot="MR180" display="off"/>
+<attribute name="TME_EU" value="GRM31MR71C105KA" x="96.3168" y="12.954" size="1.778" layer="28" rot="MR180" display="off"/>
+</element>
+<element name="C23" library="SparkFun" package="0805" value="220n" x="83.058" y="12.954" rot="MR180">
+<attribute name="MPN" value="" x="83.058" y="12.954" size="1.778" layer="28" font="vector" ratio="12" rot="MR180" display="off"/>
+<attribute name="MF" value="" x="83.058" y="12.954" size="1.778" layer="28" font="vector" ratio="12" rot="MR180" display="off"/>
+<attribute name="OC_FARNELL" value="unknown" x="83.058" y="12.954" size="1.778" layer="28" font="vector" ratio="12" rot="MR180" display="off"/>
+<attribute name="TME_EU" value="CC0805KPX7R7224" x="83.058" y="12.954" size="1.778" layer="28" rot="MR180" display="off"/>
 </element>
 </elements>
 <signals>
@@ -6478,23 +6549,22 @@ design rules under a new name.</description>
 <wire x1="19.37100625" y1="0.82900625" x2="18.923" y2="0.381" width="0.8128" layer="16"/>
 <wire x1="18.923" y1="0.381" x2="18.161" y2="0.381" width="0.8128" layer="16"/>
 <wire x1="18.161" y1="0.381" x2="18.034" y2="0.508" width="0.8128" layer="16"/>
-<via x="93.1418" y="11.8364" extent="1-16" drill="0.381"/>
+<via x="93.2688" y="11.8364" extent="1-16" drill="0.381"/>
 <wire x1="38.9382" y1="10.16" x2="41.275" y2="10.16" width="0.4064" layer="1"/>
 <wire x1="41.275" y1="10.16" x2="43.18" y2="12.065" width="0.4064" layer="1"/>
 <wire x1="43.18" y1="12.065" x2="44.704" y2="12.065" width="0.4064" layer="1"/>
 <wire x1="44.704" y1="12.065" x2="46.609" y2="10.16" width="0.4064" layer="1"/>
 <wire x1="46.609" y1="10.16" x2="51.054" y2="10.16" width="0.4064" layer="1"/>
 <wire x1="51.054" y1="10.16" x2="52.324" y2="11.43" width="0.4064" layer="1"/>
-<wire x1="93.1418" y1="11.8364" x2="92.202" y2="12.192" width="0.6096" layer="16"/>
+<wire x1="93.2688" y1="11.8364" x2="92.202" y2="12.192" width="0.6096" layer="16"/>
 <wire x1="92.202" y1="12.192" x2="91.7462" y2="12.573" width="0.6096" layer="16"/>
-<wire x1="84.0486" y1="10.541" x2="83.058" y2="10.541" width="0.3048" layer="1"/>
-<wire x1="83.058" y1="10.541" x2="82.296" y2="11.43" width="0.3048" layer="1"/>
-<wire x1="84.0486" y1="10.541" x2="84.3026" y2="11.9888" width="0.3048" layer="1"/>
-<wire x1="92.837" y1="11.938" x2="93.1418" y2="11.8364" width="0.3048" layer="1"/>
+<wire x1="83.7946" y1="10.414" x2="83.185" y2="10.414" width="0.3048" layer="1"/>
+<wire x1="83.185" y1="10.414" x2="82.296" y2="11.43" width="0.3048" layer="1"/>
+<wire x1="92.837" y1="11.938" x2="93.2688" y2="11.8364" width="0.3048" layer="1"/>
 <wire x1="82.296" y1="11.43" x2="76.454" y2="11.43" width="0.3048" layer="1"/>
-<wire x1="84.3026" y1="11.9888" x2="92.4927" y2="11.9888" width="0.3048" layer="1"/>
+<wire x1="84.5058" y1="11.9888" x2="92.4927" y2="11.9888" width="0.3048" layer="1"/>
 <wire x1="92.4927" y1="11.9888" x2="92.7862" y2="11.9888" width="0.3048" layer="1"/>
-<wire x1="92.7862" y1="11.9888" x2="93.1418" y2="11.8364" width="0.3048" layer="1"/>
+<wire x1="92.7862" y1="11.9888" x2="93.2688" y2="11.8364" width="0.3048" layer="1"/>
 <wire x1="97.6025" y1="12.5095" x2="97.8168" y2="12.954" width="0.8128" layer="16"/>
 <wire x1="102.743" y1="14.097" x2="109.143796875" y2="14.097" width="0.4064" layer="1"/>
 <via x="109.855" y="14.097" extent="1-16" drill="0.4064"/>
@@ -6532,25 +6602,25 @@ design rules under a new name.</description>
 <wire x1="111.252" y1="12.7" x2="109.866" y2="12.7" width="0.4064" layer="16"/>
 <wire x1="109.866" y1="12.7" x2="110.363" y2="12.811" width="0.4064" layer="16"/>
 <wire x1="93.2688" y1="11.8872" x2="93.091" y2="11.8872" width="0.3048" layer="1"/>
-<wire x1="93.091" y1="11.8872" x2="93.1418" y2="11.8364" width="0.3048" layer="1"/>
+<wire x1="93.091" y1="11.8872" x2="93.2688" y2="11.8364" width="0.3048" layer="1"/>
 <contactref element="C3" pad="4"/>
 <wire x1="109.855" y1="16.272" x2="109.855" y2="14.097" width="0.6096" layer="16"/>
 <via x="98.1964" y="11.303" extent="1-16" drill="0.4064"/>
 <wire x1="98.1964" y1="11.303" x2="98.171" y2="11.1492" width="0.4064" layer="16"/>
 <wire x1="98.171" y1="11.1492" x2="97.8168" y2="12.954" width="0.4064" layer="16"/>
-<wire x1="93.2688" y1="11.8872" x2="93.8066125" y2="11.8872" width="0.4064" layer="1"/>
-<wire x1="93.8066125" y1="11.8872" x2="94.0562" y2="11.8872" width="0.4064" layer="1"/>
-<wire x1="94.0562" y1="11.8872" x2="94.107" y2="11.938" width="0.4064" layer="1"/>
-<wire x1="94.107" y1="11.938" x2="94.3356" y2="12.1158" width="0.3048" layer="1"/>
-<wire x1="94.3356" y1="12.1158" x2="95.9866" y2="12.1158" width="0.3048" layer="1"/>
+<wire x1="93.2688" y1="11.8872" x2="93.9336125" y2="11.7602" width="0.4064" layer="1"/>
+<wire x1="93.9336125" y1="11.7602" x2="94.0562" y2="11.8872" width="0.4064" layer="1"/>
+<wire x1="94.0562" y1="11.8872" x2="94.234" y2="12.065" width="0.4064" layer="1"/>
+<wire x1="94.234" y1="12.065" x2="94.2086" y2="12.1158" width="0.3048" layer="1"/>
+<wire x1="94.2086" y1="12.1158" x2="95.9866" y2="12.1158" width="0.3048" layer="1"/>
 <wire x1="95.9866" y1="12.1158" x2="96.0882" y2="12.0396" width="0.3048" layer="1"/>
 <wire x1="102.743" y1="14.097" x2="101.854" y2="13.462" width="0.4064" layer="1"/>
 <wire x1="101.854" y1="13.462" x2="99.822" y2="13.462" width="0.4064" layer="1"/>
-<wire x1="99.822" y1="13.462" x2="99.562896875" y2="13.721103125" width="0.4064" layer="1"/>
-<via x="99.06" y="14.224" extent="1-16" drill="0.4064"/>
-<wire x1="99.562896875" y1="13.721103125" x2="99.06" y2="14.224" width="0.4064" layer="1"/>
-<wire x1="99.06" y1="14.224" x2="98.557103125" y2="13.721103125" width="0.4064" layer="16"/>
-<wire x1="98.557103125" y1="13.721103125" x2="98.298" y2="13.462" width="0.4064" layer="16"/>
+<wire x1="99.822" y1="13.462" x2="99.816896875" y2="13.467103125" width="0.4064" layer="1"/>
+<via x="99.187" y="14.097" extent="1-16" drill="0.4064"/>
+<wire x1="99.816896875" y1="13.467103125" x2="99.187" y2="14.097" width="0.4064" layer="1"/>
+<wire x1="99.187" y1="14.097" x2="98.303103125" y2="13.340103125" width="0.4064" layer="16"/>
+<wire x1="98.303103125" y1="13.340103125" x2="98.298" y2="13.462" width="0.4064" layer="16"/>
 <wire x1="98.298" y1="13.462" x2="98.298" y2="13.1812" width="0.4064" layer="16"/>
 <wire x1="98.298" y1="13.1812" x2="97.8168" y2="12.954" width="0.4064" layer="16"/>
 <wire x1="96.0882" y1="12.0396" x2="96.4184" y2="12.0396" width="0.4064" layer="1"/>
@@ -6585,14 +6655,14 @@ design rules under a new name.</description>
 <wire x1="38.735" y1="9.9314" x2="24.2316" y2="9.9314" width="0.4064" layer="1"/>
 <wire x1="38.735" y1="9.9314" x2="38.735" y2="9.9568" width="0.4064" layer="1"/>
 <wire x1="38.735" y1="9.9568" x2="38.9382" y2="10.16" width="0.4064" layer="1"/>
-<wire x1="92.4927" y1="11.9888" x2="92.9572" y2="11.610021875" width="0.3048" layer="1"/>
-<wire x1="93.1418" y1="11.8364" x2="92.9572" y2="11.610021875" width="0.3048" layer="1"/>
-<wire x1="92.4927" y1="11.9888" x2="93.077234375" y2="12.121275" width="0.3048" layer="1"/>
-<wire x1="93.1418" y1="11.8364" x2="93.077234375" y2="12.121275" width="0.3048" layer="1"/>
-<wire x1="93.8066125" y1="11.8872" x2="93.211734375" y2="12.067340625" width="0.4064" layer="1"/>
-<wire x1="93.1418" y1="11.8364" x2="93.211734375" y2="12.067340625" width="0.4064" layer="1"/>
-<wire x1="93.8066125" y1="11.8872" x2="93.2460125" y2="11.6187625" width="0.4064" layer="1"/>
-<wire x1="93.1418" y1="11.8364" x2="93.2460125" y2="11.6187625" width="0.4064" layer="1"/>
+<wire x1="92.4927" y1="11.9888" x2="93.0842" y2="11.610021875" width="0.3048" layer="1"/>
+<wire x1="93.2688" y1="11.8364" x2="93.0842" y2="11.610021875" width="0.3048" layer="1"/>
+<wire x1="92.4927" y1="11.9888" x2="93.204234375" y2="12.121275" width="0.3048" layer="1"/>
+<wire x1="93.2688" y1="11.8364" x2="93.204234375" y2="12.121275" width="0.3048" layer="1"/>
+<wire x1="93.9336125" y1="11.7602" x2="93.338734375" y2="11.940340625" width="0.4064" layer="1"/>
+<wire x1="93.2688" y1="11.8364" x2="93.338734375" y2="11.940340625" width="0.4064" layer="1"/>
+<wire x1="93.9336125" y1="11.7602" x2="93.3730125" y2="11.6187625" width="0.4064" layer="1"/>
+<wire x1="93.2688" y1="11.8364" x2="93.3730125" y2="11.6187625" width="0.4064" layer="1"/>
 <wire x1="109.143796875" y1="14.097" x2="109.76428125" y2="13.85975" width="0.4064" layer="1"/>
 <wire x1="109.855" y1="14.097" x2="109.76428125" y2="13.85975" width="0.4064" layer="1"/>
 <wire x1="109.143796875" y1="14.097" x2="109.76428125" y2="14.334246875" width="0.4064" layer="1"/>
@@ -6629,14 +6699,14 @@ design rules under a new name.</description>
 <wire x1="98.1964" y1="11.303" x2="98.016846875" y2="11.1233375" width="0.4064" layer="1"/>
 <wire x1="97.546975" y1="11.592921875" x2="98.210278125" y2="11.55661875" width="0.4064" layer="1"/>
 <wire x1="98.1964" y1="11.303" x2="98.210278125" y2="11.55661875" width="0.4064" layer="1"/>
-<wire x1="99.562896875" y1="13.721103125" x2="99.29190625" y2="14.3276125" width="0.4064" layer="1"/>
-<wire x1="99.06" y1="14.224" x2="99.29190625" y2="14.3276125" width="0.4064" layer="1"/>
-<wire x1="99.562896875" y1="13.721103125" x2="98.956384375" y2="13.992090625" width="0.4064" layer="1"/>
-<wire x1="99.06" y1="14.224" x2="98.956384375" y2="13.992090625" width="0.4064" layer="1"/>
-<wire x1="98.557103125" y1="13.721103125" x2="99.1636125" y2="13.992090625" width="0.4064" layer="16"/>
-<wire x1="99.06" y1="14.224" x2="99.1636125" y2="13.992090625" width="0.4064" layer="16"/>
-<wire x1="98.557103125" y1="13.721103125" x2="98.828090625" y2="14.3276125" width="0.4064" layer="16"/>
-<wire x1="99.06" y1="14.224" x2="98.828090625" y2="14.3276125" width="0.4064" layer="16"/>
+<wire x1="99.816896875" y1="13.467103125" x2="99.41890625" y2="14.2006125" width="0.4064" layer="1"/>
+<wire x1="99.187" y1="14.097" x2="99.41890625" y2="14.2006125" width="0.4064" layer="1"/>
+<wire x1="99.816896875" y1="13.467103125" x2="99.083384375" y2="13.865090625" width="0.4064" layer="1"/>
+<wire x1="99.187" y1="14.097" x2="99.083384375" y2="13.865090625" width="0.4064" layer="1"/>
+<wire x1="98.303103125" y1="13.340103125" x2="99.2906125" y2="13.865090625" width="0.4064" layer="16"/>
+<wire x1="99.187" y1="14.097" x2="99.2906125" y2="13.865090625" width="0.4064" layer="16"/>
+<wire x1="98.303103125" y1="13.340103125" x2="98.955090625" y2="14.2006125" width="0.4064" layer="16"/>
+<wire x1="99.187" y1="14.097" x2="98.955090625" y2="14.2006125" width="0.4064" layer="16"/>
 <wire x1="73.1769625" y1="10.5659625" x2="72.91808125" y2="9.954184375" width="0.4064" layer="16"/>
 <wire x1="73.152" y1="9.8552" x2="72.91808125" y2="9.954184375" width="0.4064" layer="16"/>
 <wire x1="73.1769625" y1="10.5659625" x2="73.392284375" y2="9.93753125" width="0.4064" layer="16"/>
@@ -6649,6 +6719,12 @@ design rules under a new name.</description>
 <wire x1="18.034" y1="0.508" x2="18.22783125" y2="1.1658375" width="0.8128" layer="16"/>
 <wire x1="19.37100625" y1="0.82900625" x2="18.505371875" y2="0.009871875" width="0.8128" layer="16"/>
 <wire x1="18.034" y1="0.508" x2="18.505371875" y2="0.009871875" width="0.8128" layer="16"/>
+<contactref element="C17" pad="2"/>
+<contactref element="C19" pad="2"/>
+<wire x1="84.5058" y1="11.9888" x2="84.2772" y2="11.6078" width="0.3048" layer="1"/>
+<wire x1="84.2772" y1="11.6078" x2="84.201" y2="10.922" width="0.254" layer="1"/>
+<wire x1="84.201" y1="10.922" x2="84.201" y2="10.8204" width="0.3048" layer="1"/>
+<wire x1="84.201" y1="10.8204" x2="83.7946" y2="10.414" width="0.3048" layer="1"/>
 </signal>
 <signal name="/RESET">
 <contactref element="U3" pad="9"/>
@@ -6703,10 +6779,8 @@ design rules under a new name.</description>
 <wire x1="83.312" y1="7.366" x2="82.931" y2="7.366" width="0.4064" layer="16"/>
 <wire x1="82.931" y1="7.366" x2="82.804" y2="7.493" width="0.4064" layer="16"/>
 <wire x1="82.804" y1="7.493" x2="83.312" y2="8.001" width="0.4064" layer="16"/>
-<wire x1="83.312" y1="8.001" x2="83.312" y2="9.779" width="0.4064" layer="16"/>
-<wire x1="83.312" y1="9.779" x2="83.185" y2="9.906" width="0.4064" layer="16"/>
-<wire x1="83.185" y1="9.906" x2="82.804" y2="9.906" width="0.4064" layer="16"/>
-<wire x1="82.804" y1="9.906" x2="82.461603125" y2="10.248396875" width="0.4064" layer="16"/>
+<wire x1="83.312" y1="8.001" x2="83.312" y2="9.398" width="0.4064" layer="16"/>
+<wire x1="83.312" y1="9.398" x2="82.461603125" y2="10.248396875" width="0.4064" layer="16"/>
 <wire x1="82.461603125" y1="10.248396875" x2="82.1182" y2="10.5918" width="0.4064" layer="16"/>
 <wire x1="81.8388" y1="10.5918" x2="82.1182" y2="10.5918" width="0.4064" layer="16"/>
 <contactref element="JP1" pad="P$1"/>
@@ -6737,9 +6811,8 @@ design rules under a new name.</description>
 <contactref element="JP13" pad="9"/>
 <wire x1="82.55" y1="15.621" x2="82.55" y2="14.6812" width="0.4064" layer="16"/>
 <wire x1="82.55" y1="14.6812" x2="83.058" y2="14.1732" width="0.6096" layer="16"/>
-<wire x1="83.058" y1="14.1732" x2="83.058" y2="12.446" width="0.6096" layer="16"/>
-<wire x1="83.058" y1="12.446" x2="82.8548" y2="12.2428" width="0.4064" layer="16"/>
-<wire x1="82.8548" y1="12.2428" x2="82.4484" y2="11.5316" width="0.3048" layer="16"/>
+<wire x1="83.058" y1="14.1732" x2="83.058" y2="12.192" width="0.4064" layer="16"/>
+<wire x1="83.058" y1="12.192" x2="82.6008" y2="11.7348" width="0.4064" layer="16"/>
 <wire x1="101.6" y1="2.667" x2="102.108" y2="2.159" width="0.3048" layer="16"/>
 <wire x1="86.1568" y1="5.0292" x2="86.1568" y2="3.6322" width="0.3048" layer="16"/>
 <wire x1="86.1568" y1="3.6322" x2="86.487" y2="3.302" width="0.3048" layer="16"/>
@@ -6770,16 +6843,14 @@ design rules under a new name.</description>
 <wire x1="107.696" y1="1.016" x2="108.331" y2="1.397" width="0.3048" layer="16"/>
 <wire x1="108.331" y1="1.397" x2="110.298228125" y2="1.397" width="0.4064" layer="16"/>
 <wire x1="110.298228125" y1="1.397" x2="110.744" y2="1.397" width="0.4064" layer="16"/>
-<wire x1="82.6008" y1="10.9728" x2="82.4992" y2="11.3792" width="0.3048" layer="16"/>
-<wire x1="82.4992" y1="11.3792" x2="82.4484" y2="11.5316" width="0.3048" layer="16"/>
 <wire x1="107.696" y1="1.016" x2="106.68" y2="-1.143" width="0.3048" layer="16"/>
-<wire x1="83.0326" y1="10.541" x2="83.439" y2="10.541" width="0.3048" layer="16"/>
-<wire x1="83.439" y1="10.541" x2="83.947" y2="10.033" width="0.3048" layer="16"/>
-<wire x1="83.947" y1="10.033" x2="83.947" y2="7.747" width="0.3048" layer="16"/>
+<wire x1="83.1596" y1="10.414" x2="83.566" y2="10.033" width="0.3048" layer="16"/>
+<wire x1="83.566" y1="10.033" x2="83.947" y2="9.652" width="0.3048" layer="16"/>
+<wire x1="83.947" y1="9.652" x2="83.947" y2="7.747" width="0.3048" layer="16"/>
 <wire x1="83.947" y1="7.747" x2="86.106" y2="5.588" width="0.3048" layer="16"/>
 <wire x1="86.106" y1="5.588" x2="86.106" y2="5.08" width="0.3048" layer="16"/>
 <wire x1="86.106" y1="5.08" x2="86.1568" y2="5.0292" width="0.3048" layer="16"/>
-<wire x1="83.0326" y1="10.541" x2="82.6008" y2="10.9728" width="0.3048" layer="16"/>
+<wire x1="83.1596" y1="10.414" x2="82.6008" y2="11.0998" width="0.3048" layer="16"/>
 <contactref element="JP1" pad="4"/>
 <wire x1="136.271" y1="-0.762" x2="135.255" y2="1.397" width="0.6096" layer="1"/>
 <wire x1="127" y1="4.572" x2="128.524" y2="4.572" width="0.4064" layer="1"/>
@@ -6801,6 +6872,7 @@ design rules under a new name.</description>
 <wire x1="125.095" y1="11.557" x2="125.62405" y2="11.2058125" width="0.6096" layer="1"/>
 <wire x1="125.015778125" y1="10.289471875" x2="124.5263375" y2="11.27441875" width="0.6096" layer="1"/>
 <wire x1="125.095" y1="11.557" x2="124.5263375" y2="11.27441875" width="0.6096" layer="1"/>
+<wire x1="82.6008" y1="11.7348" x2="82.6008" y2="11.0998" width="0.4064" layer="16"/>
 </signal>
 <signal name="D6_">
 <contactref element="U3" pad="7"/>
@@ -7423,14 +7495,14 @@ design rules under a new name.</description>
 <wire x1="115.951" y1="12.573" x2="118.2624" y2="12.573" width="0.3048" layer="1"/>
 <wire x1="118.2624" y1="12.573" x2="118.5164" y2="12.827" width="0.4064" layer="1"/>
 <wire x1="118.5164" y1="12.827" x2="120.4722" y2="12.827" width="0.3048" layer="1"/>
-<wire x1="99.695" y1="12.573" x2="102.235" y2="12.573" width="0.4064" layer="1"/>
+<wire x1="99.441" y1="12.573" x2="102.235" y2="12.573" width="0.4064" layer="1"/>
 <wire x1="102.235" y1="12.573" x2="102.87" y2="12.954" width="0.4064" layer="1"/>
 <wire x1="120.4722" y1="12.827" x2="120.65" y2="12.827" width="0.4064" layer="1"/>
 <wire x1="120.65" y1="12.827" x2="121.538996875" y2="12.065003125" width="0.4064" layer="1"/>
 <wire x1="121.538996875" y1="12.065003125" x2="121.92" y2="11.684" width="0.4064" layer="1"/>
 <wire x1="121.92" y1="11.684" x2="122.555" y2="11.303" width="0.4064" layer="1"/>
-<wire x1="99.695" y1="12.573" x2="99.06" y2="13.208" width="0.4064" layer="1"/>
-<wire x1="99.06" y1="13.208" x2="94.234" y2="13.208" width="0.4064" layer="1"/>
+<wire x1="99.441" y1="12.573" x2="98.806" y2="13.208" width="0.4064" layer="1"/>
+<wire x1="98.806" y1="13.208" x2="94.234" y2="13.208" width="0.4064" layer="1"/>
 <wire x1="94.234" y1="13.208" x2="92.329" y2="13.208" width="0.3048" layer="1"/>
 <wire x1="92.329" y1="13.208" x2="57.531" y2="13.208" width="0.4064" layer="1"/>
 <wire x1="121.538996875" y1="12.065003125" x2="122.085328125" y2="11.050159375" width="0.5588" layer="1"/>
@@ -8011,7 +8083,6 @@ design rules under a new name.</description>
 <wire x1="55.322" y1="9.144" x2="55.601" y2="8.865" width="0.6096" layer="16"/>
 <wire x1="55.601" y1="8.865" x2="56.921" y2="8.865" width="0.6096" layer="16"/>
 <wire x1="56.921" y1="8.865" x2="57.023" y2="8.763" width="0.6096" layer="16"/>
-<wire x1="88.7462" y1="12.573" x2="87.884" y2="12.573" width="0.6096" layer="16"/>
 <wire x1="87.884" y1="12.573" x2="86.741" y2="11.557" width="0.6096" layer="16"/>
 <wire x1="86.741" y1="11.557" x2="86.5632" y2="11.557" width="0.4064" layer="16"/>
 <via x="85.8774" y="9.7282" extent="1-16" drill="0.4064"/>
@@ -8338,6 +8409,9 @@ design rules under a new name.</description>
 <wire x1="58.801" y1="18.288" x2="59.116834375" y2="17.85815625" width="0.6096" layer="16"/>
 <wire x1="58.42" y1="17.346140625" x2="58.275134375" y2="18.1986375" width="0.6096" layer="16"/>
 <wire x1="58.801" y1="18.288" x2="58.275134375" y2="18.1986375" width="0.6096" layer="16"/>
+<contactref element="C17" pad="1"/>
+<wire x1="88.7462" y1="12.573" x2="87.884" y2="12.573" width="0.6096" layer="16"/>
+<wire x1="87.884" y1="12.573" x2="87.63" y2="12.319" width="0.6096" layer="16"/>
 </signal>
 <signal name="GND_POWER">
 <contactref element="D4" pad="A"/>
@@ -8608,6 +8682,7 @@ design rules under a new name.</description>
 <wire x1="18.034" y1="14.478" x2="18.376053125" y2="15.07240625" width="0.8128" layer="1"/>
 <wire x1="19.409003125" y1="14.478" x2="18.376053125" y2="13.883590625" width="0.8128" layer="1"/>
 <wire x1="18.034" y1="14.478" x2="18.376053125" y2="13.883590625" width="0.8128" layer="1"/>
+<contactref element="C19" pad="1"/>
 </signal>
 <signal name="D14_">
 <contactref element="U3" pad="20"/>
@@ -8740,13 +8815,14 @@ design rules under a new name.</description>
 <contactref element="R51" pad="2"/>
 <via x="101.1682" y="9.7282" extent="1-16" drill="0.4064"/>
 <wire x1="84.582" y1="12.93" x2="84.558" y2="12.954" width="0.6096" layer="16"/>
-<wire x1="84.582" y1="12.93" x2="84.582" y2="11.811" width="0.4064" layer="16"/>
-<wire x1="84.582" y1="11.811" x2="84.963" y2="11.176" width="0.4064" layer="16"/>
-<via x="84.963" y="11.176" extent="1-16" drill="0.4064"/>
+<wire x1="84.582" y1="12.93" x2="84.582" y2="12.446" width="0.4064" layer="16"/>
+<wire x1="84.582" y1="12.446" x2="84.582" y2="11.811" width="0.4064" layer="16"/>
+<wire x1="84.582" y1="11.811" x2="84.9884" y2="11.176" width="0.4064" layer="16"/>
+<via x="84.9884" y="11.176" extent="1-16" drill="0.4064"/>
 <wire x1="101.1682" y1="9.7282" x2="101.1174" y2="9.7282" width="0.3048" layer="1"/>
 <wire x1="101.1174" y1="9.7282" x2="100.640546875" y2="9.251346875" width="0.3048" layer="1"/>
 <wire x1="100.640546875" y1="9.251346875" x2="100.2792" y2="8.89" width="0.3048" layer="1"/>
-<wire x1="84.963" y1="11.176" x2="85.674203125" y2="11.176" width="0.4064" layer="1"/>
+<wire x1="84.9884" y1="11.176" x2="85.674203125" y2="11.176" width="0.4064" layer="1"/>
 <wire x1="85.674203125" y1="11.176" x2="92.075" y2="11.176" width="0.4064" layer="1"/>
 <wire x1="92.075" y1="11.176" x2="92.2528" y2="11.0236" width="0.3048" layer="1"/>
 <wire x1="92.2528" y1="11.0236" x2="93.853" y2="11.0236" width="0.3048" layer="1"/>
@@ -8809,14 +8885,14 @@ design rules under a new name.</description>
 <wire x1="101.1682" y1="9.7282" x2="101.255928125" y2="9.436296875" width="0.3048" layer="1"/>
 <wire x1="100.640546875" y1="9.251346875" x2="100.8866375" y2="9.844928125" width="0.3048" layer="1"/>
 <wire x1="101.1682" y1="9.7282" x2="100.8866375" y2="9.844928125" width="0.3048" layer="1"/>
-<wire x1="84.5970875" y1="11.78585" x2="84.7128875" y2="11.131721875" width="0.4064" layer="16"/>
-<wire x1="84.963" y1="11.176" x2="84.7128875" y2="11.131721875" width="0.4064" layer="16"/>
-<wire x1="84.5970875" y1="11.78585" x2="85.119765625" y2="11.37585" width="0.4064" layer="16"/>
-<wire x1="84.963" y1="11.176" x2="85.119765625" y2="11.37585" width="0.4064" layer="16"/>
-<wire x1="85.674203125" y1="11.176" x2="85.053715625" y2="11.413246875" width="0.4064" layer="1"/>
-<wire x1="84.963" y1="11.176" x2="85.053715625" y2="11.413246875" width="0.4064" layer="1"/>
+<wire x1="84.5970875" y1="11.78585" x2="84.7382875" y2="11.106321875" width="0.4064" layer="16"/>
+<wire x1="84.9884" y1="11.176" x2="84.7382875" y2="11.106321875" width="0.4064" layer="16"/>
+<wire x1="84.5970875" y1="11.78585" x2="85.094365625" y2="11.40125" width="0.4064" layer="16"/>
+<wire x1="84.9884" y1="11.176" x2="85.094365625" y2="11.40125" width="0.4064" layer="16"/>
+<wire x1="85.674203125" y1="11.176" x2="85.129915625" y2="11.387846875" width="0.4064" layer="1"/>
+<wire x1="84.9884" y1="11.176" x2="85.129915625" y2="11.387846875" width="0.4064" layer="1"/>
 <wire x1="85.674203125" y1="11.176" x2="85.053715625" y2="10.93875" width="0.4064" layer="1"/>
-<wire x1="84.963" y1="11.176" x2="85.053715625" y2="10.93875" width="0.4064" layer="1"/>
+<wire x1="84.9884" y1="11.176" x2="85.053715625" y2="10.93875" width="0.4064" layer="1"/>
 <wire x1="122.250203125" y1="-0.381" x2="121.629715625" y2="-0.14375" width="0.4064" layer="16"/>
 <wire x1="121.539" y1="-0.381" x2="121.629715625" y2="-0.14375" width="0.4064" layer="16"/>
 <wire x1="122.250203125" y1="-0.381" x2="121.629715625" y2="-0.618246875" width="0.4064" layer="16"/>
@@ -8849,6 +8925,9 @@ design rules under a new name.</description>
 <wire x1="132.588" y1="4.064" x2="132.484384375" y2="4.29590625" width="0.4064" layer="1"/>
 <wire x1="133.090896875" y1="4.566896875" x2="132.81990625" y2="3.960384375" width="0.4064" layer="1"/>
 <wire x1="132.588" y1="4.064" x2="132.81990625" y2="3.960384375" width="0.4064" layer="1"/>
+<contactref element="C23" pad="4"/>
+<wire x1="84.058" y1="12.954" x2="84.074" y2="12.954" width="0.4064" layer="16"/>
+<wire x1="84.074" y1="12.954" x2="84.582" y2="12.446" width="0.4064" layer="16"/>
 </signal>
 <signal name="CA_PWM">
 <contactref element="M3" pad="3"/>
@@ -9197,10 +9276,10 @@ design rules under a new name.</description>
 <wire x1="40.513" y1="12.827" x2="45.085" y2="12.827" width="0.4064" layer="1"/>
 <wire x1="47.117" y1="10.795" x2="50.673" y2="10.795" width="0.4064" layer="1"/>
 <wire x1="50.673" y1="10.795" x2="51.943" y2="12.065" width="0.3048" layer="1"/>
-<wire x1="51.943" y1="12.065" x2="82.931" y2="12.065" width="0.3048" layer="1"/>
-<wire x1="82.931" y1="12.065" x2="82.972640625" y2="12.007165625" width="0.3048" layer="1"/>
-<via x="83.3882" y="11.43" extent="1-16" drill="0.4064"/>
-<wire x1="82.972640625" y1="12.007165625" x2="83.3882" y2="11.43" width="0.3048" layer="1"/>
+<wire x1="51.943" y1="12.065" x2="82.804" y2="12.065" width="0.3048" layer="1"/>
+<wire x1="82.804" y1="12.065" x2="82.972640625" y2="12.007165625" width="0.3048" layer="1"/>
+<via x="83.4898" y="11.303" extent="1-16" drill="0.4064"/>
+<wire x1="82.972640625" y1="12.007165625" x2="83.4898" y2="11.303" width="0.3048" layer="1"/>
 <wire x1="86.9188" y1="10.039" x2="86.7918" y2="9.6012" width="0.4064" layer="16"/>
 <via x="85.8774" y="8.5598" extent="1-16" drill="0.4064"/>
 <wire x1="85.8774" y1="8.5598" x2="87.45329375" y2="8.47225" width="0.3048" layer="1"/>
@@ -9209,9 +9288,9 @@ design rules under a new name.</description>
 <wire x1="85.344" y1="7.112" x2="86.2584" y2="7.112" width="0.3048" layer="16"/>
 <wire x1="86.2584" y1="7.112" x2="87.5789375" y2="8.027571875" width="0.3048" layer="16"/>
 <wire x1="87.5789375" y1="8.027571875" x2="88.1634" y2="8.4328" width="0.3048" layer="16"/>
-<wire x1="83.3882" y1="11.43" x2="83.5152" y2="11.3538" width="0.4064" layer="16"/>
-<wire x1="83.5152" y1="11.3538" x2="83.915853125" y2="11.080146875" width="0.4064" layer="16"/>
-<wire x1="83.915853125" y1="11.080146875" x2="84.3534" y2="10.5156" width="0.4064" layer="16"/>
+<wire x1="83.4898" y1="11.303" x2="83.5152" y2="11.3538" width="0.4064" layer="16"/>
+<wire x1="83.5152" y1="11.3538" x2="84.042853125" y2="10.953146875" width="0.4064" layer="16"/>
+<wire x1="84.042853125" y1="10.953146875" x2="84.3534" y2="10.5156" width="0.4064" layer="16"/>
 <wire x1="84.3534" y1="10.5156" x2="84.4804" y2="10.3886" width="0.3048" layer="16"/>
 <wire x1="84.4804" y1="10.3886" x2="84.4804" y2="7.9756" width="0.3048" layer="16"/>
 <wire x1="84.4804" y1="7.9756" x2="85.344" y2="7.112" width="0.3048" layer="16"/>
@@ -9221,14 +9300,14 @@ design rules under a new name.</description>
 <wire x1="86.7156" y1="9.2456" x2="86.7156" y2="9.8358" width="0.3048" layer="16"/>
 <wire x1="86.7156" y1="9.8358" x2="86.9188" y2="10.039" width="0.3048" layer="16"/>
 <wire x1="41.402" y1="3.937" x2="40.767" y2="4.572" width="0.4064" layer="16"/>
-<wire x1="82.972640625" y1="12.007165625" x2="83.08838125" y2="11.3751" width="0.3048" layer="1"/>
-<wire x1="83.3882" y1="11.43" x2="83.08838125" y2="11.3751" width="0.3048" layer="1"/>
-<wire x1="82.972640625" y1="12.007165625" x2="83.53535625" y2="11.696921875" width="0.3048" layer="1"/>
-<wire x1="83.3882" y1="11.43" x2="83.53535625" y2="11.696921875" width="0.3048" layer="1"/>
-<wire x1="83.915853125" y1="11.080146875" x2="83.614575" y2="11.54519375" width="0.4064" layer="16"/>
-<wire x1="83.3882" y1="11.43" x2="83.614575" y2="11.54519375" width="0.4064" layer="16"/>
-<wire x1="83.915853125" y1="11.080146875" x2="83.296428125" y2="11.19315625" width="0.4064" layer="16"/>
-<wire x1="83.3882" y1="11.43" x2="83.296428125" y2="11.19315625" width="0.4064" layer="16"/>
+<wire x1="82.972640625" y1="12.007165625" x2="83.21538125" y2="11.2481" width="0.3048" layer="1"/>
+<wire x1="83.4898" y1="11.303" x2="83.21538125" y2="11.2481" width="0.3048" layer="1"/>
+<wire x1="82.972640625" y1="12.007165625" x2="83.66235625" y2="11.569921875" width="0.3048" layer="1"/>
+<wire x1="83.4898" y1="11.303" x2="83.66235625" y2="11.569921875" width="0.3048" layer="1"/>
+<wire x1="84.042853125" y1="10.953146875" x2="83.741575" y2="11.41819375" width="0.4064" layer="16"/>
+<wire x1="83.4898" y1="11.303" x2="83.741575" y2="11.41819375" width="0.4064" layer="16"/>
+<wire x1="84.042853125" y1="10.953146875" x2="83.423428125" y2="11.06615625" width="0.4064" layer="16"/>
+<wire x1="83.4898" y1="11.303" x2="83.423428125" y2="11.06615625" width="0.4064" layer="16"/>
 <wire x1="86.58750625" y1="8.520346875" x2="86.023103125" y2="8.82751875" width="0.3048" layer="1"/>
 <wire x1="85.8774" y1="8.5598" x2="86.023103125" y2="8.82751875" width="0.3048" layer="1"/>
 <wire x1="86.58750625" y1="8.520346875" x2="85.99255" y2="8.2775875" width="0.3048" layer="1"/>
@@ -10769,6 +10848,8 @@ design rules under a new name.</description>
 <wire x1="79.756" y1="9.906" x2="79.121" y2="10.414" width="0.3048" layer="16"/>
 <wire x1="79.121" y1="10.414" x2="78.044" y2="10.414" width="0.4064" layer="16"/>
 <wire x1="78.044" y1="10.414" x2="76.7715" y2="9.144" width="0.4064" layer="16"/>
+<contactref element="C23" pad="3"/>
+<wire x1="82.058" y1="12.954" x2="81.558" y2="12.954" width="0.4064" layer="16"/>
 </signal>
 <signal name="N$2">
 <contactref element="T1" pad="E"/>
@@ -10812,8 +10893,20 @@ design rules under a new name.</description>
 <approved hash="5,1,d0f07c0b6a832f12"/>
 <approved hash="5,16,e4d27f3c84880cf9"/>
 <approved hash="5,16,8b5cc93256a9a6f6"/>
+<approved hash="5,1,2a67439bb1cff433"/>
+<approved hash="5,1,b453439bb1cf461f"/>
+<approved hash="5,1,0f67cdc70249d941"/>
 <approved hash="8,1,8612150abf3b8810"/>
 <approved hash="8,1,422ac4e58921c06a"/>
+<approved hash="5,1,958923aa68ded8f1"/>
+<approved hash="5,1,95ffdbc56587cb39"/>
+<approved hash="5,16,3a75cec132e9c78d"/>
+<approved hash="5,16,205483dc8426e3b6"/>
+<approved hash="5,1,af38262f46842c92"/>
+<approved hash="5,1,e6a77ba86aef80b2"/>
+<approved hash="5,1,4999767eeb11b3f3"/>
+<approved hash="5,1,9bd92ca3f8a94fd1"/>
+<approved hash="5,16,4d5e08132584c259"/>
 <approved hash="8,1,9262b92a79e34f3e"/>
 <approved hash="8,1,a1b4631c16aaa320"/>
 <approved hash="8,1,a5971e17819d67bf"/>
@@ -10901,18 +10994,18 @@ design rules under a new name.</description>
 <approved hash="4,1,3676983be69d4f95"/>
 <approved hash="5,1,fbf3b374ce8f2499"/>
 <approved hash="5,1,fddf44342e168332"/>
-<approved hash="5,1,2a67439bb1cff433"/>
-<approved hash="5,1,b453439bb1cf461f"/>
-<approved hash="5,1,0f67cdc70249d941"/>
+<approved hash="5,1,fddc104ffb20b4d3"/>
+<approved hash="5,1,e9e7cdc702383bb0"/>
+<approved hash="5,1,0f640118f73dd941"/>
 <approved hash="5,1,48210a46a12c930b"/>
-<approved hash="5,1,75aebeee4c7aa7ba"/>
 <approved hash="5,1,d7eebeee4c3a083a"/>
+<approved hash="5,1,75aebeee4c7aa7ba"/>
 <approved hash="5,1,768bddaaabd46b81"/>
 <approved hash="5,1,4778038fa602b770"/>
 <approved hash="5,1,5a9621eaf5e1869f"/>
-<approved hash="5,1,499b32e5c33a8746"/>
-<approved hash="5,1,8bf232e4c32579bb"/>
 <approved hash="5,1,840d6d71bea47ad8"/>
+<approved hash="5,1,8bf232e4c32579bb"/>
+<approved hash="5,1,499b32e5c33a8746"/>
 <approved hash="5,1,b7ae8cb67121bd91"/>
 <approved hash="5,1,8bec6d71bea679bb"/>
 <approved hash="5,1,b54f6c52bddd6b40"/>
@@ -10927,8 +11020,8 @@ design rules under a new name.</description>
 <approved hash="5,1,8c21ad197cc07a78"/>
 <approved hash="5,1,8bae72f4230000e5"/>
 <approved hash="5,1,39bca027e02afea0"/>
-<approved hash="5,1,0aa8afd4ece20b9e"/>
 <approved hash="5,1,0fe4ec98afee0e92"/>
+<approved hash="5,1,0aa8afd4ece20b9e"/>
 <approved hash="5,1,9add9daba4e67d96"/>
 <approved hash="5,1,7963a4159dee9e9e"/>
 <approved hash="5,1,077883b97f9a8ad7"/>
@@ -10940,9 +11033,9 @@ design rules under a new name.</description>
 <approved hash="5,1,9fd10564ed78e194"/>
 <approved hash="6,1,ca74ce6831895dfd"/>
 <approved hash="6,1,c383ba6e1ef00f75"/>
-<approved hash="5,1,d5c3873c7336e9ca"/>
 <approved hash="5,1,24f3dadfb1cf4ffa"/>
 <approved hash="5,1,16b13e729a219f0d"/>
+<approved hash="5,1,d5c3873c7336e9ca"/>
 <approved hash="5,1,fb98b5e12549e9c5"/>
 <approved hash="5,1,9fda8bd8bc83e29a"/>
 <approved hash="5,1,fa98b4ec2549e9c5"/>
@@ -10975,11 +11068,12 @@ design rules under a new name.</description>
 <approved hash="5,1,71060e7471ae0fd8"/>
 <approved hash="5,1,2d460e7471b47b02"/>
 <approved hash="5,1,2dd3fa07d842b297"/>
-<approved hash="5,1,e6a77ba86aef80b2"/>
+<approved hash="5,1,6e549ed06ef1d5dd"/>
+<approved hash="5,1,100cc78bf3d62a6e"/>
 <approved hash="5,1,5942ca25dcd1e701"/>
 <approved hash="5,1,712d7c71c4ead89b"/>
-<approved hash="5,1,4999767eeb11b3f3"/>
-<approved hash="5,1,9bd92ca3f8a94fd1"/>
+<approved hash="5,1,5a10d4b24c6b4cb4"/>
+<approved hash="5,1,ba194ce398e96e11"/>
 <approved hash="5,1,562c0092be6130ca"/>
 <approved hash="5,1,f2e458c34beb1225"/>
 <approved hash="5,1,c461348977c1e1a9"/>
@@ -11025,8 +11119,9 @@ design rules under a new name.</description>
 <approved hash="5,1,a53c73c2a59b7361"/>
 <approved hash="5,1,29da37afe6d0c0f6"/>
 <approved hash="5,1,55b504cbd511876b"/>
-<approved hash="5,1,958923aa68ded8f1"/>
-<approved hash="5,1,95ffdbc56587cb39"/>
+<approved hash="5,1,63385fc3e990516c"/>
+<approved hash="5,1,95f8ba02c4c7cb39"/>
+<approved hash="5,1,0c9359b6c45f353d"/>
 <approved hash="5,1,059a1eb5956cca02"/>
 <approved hash="5,1,a676f78c83860a7f"/>
 <approved hash="5,1,572b04cbd519a57d"/>
@@ -11059,8 +11154,8 @@ design rules under a new name.</description>
 <approved hash="5,1,86636710a4ea8799"/>
 <approved hash="5,1,213ba8c244caf531"/>
 <approved hash="5,1,0d4fb52d11d68472"/>
-<approved hash="5,1,86e7a595a4e20592"/>
 <approved hash="5,1,01a5a4d7a5e28292"/>
+<approved hash="5,1,86e7a595a4e20592"/>
 <approved hash="5,1,420b9cf542af9c55"/>
 <approved hash="5,1,6a559cf542a49800"/>
 <approved hash="5,1,0660e310e4ea079a"/>
@@ -11077,15 +11172,15 @@ design rules under a new name.</description>
 <approved hash="5,1,be9b3463d86b0a91"/>
 <approved hash="5,1,6a5e98a46afe9800"/>
 <approved hash="5,1,9d92de1dde9469bd"/>
-<approved hash="5,1,619ba559a1313df4"/>
-<approved hash="5,1,8e60af136ce98f9a"/>
 <approved hash="5,1,8bdb6ca8afe28a91"/>
+<approved hash="5,1,8e60af136ce98f9a"/>
+<approved hash="5,1,619ba559a1313df4"/>
 <approved hash="5,1,d0c591869121d0a4"/>
-<approved hash="5,1,cfeeee1a2cf4abaa"/>
 <approved hash="5,1,905f967a91fb919c"/>
+<approved hash="5,1,cfeeee1a2cf4abaa"/>
 <approved hash="5,1,99e09c4ed7a70ed1"/>
-<approved hash="5,1,bee77d889cfe9d91"/>
 <approved hash="5,1,99b89cd77de1ba8e"/>
+<approved hash="5,1,bee77d889cfe9d91"/>
 <approved hash="5,1,382fce73c2d3a558"/>
 <approved hash="4,1,faa66a2e12888545"/>
 <approved hash="4,1,f5e98e838d619b97"/>
@@ -11106,8 +11201,8 @@ design rules under a new name.</description>
 <approved hash="5,16,4959722f183a6ebe"/>
 <approved hash="5,16,0e152f28ec1b6292"/>
 <approved hash="5,16,0e152a28eb1a6092"/>
-<approved hash="5,16,46d6557312a822ca"/>
 <approved hash="5,16,96f67ce624737291"/>
+<approved hash="5,16,46d6557312a822ca"/>
 <approved hash="5,16,e2cf4374778ee49e"/>
 <approved hash="5,16,9f81273b19ae8db8"/>
 <approved hash="5,16,cf13f0848015b66b"/>
@@ -11127,15 +11222,15 @@ design rules under a new name.</description>
 <approved hash="5,16,88255ee1e56b9867"/>
 <approved hash="5,16,1f8727222bb65fbf"/>
 <approved hash="5,16,2265645a3c82bf5a"/>
-<approved hash="5,16,41fa7be471f03467"/>
 <approved hash="5,16,4ee058db7d1c26af"/>
+<approved hash="5,16,41fa7be471f03467"/>
 <approved hash="5,16,23786790edb2bcd6"/>
 <approved hash="5,16,64253e4a5d271be0"/>
 <approved hash="5,16,077883b97f9a8ad7"/>
 <approved hash="5,16,c825de62af0ff5e0"/>
 <approved hash="5,16,24f3dadfb1cf4ffa"/>
-<approved hash="5,16,0f35d9e9d91fe3ae"/>
 <approved hash="5,16,9b527eda0b88d7d4"/>
+<approved hash="5,16,0f35d9e9d91fe3ae"/>
 <approved hash="19,16,336fa06861aa98b6"/>
 <approved hash="19,16,86bb563b0e97bbdd"/>
 <approved hash="19,16,e4a7380548bee3a0"/>
@@ -11157,19 +11252,21 @@ design rules under a new name.</description>
 <approved hash="5,16,5c65a97b6597e93c"/>
 <approved hash="19,16,6134585fb4c2b2f7"/>
 <approved hash="19,16,352ab07a0a1f2f23"/>
-<approved hash="19,16,9d2796fe65655811"/>
 <approved hash="19,16,650f4406cf6973c1"/>
-<approved hash="5,16,5e5952162cfa2275"/>
+<approved hash="19,16,9d2796fe65655811"/>
 <approved hash="19,16,d0107e9b3c97921c"/>
 <approved hash="19,16,d9bc44d706db9bb0"/>
+<approved hash="5,16,5e5952162cfa2275"/>
+<approved hash="19,16,6576ee740c9798ad"/>
 <approved hash="5,16,d073e6fc9a10ae5f"/>
 <approved hash="19,16,1acbb960fb6758cc"/>
 <approved hash="19,16,f2fd89513e44cfa5"/>
 <approved hash="19,16,3bb3bc291f989f43"/>
 <approved hash="19,16,8ba68de588197761"/>
-<approved hash="19,16,905b30a37f373d45"/>
 <approved hash="19,16,34bbf3895fb9f8a8"/>
-<approved hash="5,16,4d5e08132584c259"/>
+<approved hash="19,16,905b30a37f373d45"/>
+<approved hash="19,16,39fb1dd9e538de22"/>
+<approved hash="5,16,8cc9b9cc7e92edbb"/>
 <approved hash="5,16,d495f089db6b5871"/>
 <approved hash="5,16,1b46ca371becc599"/>
 <approved hash="5,16,b5f255619a504688"/>
@@ -11188,6 +11285,7 @@ design rules under a new name.</description>
 <approved hash="5,16,d5f06282d458e22e"/>
 <approved hash="5,16,44a1602acfb73f5c"/>
 <approved hash="5,16,9e0ffc0e01be7eea"/>
+<approved hash="19,16,66ea88968b00657c"/>
 <approved hash="5,16,1e1f7ca421ce5757"/>
 <approved hash="5,16,f17cf357a0248a5c"/>
 <approved hash="5,16,571f306c0f5e1042"/>
@@ -11203,10 +11301,12 @@ design rules under a new name.</description>
 <approved hash="5,16,a86c799237c8fa32"/>
 <approved hash="5,16,156c79923437a4cc"/>
 <approved hash="5,16,60c91430dbf9d22b"/>
-<approved hash="5,16,3a75cec132e9c78d"/>
+<approved hash="19,16,ea8fa8f3ab67e91b"/>
 <approved hash="5,16,a0c94d4f9979d2af"/>
 <approved hash="5,16,79c88774f24bbc13"/>
 <approved hash="5,16,6c403ac4c77a3fa5"/>
+<approved hash="19,16,6713bfefbc9d6461"/>
+<approved hash="5,16,2edfd4e7671cecc4"/>
 <approved hash="5,16,2edfd4e7671cecc4"/>
 <approved hash="5,16,581911bc1b375201"/>
 <approved hash="5,16,af2374f0bfd5abad"/>
@@ -11224,13 +11324,14 @@ design rules under a new name.</description>
 <approved hash="5,16,64af4d117bf436ce"/>
 <approved hash="5,16,6491b66fe43436ce"/>
 <approved hash="5,16,5ebf9141df0410fe"/>
+<approved hash="19,16,2734dfc8dcb82444"/>
 <approved hash="5,16,4b5177669b1db3cb"/>
-<approved hash="5,16,205483dc8426e3b6"/>
+<approved hash="5,16,4b5177669b1db3cb"/>
 <approved hash="5,16,e16b6b97479cb562"/>
 <approved hash="5,16,5903026b0093fbf0"/>
 <approved hash="5,16,8b6658792467f379"/>
-<approved hash="5,16,1fc543f0bbc2e3f3"/>
 <approved hash="5,16,8b665df0bbc2e979"/>
+<approved hash="5,16,1fc543f0bbc2e3f3"/>
 <approved hash="19,16,89584d0db50f715a"/>
 <approved hash="19,16,9e4f6836b5fd93ae"/>
 <approved hash="5,16,198cca17ee24c264"/>
@@ -11246,8 +11347,8 @@ design rules under a new name.</description>
 <approved hash="5,16,bc972443bbbe2487"/>
 <approved hash="19,16,e5bc85b30518f36d"/>
 <approved hash="5,16,37afab56a50a2e2a"/>
-<approved hash="19,16,5524c8c4288ec474"/>
 <approved hash="19,16,365651856f789e06"/>
+<approved hash="19,16,5524c8c4288ec474"/>
 <approved hash="5,16,6c5b92bcbeab4c50"/>
 <approved hash="19,16,38d7e88697ca7cd3"/>
 <approved hash="19,16,029df358474660f8"/>
@@ -11263,8 +11364,8 @@ design rules under a new name.</description>
 <approved hash="5,16,ced47f0601c42f12"/>
 <approved hash="5,16,6d3d0aac0afdf0a8"/>
 <approved hash="5,16,5f4968fa71ade01c"/>
-<approved hash="5,16,984be60ee9ef99e4"/>
 <approved hash="5,16,5447c8f22c37caa8"/>
+<approved hash="5,16,984be60ee9ef99e4"/>
 <approved hash="5,16,8e98d809f2d24e84"/>
 <approved hash="5,16,e8ce3231e2d4b81c"/>
 <approved hash="5,16,e3aae5a1a6b7f2fa"/>
@@ -11284,8 +11385,8 @@ design rules under a new name.</description>
 <approved hash="5,16,330b245e96b93c22"/>
 <approved hash="5,16,7da7a4d59de21a92"/>
 <approved hash="5,16,1ee59d97a4e27992"/>
-<approved hash="5,16,8bdb6ca8afe28a91"/>
 <approved hash="5,16,8e60af136ce98f9a"/>
+<approved hash="5,16,8bdb6ca8afe28a91"/>
 <approved hash="5,16,bee77d889cfe9d91"/>
 <approved hash="5,16,99b89cd77de1ba8e"/>
 <approved hash="4,16,faa66a2e12888545"/>
