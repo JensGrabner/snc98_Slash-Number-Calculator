@@ -114,7 +114,8 @@
                        // 35 - DS18B20 (0x28) Digital Thermometer, 12bit
                        // 36 - tanh Test 0.000010 .. 100.
                        // 37 - tanh Test -22.000 .. +22.001 Step 0.003.
-                       // 38 - atanh Test 0.0 to 1.0    10 x 540  
+                       // 38 - atanh Test 0.0 to 1.0  10 x  540       = 5400 
+                       // 39 - acosh Test 1.0 to 10.995  8 x 1800 + 200 = 14600 
 
 uint8_t mem_pointer        =  1;   //     mem_stack 0 .. 19
 #define mem_stack_max_c       39   // 39  Variable in calculate
@@ -423,6 +424,7 @@ AVRational_32  temp_32_fac       = {1, int32_max_16, int32_max, 0}; // 6
 AVRational_32  temp_32_corr      = {0, int32_max, int32_max, 0};
 AVRational_32  temp_32_corr_0_1  = {0, int32_max, int32_max, 0};
 AVRational_32  temp_32_corr_a    = {0, int32_max, int32_max, 0};
+AVRational_32  temp_32_corr_b    = {0, int32_max, int32_max, 0};
 
 // ---  cbrt(10)_Konstante  ---
 #define cbrt_10_expo            0
@@ -4338,10 +4340,20 @@ AVRational_32 factorial(AVRational_32 a) {
  */
   uint8_t  fac_test     = 10;
   uint8_t  fac_count    = 10;
+  
+  boolean input_near_null = false; //     -1.000 < input < 0.000
 
   if ( a.expo == 0 ) { //  input = 1.000 or 0.000
     if ( (a.num == a.denom) || (a.num == 0) ) {
       return log_1e0;
+    }
+  }
+
+  if ( a.num < 0 ) {
+    a = add( a, log_1e0, 1 );
+    if ( a.num > 0 ) {
+      input_near_null = true;
+      temp_32_corr_b  = div_x( a );
     }
   }
 
@@ -4438,7 +4450,12 @@ AVRational_32 factorial(AVRational_32 a) {
     
     temp_32_mul = add( temp_32_mul, min_x( mul( temp_32_mul, temp_32_corr_a ) ), 1 );
 
-    return temp_32_mul;
+    if ( input_near_null == true ) {
+      return mul( temp_32_corr_b, temp_32_mul );
+    }
+    else {
+      return temp_32_mul;
+    }
   }
   else {
   	a.denom = 2; // Error_String('u');  // input <= 0	      
@@ -5884,6 +5901,61 @@ void Test_all_function() {
         denom_temp_u32  = denom_temp_u32_;
       }
 
+    test_index = false;
+    time_end = millis();
+    time_diff = time_end - time_start;
+    Serial.print("Time: ");
+    Serial.println(time_diff);
+  }
+  if ( Debug_Level == 39 ) {
+    time_start = millis();
+    
+    uint64_t index_test      = 2000;
+    uint64_t index_count     = 0;
+    uint64_t index_count_add = 1;
+
+    int8_t index_expo        = 0;
+
+    uint64_t num_temp_u64_x   = 2000000000;
+    uint64_t denom_temp_u64_x = 2000000000;
+
+    for ( uint8_t index = 0; index < 8; index += 1 ) {    
+      while ( index_count < index_test ) {
+
+        if ( num_temp_u64_x > 6000000000 ) {
+        	denom_temp_u64_x = 20000000000;
+          index_expo = 1;
+        }
+
+        num_temp_u64 = num_temp_u64_x;
+        denom_temp_u64 = denom_temp_u64_x;
+        Reduce_Number();              // reduce
+        calc_32.num   = num_temp_u32;
+        calc_32.denom = denom_temp_u32;
+        calc_32.expo  = index_expo;
+      /*    
+        Serial.print(calc_32.num);
+        Serial.print("  ");
+        Serial.print(calc_32.denom);
+        Serial.print("  ");
+        Serial.print(calc_32.expo);
+        Serial.println("  ");
+      */
+        test_32 = acosh(calc_32);
+        Serial.print(test_32.num);
+        Serial.print("  ");
+        Serial.print(test_32.denom);
+        Serial.print("  ");
+        Serial.print(test_32.expo);
+        Serial.println("    ");       	
+
+      	num_temp_u64_x += index_count_add; 
+      	index_count    += index_count_add;
+      }
+      index_count_add *= expo_10[1];
+      index_test      *= expo_10[1];
+    }
+    
     test_index = false;
     time_end = millis();
     time_diff = time_end - time_start;
