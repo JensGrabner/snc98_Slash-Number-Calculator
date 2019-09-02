@@ -1,4 +1,3 @@
-
 #include <int96.h>
 // Original:  http://www.naughter.com/int96.html
 // https://github.com/JensGrabner/snc98_Slash-Number-Calculator/tree/master/Software/Arduino/libraries/int96
@@ -15,6 +14,7 @@
  int96_a my_xx_bit;
  int96_a add;
  int96_a mul_10 = 10;
+ int96_a my_start_bit;
  
 char  display_string[33];
 
@@ -32,7 +32,7 @@ void setup() {
 
   Serial.begin(115200);
   delay(10);
-
+ 
 } // end setup
 
 // ------------------------------------------------
@@ -41,12 +41,12 @@ void loop() {
 
   delay(10);
 
-for ( uint16_t ii = 0; ii < 27 ; ii += 1 ) {
+for ( uint8_t ii_a = 0; ii_a < 26 ; ii_a += 1 ) {
   delay(10);
-  if ( ii == 26 ) ii_end = 296;
+  if ( ii_a == 26 ) ii_end = 296;
   time_start = millis();
 
-  for ( uint16_t ii = 0; ii < ii_end; ii += 1 ) {
+  for ( uint16_t ii_b = 0; ii_b < ii_end; ii_b += 1 ) {
      itoa_(my_xx_bit, display_string);
      my_xx_bit += add;
     // Serial.println(display_string);
@@ -64,7 +64,7 @@ for ( uint16_t ii = 0; ii < 27 ; ii += 1 ) {
   add *= mul_10;
 }  
  
-delay(2000000);
+delay(20000000);
 
 }
 

@@ -1,4 +1,4 @@
-//=== itoa_ljust.cpp - Fast integer to ascii conversion           --*- C++ -*-//
+﻿//=== itoa_ljust.cpp - Fast integer to ascii conversion           --*- C++ -*-//
 //
 // Substantially simplified (and slightly faster) version
 // based on the following functions in Google's protocol buffers:
@@ -161,8 +161,8 @@
         case  6: d  = u /     10000; p = out( dd(d), p );
         case  5: u -= d *     10000;
         case  4: n = 4 ;
-        case  3: ;
-        case  2: ;
+        case  3: ;        	
+        case  2: ;        	
         default: return itoa_16( u, p, d, n );
         }
     }
@@ -180,12 +180,12 @@
         case 10: d  = u /           100000000; p = out( dd(d), p );
         case  9: u -= d *           100000000;
         case  8: n = 8 ;
-        case  7: ;
-        case  6: ;
-        case  5: ;
-        case  4: ;
-        case  3: ;
-        case  2: ;
+        case  7: ;        	
+        case  6: ;        	
+        case  5: ;        	
+        case  4: ;        	
+        case  3: ;        	
+        case  2: ;        	
         default: return itoa_32( u, p, d, n ); 
       }
     } 

@@ -41,7 +41,7 @@ void loop() {
 
   delay(10);
 
-for ( uint8_t ii_a = 0; ii_a < 27 ; ii_a += 1 ) {
+for ( uint8_t ii_a = 0; ii_a < 26 ; ii_a += 1 ) {
   delay(10);
   if ( ii_a == 26 ) ii_end = 296;
   time_start = millis();
