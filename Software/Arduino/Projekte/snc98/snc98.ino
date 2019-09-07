@@ -122,7 +122,12 @@ char  display_string_itoa_[33];
                        // 38 - atanh Test 0.0 to 1.0  10 x  540       = 5400 
                        // 39 - acosh Test 1.0 to 10.995  8 x 1800 + 200 = 14600 
                        // 40 - Test Cordic
-                       // 41 - sin Test  0 .. 90.00 Step +0.005  = 18000 - 100 ms
+                       // 41 - sin Test  0 .. 90.000 Step +0.005  = 18000 - 100 ms
+                       // 42 - tan Test  0.005 .. 89.995 Step +0.005  = 18000 - 100 ms
+
+#define sin_   1
+#define cos_   2
+#define tan_   3
 
 uint8_t mem_pointer        =   1;   //     mem_stack 0 .. 39
 #define mem_stack_max_c       39    // 39  Variable in calculate
@@ -692,8 +697,8 @@ uint32_t x0_b_32 =      1;
 uint64_t x0_a_64_mul  = 1;
 uint64_t x0_a_64_div  = 1;
 
-boolean first_value = false;
-boolean exact_value = false;
+boolean first_value     = false;
+boolean exact_value     = false;
 boolean NoOverflowSoFar = true;
 
   int8_t  k_  = 0;
@@ -798,8 +803,8 @@ static const AVRational_32 to_xx[14] = {
 
 static const char mem_str_1[]     = "##########111111111122222222223333333333";
 static const char mem_str_0[]     = "#123456789012345678901234567890123456789";
-                                       // 01234567
-static const char Error_String_txt[]   = "0IuX[U^V";
+                                       // 012345678
+static const char Error_String_txt[]   = "0IuX[U^Vx";
 
 uint8_t mem_extra_pointer  =   0;   // mem_extra  MR 0 .. MR 9
 uint8_t extra_test_13      =   0;
@@ -4676,17 +4681,14 @@ AVRational_32 sin_cos_tan(AVRational_32 a) {
   }
 }
 
-AVRational_32 sin(AVRational_32 a) {
-	
+AVRational_32 cordic(int8_t function) {
 	uint8_t index_tab     = 0;
 	int64_t test_cordic   = 0;
 	int64_t cordic_add    = 0;
 	uint8_t index_count   = 0;
 	
 	int96_a temp_cordic   = 0;
-	
-  temp_32_corr_a = sin_cos_tan( a );
-  
+	   
   uint8_t k_count       = 1;
   
   int64_t x_cordic      = 1;
@@ -4705,32 +4707,93 @@ AVRational_32 sin(AVRational_32 a) {
   
   if ( ( temp_32_corr_a.expo <  -8 ) || ( temp_32_corr_a.num == 0 ) ) {
 
-    switch (cordic_test) {
-  	
-    	case 5:
-    	case 4:
-    	case 0:
-    	  return mul( Tau, temp_32_corr_a );
-    	  break;
+    if ( function == sin_ ) {
+      switch (cordic_test) {
+    	
+        case -5:
+    	  case -4:
+          temp_32_corr_a = min_x( temp_32_corr_a );
+        case  5:
+        case  4:
+        case  0:
+      	  return mul( Tau, temp_32_corr_a );
+          break;
   	  
-    	case 3:
-    	case 2:
-        return log_1e0;
-  	    break;
+    	  case  3:
+        case  2:
+          return log_1e0;
+  	     break;
 
-    	case -2:
-    	case -3:
-        return min_x( log_1e0 );
-        break;
+        case -2:
+        case -3:
+          return min_x( log_1e0 );
+          break;
 
-    	case -4:
-    	case -5:
-        return min_x( mul( Tau, temp_32_corr_a ) );
-    	  break;
-
-    	default: 
-  	    break;
+        default: 
+  	      break;
+      }      
     }
+
+    if ( function == cos_ ) {
+      switch (cordic_test) {
+    	
+        case -5:
+    	  case -4:
+        case  5:
+        case  4:
+          return min_x( log_1e0 );
+          break;
+  	  
+        case  0:
+          return log_1e0;
+  	     break;
+
+    	  case  3:
+        case -3:
+          temp_32_corr_a = min_x( temp_32_corr_a );
+        case  2:
+        case -2:
+          return mul( Tau, temp_32_corr_a );
+          break;
+
+        default: 
+  	      break;
+      }      
+    }
+
+    if ( function == tan_ ) {
+      switch (cordic_test) {
+  	
+        case  5:
+        case  4:
+          temp_32_corr_a = min_x( temp_32_corr_a );
+        case -5:
+  	    case -4:
+        case  0:
+          return mul( Tau, temp_32_corr_a );
+        break;
+ 	  
+  	    case  3:
+        case -2:
+          temp_32_corr_a = min_x( temp_32_corr_a );
+        case  2:
+        case -3:
+        	if ( abs( temp_32_corr_a.num ) > 0 ) {
+        		return div_x( mul( Tau, temp_32_corr_a ) );
+        	}
+        	else {
+            temp_32_corr_a.num = int32_max; 
+            temp_32_corr_a.denom = 8;  // Error_String('x');
+            Error_first = true;
+        	}
+          return temp_32_corr_a;
+  	    break;
+
+        default: 
+  	      break;
+      }      
+    }
+
   }
   
   temp_32_corr_a = mul( circle_to, temp_32_corr_a );
@@ -4815,39 +4878,108 @@ AVRational_32 sin(AVRational_32 a) {
   tx_cordic += y_cordic >> 32;
   ty_cordic -= x_cordic >> 32;
 
+  temp_32_corr_a.expo  = -1; 
+  denom_temp_u64  = 920348428214616521;
+  if ( function == sin_ ) {
+    num_temp_u64    = ty_cordic;
+  }
+  if ( function == cos_ ) {
+    num_temp_u64    = tx_cordic;
+  }
+  if ( function == tan_ ) {
+    num_temp_u64         = ty_cordic;
+    denom_temp_u64       = tx_cordic;
+    temp_32_corr_a.expo  = 0; 
+  }
+    
+  if ( abs(cordic_test) > 1 ) {
+    if ( abs(cordic_test) < 4 ) {
+      if ( function == sin_ ) {
+        num_temp_u64    = tx_cordic;  	
+      }
+      if ( function == cos_ ) {
+        num_temp_u64    = ty_cordic;  	
+      }
+    }
+  }
+
+  if ( function == tan_ ) {
+    while ( num_temp_u64 < expo_test_0a ) {
+      num_temp_u64        *= 10;
+      temp_32_corr_a.expo -= 1;
+    }
+    if ( num_temp_u64 < expo_test_0b ) {
+      num_temp_u64        *= 5;
+      denom_temp_u64      /= 2;
+      temp_32_corr_a.expo -= 1;      
+    }  
+  }
+
+  if ( (function == sin_) || (function == cos_) ){
+    while ( num_temp_u64 < 276104528464384956 ) {
+      num_temp_u64        *= 10;
+      temp_32_corr_a.expo -= 1;
+    }
+    if ( num_temp_u64 > 2761045284643849563 ) {
+      denom_temp_u64      *= 10;
+      temp_32_corr_a.expo += 1;
+    }
+  }
+  
   if ( Debug_Level == 40 ) {
     Serial.print("63 0 xx ");
       
-    itoa_(tx_cordic, display_string_itoa_);
+    itoa_(num_temp_u64, display_string_itoa_);
     Serial.print(display_string_itoa_); 
 
-    Serial.print(' ');
-    itoa_(ty_cordic, display_string_itoa_);
+    Serial.print(" / ");
+    itoa_(denom_temp_u64, display_string_itoa_);
     Serial.println(display_string_itoa_); 
   }
-
-  temp_32_corr_a.expo  = -1;
-  num_temp_u64    = ty_cordic;
-  denom_temp_u64  = 920348428214616521;
-  
-  if ( cordic_test == 2 ) {
-    num_temp_u64    = tx_cordic;
-  }
-
-  while ( num_temp_u64 < 276104528464384956 ) {
-    num_temp_u64        *= 10;
-    temp_32_corr_a.expo -= 1;
-  }
-  if ( num_temp_u64 > 2761045284643849563 ) {
-    denom_temp_u64      *= 10;
-    temp_32_corr_a.expo += 1;
-  }
+   
   Reduce_Number();
 
   temp_32_corr_a.num   = num_temp_u32;
   temp_32_corr_a.denom = denom_temp_u32;
   
+  if ( function == sin_ ) {
+    if ( cordic_test < 0 ) {
+      return min_x( temp_32_corr_a );
+    }
+  }
+  if ( function == cos_ ) {
+    if ( abs(cordic_test) > 2 ) {
+      return min_x( temp_32_corr_a );
+    }
+  }
+  if ( function == tan_ ) {
+    switch (cordic_test) {
+  	
+      case  3:
+      case -2:
+      	temp_32_corr_a = min_x( temp_32_corr_a );
+      case  2:
+      case -3:
+      	return div_x( temp_32_corr_a );
+  	    break;
+      	
+      case  5:
+      case  4:
+      case -1:
+      	return min_x( temp_32_corr_a );
+  	    break;
+
+      default: 
+	      break;
+    }      
+  }
+  
   return temp_32_corr_a;
+}
+
+AVRational_32 sin(AVRational_32 a) {
+	temp_32_corr_a = sin_cos_tan( a );  
+  return cordic( sin_ );
 }
 
 AVRational_32 sinh(AVRational_32 a) {
@@ -4876,7 +5008,7 @@ AVRational_32 asinh(AVRational_32 a) {
 
 AVRational_32 cos(AVRational_32 a) {
   temp_32_corr_a = sin_cos_tan( a );
-  return temp_32_corr_a;
+  return cordic( cos_ );
 }
 
 AVRational_32 cosh(AVRational_32 a) {
@@ -4915,7 +5047,7 @@ AVRational_32 acosh(AVRational_32 a) {
 
 AVRational_32 tan(AVRational_32 a) {
   temp_32_corr_a = sin_cos_tan( a );
-  return temp_32_corr_a;
+  return cordic( tan_ );
 }
 
 AVRational_32 tanh(AVRational_32 a) {
@@ -5881,7 +6013,7 @@ void Test_all_function() {
     num_temp_u32_   =   1;
     denom_temp_u32_ = 200;
     Serial.println(" ");            // 
-    for ( uint16_t index = 0; index <= 1800; index += 1 ) {
+    for ( uint16_t index = 6467; index <= 14200; index += 1 ) {
       temp_32_cbrt.expo = 0;
       Serial.print(index);
       Serial.print("  ");
@@ -6409,6 +6541,63 @@ void Test_all_function() {
       }
       
       temp_32_xxx = sin(temp_32_cbrt);
+   /* 
+      Serial.print(temp_32_cbrt.num);
+      Serial.print("  ");
+      Serial.print(temp_32_cbrt.denom);
+      Serial.print("  ");
+      Serial.print(temp_32_cbrt.expo);
+      Serial.println("  ");
+   */     
+      Serial.print(temp_32_xxx.num);
+      Serial.print("  ");
+      Serial.print(temp_32_xxx.denom);
+      Serial.print("  ");
+      Serial.print(temp_32_xxx.expo);
+      Serial.println(" -> ");
+ 
+    }
+    test_index = false;
+    time_end = millis();
+    time_diff = time_end - time_start;
+    Serial.print("Time: ");
+    Serial.println(time_diff);
+  }
+  if ( Debug_Level == 42 ) {
+    time_start = millis();
+
+    num_temp_u32_   =   1;
+    denom_temp_u32_ = 200;
+    Serial.println(" ");            // 
+    for ( uint16_t index = 1; index < 18000; index += 1 ) {
+      temp_32_cbrt.expo = 0;
+      Serial.print(index);
+      Serial.print("  ");
+      num_temp_u32   = num_temp_u32_;
+      num_temp_u32  *= index;
+      denom_temp_u32 = denom_temp_u32_;
+      if ( num_temp_u32 < 600 ) {
+      	num_temp_u32 *= 10;
+      	temp_32_cbrt.expo -= 1;
+      }
+      if ( num_temp_u32 < 61 ) {
+      	num_temp_u32 *= 10;
+      	temp_32_cbrt.expo -= 1;
+      }
+      if ( num_temp_u32 > 600 ) {
+      	denom_temp_u32 *= 10;
+      	temp_32_cbrt.expo += 1;
+      }
+      if ( num_temp_u32 > 6000 ) {
+      	denom_temp_u32 *= 10;
+      	temp_32_cbrt.expo += 1;
+      }
+      Expand_Number();
+      
+      temp_32_cbrt.num   = num_temp_u32;
+      temp_32_cbrt.denom = denom_temp_u32;
+            
+      temp_32_xxx = tan(temp_32_cbrt);
    /* 
       Serial.print(temp_32_cbrt.num);
       Serial.print("  ");
