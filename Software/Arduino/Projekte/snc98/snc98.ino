@@ -125,9 +125,12 @@ char  display_string_itoa_[33];
                        // 41 - sin Test  0 .. 90.000 Step +0.005  = 18000 - 100 ms
                        // 42 - tan Test  0.005 .. 89.995 Step +0.005  = 18000 - 100 ms
 
-#define sin_   1
-#define cos_   2
-#define tan_   3
+#define sin_    1
+#define cos_    2
+#define tan_    3
+#define asin_  -1
+#define acos_  -2
+#define atan_  -3
 
 uint8_t mem_pointer        =   1;   //     mem_stack 0 .. 39
 #define mem_stack_max_c       39    // 39  Variable in calculate
@@ -340,27 +343,27 @@ static const uint64_t expo_10_[10] = {
   expo_10_15, expo_10_16, expo_10_17, expo_10_18, expo_10_19 };
 
 static const uint8_t cordic_tab[] = {
-  8, 0x3B, 0x58, 0xCE, 0x0A, 0xC3, 0x76, 0x9E, 0xCF,  //  0
-  8, 0x01, 0xAF, 0x0E, 0xF3, 0xCA, 0xC5, 0x8D, 0xFA,  //  1
-  7, 0x3D, 0x22, 0x50, 0xBF, 0xD7, 0x48, 0x32,        //  2
-  7, 0x07, 0xE8, 0x47, 0x20, 0x33, 0x9F, 0x00,        //  3
-  6, 0xFF, 0x40, 0x8F, 0x8F, 0x07, 0x5D,              //  4
-  6, 0x1F, 0xFA, 0x01, 0x1F, 0xC7, 0x61,              //  5
-  6, 0x03, 0xFF, 0xD0, 0x02, 0x3F, 0xE4,              //  6
-  5, 0x7F, 0xFE, 0x80, 0x04, 0x81,                    //  7
-  5, 0x0F, 0xFF, 0xF4, 0x00, 0x09,                    //  8
-  5, 0x01, 0xFF, 0xFF, 0xA0, 0x01,                    //  9
-  4, 0x3F, 0xFF, 0xFD, 0x00,                          // 10
-  4, 0x07, 0xFF, 0xFF, 0xE8,                          // 11
-  4, 0x01, 0x00, 0x00, 0x00,                          // 12
-  3, 0x20, 0x00, 0x00,                                // 13
-  3, 0x04, 0x00, 0x01,                                // 14
-  2, 0x80, 0x00,                                      // 15
-  2, 0x10, 0x01,                                      // 16
-  2, 0x02, 0x00,                                      // 17
-  1, 0x41,                                            // 18
-  1, 0x08,                                            // 19
-  1, 0x02,                                            // 20
+  0x90, 0x3B, 0x58, 0xCE, 0x0A, 0xC3, 0x76, 0x9E, 0xCF,  //  0
+  0x81, 0xAF, 0x0E, 0xF3, 0xCA, 0xC5, 0x8D, 0xFA,        //  1
+  0x80, 0x3D, 0x22, 0x50, 0xBF, 0xD7, 0x48, 0x32,        //  2
+  0x77, 0xE8, 0x47, 0x20, 0x33, 0x9F, 0x00,              //  3
+  0x70, 0xFF, 0x40, 0x8F, 0x8F, 0x07, 0x5D,              //  4
+  0x70, 0x1F, 0xFA, 0x01, 0x1F, 0xC7, 0x61,              //  5
+  0x63, 0xFF, 0xD0, 0x02, 0x3F, 0xE4,                    //  6
+  0x60, 0x7F, 0xFE, 0x80, 0x04, 0x81,                    //  7
+  0x5F, 0xFF, 0xF4, 0x00, 0x09,                          //  8
+  0x51, 0xFF, 0xFF, 0xA0, 0x01,                          //  9
+  0x50, 0x3F, 0xFF, 0xFD, 0x00,                          // 10
+  0x47, 0xFF, 0xFF, 0xE8,                                // 11
+  0x41, 0x00, 0x00, 0x00,                                // 12
+  0x40, 0x20, 0x00, 0x00,                                // 13
+  0x34, 0x00, 0x01,                                      // 14
+  0x30, 0x80, 0x00,                                      // 15
+  0x30, 0x10, 0x01,                                      // 16
+  0x22, 0x00,                                            // 17
+  0x20, 0x41,                                            // 18
+  0x18,                                                  // 19
+  0x12,                                                  // 20
   0 };
                                               //  9214364837600034815 = 2^63 - 2^53 - 1
 #define expo_test_10aaa       0x3097AE14ULL   //            815246868 = expo_test_0a / 2^31
@@ -455,6 +458,7 @@ static const AVRational_32 mul_5_0   = { 1, int30_max, int32_max, 0};
 static const AVRational_32 mul_6_0   = { 1, int32_max_16, int32_max, 0};
 static const AVRational_32 __1e90    = { 90, int32_max, int32_max, 0};
 static const AVRational_32 log_1e0   = { 0, int32_max, int32_max, 0};
+static const AVRational_32 _10e0     = { 1, int32_max, int32_max, 0};
 static const AVRational_32 log_1e1   = { 0, num_log1e1, denum_log1e1, 0};
 static const AVRational_32 log_5e8   = { 1, num_log5e8, denum_log5e8, 0};
 static const AVRational_32 log_1e9   = { 1, num_log1e9, denum_log1e9, 0};
@@ -468,6 +472,12 @@ AVRational_32  temp_32_corr      = {0, int32_max, int32_max, 0};
 AVRational_32  temp_32_corr_0_1  = {0, int32_max, int32_max, 0};
 AVRational_32  temp_32_corr_a    = {0, int32_max, int32_max, 0};
 AVRational_32  temp_32_corr_b    = {0, int32_max, int32_max, 0};
+
+// --- sqrt(0.5)_Konstante  ---
+#define sqrt_0_5_expo           0
+#define sqrt_0_5_num   1311738121
+#define sqrt_0_5_denom 1855077841  // Fehler ..  1,5e-19
+static const AVRational_32 sqrt_0_5   = { 0, sqrt_0_5_num, sqrt_0_5_denom, 0};
 
 // ---  cbrt(10)_Konstante  ---
 #define cbrt_10_expo            0
@@ -783,6 +793,10 @@ AVRational_32      mem_stack_input[mem_stack_max_c + 1] = {  // before calc
 AVRational_32_plus mem_stack_calc[mem_stack_max_c + 1] = {   // after calc
   { 0, int32_max,  int32_max, 0, 0 }
 };
+
+// ---  circle_Tau  ---  360 / Tau  = 
+#define to_deg           12  
+#define to_rad           13   
 
 static const AVRational_32 to_xx[14] = {
   { -1, 1250000000,  473176473, 0 },   // 0  7  ..  1 Liter =  (1 / 3,785411784) US-gal
@@ -3777,13 +3791,6 @@ AVRational_32 abs_x(AVRational_32 a) {
   return temp_32;
 }
 
-AVRational_32 input_x(AVRational_32 a) {
-  temp_32.expo  = a.expo;
-  temp_32.num   = a.num;
-  temp_32.denom = a.denom;
-  return temp_32;
-}
-
 AVRational_32 floor_(AVRational_32 a, int8_t expo_test) {
 // floor_(x) returns the largest integer n such that n <= x
   denom_temp_u64  = a.denom;
@@ -3871,6 +3878,36 @@ AVRational_32 frac(AVRational_32 a) {
   return add(a, min_x(temp_32), 1);
 }
 
+int8_t compare(AVRational_32 a, AVRational_32 b) {
+  uint64_t test_a = abs(a.num);
+  uint64_t test_b = abs(b.num);
+  int8_t   comp = 0;
+	
+  test_a *= b.denom;
+  test_b *= a.denom;
+  
+  if ( a.expo > b.expo ) {
+    comp = 1;
+    return comp;
+  }
+
+  if ( a.expo < b.expo ) {
+    comp = -1;
+    return comp;
+  }
+
+  if ( test_a > test_b ) {
+    comp = 1;
+    return comp;
+  }
+
+  if ( test_a < test_b ) {
+    comp = -1;
+    return comp;
+  }
+	
+  return comp;
+}
 int8_t compare(Rational_32 a, Rational_32 b) {
   uint64_t test_a = a.num;
   uint64_t test_b = b.num;
@@ -4073,21 +4110,10 @@ void calc_stack(uint8_t count_stack) {
             break;
 
           case 88:  //    _y_expo
-          	if ( number_stack[ count_stack ].num >= 0 ) {
-          	  number_stack[ count_stack ] = powx(number_stack[ count_stack     ], number_stack[ count_stack + 1 ]);
-          	}
-          	else {
-          		temp_32 = frac( mul(number_stack[ count_stack + 1 ], exp2_1_2) );
-           	  if ( temp_32.num == 0 ) {
-                number_stack[ count_stack ] = abs_x(powx(min_x(number_stack[ count_stack     ]), number_stack[ count_stack + 1 ]));
-         	    }
-           	  else {
-                number_stack[ count_stack ] = min_x(powx(min_x(number_stack[ count_stack     ]), number_stack[ count_stack + 1 ]));
-              }
-          	}          	
+          	number_stack[ count_stack ] = powx_extra(number_stack[ count_stack ], number_stack[ count_stack + 1 ]);
             break;
 
-          case 89:  //    _y_root
+          case 89:  //    _logx
           	number_stack[ count_stack ] = logx(number_stack[ count_stack + 1 ], number_stack[ count_stack     ]);
             break;
 
@@ -4100,18 +4126,7 @@ void calc_stack(uint8_t count_stack) {
             break;
 
           case 217: //    _y_expo y_expo_
-          	if ( number_stack[ count_stack + 1 ].num >= 0 ) {
-          	  number_stack[ count_stack ] = powx(number_stack[ count_stack + 1 ], number_stack[ count_stack     ]);
-          	}
-          	else {
-          		temp_32 = frac(mul(number_stack[ count_stack ], exp2_1_2));
-          		if ( temp_32.num == 0 ) {
-                number_stack[ count_stack ] = abs_x(powx(min_x(number_stack[ count_stack + 1 ]), number_stack[ count_stack     ]));
-          		}
-          		else {
-                  number_stack[ count_stack ] = min_x(powx(min_x(number_stack[ count_stack + 1 ]), number_stack[ count_stack     ]));
-          		}
-          	}          	
+            number_stack[ count_stack ] = powx_extra(number_stack[ count_stack + 1 ], number_stack[ count_stack ]);
             break;
 
           case 218: //    _y_root y_root_
@@ -4687,6 +4702,8 @@ AVRational_32 cordic(int8_t function) {
 	int64_t cordic_add    = 0;
 	uint8_t index_count   = 0;
 	
+	uint8_t cordic_tab_   = 0;
+	
 	int96_a temp_cordic   = 0;
 	   
   uint8_t k_count       = 1;
@@ -4710,21 +4727,21 @@ AVRational_32 cordic(int8_t function) {
     if ( function == sin_ ) {
       switch (cordic_test) {
     	
-        case -5:
-    	  case -4:
-          temp_32_corr_a = min_x( temp_32_corr_a );
-        case  5:
-        case  4:
+        case -5: 
+    	  case -4: 
+          temp_32_corr_a = min_x( temp_32_corr_a ); [[fallthrough]];
+        case  5: 
+        case  4: 
         case  0:
       	  return mul( Tau, temp_32_corr_a );
           break;
   	  
-    	  case  3:
+    	  case  3: 
         case  2:
           return log_1e0;
   	     break;
 
-        case -2:
+        case -2: 
         case -3:
           return min_x( log_1e0 );
           break;
@@ -4738,8 +4755,8 @@ AVRational_32 cordic(int8_t function) {
       switch (cordic_test) {
     	
         case -5:
-    	  case -4:
-        case  5:
+    	  case -4: 
+        case  5: 
         case  4:
           return min_x( log_1e0 );
           break;
@@ -4748,10 +4765,10 @@ AVRational_32 cordic(int8_t function) {
           return log_1e0;
   	     break;
 
-    	  case  3:
+    	  case  3: 
         case -3:
-          temp_32_corr_a = min_x( temp_32_corr_a );
-        case  2:
+          temp_32_corr_a = min_x( temp_32_corr_a ); [[fallthrough]];
+        case  2: 
         case -2:
           return mul( Tau, temp_32_corr_a );
           break;
@@ -4764,19 +4781,19 @@ AVRational_32 cordic(int8_t function) {
     if ( function == tan_ ) {
       switch (cordic_test) {
   	
-        case  5:
+        case  5: 
         case  4:
-          temp_32_corr_a = min_x( temp_32_corr_a );
-        case -5:
-  	    case -4:
+          temp_32_corr_a = min_x( temp_32_corr_a ); [[fallthrough]];
+        case -5: 
+  	    case -4: 
         case  0:
           return mul( Tau, temp_32_corr_a );
         break;
  	  
-  	    case  3:
+  	    case  3: 
         case -2:
-          temp_32_corr_a = min_x( temp_32_corr_a );
-        case  2:
+          temp_32_corr_a = min_x( temp_32_corr_a ); [[fallthrough]];
+        case  2: 
         case -3:
         	if ( abs( temp_32_corr_a.num ) > 0 ) {
         		return div_x( mul( Tau, temp_32_corr_a ) );
@@ -4817,28 +4834,28 @@ AVRational_32 cordic(int8_t function) {
  */   
   for ( uint8_t index_a = 0; index_a < 32; index_a += 1 ) {
     index_count = cordic_tab[index_tab];
+    index_count = index_count >> 4;
     cordic_add = 0;
     if ( index_count > 0 ) {
       for ( uint8_t index_b = 0; index_b < index_count; index_b += 1 ) {
-    	  index_tab += 1;
         cordic_add  = cordic_add << 8;
-        cordic_add += cordic_tab[index_tab];
+        cordic_tab_ = cordic_tab[index_tab];
+        if ( index_b == 0 ) {
+          cordic_tab_= cordic_tab_ << 4;
+          cordic_tab_= cordic_tab_ >> 4;
+        }
+        cordic_add += cordic_tab_;
+        index_tab += 1;
       }
-      index_tab += 1;
     }
     test_cordic  = test_cordic >> 1;
     test_cordic += cordic_add;
-   /*
+   /*   
     if ( Debug_Level == 40 ) {
-    	itoa_(test_cordic, display_string_itoa_);
-    	
+    	itoa_(test_cordic, display_string_itoa_);    	
       Serial.println(display_string_itoa_);    
     }
-   */
-   
-    // d_cordic = tz_cordic >> 63;
-    // d_cordic = tz_cordic >= 0 ? +1 : -1;
-    	
+   */   
     if ( tz_cordic < 0 ) {
     	d_cordic = 1;
     }
@@ -4957,7 +4974,7 @@ AVRational_32 cordic(int8_t function) {
   	
       case  3:
       case -2:
-      	temp_32_corr_a = min_x( temp_32_corr_a );
+      	temp_32_corr_a = min_x( temp_32_corr_a ); [[fallthrough]];
       case  2:
       case -3:
       	return div_x( temp_32_corr_a );
@@ -4980,6 +4997,11 @@ AVRational_32 cordic(int8_t function) {
 AVRational_32 sin(AVRational_32 a) {
 	temp_32_corr_a = sin_cos_tan( a );  
   return cordic( sin_ );
+}
+
+AVRational_32 asin(AVRational_32 a) {
+	temp_32_corr_a = sin_cos_tan( a );  
+  return cordic( asin_ );
 }
 
 AVRational_32 sinh(AVRational_32 a) {
@@ -5009,6 +5031,11 @@ AVRational_32 asinh(AVRational_32 a) {
 AVRational_32 cos(AVRational_32 a) {
   temp_32_corr_a = sin_cos_tan( a );
   return cordic( cos_ );
+}
+
+AVRational_32 acos(AVRational_32 a) {
+  temp_32_corr_a = sin_cos_tan( a );
+  return cordic( acos_ );
 }
 
 AVRational_32 cosh(AVRational_32 a) {
@@ -5048,6 +5075,24 @@ AVRational_32 acosh(AVRational_32 a) {
 AVRational_32 tan(AVRational_32 a) {
   temp_32_corr_a = sin_cos_tan( a );
   return cordic( tan_ );
+}
+
+AVRational_32 atan(AVRational_32 a) {
+
+	if ( a.num == 0 ) {
+	  return a;
+	}
+  if ( a.expo < -3 ) { //  input <= abs(3.000e-4) 
+    temp_32_corr_a = add( a, min_x( mul( cubic( a ), exp2_1_3 ) ), 1 );
+    if ( Rad_in_out == false ) {
+      return mul( temp_32_corr_a, to_xx[to_deg] );
+    }
+    return temp_32_corr_a;
+  }  
+  return exp2_1_3;  
+
+  // temp_32_corr_a = sin_cos_tan( a );
+  // return cordic( atan_ );
 }
 
 AVRational_32 tanh(AVRational_32 a) {
@@ -5149,13 +5194,14 @@ AVRational_32 exp(AVRational_32 a) {
       return div_x( one_e );
     }
   }
-  return exp2( mul(div_x( ln2 ), a ));
+  return exp2( mul(div_x( ln2 ), a), ln2 );
 }
 
-AVRational_32 exp2(AVRational_32 a) {
-  int8_t  count_x       = 0;
-  uint8_t count_horner  = 8;
-  test_signum_log       = 0;
+AVRational_32 exp2(AVRational_32 a, AVRational_32 corr) {
+  AVRational_32 temp_32_test  = {0, int32_max, int32_max, 0};
+  int8_t  count_x             = 0;
+  uint8_t count_horner        = 8;
+  test_signum_log             = 0;
 
   if ( a.num > 0 ) {
     test_signum_log =  1;
@@ -5218,6 +5264,21 @@ AVRational_32 exp2(AVRational_32 a) {
     }
   }
   
+  temp_32_ext  = mul ( a, corr );
+  temp_32_test = frac( temp_32_ext );
+  if ( temp_32_test.denom < 9 ) {
+    return temp_32_test;
+  }
+  if ( temp_32_test.num == 0 ) {
+  	if ( compare( corr, ln2) == 0 ) {
+  		return powx_( one_e, temp_32_ext );
+  	}
+  	if ( compare( corr, log_2) == 0 ) {
+  		return powx_( _10e0, temp_32_ext );
+  	}
+    return powx_( exp2_2_1, temp_32_ext );
+  }
+
   while ( temp_32_log.num < temp_32_log.denom ) {
     temp_32_log = mul( exp2_2_1, temp_32_log );
     count_x -= 1;
@@ -5299,15 +5360,62 @@ AVRational_32 exp10(AVRational_32 a) {
       return temp_32_log;
     }
   }
-  return exp2( mul(div_x( log_2 ), a ));
+  return exp2( mul(div_x( log_2 ), a ), log_2 );
+}
+
+AVRational_32 powx_extra(AVRational_32 base, AVRational_32 expo_) {
+  temp_32 = frac( expo_ );
+  if ( temp_32.denom < 9 ) {
+    return temp_32;
+  }
+  if ( temp_32.num == 0 ) {
+    return powx_(base, expo_);
+  }
+  else {
+    if ( base.num >= 0 ) {
+  	  return powx(base, expo_);
+    }
+    else {
+      return min_x(powx(min_x(base), expo_));
+    }          	
+  }
+}
+
+AVRational_32 powx_(AVRational_32 base, AVRational_32 expo_) {
+	AVRational_32 result = clone( log_1e0 );
+	uint64_t      expo   = abs( expo_.num );
+	              expo  *= expo_10[ expo_.expo ];
+	              expo  /= expo_.denom;
+	uint32_t   expo_32   = expo;
+	uint8_t    wait_8    = 0;
+
+  Display_wait();
+  
+  while (expo_32 > 0) {
+    if ((expo_32 & 0x1UL) == 0x1UL) {
+      result  = mul( result, base );
+      wait_8 += 1;
+    }
+        
+    expo_32 = expo_32 >> 1;
+    base = square( base );
+    wait_8 += 1;
+    
+    if ( (wait_8 % 5) == 4 ) {
+      Display_wait();
+    }   
+  }
+  Display_wait();
+	
+	if ( expo_.num < 0 ) {
+	  return div_x( result );
+	}
+  return result;
 }
 
 AVRational_32 powx(AVRational_32 a, AVRational_32 b) {
   if ( b.num == 0 ) {
-    temp_32_pow.num   = int32_max;
-    temp_32_pow.denom = int32_max;
-    temp_32_pow.expo  = 0;
-    return temp_32_pow;
+    return clone( log_1e0 );
   }
   
   if ( a.num > 0 ) {
@@ -5350,7 +5458,7 @@ AVRational_32 powx(AVRational_32 a, AVRational_32 b) {
     }
 
     Display_wait();
-    temp_32_pow = exp2(temp_32_ext);
+    temp_32_pow = exp2(temp_32_ext, exp2_0_1);
     return temp_32_pow;
   }
   else {
@@ -5497,13 +5605,11 @@ AVRational_32 agm(AVRational_32 a, AVRational_32 b) {
 }
 
 AVRational_32 square(AVRational_32 a) {
-  temp_32 = mul(a, a);          // 1,83664477 44079e+93  calc
-  return temp_32;               // 1,83664477 30683e+93  exact
+  return mul(a, a);          
 }
 
 AVRational_32 cubic(AVRational_32 a) {
-  temp_32 = mul(a, square(a));  // 299.482631 91683e+48  calc
-  return temp_32;               // 2.99482631 72691e+50  exact
+  return mul(a, square(a));  
 }
 
 void copy_input_left_right( uint8_t left, uint8_t right ) {
@@ -5923,7 +6029,7 @@ void Test_all_function() {
       Serial.print(calc_32.expo);
       Serial.println("  ");
      */
-      test_32 = exp2(calc_32);
+      test_32 = exp2(calc_32, exp2_0_1);
       Serial.print(test_32.num);
       Serial.print("  ");
       Serial.print(test_32.denom);
@@ -5966,7 +6072,7 @@ void Test_all_function() {
       temp_32_log2.num = num_temp_u32;
       temp_32_log2.denom = denom_temp_u32;
       
-      temp_32_cbrt = exp2(temp_32_log2);
+      temp_32_cbrt = exp2(temp_32_log2, exp2_0_1);
 
       temp_32_cbrt.num  += index;
       temp_32_cbrt.num  /= index;
@@ -6645,7 +6751,7 @@ void Test_Switch_up_down() {
           break;
 
         case 3:
-        case 5:
+        case 5: 
         case 6:
         case 7:
           bit_3 = 0;           //     "EE"       Write to the bit.
@@ -6697,48 +6803,48 @@ void Test_Switch_up_down() {
         case 8:                //   "1/x"
           if ( Display_mode == true ) {   //
             Switch_Code = 154;   //              Std_on_off_up
-          }
+          }  [[fallthrough]];
 
-        case 32768:      //    1
-        case 98304:
+        case 32768:       //    1
+        case 98304: 
 
-        case 65536:      //    2
+        case 65536:       //    2
 
-        case 131072:     //    3
-        case 196608:
+        case 131072:      //    3
+        case 196608: 
 
-        case 262144:     //    4
-        case 786432:
+        case 262144:      //    4
+        case 786432: 
 
-        case 524288:     //    5
+        case 524288:      //    5
 
-        case 1048576:    //    6
-        case 1572864:
+        case 1048576:     //    6
+        case 1572864: 
 
         case 2097152:    //    7
-        case 6291456:
+        case 6291456: 
 
         case 4194304:    //    8
 
         case 8388608:    //    9
-        case 12582912:
+        case 12582912:  
 
         case 2048:       //    )
-        case 3072:
+        case 3072:  
 
         case 1024:       //    (
 
         case 512:        //    _CE_
-        case 1536:
+        case 1536: 
 
         case 256:        //    _/_
-        case 384:
+        case 384:  
 
         case 64:         //    <--
-        case 192:
+        case 192:  
 
         case 32:         //    _-_
-        case 48:
+        case 48:   
 
         case 16:         //     _+_
 
@@ -6747,17 +6853,17 @@ void Test_Switch_up_down() {
           Display_Status_old = 255;
           switch (Display_Status_new) {
 
-            case 0:         // __
-            case 4:         // +/-
-            case 8:         // inv
-            case 16:        // FN
-            case 24:        // MR
-            case 32:        // =
-            case 40:        // Display
-            case 48:        // MS
-            case 96:        // M_plus
+            case 0:          // __
+            case 4:          // +/-
+            case 8:          // inv
+            case 16:         // FN
+            case 24:         // MR
+            case 32:         // =
+            case 40:         // Display
+            case 48:         // MS
+            case 96:         // M_plus
             case 112:
-            case 128:       // "+" "-" "x" "/"
+            case 128:        // "+" "-" "x" "/"
               Display_Status_old = Display_Status_new;
               break;
           }
@@ -6814,7 +6920,7 @@ void Test_Switch_up_down() {
           }
           break;
 
-        case 1540:     //    "=" + "CE"  +  "("   three Switch pressed
+        case 1540:    //    "=" + "CE"  +  "("   three Switch pressed
         case 1542:     //    "=" + "CE"  +  "("   three Switch pressed
           Switch_Code = 148;  //            new   ->>
           break;
@@ -6899,20 +7005,20 @@ void Test_Switch_up_down() {
           Switch_Code = 160;  //                  MCs
           break;
 
-        case 11:       //    "pi()"               defect
-        case 19:       //    "pi()"               defect
-        case 27:       //    "EE" + "FN" + "1/x"  defect
-        case 72:       //    "<--"                defect
-        case 131:      //    "<"                  defect
-        case 194:      //    "<"                  defect
-        case 585:      //    "e()"                defect
-        case 576:      //    "CE"                 defect
-        case 1027:     //    "("                  defect
-        case 1537:     //    "("                  defect
-        case 1538:     //    "("                  defect
-        case 2054:     //    "FN" + "=" +  "("    defect
-        case 196614:   //    "2" + "3" + "MS_on"  defect
-        case 1572870:  //    "5" + "6" + "MS_on"  defect
+        case 11:        //    "pi()"               defect
+        case 19:        //    "pi()"               defect
+        case 27:        //    "EE" + "FN" + "1/x"  defect
+        case 72:        //    "<--"                defect
+        case 131:       //    "<"                  defect
+        case 194:       //    "<"                  defect
+        case 585:       //    "e()"                defect
+        case 576:       //    "CE"                 defect
+        case 1027:      //    "("                  defect
+        case 1537:      //    "("                  defect
+        case 1538:      //    "("                  defect
+        case 2054:      //    "FN" + "=" +  "("    defect
+        case 196614:    //    "2" + "3" + "MS_on"  defect
+        case 1572870:   //    "5" + "6" + "MS_on"  defect
         case 12582918: //    "8" + "9" + "MS_on"  defect
           break;
 
@@ -7012,7 +7118,7 @@ void Test_Switch_up_down() {
           bit_2 = 1;           //     "+/-"       Write to the bit.
           break;
 
-        case 32768:      //    1
+        case 32768:       //    1
         case 98304:
           switch (Display_Status_new) {
 
@@ -7045,7 +7151,7 @@ void Test_Switch_up_down() {
               Switch_Code = 78;  //            new  MR(1)
               break;
 
-            case 32:
+            case 32:  
             case 96:
               Switch_Code = 103;  //           new  M_plus(1)
               break;
@@ -7054,7 +7160,7 @@ void Test_Switch_up_down() {
               Switch_Code = 87;  //            new  FIX_a_b/c
               break;
 
-            case 48:
+            case 48:  
             case 112:
               Switch_Code = 161;  //           new  Min(1)
               break;
@@ -7068,7 +7174,7 @@ void Test_Switch_up_down() {
               Switch_Code = 50;
               break;
 
-            case 1:
+            case 1:  
             case 3:
               Switch_Code = 203;  //           new  EE(2)
               break;
@@ -7093,7 +7199,7 @@ void Test_Switch_up_down() {
               Switch_Code = 79;  //            new  MR(2)
               break;
 
-            case 32:
+            case 32:  
             case 96:
               Switch_Code = 104;  //           new  M_plus(2)
               break;
@@ -7102,14 +7208,14 @@ void Test_Switch_up_down() {
               Switch_Code = 95;  //            new  FIX_2
               break;
 
-            case 48:
+            case 48:  
             case 112:
               Switch_Code = 162;  //           new  Min(2)
               break;
           }
           break;
 
-        case 131072:     //    3
+        case 131072:      //    3
         case 196608:
           switch (Display_Status_new) {
 
@@ -7117,7 +7223,7 @@ void Test_Switch_up_down() {
               Switch_Code = 51;
               break;
 
-            case 1:
+            case 1:  
             case 3:
               Switch_Code = 204;  //           new  EE(3)
               break;
@@ -7142,7 +7248,7 @@ void Test_Switch_up_down() {
               Switch_Code = 80;  //            new  MR(3)
               break;
 
-            case 32:
+            case 32:  
             case 96:
               Switch_Code = 105;  //           new  M_plus(3)
               break;
@@ -7151,14 +7257,14 @@ void Test_Switch_up_down() {
               Switch_Code = 96;  //            new  FIX_3
               break;
 
-            case 48:
+            case 48:   
             case 112:
               Switch_Code = 163;  //           new  Min(3)
               break;
           }
           break;
 
-        case 262144:     //    4
+        case 262144:      //    4
         case 786432:
           switch (Display_Status_new) {
 
@@ -7166,7 +7272,7 @@ void Test_Switch_up_down() {
               Switch_Code = 52;
               break;
 
-            case 1:
+            case 1:  
             case 3:
               Switch_Code = 205;  //           new  EE(4)
               break;
@@ -7191,7 +7297,7 @@ void Test_Switch_up_down() {
               Switch_Code = 81;  //            new  MR(4)
               break;
 
-            case 32:
+            case 32:  
             case 96:
               Switch_Code = 106;  //           new  M_plus(4)
               break;
@@ -7200,7 +7306,7 @@ void Test_Switch_up_down() {
               Switch_Code = 97;  //            new  FIX_4
               break;
 
-            case 48:
+            case 48:  
             case 112:
               Switch_Code = 164;  //           new  Min(4)
               break;
@@ -7214,7 +7320,7 @@ void Test_Switch_up_down() {
               Switch_Code = 53;
               break;
 
-            case 1:
+            case 1:  
             case 3:
               Switch_Code = 206;  //           new  EE(5)
               break;
@@ -7239,7 +7345,7 @@ void Test_Switch_up_down() {
               Switch_Code = 82;  //            new  MR(5)
               break;
 
-            case 32:
+            case 32:  
             case 96:
               Switch_Code = 107;  //           new  M_plus(5)
               break;
@@ -7248,14 +7354,14 @@ void Test_Switch_up_down() {
               Switch_Code = 98;  //            new  FIX_5
               break;
 
-            case 48:
+            case 48:  
             case 112:
               Switch_Code = 165;  //           new  Min(5)
               break;
           }
           break;
 
-        case 1048576:    //    6
+        case 1048576:     //    6
         case 1572864:
           switch (Display_Status_new) {
 
@@ -7263,7 +7369,7 @@ void Test_Switch_up_down() {
               Switch_Code = 54;
               break;
 
-            case 1:
+            case 1:  
             case 3:
               Switch_Code = 207;  //           new  EE(6)
               break;
@@ -7288,7 +7394,7 @@ void Test_Switch_up_down() {
               Switch_Code = 83;  //            new  MR(6)
               break;
 
-            case 32:
+            case 32:  
             case 96:
               Switch_Code = 108;  //           new  M_plus(6)
               break;
@@ -7297,14 +7403,14 @@ void Test_Switch_up_down() {
               Switch_Code = 99;  //            new  FIX_6
               break;
 
-            case 48:
+            case 48:  
             case 112:
               Switch_Code = 166;  //           new  Min(6)
               break;
           }
           break;
 
-        case 2097152:    //    7
+        case 2097152:     //    7
         case 6291456:
           switch (Display_Status_new) {
 
@@ -7312,7 +7418,7 @@ void Test_Switch_up_down() {
               Switch_Code = 55;
               break;
 
-            case 1:
+            case 1:  
             case 3:
               Switch_Code = 208;  //           new  EE(7)
               break;
@@ -7337,7 +7443,7 @@ void Test_Switch_up_down() {
               Switch_Code = 84;  //            new  MR(7)
               break;
 
-            case 32:
+            case 32:  
             case 96:
               Switch_Code = 109;  //           new  M_plus(7)
               break;
@@ -7346,7 +7452,7 @@ void Test_Switch_up_down() {
               Switch_Code = 100;  //           new  FIX_7
               break;
 
-            case 48:
+            case 48:  
             case 112:
               Switch_Code = 167;  //           new  Min(7)
               break;
@@ -7360,7 +7466,7 @@ void Test_Switch_up_down() {
               Switch_Code = 56;
               break;
 
-            case 1:
+            case 1:  
             case 3:
               Switch_Code = 209;  //           new  EE(8)
               break;
@@ -7385,7 +7491,7 @@ void Test_Switch_up_down() {
               Switch_Code = 85;  //            new  MR(8)
               break;
 
-            case 32:
+            case 32:  
             case 96:
               Switch_Code = 110;  //           new  M_plus(8)
               break;
@@ -7394,14 +7500,14 @@ void Test_Switch_up_down() {
               Switch_Code = 101;  //           new  FIX_8
               break;
 
-            case 48:
+            case 48:  
             case 112:
               Switch_Code = 168;  //           new  Min(8)
               break;
           }
           break;
 
-        case 8388608:    //    9
+        case 8388608:      //    9
         case 12582912:
           switch (Display_Status_new) {
 
@@ -7409,7 +7515,7 @@ void Test_Switch_up_down() {
               Switch_Code = 57;
               break;
 
-            case 1:
+            case 1:  
             case 3:
               Switch_Code = 210;  //           new  EE(9)
               break;
@@ -7434,7 +7540,7 @@ void Test_Switch_up_down() {
               Switch_Code = 86;  //            new  MR(9)
               break;
 
-            case 32:
+            case 32:  
             case 96:
               Switch_Code = 111;  //           new  M_plus(9)
               break;
@@ -7443,14 +7549,14 @@ void Test_Switch_up_down() {
               Switch_Code = 102;  //           new  FIX_E24
               break;
 
-            case 48:
+            case 48:  
             case 112:
               Switch_Code = 169;  //           new  Min(9)
               break;
           }
           break;
 
-        case 2048:       //    )
+        case 2048:        //    )
         case 3072:
           switch (Display_Status_new) {
 
@@ -7466,7 +7572,7 @@ void Test_Switch_up_down() {
               Switch_Code = 115;  //                log10(x)
               break;
 
-            case 24:
+            case 24:  
             case 40:
               Switch_Code = 123;  //           new  Off
               break;
@@ -7488,7 +7594,7 @@ void Test_Switch_up_down() {
               Switch_Code = 112;  //                ln(x)
               break;
 
-            case 32:
+            case 32:  
             case 48:
               Switch_Code = 175;  //                _EE-1_ ">"
               break;
@@ -7499,7 +7605,7 @@ void Test_Switch_up_down() {
           }
           break;
 
-        case 512:        //    _CE_
+        case 512:         //    _CE_
         case 1536:
           switch (Display_Status_new) {
 
@@ -7515,19 +7621,19 @@ void Test_Switch_up_down() {
               Switch_Code = 34;   //                 lb
               break;
 
-            case 24:
+            case 24:  
             case 40:
               Switch_Code = 91;   //           new   Light up
               break;
 
-            case 32:
+            case 32:  
             case 48:
               Switch_Code = 174;  //                _EE+1_ "<"
               break;
           }
           break;
 
-        case 256:        //    _/_
+        case 256:         //    _/_
         case 384:
           switch (Display_Status_new) {
 
@@ -7549,7 +7655,7 @@ void Test_Switch_up_down() {
               Switch_Code = 129;   //                _GM_
               break;
 
-            case 24:
+            case 24:  
             case 40:
               Switch_Code = 38;   //           new   _EE+3_
               break;
@@ -7571,17 +7677,17 @@ void Test_Switch_up_down() {
               Switch_Code = 124;   //                _HM_
               break;
 
-            case 24:
-            case 32:
-            case 40:
-            case 48:      //     EE +  =  + _*_      three Switch pressed
+            case 24:  
+            case 32:  
+            case 40:  
+            case 48:       //     EE +  =  + _*_      three Switch pressed
               Display_rotate = true;
               Switch_Code = 176;   //          new   _Cha_Dis_Dir_on_
               break;
           }
           break;
 
-        case 64:         //    <--
+        case 64:          //    <--
         case 192:
           switch (Display_Status_new) {
 
@@ -7597,14 +7703,14 @@ void Test_Switch_up_down() {
               Switch_Code = 171;  //                 Frac
               break;
 
-            case 24:
+            case 24:  
             case 40:
               Switch_Code = 93;   //           new   Light down
               break;
           }
           break;
 
-        case 32:         //    _-_
+        case 32:          //    _-_
         case 48:
           switch (Display_Status_new) {
 
@@ -7626,7 +7732,7 @@ void Test_Switch_up_down() {
               Switch_Code = 94;   //           new   _/p/_  Phytagoras
               break;
 
-            case 24:
+            case 24:  
             case 40:
               Switch_Code = 39;   //           new   _EE-3_
               break;
@@ -7655,7 +7761,7 @@ void Test_Switch_up_down() {
           }
           break;
 
-        case 8:          //    _1/x_
+        case 8:           //    _1/x_
         case 24:
           switch (Display_Status_new) {
 
@@ -7671,7 +7777,7 @@ void Test_Switch_up_down() {
               Switch_Code = 36;   //           new   Pi()
               break;
 
-            case 24:
+            case 24:  
             case 40:
           	  Switch_Code = 153;  //           new   Std_on_off
               break;
@@ -7814,6 +7920,18 @@ void Function_1_number() {
     	  mem_stack_input[ mem_pointer ] = tan(mem_stack_input[ mem_pointer ]);
         break;
     	  
+      case 68:                 //    _asin_
+    	  mem_stack_input[ mem_pointer ] = asin(mem_stack_input[ mem_pointer ]);
+        break;
+
+      case 69:                 //    _acos_
+    	  mem_stack_input[ mem_pointer ] = acos(mem_stack_input[ mem_pointer ]);
+        break;
+
+      case 70:                 //    _atan_
+    	  mem_stack_input[ mem_pointer ] = atan(mem_stack_input[ mem_pointer ]);
+        break;
+    	  
       case 71:                 //    _sinh_
     	  mem_stack_input[ mem_pointer ] = sinh(mem_stack_input[ mem_pointer ]);
     	  break;
@@ -7843,7 +7961,7 @@ void Function_1_number() {
     	  break;
     	  
       case 114:                //    2^x
-    	  mem_stack_input[ mem_pointer ] = exp2(mem_stack_input[ mem_pointer ]);
+    	  mem_stack_input[ mem_pointer ] = exp2(mem_stack_input[ mem_pointer ], exp2_0_1);
     	  break;
     	  
     	case 115:                //    _log10_
@@ -8122,6 +8240,9 @@ void loop() {
         case 65:                 //    sin(x)
         case 66:                 //    cos(x)
         case 67:                 //    tan(x)
+        case 68:                 //    asin(x)
+        case 69:                 //    acos(x)
+        case 70:                 //    atan(x)
         case 71:                 //    sinh(x)
         case 72:                 //    cosh(x)
         case 73:                 //    tanh(x)
@@ -8232,7 +8353,7 @@ void loop() {
               if ( Start_input != Display_Error ) {
                 mem_pointer = 0;
                 Rad_in_out = false;
-                mem_stack_input[ mem_pointer ] = mul(mem_stack_input[ mem_pointer ], to_xx[ 12 ]);
+                mem_stack_input[ mem_pointer ] = mul(mem_stack_input[ mem_pointer ], to_xx[ to_deg ]);
                 if ( max_input == false ) {
                   mem_stack_input[ mem_pointer ].op = '_';
                 }
@@ -8762,7 +8883,7 @@ void loop() {
               if ( Start_input != Display_Error ) {
                 mem_pointer = 0;
                 Rad_in_out = true;
-                mem_stack_input[ mem_pointer ] = mul(mem_stack_input[ mem_pointer ], to_xx[ 13 ]);
+                mem_stack_input[ mem_pointer ] = mul(mem_stack_input[ mem_pointer ], to_xx[ to_rad ]);
                 if ( max_input == false ) {
                   mem_stack_input[ mem_pointer ].op = '_';
                 }
@@ -8788,15 +8909,6 @@ void loop() {
             display_string[Memory_1] = '_';
             display_string[Memory_0] = '_';
           }
-          break;
-
-        case 68:                 //    asin()
-          break;
-
-        case 69:                 //    acos()
-          break;
-
-        case 70:                 //    atan()
           break;
 
         case 77:                 //   _MR(0)
@@ -9441,26 +9553,26 @@ void loop() {
             switch (to_extra_test) {
 
               case 1:
-                display_string[Plus_Minus_Expo] = '-';
+                display_string[Plus_Minus_Expo] = '-'; [[fallthrough]];
               case 9:
                 display_string[Expo_1] = '1';
                 display_string[Expo_0] = '2';
                 break;
 
               case 2:
-                display_string[Plus_Minus_Expo] = '-';
+                display_string[Plus_Minus_Expo] = '-'; [[fallthrough]];
               case 8:
                 display_string[Expo_0] = '9';
                 break;
 
               case 3:
-                display_string[Plus_Minus_Expo] = '-';
+                display_string[Plus_Minus_Expo] = '-'; [[fallthrough]];
               case 7:
                 display_string[Expo_0] = '6';
                 break;
 
               case 4:
-                display_string[Plus_Minus_Expo] = '-';
+                display_string[Plus_Minus_Expo] = '-'; [[fallthrough]];
               case 6:
                 display_string[Expo_0] = '3';
                 break;
@@ -9756,7 +9868,7 @@ void loop() {
         case Countdown_Off_1 - 10:
         	Pendular_on = false;
           strcpy( display_string, string_end );
-          Display_new = true;
+          Display_new = true; [[fallthrough]];
         case Countdown_Off_2 - 10:
         case Countdown_Off_3 -  5:
           Beep__on();
@@ -9871,7 +9983,7 @@ void loop() {
 
         case 30:
           Beep__on();
-          Display_new = false;
+          Display_new = false; [[fallthrough]];
         case 157:
           display_b[2] = 0;
           display_b[3] = 54;
@@ -10073,7 +10185,7 @@ void loop() {
 
         case 125:
           Beep__on();
-          Display_new = false;
+          Display_new = false; [[fallthrough]];
         case 62:
           display_b[10] = 0;
           display_b[11] = 54;
@@ -10583,7 +10695,7 @@ uint16_t temp_pwm = test_pwm;
   switch (index_Switch) {          //  =  Tastenabfrage - Analog
 
     case 85:            //  1
-      Mux_change(1);
+      Mux_change(1); [[fallthrough]];
     case 1:
     case 4:
     case 43:
@@ -10593,7 +10705,7 @@ uint16_t temp_pwm = test_pwm;
       break;
 
     case 5:             //  1
-      Mux_change(1);
+      Mux_change(1); [[fallthrough]];
     case 2:
     case 41:
     case 44:
@@ -10603,7 +10715,7 @@ uint16_t temp_pwm = test_pwm;
       break;
 
     case 45:            //  1
-      Mux_change(1);
+      Mux_change(1); [[fallthrough]];
     case 3:
     case 42:
     case 81:
@@ -10613,7 +10725,7 @@ uint16_t temp_pwm = test_pwm;
       break;
 
     case 10:            //  2
-      Mux_change(2);
+      Mux_change(2); [[fallthrough]];
     case 7:
     case 46:
     case 49:
@@ -10623,7 +10735,7 @@ uint16_t temp_pwm = test_pwm;
       break;
 
     case 50:            //  2
-      Mux_change(2);
+      Mux_change(2); [[fallthrough]];
     case 8:
     case 47:
     case 86:
@@ -10633,7 +10745,7 @@ uint16_t temp_pwm = test_pwm;
       break;
 
     case 90:            //  2
-      Mux_change(2);
+      Mux_change(2); [[fallthrough]];
     case 6:
     case 9:
     case 48:
@@ -10643,7 +10755,7 @@ uint16_t temp_pwm = test_pwm;
       break;
 
     case 55:            //  3
-      Mux_change(3);
+      Mux_change(3); [[fallthrough]];
     case 13:
     case 52:
     case 91:
@@ -10653,7 +10765,7 @@ uint16_t temp_pwm = test_pwm;
       break;
 
     case 95:            //  3
-      Mux_change(3);
+      Mux_change(3); [[fallthrough]];
     case 11:
     case 14:
     case 53:
@@ -10663,7 +10775,7 @@ uint16_t temp_pwm = test_pwm;
       break;
 
     case 15:            //  3
-      Mux_change(3);
+      Mux_change(3); [[fallthrough]];
     case 12:
     case 51:
     case 54:
@@ -10673,7 +10785,7 @@ uint16_t temp_pwm = test_pwm;
       break;
 
     case 100:           //  4
-      Mux_change(4);
+      Mux_change(4); [[fallthrough]];
     case 16:
     case 19:
     case 58:
@@ -10683,7 +10795,7 @@ uint16_t temp_pwm = test_pwm;
       break;
 
     case 20:            //  4
-      Mux_change(4);
+      Mux_change(4); [[fallthrough]];
     case 17:
     case 56:
     case 59:
@@ -10693,7 +10805,7 @@ uint16_t temp_pwm = test_pwm;
       break;
 
     case 60:            //  4
-      Mux_change(4);
+      Mux_change(4); [[fallthrough]];
     case 18:
     case 57:
     case 96:
@@ -10703,7 +10815,7 @@ uint16_t temp_pwm = test_pwm;
       break;
 
     case 25:            //  5
-      Mux_change(5);
+      Mux_change(5); [[fallthrough]];
     case 22:
     case 61:
     case 64:
@@ -10713,7 +10825,7 @@ uint16_t temp_pwm = test_pwm;
       break;
 
     case 65:            //  5
-      Mux_change(5);
+      Mux_change(5); [[fallthrough]];
     case 23:
     case 62:
     case 101:
@@ -10723,7 +10835,7 @@ uint16_t temp_pwm = test_pwm;
       break;
 
     case 105:           //  5
-      Mux_change(5);
+      Mux_change(5); [[fallthrough]];
     case 21:
     case 24:
     case 63:
@@ -10733,7 +10845,7 @@ uint16_t temp_pwm = test_pwm;
       break;
 
     case 70:            //  6
-      Mux_change(6);
+      Mux_change(6); [[fallthrough]];
     case 28:
     case 67:
     case 106:
@@ -10743,7 +10855,7 @@ uint16_t temp_pwm = test_pwm;
       break;
 
     case 110:           //  6
-      Mux_change(6);
+      Mux_change(6); [[fallthrough]];
     case 26:
     case 29:
     case 68:
@@ -10753,7 +10865,7 @@ uint16_t temp_pwm = test_pwm;
       break;
 
     case 30:            //  6
-      Mux_change(6);
+      Mux_change(6); [[fallthrough]];
     case 27:
     case 66:
     case 69:
@@ -10763,7 +10875,7 @@ uint16_t temp_pwm = test_pwm;
       break;
 
     case 115:           //  7
-      Mux_change(7);
+      Mux_change(7); [[fallthrough]];
     case 31:
     case 34:
     case 73:
@@ -10773,7 +10885,7 @@ uint16_t temp_pwm = test_pwm;
       break;
 
     case 35:            //  7
-      Mux_change(7);
+      Mux_change(7); [[fallthrough]];
     case 32:
     case 71:
     case 74:
@@ -10783,7 +10895,7 @@ uint16_t temp_pwm = test_pwm;
       break;
 
     case 75:            //  7
-      Mux_change(7);
+      Mux_change(7); [[fallthrough]];
     case 33:
     case 72:
     case 111:
@@ -10793,7 +10905,7 @@ uint16_t temp_pwm = test_pwm;
       break;
 
     case 40:            //  0
-      Mux_change(0);
+      Mux_change(0); [[fallthrough]];
     case 37:
     case 76:
     case 118:
@@ -10808,7 +10920,7 @@ uint16_t temp_pwm = test_pwm;
       break;
 
     case 80:            //  0
-      Mux_change(0);
+      Mux_change(0); [[fallthrough]];
     case 38:
     case 77:
     case 116:
@@ -10824,7 +10936,7 @@ uint16_t temp_pwm = test_pwm;
       break;
 
     case 0:             //  0
-      Mux_change(0);
+      Mux_change(0); [[fallthrough]];
     case 36:
     case 78:
     case 117:

@@ -136,31 +136,31 @@
 
     static inline char* itoa_8(uint8_t u, char* p, uint8_t d, uint8_t n) {
         switch(n) {
-        case  3: u -= d * 100;
-        case  2: p = out( dd(u), p );
+        case  3: u -= d * 100; [[fallthrough]]; 
+        case  2: p = out( dd(u), p ); [[fallthrough]];
         default: *p = '\0'; return p;
         }
     }
 
     static inline char* itoa_16(uint16_t u, char* p, uint16_t d, uint8_t n) {
         switch(n) {
-        case  5: u -= d * 10000;
-        case  4: d  = u /   100; p = out( dd(d), p );
-        case  3: u -= d *   100;
-        case  2: n = 2 ;
+        case  5: u -= d * 10000; [[fallthrough]];
+        case  4: d  = u /   100; p = out( dd(d), p ); [[fallthrough]];
+        case  3: u -= d *   100; [[fallthrough]];
+        case  2: n = 2;  [[fallthrough]];
         default: return itoa_8( u, p, d, n );
         }
     }
 
     static inline char* itoa_32(uint32_t u, char* p, uint32_t d, uint8_t n) {
         switch(n) {   // 1000000000
-        case 10: d  = u / 100000000; p = out( dd(d), p );
-        case  9: u -= d * 100000000;
-        case  8: d  = u /   1000000; p = out( dd(d), p );
-        case  7: u -= d *   1000000;
-        case  6: d  = u /     10000; p = out( dd(d), p );
-        case  5: u -= d *     10000;
-        case  4: n = 4 ;
+        case 10: d  = u / 100000000; p = out( dd(d), p ); [[fallthrough]];
+        case  9: u -= d * 100000000; [[fallthrough]];
+        case  8: d  = u /   1000000; p = out( dd(d), p ); [[fallthrough]];
+        case  7: u -= d *   1000000; [[fallthrough]];
+        case  6: d  = u /     10000; p = out( dd(d), p ); [[fallthrough]];
+        case  5: u -= d *     10000; [[fallthrough]];
+        case  4: n = 4; [[fallthrough]];
         case  3: ;        	
         case  2: ;        	
         default: return itoa_16( u, p, d, n );
@@ -169,17 +169,17 @@
 
     static inline char* itoa_64(uint64_t u, char* p, uint64_t d, uint8_t n) {
         switch(n) {    // 1000000000000000000
-        case 18: d  = u /   10000000000000000; p = out( dd(d), p );
-        case 17: u -= d *   10000000000000000;
-        case 16: d  = u /     100000000000000; p = out( dd(d), p );
-        case 15: u -= d *     100000000000000;
-        case 14: d  = u /       1000000000000; p = out( dd(d), p );
-        case 13: u -= d *       1000000000000;
-        case 12: d  = u /         10000000000; p = out( dd(d), p );
-        case 11: u -= d *         10000000000;
-        case 10: d  = u /           100000000; p = out( dd(d), p );
-        case  9: u -= d *           100000000;
-        case  8: n = 8 ;
+        case 18: d  = u /   10000000000000000; p = out( dd(d), p ); [[fallthrough]];
+        case 17: u -= d *   10000000000000000; [[fallthrough]];
+        case 16: d  = u /     100000000000000; p = out( dd(d), p ); [[fallthrough]];
+        case 15: u -= d *     100000000000000; [[fallthrough]];
+        case 14: d  = u /       1000000000000; p = out( dd(d), p ); [[fallthrough]];
+        case 13: u -= d *       1000000000000; [[fallthrough]];
+        case 12: d  = u /         10000000000; p = out( dd(d), p ); [[fallthrough]];
+        case 11: u -= d *         10000000000; [[fallthrough]];
+        case 10: d  = u /           100000000; p = out( dd(d), p ); [[fallthrough]];
+        case  9: u -= d *           100000000; [[fallthrough]];
+        case  8: n = 8; [[fallthrough]];
         case  7: ;        	
         case  6: ;        	
         case  5: ;        	
