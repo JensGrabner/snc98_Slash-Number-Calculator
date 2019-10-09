@@ -110,8 +110,8 @@ char  display_string_itoa_[33];
                        // 26 - Pint_pos Test
                        // 27 - cbrt(x) : in 1.0 .. 1000.0 _>_ out 1.00 .. 10.00
                        // 28 - Test cbrt steps
-                       // 29 - log2(x) : in 0.2 .. 2.0 _>_ out -2.30 .. 1.00 Step 0.0002
-                       // 30 - log(x)  : in 0.3 .. 3.3 _>_ out -1.20 .. 1.20 Step 0.0004
+                       // 29 - log2(x) : in 0.2 .. 2.0 _>_ out -2.30 .. 1.00 Step 0.001
+                       // 30 - log(x)  : in 0.3 .. 3.3 _>_ out -1.20 .. 1.20 Step 0.001
                        // 31 - Test Error
                        // 32 - 2^x Test  0,00000000100 .. 320
                        // 33 - log2 Test out -> 0,00000000100 .. 320
@@ -125,6 +125,7 @@ char  display_string_itoa_[33];
                        // 41 - sin Test  0 .. 90.000 Step +0.005  = 18000 - 100 ms
                        // 42 - tan Test  0.005 .. 89.995 Step +0.005  = 18000 - 100 ms
                        // 43 - log_ Test
+                       // 44 - atan Test 0.0001 .. 1.0000 Step +0.0001
 
 #define sin_    1
 #define cos_    2
@@ -4688,10 +4689,6 @@ AVRational_32 sin_cos_tan(AVRational_32 a) {
       return add( exp2_1_4, min_x( temp_32_mul ), 1 );	
       break;
 
-    case 1:                  //
-      return temp_32_mul;
-  	  break;
-
     case -1:                 //
   	  return min_x( temp_32_mul );
       break;
@@ -4709,6 +4706,7 @@ AVRational_32 sin_cos_tan(AVRational_32 a) {
       return add( exp2_1_2, temp_32_mul, 1 );	
   	  break;
   	  
+    case 1:                  //
   	default:
   		return temp_32_mul; 
   	  break;
@@ -4769,7 +4767,6 @@ AVRational_32 cordic(int8_t function) {
   	      break;
       }      
     }
-
     if ( function == cos_ ) {
       switch (cordic_test) {
     	
@@ -4796,7 +4793,6 @@ AVRational_32 cordic(int8_t function) {
   	      break;
       }      
     }
-
     if ( function == tan_ ) {
       switch (cordic_test) {
   	
@@ -4831,26 +4827,46 @@ AVRational_32 cordic(int8_t function) {
     }
 
   }
+
+  if ( function > 0 ) {
+    temp_32_corr_a = mul( circle_to, temp_32_corr_a );
+
+    temp_cordic   = temp_32_corr_a.num;
+    temp_cordic  *= expo_10_[temp_32_corr_a.expo - 10];
+    temp_cordic  /= temp_32_corr_a.denom;
+
+    tz_cordic     = temp_cordic;
+    tz_cordic    *= d_cordic;
   
-  temp_32_corr_a = mul( circle_to, temp_32_corr_a );
+    tx_cordic     = tx_cordic << 62;
+    tx_cordic    += tx_cordic >> 1;
+    tx_cordic    += tx_cordic >> 3;
+    tx_cordic    += tx_cordic >> 6;
+  } 
   
-  temp_cordic   = temp_32_corr_a.num;
-  temp_cordic  *= expo_10_[temp_32_corr_a.expo - 10];
-  temp_cordic  /= temp_32_corr_a.denom;
-  tz_cordic     = temp_cordic;
-  tz_cordic    *= d_cordic;
-  
-  tx_cordic     = tx_cordic << 62;
-  tx_cordic    += tx_cordic >> 1;
-  tx_cordic    += tx_cordic >> 3;
-  tx_cordic    += tx_cordic >> 6;
-  x_cordic      = tx_cordic;  
- /*
+  if ( function == atan_ ) {  
+    tx_cordic  = temp_32_corr_a.num;
+    tx_cordic  = tx_cordic << 31;
+    ty_cordic  = temp_32_corr_a.denom;
+    ty_cordic  = ty_cordic << 31;
+    tz_cordic  = 0;
+    while ( temp_32_corr_a.expo < 0 ) {
+    	tx_cordic  = tx_cordic >> 4;
+    	y_cordic   = ty_cordic;
+    	ty_cordic -= y_cordic >> 2;
+    	ty_cordic -= y_cordic >> 3;    	
+      temp_32_corr_a.expo += 1;
+    }
+  }    
+
+  x_cordic  = tx_cordic;
+  y_cordic  = ty_cordic;
+
   if ( Debug_Level == 40 ) {
     itoa_(tz_cordic, display_string_itoa_);   	
     Serial.println(display_string_itoa_);    
   }
- */   
+   
   for ( uint8_t index_a = 0; index_a < 32; index_a += 1 ) {
     index_count = cordic_tab[index_tab];
     index_count = index_count >> 4;
@@ -4860,8 +4876,8 @@ AVRational_32 cordic(int8_t function) {
         cordic_add  = cordic_add << 8;
         cordic_tab_ = cordic_tab[index_tab];
         if ( index_b == 0 ) {
-          cordic_tab_= cordic_tab_ << 4;
-          cordic_tab_= cordic_tab_ >> 4;
+          cordic_tab_ = cordic_tab_ << 4;
+          cordic_tab_ = cordic_tab_ >> 4;
         }
         cordic_add += cordic_tab_;
         index_tab += 1;
@@ -4874,9 +4890,17 @@ AVRational_32 cordic(int8_t function) {
     	itoa_(test_cordic, display_string_itoa_);    	
       Serial.println(display_string_itoa_);    
     }
-   */   
-    if ( tz_cordic < 0 ) {
-    	d_cordic = 1;
+   */
+    if ( function > 0 ) {   
+      if ( tz_cordic < 0 ) {
+      	d_cordic = 1;
+      }
+    }
+    
+    if ( function < 0 ) {   
+      if ( tx_cordic > 0 ) {
+      	d_cordic = 1;
+      }
     }
 
     tx_cordic -= d_cordic * (y_cordic >> k_count);
@@ -4905,17 +4929,41 @@ AVRational_32 cordic(int8_t function) {
     d_cordic  = -1;
   }
 
-  x_cordic   = x_cordic >> 31;
-  y_cordic   = y_cordic >> 31;
+  if ( function > 0 ) {
+    x_cordic   = x_cordic >> 31;
+    y_cordic   = y_cordic >> 31;
   
-  x_cordic  *= tz_cordic;
-  y_cordic  *= tz_cordic;
+    x_cordic  *= tz_cordic;
+    y_cordic  *= tz_cordic;
    
-  tx_cordic += y_cordic >> 32;
-  ty_cordic -= x_cordic >> 32;
+    tx_cordic += y_cordic >> 32;
+    ty_cordic -= x_cordic >> 32;
 
-  temp_32_corr_a.expo  = -1; 
-  denom_temp_u64  = 920348428214616521;
+    temp_32_corr_a.expo  = -1; 
+    denom_temp_u64  = 920348428214616521;
+  }
+ 
+  if ( function < 0 ) {
+  	z_cordic             = 1;
+  	z_cordic             = z_cordic << 63;
+  	temp_cordic          = z_cordic;
+  	temp_cordic         *= abs(tx_cordic);
+  	temp_cordic         /= ty_cordic;
+  	
+  	z_cordic             = temp_cordic;
+  	
+  	if ( tx_cordic > 0 ) {
+  	  tz_cordic         += z_cordic;
+  	}
+  	else {
+      tz_cordic         -= z_cordic;		
+  	}
+ 	
+    temp_32_corr_a.expo  = 0; 
+  	num_temp_u64         = tz_cordic;  	    
+    denom_temp_u64       = 9223372036854775802;  // 45° = pi() / 4;
+  } 
+
   if ( function == sin_ ) {
     num_temp_u64    = ty_cordic;
   }
@@ -4939,7 +4987,7 @@ AVRational_32 cordic(int8_t function) {
     }
   }
 
-  if ( function == tan_ ) {
+  if ( (function == tan_) || (function == atan_) ) {
     while ( num_temp_u64 < expo_test_0a ) {
       num_temp_u64        *= 10;
       temp_32_corr_a.expo -= 1;
@@ -4950,7 +4998,7 @@ AVRational_32 cordic(int8_t function) {
       temp_32_corr_a.expo -= 1;      
     }  
   }
-
+ 
   if ( (function == sin_) || (function == cos_) ){
     while ( num_temp_u64 < 276104528464384956 ) {
       num_temp_u64        *= 10;
@@ -5008,6 +5056,15 @@ AVRational_32 cordic(int8_t function) {
       default: 
 	      break;
     }      
+  }
+
+  if ( function == atan_ ) {
+  	if ( cordic_test == -1 ) {
+  	  temp_32_corr_a = min_x( temp_32_corr_a );
+  	}
+  	if ( Rad_in_out == false ) {
+      return mul( temp_32_corr_a, to_xx[to_deg] );
+    }
   }
   
   return temp_32_corr_a;
@@ -5097,6 +5154,7 @@ AVRational_32 tan(AVRational_32 a) {
 }
 
 AVRational_32 atan(AVRational_32 a) {
+cordic_test = 0;
 
 	if ( a.num == 0 ) {
 	  return a;
@@ -5108,10 +5166,18 @@ AVRational_32 atan(AVRational_32 a) {
     }
     return temp_32_corr_a;
   }  
-  return exp2_1_3;  
+  // return exp2_1_3;  
 
-  // temp_32_corr_a = sin_cos_tan( a );
-  // return cordic( atan_ );
+  if ( a.num > 0 ) {
+    cordic_test += 1;
+  }
+  if ( a.num < 0 ) {
+    cordic_test -=  1;
+    a.num       *= -1;
+  }  	
+
+  temp_32_corr_a = clone( a );
+  return cordic( atan_ );
 }
 
 AVRational_32 tanh(AVRational_32 a) {
@@ -5607,15 +5673,6 @@ AVRational_32 log_(AVRational_32 a) {
      	}
       return temp_32_log;
     }
-    while ( ( a.num - a.denom ) < ( a.denom >> 11 ) ) {
-      if ( (count_x % 6) == 0 ) {
-        Display_wait();
-      }
-      a        = square(a);
-      denom_x *= 2;
-      count_x += 1;
-    }
-   // return a;
         
     test_temp_u64 = test_temp_u64 << 63;
     num_log_u64   = 0;
@@ -5661,8 +5718,6 @@ AVRational_32 log_(AVRational_32 a) {
         num_u64_loc    = num_temp_u32;
         denom_u64_loc  = denom_temp_u32;        
       }
-      if ( index_a == 10 ) {
-      }
       
       mul_count *= 2;
    	}
@@ -5693,6 +5748,17 @@ AVRational_32 log_(AVRational_32 a) {
       
       // return temp_32_log_a;   	
     }
+
+    while ( ( a.num - a.denom ) < ( a.denom >> 11 ) ) {
+      if ( (count_x % 6) == 0 ) {
+        Display_wait();
+      }
+      a        = square(a);
+      denom_x *= 2;
+      count_x += 1;
+    }
+    // return a;
+    
     temp_32_log_3 = div_x( add( a, exp2_0_1, 1 ));
     temp_32_log_1 = mul( add( a, min_x( exp2_0_1 ), 1 ), temp_32_log_3);
     temp_32_log_2 = mul( temp_32_log_1, temp_32_log_1 );
@@ -5704,11 +5770,11 @@ AVRational_32 log_(AVRational_32 a) {
     temp_32_log_5 = add( mul( temp_32_log_3, temp_32_log_4 ), exp2_0_1, 1);
     temp_32_log_b = mul( mul( temp_32_log_1, temp_32_log_5 ), exp2_2_1 );
 
-    if ( num_log_u64 > 0 ) {
-      temp_32_log_b = add( temp_32_log_b, temp_32_log_a, 1 );	
-    }
     if ( denom_x > 1 ) {
       temp_32_log_b = div_u32( temp_32_log_b, denom_x );
+    }
+    if ( num_log_u64 > 0 ) {
+      temp_32_log_b = add( temp_32_log_b, temp_32_log_a, 1 );	
     }
 
     if ( test_temp_8 < 0 ) {
@@ -6168,7 +6234,7 @@ void Test_all_function() {
   if ( Debug_Level == 30 ) {
     time_start = millis();
 
-    Serial.println(" ");                        // Step    4
+    Serial.println(" ");                        // Step    1
     for ( int32_t index = 300; index <= 3333; index += 1 ) {
       Serial.print(index);
       Serial.print("  ");
@@ -6934,6 +7000,60 @@ void Test_all_function() {
       Serial.print(temp_32_xxx.expo);
       Serial.println(" -> ");
  
+    }
+    test_index = false;
+    time_end = millis();
+    time_diff = time_end - time_start;
+    Serial.print("Time: ");
+    Serial.println(time_diff);
+  }
+  if ( Debug_Level == 44 ) {
+    time_start = millis();
+
+    Serial.println(" ");            // 
+    for ( uint16_t index = 1; index < 10001; index += 1 ) {
+      num_temp_u32   = index;
+      denom_temp_u32 = 10000;
+      temp_32_cbrt.expo = 0;
+      Serial.print(index);
+      Serial.print("  ");
+      if ( num_temp_u32 < 4 ) {
+      	num_temp_u32 *= 10;
+      	temp_32_cbrt.expo -= 1;
+      }
+      if ( num_temp_u32 < 31 ) {
+      	num_temp_u32 *= 10;
+      	temp_32_cbrt.expo -= 1;
+      }
+      if ( num_temp_u32 < 301 ) {
+      	num_temp_u32 *= 10;
+      	temp_32_cbrt.expo -= 1;
+      }
+      if ( num_temp_u32 < 3001 ) {
+      	num_temp_u32 *= 10;
+      	temp_32_cbrt.expo -= 1;
+      }
+      Expand_Number();
+      
+      temp_32_cbrt.num   = num_temp_u32;
+      temp_32_cbrt.denom = denom_temp_u32;
+      
+      temp_32_xxx = atan( temp_32_cbrt );
+   /*
+      Serial.print(temp_32_cbrt.num);
+      Serial.print("  ");
+      Serial.print(temp_32_cbrt.denom);
+      Serial.print("  ");
+      Serial.print(temp_32_cbrt.expo);
+      Serial.println("  ");
+   */     
+      Serial.print(temp_32_xxx.num);
+      Serial.print("  ");
+      Serial.print(temp_32_xxx.denom);
+      Serial.print("  ");
+      Serial.print(temp_32_xxx.expo);
+      Serial.println(" -> ");
+
     }
     test_index = false;
     time_end = millis();
