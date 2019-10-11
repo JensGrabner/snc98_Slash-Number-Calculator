@@ -126,6 +126,7 @@ char  display_string_itoa_[33];
                        // 42 - tan Test  0.005 .. 89.995 Step +0.005  = 18000 - 100 ms
                        // 43 - log_ Test
                        // 44 - atan Test 0.0001 .. 1.0000 Step +0.0001
+                       // 45 - atan Test 0.001  .. 10.000 Step +0.001
 
 #define sin_    1
 #define cos_    2
@@ -4851,10 +4852,12 @@ AVRational_32 cordic(int8_t function) {
     ty_cordic  = ty_cordic << 31;
     tz_cordic  = 0;
     while ( temp_32_corr_a.expo < 0 ) {
-    	tx_cordic  = tx_cordic >> 4;
+    	tx_cordic += tx_cordic >> 1; // * 1.5
+    	tx_cordic  = tx_cordic >> 4; // / 16   	
+    	ty_cordic += ty_cordic >> 1; // * 1.5
     	y_cordic   = ty_cordic;
     	ty_cordic -= y_cordic >> 2;
-    	ty_cordic -= y_cordic >> 3;    	
+    	ty_cordic -= y_cordic >> 3; // * 0.625 = / 1.6   	
       temp_32_corr_a.expo += 1;
     }
   }    
@@ -4867,7 +4870,7 @@ AVRational_32 cordic(int8_t function) {
     Serial.println(display_string_itoa_);    
   }
    
-  for ( uint8_t index_a = 0; index_a < 32; index_a += 1 ) {
+  for ( uint8_t index_a = 0; index_a < 32; index_a += 1 ) {  // 32
     index_count = cordic_tab[index_tab];
     index_count = index_count >> 4;
     cordic_add = 0;
@@ -4940,7 +4943,7 @@ AVRational_32 cordic(int8_t function) {
     ty_cordic -= x_cordic >> 32;
 
     temp_32_corr_a.expo  = -1; 
-    denom_temp_u64  = 920348428214616521;
+    denom_temp_u64  = 920348428214616521;  // 32
   }
  
   if ( function < 0 ) {
@@ -4961,7 +4964,7 @@ AVRational_32 cordic(int8_t function) {
  	
     temp_32_corr_a.expo  = 0; 
   	num_temp_u64         = tz_cordic;  	    
-    denom_temp_u64       = 9223372036854775802;  // 45° = pi() / 4;
+    denom_temp_u64       = 9223372036854775802;  // 32 - round -- 45° = pi() / 4;
   } 
 
   if ( function == sin_ ) {
@@ -5057,9 +5060,11 @@ AVRational_32 cordic(int8_t function) {
 	      break;
     }      
   }
-
   if ( function == atan_ ) {
-  	if ( cordic_test == -1 ) {
+  	if ( abs( cordic_test ) == 2 ) {
+  	  temp_32_corr_a = add( Pi_2, min_x( temp_32_corr_a ), 1 );
+  	}
+  	if ( cordic_test < 0 ) {
   	  temp_32_corr_a = min_x( temp_32_corr_a );
   	}
   	if ( Rad_in_out == false ) {
@@ -5166,15 +5171,36 @@ cordic_test = 0;
     }
     return temp_32_corr_a;
   }  
-  // return exp2_1_3;  
 
   if ( a.num > 0 ) {
-    cordic_test += 1;
+    cordic_test +=  1;
   }
   if ( a.num < 0 ) {
     cordic_test -=  1;
     a.num       *= -1;
   }  	
+  if ( a.expo == 0 ) {
+    if ( a.num > a.denom ) {
+      cordic_test *= 2;
+      a = div_x( a );      
+    }
+  }
+  if ( a.expo > 0 ) {
+    cordic_test *= 2;
+    a = div_x( a );
+     
+    if ( a.expo < -3 ) { //  input > abs( 3333.3333 ) 
+      temp_32_corr_a = add( a, min_x( mul( cubic( a ), exp2_1_3 ) ), 1 );
+      temp_32_corr_a = add( Pi_2, min_x( temp_32_corr_a ), 1 );
+      if ( cordic_test < 0 ) {
+        temp_32_corr_a = min_x( temp_32_corr_a );
+      }
+      if ( Rad_in_out == false ) {
+        return mul( temp_32_corr_a, to_xx[to_deg] );
+      }
+      return temp_32_corr_a;
+    }   
+  }
 
   temp_32_corr_a = clone( a );
   return cordic( atan_ );
@@ -7015,6 +7041,60 @@ void Test_all_function() {
       num_temp_u32   = index;
       denom_temp_u32 = 10000;
       temp_32_cbrt.expo = 0;
+      Serial.print(index);
+      Serial.print("  ");
+      if ( num_temp_u32 < 4 ) {
+      	num_temp_u32 *= 10;
+      	temp_32_cbrt.expo -= 1;
+      }
+      if ( num_temp_u32 < 31 ) {
+      	num_temp_u32 *= 10;
+      	temp_32_cbrt.expo -= 1;
+      }
+      if ( num_temp_u32 < 301 ) {
+      	num_temp_u32 *= 10;
+      	temp_32_cbrt.expo -= 1;
+      }
+      if ( num_temp_u32 < 3001 ) {
+      	num_temp_u32 *= 10;
+      	temp_32_cbrt.expo -= 1;
+      }
+      Expand_Number();
+      
+      temp_32_cbrt.num   = num_temp_u32;
+      temp_32_cbrt.denom = denom_temp_u32;
+      
+      temp_32_xxx = atan( temp_32_cbrt );
+   /*
+      Serial.print(temp_32_cbrt.num);
+      Serial.print("  ");
+      Serial.print(temp_32_cbrt.denom);
+      Serial.print("  ");
+      Serial.print(temp_32_cbrt.expo);
+      Serial.println("  ");
+   */     
+      Serial.print(temp_32_xxx.num);
+      Serial.print("  ");
+      Serial.print(temp_32_xxx.denom);
+      Serial.print("  ");
+      Serial.print(temp_32_xxx.expo);
+      Serial.println(" -> ");
+
+    }
+    test_index = false;
+    time_end = millis();
+    time_diff = time_end - time_start;
+    Serial.print("Time: ");
+    Serial.println(time_diff);
+  }
+  if ( Debug_Level == 45 ) {
+    time_start = millis();
+
+    Serial.println(" ");            // 
+    for ( uint16_t index = 1; index < 10001; index += 1 ) {
+      num_temp_u32   = index;
+      denom_temp_u32 = 10000;
+      temp_32_cbrt.expo = 1;
       Serial.print(index);
       Serial.print("  ");
       if ( num_temp_u32 < 4 ) {
