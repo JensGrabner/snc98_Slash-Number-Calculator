@@ -4954,14 +4954,8 @@ AVRational_32 cordic(int8_t function) {
   	temp_cordic         /= ty_cordic;
   	
   	z_cordic             = temp_cordic;
-  	
-  	if ( tx_cordic > 0 ) {
-  	  tz_cordic         += z_cordic;
-  	}
-  	else {
-      tz_cordic         -= z_cordic;		
-  	}
- 	
+    tz_cordic           += z_cordic;
+
     temp_32_corr_a.expo  = 0; 
   	num_temp_u64         = tz_cordic;  	    
     denom_temp_u64       = 9223372036854775802;  // 32 - round -- 45° = pi() / 4;
