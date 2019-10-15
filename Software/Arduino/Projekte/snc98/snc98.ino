@@ -4950,7 +4950,7 @@ AVRational_32 cordic(int8_t function) {
   	z_cordic             = 1;
   	z_cordic             = z_cordic << 63;
   	temp_cordic          = z_cordic;
-  	temp_cordic         *= abs(tx_cordic);
+    temp_cordic         *= tx_cordic;
   	temp_cordic         /= ty_cordic;
   	
   	z_cordic             = temp_cordic;

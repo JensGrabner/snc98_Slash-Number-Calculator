@@ -103,8 +103,8 @@ int96_a::int96_a(const uint64_t& value) {
 
 int96_a::int96_a(int8_t value) {
   if ( value < 0)
-  {
-    *this = int96_a((uint8_t)-value);
+  {  
+    *this = int96_a(0xFF-value);
     TwosComplement();
   }
   else
@@ -118,7 +118,7 @@ int96_a::int96_a(int8_t value) {
 int96_a::int96_a(int16_t value) {
   if ( value < 0)
   {
-    *this = int96_a((uint16_t)-value);
+    *this = int96_a(0xFFFF-value);
     TwosComplement();
   }
   else
@@ -132,7 +132,7 @@ int96_a::int96_a(int16_t value) {
 int96_a::int96_a(int32_t value) {
   if ( value < 0)
   {
-    *this = int96_a((uint32_t )-value);
+    *this = int96_a(0xFFFFFFFF-value);
     TwosComplement();
   }
   else
@@ -146,7 +146,7 @@ int96_a::int96_a(int32_t value) {
 int96_a::int96_a(const int64_t& value) {
   if ( value < 0)
   {
-    *this = int96_a((uint64_t)-value);
+    *this = int96_a(0xFFFFFFFFFFFFFFFF-value);
     TwosComplement();
   }
   else
