@@ -56,11 +56,11 @@ public:
   int96_a(uint8_t value);
   int96_a(uint16_t value);
   int96_a(uint32_t value);
-  int96_a(const uint64_t& value);
+  int96_a(uint64_t value);
   int96_a(int8_t value);
   int96_a(int16_t value);
   int96_a(int32_t value);
-  int96_a(const int64_t& value);
+  int96_a(int64_t value);
   int96_a(const int96_a& value);
 
 //assignment operator

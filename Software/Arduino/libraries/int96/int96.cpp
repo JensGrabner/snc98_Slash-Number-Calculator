@@ -95,7 +95,7 @@ int96_a::int96_a(uint32_t value) {
   lo  = value;
 }
 
-int96_a::int96_a(const uint64_t& value) {
+int96_a::int96_a(uint64_t value) {
   hi  = 0;
   mid = value >> 32;
   lo  = value;
@@ -104,7 +104,7 @@ int96_a::int96_a(const uint64_t& value) {
 int96_a::int96_a(int8_t value) {
   if ( value < 0)
   {  
-    *this = int96_a(0xFF-value);
+    *this = int96_a(uint8_t(0)-value);
     TwosComplement();
   }
   else
@@ -118,7 +118,7 @@ int96_a::int96_a(int8_t value) {
 int96_a::int96_a(int16_t value) {
   if ( value < 0)
   {
-    *this = int96_a(0xFFFF-value);
+    *this = int96_a(uint16_t(0)-value);
     TwosComplement();
   }
   else
@@ -132,7 +132,7 @@ int96_a::int96_a(int16_t value) {
 int96_a::int96_a(int32_t value) {
   if ( value < 0)
   {
-    *this = int96_a(0xFFFFFFFF-value);
+    *this = int96_a(uint32_t(0)-value);
     TwosComplement();
   }
   else
@@ -143,10 +143,10 @@ int96_a::int96_a(int32_t value) {
   }
 }
 
-int96_a::int96_a(const int64_t& value) {
+int96_a::int96_a(int64_t value) {
   if ( value < 0)
   {
-    *this = int96_a(0xFFFFFFFFFFFFFFFF-value);
+    *this = int96_a(uint64_t(0)-value);
     TwosComplement();
   }
   else
@@ -785,13 +785,13 @@ int96_a::operator int32_t() {
   if ( IsNegative())
   {
     int96_a t(*this);
-    t.Negate();
-    return -t;
+    t.InverseTwosComplement();
+    return -int32_t(t);
   }
   else
   {
     ASSERT(mid == 0 && hi  == 0 && ((lo  & 0x80000000) == 0));
-    return (int) lo;
+    return (int32_t) lo;
   }
 }
 
@@ -805,8 +805,8 @@ int96_a::operator int64_t() {
   if ( IsNegative())
   {
     int96_a t(*this);
-    t.Negate();
-    return -t;
+    t.InverseTwosComplement();
+    return -int64_t(t);
   }
   else
   {

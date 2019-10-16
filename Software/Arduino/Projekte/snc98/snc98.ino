@@ -4864,12 +4864,12 @@ AVRational_32 cordic(int8_t function) {
 
   x_cordic  = tx_cordic;
   y_cordic  = ty_cordic;
-
+ /*
   if ( Debug_Level == 40 ) {
     itoa_(tz_cordic, display_string_itoa_);   	
     Serial.println(display_string_itoa_);    
   }
-   
+ */ 
   for ( uint8_t index_a = 0; index_a < 32; index_a += 1 ) {  // 32
     index_count = cordic_tab[index_tab];
     index_count = index_count >> 4;
@@ -4949,13 +4949,24 @@ AVRational_32 cordic(int8_t function) {
   if ( function < 0 ) {
   	z_cordic             = 1;
   	z_cordic             = z_cordic << 63;
-  	temp_cordic          = z_cordic;
-    temp_cordic         *= tx_cordic;
+    temp_cordic          = tx_cordic;
+   	temp_cordic         *= z_cordic;
   	temp_cordic         /= ty_cordic;
-  	
-  	z_cordic             = temp_cordic;
-    tz_cordic           += z_cordic;
-
+   /*
+    if ( Debug_Level == 40 ) {
+      Serial.print("temp_cordic = ");  
+      itoa_(temp_cordic, display_string_itoa_);   	
+      Serial.println(display_string_itoa_);    
+    }
+   */ 
+  	tz_cordic           -= int64_t(temp_cordic);
+   /*
+    if ( Debug_Level == 40 ) {
+      Serial.print("z_cordic = ");  
+      itoa_(z_cordic, display_string_itoa_);   	
+      Serial.println(display_string_itoa_);    
+    }
+   */
     temp_32_corr_a.expo  = 0; 
   	num_temp_u64         = tz_cordic;  	    
     denom_temp_u64       = 9223372036854775802;  // 32 - round -- 45° = pi() / 4;
@@ -5006,7 +5017,7 @@ AVRational_32 cordic(int8_t function) {
       temp_32_corr_a.expo += 1;
     }
   }
-  
+ /*
   if ( Debug_Level == 40 ) {
     Serial.print("63 0 xx ");
       
@@ -5017,7 +5028,7 @@ AVRational_32 cordic(int8_t function) {
     itoa_(denom_temp_u64, display_string_itoa_);
     Serial.println(display_string_itoa_); 
   }
-   
+ */  
   Reduce_Number();
 
   temp_32_corr_a.num   = num_temp_u32;
@@ -11074,8 +11085,6 @@ uint16_t temp_pwm = test_pwm;
       index_TIME = 255;
       break;
   }
-
-  // index_Display_old = index_Display;
 
   if ( index_Switch % 5 == 0 ) {   // Segmente ausschalten --> Segment "a - f - point"
     for ( Digit = Digit_Count - 1; Digit >= 0; Digit -= 1) {
