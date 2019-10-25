@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="yes"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="50" unitdist="mil" unit="mil" style="lines" multiple="1" display="yes" altdistance="0.05" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.05" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -37361,173 +37361,21 @@ With round pins</description>
 </library>
 <library name="SmartPrj">
 <packages>
-<package name="KSA_SEALED_TAC_SWITCH">
-<pad name="P$1" x="-3.81" y="2.54" drill="1" shape="square"/>
-<pad name="P$2" x="3.81" y="2.54" drill="1" shape="square"/>
-<pad name="P$3" x="-3.81" y="-2.54" drill="1" shape="square"/>
-<pad name="P$4" x="3.81" y="-2.54" drill="1" shape="square"/>
-<wire x1="0" y1="1.27" x2="0" y2="-1.27" width="0.127" layer="21"/>
-<wire x1="-1.27" y1="0" x2="1.27" y2="0" width="0.127" layer="21"/>
-<wire x1="-5.08" y1="3.81" x2="5.08" y2="3.81" width="0.127" layer="21"/>
-<wire x1="5.08" y1="3.81" x2="5.08" y2="-3.81" width="0.127" layer="21"/>
-<wire x1="5.08" y1="-3.81" x2="-5.08" y2="-3.81" width="0.127" layer="21"/>
-<wire x1="-5.08" y1="-3.81" x2="-5.08" y2="3.81" width="0.127" layer="21"/>
-</package>
-<package name="TACTILE-PTH">
-<description>&lt;b&gt;OMRON SWITCH&lt;/b&gt;</description>
-<circle x="0" y="0" radius="1.778" width="0.2032" layer="21"/>
-<pad name="1" x="-3.2512" y="2.2606" drill="1.016" diameter="1.8796"/>
-<pad name="2" x="3.2512" y="2.2606" drill="1.016" diameter="1.8796"/>
-<pad name="3" x="-3.2512" y="-2.2606" drill="1.016" diameter="1.8796"/>
-<pad name="4" x="3.2512" y="-2.2606" drill="1.016" diameter="1.8796"/>
-<text x="-2.54" y="3.81" size="1.27" layer="25" ratio="10">&gt;NAME</text>
-<circle x="0" y="0" radius="1.778" width="0.2032" layer="21"/>
-<wire x1="3.048" y1="1.016" x2="3.048" y2="2.54" width="0.2032" layer="51"/>
-<wire x1="3.048" y1="2.54" x2="2.54" y2="3.048" width="0.2032" layer="51"/>
-<wire x1="2.54" y1="-3.048" x2="3.048" y2="-2.54" width="0.2032" layer="51"/>
-<wire x1="3.048" y1="-2.54" x2="3.048" y2="-1.016" width="0.2032" layer="51"/>
-<wire x1="-2.54" y1="3.048" x2="-3.048" y2="2.54" width="0.2032" layer="51"/>
-<wire x1="-3.048" y1="2.54" x2="-3.048" y2="1.016" width="0.2032" layer="51"/>
-<wire x1="-2.54" y1="-3.048" x2="-3.048" y2="-2.54" width="0.2032" layer="51"/>
-<wire x1="-3.048" y1="-2.54" x2="-3.048" y2="-1.016" width="0.2032" layer="51"/>
-<wire x1="2.54" y1="-3.048" x2="2.159" y2="-3.048" width="0.2032" layer="51"/>
-<wire x1="-2.54" y1="-3.048" x2="-2.159" y2="-3.048" width="0.2032" layer="51"/>
-<wire x1="-2.54" y1="3.048" x2="-2.159" y2="3.048" width="0.2032" layer="51"/>
-<wire x1="2.54" y1="3.048" x2="2.159" y2="3.048" width="0.2032" layer="51"/>
-<wire x1="2.159" y1="3.048" x2="-2.159" y2="3.048" width="0.2032" layer="21"/>
-<wire x1="-2.159" y1="-3.048" x2="2.159" y2="-3.048" width="0.2032" layer="21"/>
-<wire x1="3.048" y1="0.998" x2="3.048" y2="-1.016" width="0.2032" layer="21"/>
-<wire x1="-3.048" y1="1.028" x2="-3.048" y2="-1.016" width="0.2032" layer="21"/>
-<wire x1="-2.54" y1="1.27" x2="-2.54" y2="0.508" width="0.2032" layer="51"/>
-<wire x1="-2.54" y1="-0.508" x2="-2.54" y2="-1.27" width="0.2032" layer="51"/>
-<wire x1="-2.54" y1="0.508" x2="-2.159" y2="-0.381" width="0.2032" layer="51"/>
-<text x="-2.54" y="3.81" size="1.27" layer="25" ratio="10">&gt;NAME</text>
-</package>
-<package name="TACTILE_SWITCH_SMD">
-<circle x="0" y="0" radius="1.27" width="0.2032" layer="21"/>
-<smd name="1" x="-2.54" y="1.905" dx="0.762" dy="1.524" layer="1" rot="R90"/>
-<smd name="2" x="2.54" y="1.905" dx="0.762" dy="1.524" layer="1" rot="R90"/>
-<smd name="3" x="-2.54" y="-1.905" dx="0.762" dy="1.524" layer="1" rot="R90"/>
-<smd name="4" x="2.54" y="-1.905" dx="0.762" dy="1.524" layer="1" rot="R90"/>
-<text x="-0.889" y="1.778" size="0.4064" layer="25">&gt;NAME</text>
-<text x="-0.889" y="-2.032" size="0.4064" layer="27">&gt;Value</text>
-<circle x="0" y="0" radius="1.27" width="0.2032" layer="21"/>
-<wire x1="-1.54" y1="-2.54" x2="-2.54" y2="-1.54" width="0.2032" layer="51"/>
-<wire x1="-2.54" y1="-1.24" x2="-2.54" y2="1.27" width="0.2032" layer="21"/>
-<wire x1="-2.54" y1="1.54" x2="-1.54" y2="2.54" width="0.2032" layer="51"/>
-<wire x1="-1.54" y1="2.54" x2="1.54" y2="2.54" width="0.2032" layer="21"/>
-<wire x1="1.54" y1="2.54" x2="2.54" y2="1.54" width="0.2032" layer="51"/>
-<wire x1="2.54" y1="1.24" x2="2.54" y2="-1.24" width="0.2032" layer="21"/>
-<wire x1="2.54" y1="-1.54" x2="1.54" y2="-2.54" width="0.2032" layer="51"/>
-<wire x1="1.54" y1="-2.54" x2="-1.54" y2="-2.54" width="0.2032" layer="21"/>
-<wire x1="1.905" y1="1.27" x2="1.905" y2="0.445" width="0.127" layer="51"/>
-<wire x1="1.905" y1="0.445" x2="2.16" y2="-0.01" width="0.127" layer="51"/>
-<wire x1="1.905" y1="-0.23" x2="1.905" y2="-1.115" width="0.127" layer="51"/>
-<text x="-0.889" y="1.778" size="0.4064" layer="25">&gt;NAME</text>
-<text x="-0.889" y="-2.032" size="0.4064" layer="27">&gt;Value</text>
-</package>
-<package name="TACTILE_SWITCH_SMD-2">
-<circle x="0" y="0" radius="1.27" width="0.2032" layer="21"/>
-<smd name="1" x="2.225" y="1.75" dx="1.1" dy="0.7" layer="1" rot="R90"/>
-<smd name="2" x="2.225" y="-1.75" dx="1.1" dy="0.7" layer="1" rot="R90"/>
-<smd name="3" x="-2.225" y="-1.75" dx="1.1" dy="0.7" layer="1" rot="R90"/>
-<smd name="4" x="-2.225" y="1.75" dx="1.1" dy="0.7" layer="1" rot="R90"/>
-<text x="-0.889" y="1.778" size="0.4064" layer="25">&gt;NAME</text>
-<text x="-0.889" y="-2.032" size="0.4064" layer="27">&gt;Value</text>
-<circle x="0" y="0" radius="1.27" width="0.2032" layer="21"/>
-<wire x1="1.905" y1="1.27" x2="1.905" y2="0.445" width="0.127" layer="51"/>
-<wire x1="1.905" y1="0.445" x2="2.16" y2="-0.01" width="0.127" layer="51"/>
-<wire x1="1.905" y1="-0.23" x2="1.905" y2="-1.115" width="0.127" layer="51"/>
-<wire x1="-2.25" y1="2.25" x2="2.25" y2="2.25" width="0.127" layer="51"/>
-<wire x1="2.25" y1="2.25" x2="2.25" y2="-2.25" width="0.127" layer="51"/>
-<wire x1="2.25" y1="-2.25" x2="-2.25" y2="-2.25" width="0.127" layer="51"/>
-<wire x1="-2.25" y1="-2.25" x2="-2.25" y2="2.25" width="0.127" layer="51"/>
-<wire x1="-2.2" y1="0.8" x2="-2.2" y2="-0.8" width="0.2032" layer="21"/>
-<wire x1="1.3" y1="2.2" x2="-1.3" y2="2.2" width="0.2032" layer="21"/>
-<wire x1="2.2" y1="-0.8" x2="2.2" y2="0.8" width="0.2032" layer="21"/>
-<wire x1="-1.3" y1="-2.2" x2="1.3" y2="-2.2" width="0.2032" layer="21"/>
-<wire x1="2.2" y1="0.8" x2="1.8" y2="0.8" width="0.2032" layer="21"/>
-<wire x1="2.2" y1="-0.8" x2="1.8" y2="-0.8" width="0.2032" layer="21"/>
-<wire x1="-1.8" y1="0.8" x2="-2.2" y2="0.8" width="0.2032" layer="21"/>
-<wire x1="-1.8" y1="-0.8" x2="-2.2" y2="-0.8" width="0.2032" layer="21"/>
-<text x="-0.889" y="1.778" size="0.4064" layer="25">&gt;NAME</text>
-<text x="-0.889" y="-2.032" size="0.4064" layer="27">&gt;Value</text>
-</package>
-<package name="TACTILE-SMD-12MM">
-<circle x="0" y="0" radius="3.35" width="0.3048" layer="51"/>
-<circle x="-4.5" y="4.5" radius="0.3" width="0.7" layer="51"/>
-<circle x="4.5" y="4.5" radius="0.3" width="0.7" layer="51"/>
-<circle x="4.5" y="-4.5" radius="0.3" width="0.7" layer="51"/>
-<circle x="-4.5" y="-4.5" radius="0.3" width="0.7" layer="51"/>
-<wire x1="-6" y1="5" x2="-5" y2="6" width="0.2032" layer="51" curve="-90"/>
-<wire x1="5" y1="6" x2="6" y2="5" width="0.2032" layer="51" curve="-90"/>
-<wire x1="6" y1="-5" x2="5" y2="-6" width="0.2032" layer="51" curve="-90"/>
-<wire x1="-5" y1="-6" x2="-6" y2="-5" width="0.2032" layer="51" curve="-90"/>
-<smd name="P$1" x="7.1" y="-2.5" dx="2.3" dy="2.4" layer="1"/>
-<smd name="P$2" x="-7.1" y="-2.5" dx="2.3" dy="2.4" layer="1"/>
-<smd name="P$3" x="7.1" y="2.5" dx="2.3" dy="2.4" layer="1"/>
-<smd name="P$4" x="-7.1" y="2.5" dx="2.3" dy="2.4" layer="1"/>
-<text x="-3.2" y="7" size="1.27" layer="25">&gt;NAME</text>
-<text x="-3" y="-8.1" size="1.27" layer="27">&gt;VALUE</text>
-<hole x="0" y="4.5" drill="1.8"/>
-<hole x="0" y="-4.5" drill="1.8"/>
-<circle x="0" y="0" radius="3.35" width="0.3048" layer="51"/>
-<circle x="-4.5" y="4.5" radius="0.3" width="0.7" layer="51"/>
-<circle x="4.5" y="4.5" radius="0.3" width="0.7" layer="51"/>
-<circle x="4.5" y="-4.5" radius="0.3" width="0.7" layer="51"/>
-<circle x="-4.5" y="-4.5" radius="0.3" width="0.7" layer="51"/>
-<wire x1="5" y1="-1.3" x2="5" y2="-0.7" width="0.2032" layer="51"/>
-<wire x1="5" y1="-0.7" x2="4.5" y2="-0.2" width="0.2032" layer="51"/>
-<wire x1="5" y1="0.2" x2="5" y2="1" width="0.2032" layer="51"/>
-<wire x1="-6" y1="4" x2="-6" y2="5" width="0.2032" layer="51"/>
-<wire x1="-5" y1="6" x2="5" y2="6" width="0.2032" layer="51"/>
-<wire x1="6" y1="5" x2="6" y2="4" width="0.2032" layer="51"/>
-<wire x1="6" y1="1" x2="6" y2="-1" width="0.2032" layer="51"/>
-<wire x1="6" y1="-4" x2="6" y2="-5" width="0.2032" layer="51"/>
-<wire x1="5" y1="-6" x2="-5" y2="-6" width="0.2032" layer="51"/>
-<wire x1="-6" y1="-5" x2="-6" y2="-4" width="0.2032" layer="51"/>
-<wire x1="-6" y1="-1" x2="-6" y2="1" width="0.2032" layer="51"/>
-<wire x1="-6" y1="5" x2="-5" y2="6" width="0.2032" layer="51" curve="-90"/>
-<wire x1="5" y1="6" x2="6" y2="5" width="0.2032" layer="51" curve="-90"/>
-<wire x1="6" y1="-5" x2="5" y2="-6" width="0.2032" layer="51" curve="-90"/>
-<wire x1="-5" y1="-6" x2="-6" y2="-5" width="0.2032" layer="51" curve="-90"/>
-<text x="-3.2" y="7" size="1.27" layer="25">&gt;NAME</text>
-<text x="-3" y="-8.1" size="1.27" layer="27">&gt;VALUE</text>
-<hole x="0" y="4.5" drill="1.8"/>
-<hole x="0" y="-4.5" drill="1.8"/>
-</package>
 <package name="TACTILE-PTH-12MM">
 <circle x="0" y="0" radius="3.35" width="0.3048" layer="51"/>
 <circle x="-4.5" y="4.5" radius="0.3" width="0.7" layer="51"/>
 <circle x="4.5" y="4.5" radius="0.3" width="0.7" layer="51"/>
 <circle x="4.5" y="-4.5" radius="0.3" width="0.7" layer="51"/>
 <circle x="-4.5" y="-4.5" radius="0.3" width="0.7" layer="51"/>
-<wire x1="-6" y1="5" x2="-5" y2="6" width="0.2032" layer="51" curve="-90"/>
-<wire x1="5" y1="6" x2="6" y2="5" width="0.2032" layer="51" curve="-90"/>
-<wire x1="6" y1="-5" x2="5" y2="-6" width="0.2032" layer="51" curve="-90"/>
-<wire x1="-5" y1="-6" x2="-6" y2="-5" width="0.2032" layer="51" curve="-90"/>
-<smd name="P$1" x="7.1" y="-2.5" dx="2.3" dy="2.4" layer="1" roundness="20"/>
-<smd name="P$2" x="-7.1" y="-2.5" dx="2.3" dy="2.4" layer="1" roundness="20"/>
-<smd name="P$3" x="7.1" y="2.5" dx="2.3" dy="2.4" layer="1" roundness="20"/>
-<smd name="P$4" x="-7.1" y="2.5" dx="2.3" dy="2.4" layer="1" roundness="20"/>
-<text x="-3.2" y="7" size="1.27" layer="25">&gt;NAME</text>
-<text x="-3" y="-8.1" size="1.27" layer="27">&gt;VALUE</text>
-<hole x="0" y="4.5" drill="1.6"/>
-<hole x="0" y="-4.5" drill="1.6"/>
-<pad name="P$14" x="-6.25" y="2.5" drill="1.2" shape="long" rot="R90"/>
-<pad name="P$12" x="-6.25" y="-2.5" drill="1.2" shape="long" rot="R90"/>
-<pad name="P$13" x="6.25" y="2.5" drill="1.2" shape="long" rot="R90"/>
-<pad name="P$11" x="6.25" y="-2.5" drill="1.2" shape="long" rot="R90"/>
-<pad name="P$15" x="0" y="-6.9" drill="1" shape="long"/>
-<pad name="P$24" x="-2.5" y="2.5" drill="1" shape="long" rot="R90"/>
-<pad name="P$22" x="-2.5" y="-2.5" drill="1" shape="long" rot="R90"/>
-<pad name="P$23" x="2.5" y="2.5" drill="1" shape="long" rot="R90"/>
-<pad name="P$21" x="2.5" y="-2.5" drill="1" shape="long" rot="R90"/>
 <circle x="0" y="0" radius="3.35" width="0.3048" layer="51"/>
 <circle x="-4.5" y="4.5" radius="0.3" width="0.7" layer="51"/>
 <circle x="4.5" y="4.5" radius="0.3" width="0.7" layer="51"/>
 <circle x="4.5" y="-4.5" radius="0.3" width="0.7" layer="51"/>
 <circle x="-4.5" y="-4.5" radius="0.3" width="0.7" layer="51"/>
+<wire x1="-6" y1="5" x2="-5" y2="6" width="0.2032" layer="51" curve="-90"/>
+<wire x1="5" y1="6" x2="6" y2="5" width="0.2032" layer="51" curve="-90"/>
+<wire x1="6" y1="-5" x2="5" y2="-6" width="0.2032" layer="51" curve="-90"/>
+<wire x1="-5" y1="-6" x2="-6" y2="-5" width="0.2032" layer="51" curve="-90"/>
 <wire x1="5" y1="-1.3" x2="5" y2="-0.7" width="0.2032" layer="51"/>
 <wire x1="5" y1="-0.7" x2="4.5" y2="-0.2" width="0.2032" layer="51"/>
 <wire x1="5" y1="0.2" x2="5" y2="1" width="0.2032" layer="51"/>
@@ -37543,27 +37391,34 @@ With round pins</description>
 <wire x1="5" y1="6" x2="6" y2="5" width="0.2032" layer="51" curve="-90"/>
 <wire x1="6" y1="-5" x2="5" y2="-6" width="0.2032" layer="51" curve="-90"/>
 <wire x1="-5" y1="-6" x2="-6" y2="-5" width="0.2032" layer="51" curve="-90"/>
+<wire x1="-2.19" y1="-1" x2="-2.19" y2="1" width="0.2032" layer="51"/>
+<smd name="P$1" x="7.1" y="-2.5" dx="2.3" dy="2.4" layer="1" roundness="20"/>
+<smd name="P$2" x="-7.1" y="-2.5" dx="2.3" dy="2.4" layer="1" roundness="20"/>
+<smd name="P$3" x="7.1" y="2.5" dx="2.3" dy="2.4" layer="1" roundness="20"/>
+<smd name="P$4" x="-7.1" y="2.5" dx="2.3" dy="2.4" layer="1" roundness="20"/>
+<pad name="P$11" x="6.25" y="-2.5" drill="1.2" shape="long" rot="R90"/>
+<pad name="P$12" x="-6.25" y="-2.5" drill="1.2" shape="long" rot="R90"/>
+<pad name="P$13" x="6.25" y="2.5" drill="1.2" shape="long" rot="R90"/>
+<pad name="P$14" x="-6.25" y="2.5" drill="1.2" shape="long" rot="R90"/>
+<pad name="P$15" x="0" y="-6.9" drill="1" shape="long"/>
+<pad name="P$21" x="3.2512" y="-2.2479" drill="1" shape="long" rot="R90"/>
+<pad name="P$22" x="-3.2512" y="-2.2479" drill="1" shape="long" rot="R90"/>
+<pad name="P$23" x="3.2512" y="2.2479" drill="1" shape="long" rot="R90"/>
+<pad name="P$24" x="-3.2512" y="2.2479" drill="1" shape="long" rot="R90"/>
+<text x="-3.2" y="7" size="1.27" layer="25">&gt;NAME</text>
+<text x="-3" y="-8.1" size="1.27" layer="27">&gt;VALUE</text>
 <text x="-3.2" y="7" size="1.27" layer="25">&gt;NAME</text>
 <text x="-3" y="-8.1" size="1.27" layer="27">&gt;VALUE</text>
 <hole x="0" y="4.5" drill="1.6"/>
 <hole x="0" y="-4.5" drill="1.6"/>
-<wire x1="-2.19" y1="-1" x2="-2.19" y2="1" width="0.2032" layer="51"/>
+<hole x="0" y="4.5" drill="1.6"/>
+<hole x="0" y="-4.5" drill="1.6"/>
 </package>
 </packages>
 <symbols>
 <symbol name="SWITCH-MOMENTARY">
 <circle x="-2.54" y="0" radius="0.127" width="0.4064" layer="94"/>
 <circle x="2.54" y="0" radius="0.127" width="0.4064" layer="94"/>
-<pin name="1" x="-5.08" y="0" visible="off" length="short" direction="pas" swaplevel="2"/>
-<pin name="2" x="-5.08" y="-2.54" visible="off" length="short" direction="pas" swaplevel="2"/>
-<pin name="3" x="5.08" y="0" visible="off" length="short" direction="pas" swaplevel="1" rot="R180"/>
-<pin name="4" x="5.08" y="-2.54" visible="off" length="short" direction="pas" swaplevel="1" rot="R180"/>
-<text x="-3.81" y="-6.35" size="1.778" layer="96">&gt;VALUE</text>
-<text x="-5.08" y="1.27" size="1.27" layer="104">1</text>
-<text x="-5.08" y="-2.54" size="1.27" layer="104">2</text>
-<text x="5.08" y="-2.54" size="1.27" layer="104">4</text>
-<text x="5.08" y="1.27" size="1.27" layer="104">3</text>
-<pin name="5" x="-5.08" y="5.08" visible="off" length="short" direction="pas" swaplevel="1"/>
 <circle x="-2.54" y="0" radius="0.127" width="0.4064" layer="94"/>
 <circle x="2.54" y="0" radius="0.127" width="0.4064" layer="94"/>
 <wire x1="1.905" y1="0" x2="2.54" y2="0" width="0.254" layer="94"/>
@@ -37577,6 +37432,16 @@ With round pins</description>
 <wire x1="2.54" y1="-2.54" x2="2.54" y2="0" width="0.1524" layer="94"/>
 <wire x1="-2.54" y1="-2.54" x2="-2.54" y2="0" width="0.1524" layer="94"/>
 <wire x1="-2.54" y1="0" x2="1.905" y2="1.27" width="0.254" layer="94"/>
+<pin name="1" x="-5.08" y="0" visible="off" length="short" direction="pas" swaplevel="2"/>
+<pin name="2" x="-5.08" y="-2.54" visible="off" length="short" direction="pas" swaplevel="2"/>
+<pin name="3" x="5.08" y="0" visible="off" length="short" direction="pas" swaplevel="1" rot="R180"/>
+<pin name="4" x="5.08" y="-2.54" visible="off" length="short" direction="pas" swaplevel="1" rot="R180"/>
+<pin name="5" x="-5.08" y="5.08" visible="off" length="short" direction="pas" swaplevel="1"/>
+<text x="-3.81" y="-6.35" size="1.778" layer="96">&gt;VALUE</text>
+<text x="-5.08" y="1.27" size="1.27" layer="104">1</text>
+<text x="-5.08" y="-2.54" size="1.27" layer="104">2</text>
+<text x="5.08" y="-2.54" size="1.27" layer="104">4</text>
+<text x="5.08" y="1.27" size="1.27" layer="104">3</text>
 <text x="-1.27" y="6.35" size="1.778" layer="95">B3F</text>
 <text x="-3.81" y="-6.35" size="1.778" layer="96">&gt;VALUE</text>
 <text x="-5.08" y="1.27" size="1.27" layer="104">1</text>
@@ -37594,61 +37459,6 @@ Button commonly used for reset or general input.</description>
 <gate name="S" symbol="SWITCH-MOMENTARY" x="0" y="0"/>
 </gates>
 <devices>
-<device name="KSA_SEALED" package="KSA_SEALED_TAC_SWITCH">
-<connects>
-<connect gate="S" pin="1" pad="P$1"/>
-<connect gate="S" pin="2" pad="P$2"/>
-<connect gate="S" pin="3" pad="P$3"/>
-<connect gate="S" pin="4" pad="P$4"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-<device name="PTH" package="TACTILE-PTH">
-<connects>
-<connect gate="S" pin="1" pad="1"/>
-<connect gate="S" pin="2" pad="2"/>
-<connect gate="S" pin="3" pad="3"/>
-<connect gate="S" pin="4" pad="4"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-<device name="SMD" package="TACTILE_SWITCH_SMD">
-<connects>
-<connect gate="S" pin="1" pad="1"/>
-<connect gate="S" pin="2" pad="2"/>
-<connect gate="S" pin="3" pad="3"/>
-<connect gate="S" pin="4" pad="4"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-<device name="TACTILE_SWITCH-SMD" package="TACTILE_SWITCH_SMD-2">
-<connects>
-<connect gate="S" pin="1" pad="1"/>
-<connect gate="S" pin="2" pad="2"/>
-<connect gate="S" pin="3" pad="3"/>
-<connect gate="S" pin="4" pad="4"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
-<device name="TACTILE_SWITCH_SMD-12MM" package="TACTILE-SMD-12MM">
-<connects>
-<connect gate="S" pin="1" pad="P$1"/>
-<connect gate="S" pin="2" pad="P$2"/>
-<connect gate="S" pin="3" pad="P$3"/>
-<connect gate="S" pin="4" pad="P$4"/>
-</connects>
-<technologies>
-<technology name=""/>
-</technologies>
-</device>
 <device name="TACTILE_SWITCH_PTH-12MM" package="TACTILE-PTH-12MM">
 <connects>
 <connect gate="S" pin="1" pad="P$1 P$11 P$21"/>
@@ -37658,7 +37468,9 @@ Button commonly used for reset or general input.</description>
 <connect gate="S" pin="5" pad="P$15"/>
 </connects>
 <technologies>
-<technology name=""/>
+<technology name="">
+<attribute name="TME_EU" value="B3F-4050" constant="no"/>
+</technology>
 </technologies>
 </device>
 </devices>
