@@ -19,13 +19,13 @@
 "4";"IRLML2244";"IRLML6402";"SOT-23";"M1, M2, M3, M12";"";"INFINEON";"IRLML2244TRPBF";"2468051";"";"";"";"";"DMG2305UX-7";
 "10";"SD103CW";"DIODESOD-123";"SOD-123";"D2, D3, D4, D5, D7, D8, D9, D10, D11, D12";"";"MULTICOMP";"SD103CW-7-F";"2306221";"";"";"";"";"SD103AW-DIO";
 "1";"HT7333 / TS9011SCY ";"HT7333";"SOT89";"U$3";"";"";"";"unknown";"";"";"";"";"TS9011SCY";
-"6";"1µ";"C-EUC1206K";"C1206K";"C4, C9, C14, C15, C17, C19";"CAPACITOR, European ";"";"";"unknown";"";"";"";"";"GRM31MR71C105KA";
+"7";"1µ";"C-EUC1206K";"C1206K";"C3, C4, C9, C14, C15, C17, C19";"CAPACITOR, European ";"";"";"unknown";"";"";"";"";"GRM31MR71C105KA";
 "1";"74HC4051_MUX";"74HC4051_MUX";"SO16";"U1";"8:1 analog mux";"";"";"unknown";"";"";"";"";"4HC4051D.652";
 "9";"6k8";"R-EU_R1206";"R1206";"R3, R7, R21, R22, R23, R27, R33, R34, R50";"RESISTOR, European s";"";"";"unknown";"";"";"";"";"RC0805FR-076K8";
 "3";"3k3";"R-EU_R1206";"R1206";"R35, R48, R51";"RESISTOR, European s";"";"";"unknown";"";"";"";"";"RC0805FR-073K3";
 "1";"1n";"CAP0805";"0805";"C11";"Capacitor";"";"";"unknown";"";"";"";"";"CC0805KPX7R7224";
 "3";"15n";"C-EUC1206K";"C1206K";"C6, C10, C22";"CAPACITOR, European ";"";"";"unknown";"";"";"";"";"CC0805KRX7R9153";
-"5";"220nF";"CAP0805";"0805";"C2, C3, C12, C16, C18";"Capacitor";"";"";"unknown";"";"";"";"";"CC0805KPX7R7224";
+"4";"220nF";"CAP0805";"0805";"C2, C12, C16, C18";"Capacitor";"";"";"unknown";"";"";"";"";"CC0805KPX7R7224";
 "1";"1k";"R-EU_R1206";"R1206";"R20";"RESISTOR, European s";"";"";"unknown";"";"";"";"";"";
 "2";"47n";"C-EUC1206K";"C1206K";"C5, C13";"CAPACITOR, European ";"";"";"unknown";"";"";"";"";"CC0805KRX7R9473";
 "3";"22k";"R-EU_R1206";"R1206";"R6, R44, R47";"RESISTOR, European s";"";"";"unknown";"";"";"";"";"CRCW080522K0FKTABC";

@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="yes"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.05" altunitdist="inch" altunit="inch"/>
+<grid distance="50" unitdist="mil" unit="mil" style="lines" multiple="1" display="yes" altdistance="0.05" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -32416,13 +32416,8 @@ Source: http://www.kingbright.com .. BA56-11EWA(Ver1189474895.pdf</description>
 <net name="SEG_DP" class="0">
 <segment>
 <pinref part="JP9" gate="G$1" pin="1"/>
-<wire x1="6.35" y1="113.03" x2="15.24" y2="113.03" width="0.1524" layer="91"/>
 <label x="15.24" y="114.3" size="1.778" layer="95"/>
-</segment>
-<segment>
-<pinref part="JP12" gate="G$1" pin="1"/>
-<wire x1="6.35" y1="123.19" x2="15.24" y2="123.19" width="0.1524" layer="91"/>
-<label x="15.24" y="124.46" size="1.778" layer="95"/>
+<wire x1="6.35" y1="113.03" x2="13.97" y2="113.03" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <label x="-132.08" y="181.61" size="1.778" layer="95" rot="R180"/>
@@ -32448,6 +32443,15 @@ Source: http://www.kingbright.com .. BA56-11EWA(Ver1189474895.pdf</description>
 <label x="-7.62" y="182.88" size="1.778" layer="95" rot="R180"/>
 <wire x1="-3.81" y1="182.88" x2="-7.62" y2="182.88" width="0.1524" layer="91"/>
 <pinref part="LED5" gate="DIG1" pin="DP"/>
+</segment>
+<segment>
+<pinref part="JP7" gate="G$1" pin="1"/>
+<label x="13.97" y="74.93" size="1.778" layer="95"/>
+<pinref part="JP12" gate="G$1" pin="1"/>
+<label x="15.24" y="124.46" size="1.778" layer="95"/>
+<wire x1="6.35" y1="123.19" x2="36.83" y2="123.19" width="0.1524" layer="91"/>
+<wire x1="36.83" y1="123.19" x2="36.83" y2="74.93" width="0.1524" layer="91"/>
+<wire x1="36.83" y1="74.93" x2="7.62" y2="74.93" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="SEG_F" class="0">
@@ -32505,11 +32509,6 @@ Source: http://www.kingbright.com .. BA56-11EWA(Ver1189474895.pdf</description>
 </segment>
 </net>
 <net name="SEG_C" class="0">
-<segment>
-<pinref part="JP8" gate="G$1" pin="1"/>
-<wire x1="7.62" y1="83.82" x2="13.97" y2="83.82" width="0.1524" layer="91"/>
-<label x="13.97" y="83.82" size="1.778" layer="95"/>
-</segment>
 <segment>
 <pinref part="JP11" gate="G$1" pin="1"/>
 <wire x1="7.62" y1="92.71" x2="13.97" y2="92.71" width="0.1524" layer="91"/>
@@ -33018,18 +33017,15 @@ Source: http://www.kingbright.com .. BA56-11EWA(Ver1189474895.pdf</description>
 <pinref part="JP2" gate="G$1" pin="1"/>
 </segment>
 </net>
-<net name="SEG_DP_SOURCE" class="0">
-<segment>
-<pinref part="JP7" gate="G$1" pin="1"/>
-<wire x1="7.62" y1="74.93" x2="13.97" y2="74.93" width="0.1524" layer="91"/>
-<label x="13.97" y="74.93" size="1.778" layer="95"/>
-</segment>
-</net>
 <net name="SEG_C_SOURCE" class="0">
 <segment>
 <pinref part="JP10" gate="G$1" pin="1"/>
-<wire x1="6.35" y1="104.14" x2="15.24" y2="104.14" width="0.1524" layer="91"/>
 <label x="15.24" y="105.41" size="1.778" layer="95"/>
+<wire x1="6.35" y1="104.14" x2="34.29" y2="104.14" width="0.1524" layer="91"/>
+<wire x1="34.29" y1="104.14" x2="34.29" y2="83.82" width="0.1524" layer="91"/>
+<pinref part="JP8" gate="G$1" pin="1"/>
+<label x="13.97" y="83.82" size="1.778" layer="95"/>
+<wire x1="34.29" y1="83.82" x2="7.62" y2="83.82" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="D3_A" class="0">

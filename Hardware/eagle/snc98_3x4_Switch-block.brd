@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="yes"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="5" unitdist="mil" unit="mil" style="lines" multiple="1" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="yes" active="yes"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -7782,6 +7782,18 @@ design rules under a new name.</description>
 <approved hash="18,29,50f706b9de7cea54"/>
 <approved hash="18,29,28354e3ad688f9d1"/>
 <approved hash="18,29,ebd5d6dc0cc58a4e"/>
+<approved hash="18,29,e9d252da76e949e2"/>
+<approved hash="18,29,5007b3140181f5ca"/>
+<approved hash="18,29,b6d201d001e1b6e3"/>
+<approved hash="18,29,a018951a957da07f"/>
+<approved hash="18,29,cc8d9dc512b1807a"/>
+<approved hash="18,29,27769b5da68f6525"/>
+<approved hash="18,29,206e8e6e8d522352"/>
+<approved hash="18,29,95006bf26b8e957c"/>
+<approved hash="18,29,2ad07e83f3e5fb15"/>
+<approved hash="18,29,2ad07e83f3e5fb15"/>
+<approved hash="18,29,7887f048fc942924"/>
+<approved hash="18,29,95006bf26b8e957c"/>
 <approved hash="18,29,c454c222c20ac47c"/>
 <approved hash="18,29,84e04296428a84fc"/>
 <approved hash="18,29,c454c222c20ac47c"/>
