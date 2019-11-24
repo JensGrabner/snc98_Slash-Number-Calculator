@@ -128,12 +128,12 @@ char  display_string_itoa_[33];
                        // 44 - atan Test 0.0001 .. 1.0000 Step +0.0001
                        // 45 - atan Test 0.001  .. 10.000 Step +0.001
 
-#define sin_    1
+#define sin_    3
 #define cos_    2
-#define tan_    3
-#define asin_  -1
+#define tan_    1
+#define atan_  -1
 #define acos_  -2
-#define atan_  -3
+#define asin_  -3
 
 uint8_t mem_pointer        =   1;   //     mem_stack 0 .. 39
 #define mem_stack_max_c       39    // 39  Variable in calculate
@@ -494,6 +494,32 @@ AVRational_32  temp_32_corr      = {0, int32_max, int32_max, 0};
 AVRational_32  temp_32_corr_0_1  = {0, int32_max, int32_max, 0};
 AVRational_32  temp_32_corr_a    = {0, int32_max, int32_max, 0};
 AVRational_32  temp_32_corr_b    = {0, int32_max, int32_max, 0};
+AVRational_32  temp_32_corr_c    = {0, int32_max, int32_max, 0};
+
+ /*
+  Quadratic Fit:  y=a+bx+cx^2	
+  Coefficient Data:	
+  a =	2.1384175E-14
+  b =	6.2447861E-14
+  c =	-3.4948250E-15
+ */
+// --- facc_a_Konstante  ---
+#define facc_a_expo           -14
+#define facc_a_num     2146971170
+#define facc_a_denom   1004000000
+static const AVRational_32 facc_a   = { facc_a_expo, facc_a_num, facc_a_denom, 0};
+
+// --- facc_b_Konstante  ---
+#define facc_b_expo           -13
+#define facc_b_num     1311405081
+#define facc_b_denom   2100000000
+static const AVRational_32 facc_b   = { facc_b_expo, facc_b_num, facc_b_denom, 0};
+
+// --- facc_c_Konstante  ---
+#define facc_c_expo           -14
+#define facc_c_num     -750408824
+#define facc_c_denom   2147200000
+static const AVRational_32 facc_c   = { facc_c_expo, facc_c_num, facc_c_denom, 0};
 
 // --- sqrt(0.5)_Konstante  ---
 #define sqrt_0_5_expo           0
@@ -4443,10 +4469,11 @@ AVRational_32 factorial(AVRational_32 a) {
  * http://www.luschny.de/math/factorial/approx/SimpleCases.html#AhighPrecisionApproximation
  * http://www.luschny.de/math/factorial/approx/Approximations%20for%20the%20Factorial%20Function.pdf  page 8
  */
+  // int32_t   fac_cor_num = 0;
   uint8_t   fac_test    = 10;
   uint8_t   fac_count   = 10;
-  uint8_t   test_corr   = 2;
-  uint32_t  test_mul    = 1;  
+ // int64_t   fac_corr    = 0; 
+ // uint32_t  test_mul    = 1;  
   
   boolean input_near_null = false; //     -1.000 < input < 0.000
 
@@ -4474,8 +4501,8 @@ AVRational_32 factorial(AVRational_32 a) {
     temp_32_corr_a = mul( a, add( fa_a, mul( fa_b, a ), 1 ) );
     
     if ( a.expo == 2 ) { //  input > 71.00
-      num_temp_u64    = abs(a.num);
-      denom_temp_u64  = abs(a.denom);
+      num_temp_u64    = a.num;
+      denom_temp_u64  = a.denom;
       num_temp_u64   *= 100;
       denom_temp_u64 *=  71;
     	if ( num_temp_u64 > denom_temp_u64 ) {
@@ -4483,25 +4510,10 @@ AVRational_32 factorial(AVRational_32 a) {
     		Error_first = true;
         return a;
     	}
-    	if ( ( a.num / 97 ) >= ( a.denom / 300 ) ) {  // input >= 32.333
-    		temp_32_corr_a = mul( fa_c, a );
-    		test_corr      = 3;
-    	}
     }
-    if ( a.expo == 1 ) { //  input >  3.00
-    	if ( ( a.num / 97 ) >= ( a.denom / 30 ) ) {  // input >= 32.333
-        temp_32_corr_a = mul( fa_c, a );
-        test_corr      = 3;
-    	}
-    	if ( ( a.num /  9 ) <  ( a.denom / 10 ) ) {  // input <   9.000
-        temp_32_corr_a = mul( a, add( fa_d, mul( fa_e, a ), 1 ) );
-        test_corr      = 1;
-    	}
-    }    
-    if ( a.expo <  1 ) { //  input <  3.00
-      temp_32_corr_a = mul( a, add( fa_d, mul( fa_e, a ), 1 ) );
-      test_corr      = 1;
-    }    
+    
+    temp_32_corr_c = add( facc_a, mul( a, add( facc_b, mul( facc_c, a ), 1 ) ), 1 );
+   // return temp_32_corr_c;
     
     temp_32_corr     = clone( log_1e0 );
     temp_32_corr_0_1 = clone( log_1e0 );    
@@ -4510,20 +4522,14 @@ AVRational_32 factorial(AVRational_32 a) {
       temp_32_corr_0_1 = div_x( a );      
     }
      
-    num_temp_u64    = abs(a.num);
-    denom_temp_u64  = abs(a.denom);
-    if ( a.expo ==  2 ) {
-      num_temp_u64   *= 100;
+    num_temp_u64    = 0;
+    if ( a.expo >= 0 ) {
+      num_temp_u64   = abs(a.num);
+      num_temp_u64  *= expo_10[a.expo];
+      num_temp_u64  /= abs(a.denom);
     }
-    if ( a.expo ==  1 ) {
-      num_temp_u64   *= 10;
-    }
-    if ( a.expo == -1 ) {
-      denom_temp_u64 *= 10;
-    }
-    num_temp_u64  /= denom_temp_u64;
-    fac_test       = num_temp_u64;
-    fac_count      = num_temp_u64;
+    fac_test   = num_temp_u64;
+    fac_count  = num_temp_u64;
 
     temp_32_fac      = add( a, log_1e0, 1 );
     if ( fac_test < 5 ) {
@@ -4562,29 +4568,10 @@ AVRational_32 factorial(AVRational_32 a) {
     temp_32_mul = mul( temp_32_mul, temp_32_corr_0_1 );
     
     temp_32_mul = add( temp_32_mul, min_x( mul( temp_32_mul, temp_32_corr_a ) ), 1 );
-   
-    denom_temp_u64  = 833502269143380;
+    Display_wait();
+    
+    temp_32_mul = add( temp_32_mul, mul( temp_32_corr_c, temp_32_mul ), 1 ); 
 
-    denom_temp_u64 /= temp_32_mul.denom;
-    num_temp_u64    = denom_temp_u64;
-    num_temp_u64   *= temp_32_mul.num;
-    denom_temp_u64 *= temp_32_mul.denom;
-
-    if ( test_corr == 1 ) {  // bis  9,000
-      num_temp_u64   -= 215; // 215 
-    }
-    if ( test_corr == 2 ) {  // bis  32,333
-      num_temp_u64   += 300; // 300
-    }
-    if ( test_corr == 3 ) {  // bis  71,000
-      num_temp_u64   -= 628; // 628
-    }
-
-    Reduce_Number();
-
-    temp_32_mul.num   = num_temp_u32;
-    temp_32_mul.denom = denom_temp_u32;
-   
     if ( input_near_null == true ) {
       return mul( temp_32_corr_b, temp_32_mul );
     }
@@ -4836,7 +4823,7 @@ AVRational_32 cordic(int8_t function) {
     temp_cordic  *= expo_10_[temp_32_corr_a.expo - 10];
     temp_cordic  /= temp_32_corr_a.denom;
 
-    tz_cordic     = temp_cordic;
+    tz_cordic     = int64_t(temp_cordic);
     tz_cordic    *= d_cordic;
   
     tx_cordic     = tx_cordic << 62;
@@ -4949,8 +4936,8 @@ AVRational_32 cordic(int8_t function) {
   if ( function < 0 ) {
   	z_cordic             = 1;
   	z_cordic             = z_cordic << 63;
-    temp_cordic          = tx_cordic;
-   	temp_cordic         *= z_cordic;
+   	temp_cordic          = z_cordic;
+    temp_cordic         *= tx_cordic;
   	temp_cordic         /= ty_cordic;
    /*
     if ( Debug_Level == 40 ) {
@@ -6431,7 +6418,7 @@ void Test_all_function() {
     num_temp_u32_   =   1;
     denom_temp_u32_ = 200;
     Serial.println(" ");            // 
-    for ( uint16_t index = 6467; index <= 14200; index += 1 ) {
+    for ( uint16_t index = 0; index <= 14200; index += 1 ) {
       temp_32_cbrt.expo = 0;
       Serial.print(index);
       Serial.print("  ");
