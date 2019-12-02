@@ -551,6 +551,18 @@ static const AVRational_32  circle_to = {circle_to_expo, circle_to_num, circle_t
 #define circle_denom      2147302900  // 
 static const AVRational_32  circle = {circle_expo, circle_num, circle_denom, 0};
 
+// ---  circle_Konstante (circle) ---  180
+#define circle_2_expo                2       
+#define circle_2_num        2147302800  // 
+#define circle_2_denom      1192946000  // 
+static const AVRational_32  circle_2 = {circle_2_expo, circle_2_num, circle_2_denom, 0};
+
+// ---  circle_Konstante (circle) ---  90
+#define circle_4_expo                2       
+#define circle_4_num        1932572610  // 
+#define circle_4_denom      2147302900  // 
+static const AVRational_32  circle_4 = {circle_4_expo, circle_4_num, circle_4_denom, 0};
+
 // ---  Tau_Konstante (2_Pi) ---
 #define Tau_expo                1       
 #define Tau_num        1135249722  // 
@@ -5073,8 +5085,16 @@ AVRational_32 sin(AVRational_32 a) {
 }
 
 AVRational_32 asin(AVRational_32 a) {
-	temp_32_corr_a = sin_cos_tan( a );  
-  return cordic( asin_ );
+
+	temp_32_corr_a = test_asin_acos( a );
+	if ( Error_first == true ) {
+	  return temp_32_corr_a;
+	}
+
+  if ( Rad_in_out == true ) {
+    return add( Pi_2, min_x( acos( a )), 1 );
+  }
+  return add( circle_4, min_x( acos( a )), 1 );
 }
 
 AVRational_32 sinh(AVRational_32 a) {
@@ -5106,9 +5126,57 @@ AVRational_32 cos(AVRational_32 a) {
   return cordic( cos_ );
 }
 
+AVRational_32 test_asin_acos(AVRational_32 a) {
+	
+  if ( a.expo == 0 ) { //  input  = 0.3000 .. 1.000 
+    if ( abs( a.num ) > a.denom ) {
+      if ( a.num > 0 ) {
+        a.denom = 6;  // Error_String('^');  input >  1
+      }
+      else {
+        a.denom = 5;  // Error_String('U');  input < -1
+      }  
+      Error_first = true;
+      return a;
+    }
+  }
+  if ( a.expo > 0 ) {  //  input >= 3.000 
+    if ( a.num > 0 ) {
+      a.denom = 6;  // Error_String('^');  input >  3
+    }
+    else {
+      a.denom = 5;  // Error_String('U');  input < -3
+    }
+    Error_first = true;
+    return a;
+  }
+}
+
 AVRational_32 acos(AVRational_32 a) {
-  temp_32_corr_a = sin_cos_tan( a );
-  return cordic( acos_ );
+	
+	temp_32_corr_a = test_asin_acos( a );
+	if ( Error_first == true ) {
+	  return temp_32_corr_a;
+	}
+
+ 	if ( a.num == 0 ) {
+    if ( Rad_in_out == false ) {
+      return mul( Pi_2, to_xx[to_deg] );
+    }
+    return Pi_2;
+	}
+   
+  if ( a.expo == 0 ) { //  input  = 0.3000 .. 1.000 
+    if ( abs( a.num ) == a.denom ) {
+      if ( a.num < 0 ) {
+        if ( Rad_in_out == false ) {
+          return mul( Pi , to_xx[to_deg] );
+        }
+        return Pi;
+      }
+    }
+  }
+	return mul( exp2_2_1, atan( sqrt( mul( add( exp2_0_1, min_x( a ), 1), div_x(add( exp2_0_1, a, 1))))));
 }
 
 AVRational_32 cosh(AVRational_32 a) {
@@ -5152,18 +5220,12 @@ AVRational_32 tan(AVRational_32 a) {
 
 AVRational_32 atan(AVRational_32 a) {
 cordic_test = 0;
+boolean reverse = false;
 
 	if ( a.num == 0 ) {
 	  return a;
 	}
-  if ( a.expo < -3 ) { //  input <= abs(3.000e-4) 
-    temp_32_corr_a = add( a, min_x( mul( cubic( a ), exp2_1_3 ) ), 1 );
-    if ( Rad_in_out == false ) {
-      return mul( temp_32_corr_a, to_xx[to_deg] );
-    }
-    return temp_32_corr_a;
-  }  
-
+	
   if ( a.num > 0 ) {
     cordic_test +=  1;
   }
@@ -5181,18 +5243,25 @@ cordic_test = 0;
     cordic_test *= 2;
     a = div_x( a );
      
-    if ( a.expo < -3 ) { //  input > abs( 3333.3333 ) 
-      temp_32_corr_a = add( a, min_x( mul( cubic( a ), exp2_1_3 ) ), 1 );
-      temp_32_corr_a = add( Pi_2, min_x( temp_32_corr_a ), 1 );
-      if ( cordic_test < 0 ) {
-        temp_32_corr_a = min_x( temp_32_corr_a );
-      }
-      if ( Rad_in_out == false ) {
-        return mul( temp_32_corr_a, to_xx[to_deg] );
-      }
-      return temp_32_corr_a;
+    if ( a.expo < -3 ) { //  input <= abs(3.000e-4) 
+    	reverse = true;
     }   
   }
+
+  if ( a.expo < -3 ) { //  input <= abs(3.000e-4)
+    temp_32_corr_a = add( a, min_x( mul( cubic( a ), exp2_1_3 ) ), 1 );
+  	if ( reverse == true ) {
+  		temp_32_corr_a = add( Pi_2, min_x( temp_32_corr_a ), 1 );
+  	}
+    
+    if ( cordic_test < 0 ) {
+      temp_32_corr_a = min_x( temp_32_corr_a );
+    }
+    if ( Rad_in_out == false ) {
+      return mul( temp_32_corr_a, to_xx[to_deg] );
+    }
+    return temp_32_corr_a;
+  }   
 
   temp_32_corr_a = clone( a );
   return cordic( atan_ );
@@ -5763,8 +5832,6 @@ AVRational_32 log_(AVRational_32 a) {
       Reduce_Number();
       temp_32_log_a.num   = num_temp_u32;
       temp_32_log_a.denom = denom_temp_u32;
-      
-      // return temp_32_log_a;   	
     }
 
     while ( ( a.num - a.denom ) < ( a.denom >> 11 ) ) {
@@ -5775,7 +5842,6 @@ AVRational_32 log_(AVRational_32 a) {
       denom_x *= 2;
       count_x += 1;
     }
-    // return a;
     
     temp_32_log_3 = div_x( add( a, exp2_0_1, 1 ));
     temp_32_log_1 = mul( add( a, min_x( exp2_0_1 ), 1 ), temp_32_log_3);
@@ -7056,7 +7122,7 @@ void Test_all_function() {
       temp_32_cbrt.num   = num_temp_u32;
       temp_32_cbrt.denom = denom_temp_u32;
       
-      temp_32_xxx = atan( temp_32_cbrt );
+      temp_32_xxx = asin( temp_32_cbrt );
    /*
       Serial.print(temp_32_cbrt.num);
       Serial.print("  ");
@@ -10917,8 +10983,8 @@ void loop() {
         default:
         	Beep__off();
           break;
-        }
-
+      }
+     /*
       if ( Start_input > Input_Operation_0 ) {
         if ( Start_input < Display_Input_Error ) {
           if  ( (Display_Status_new !=  8) && (Display_Status_new != 16) && (Display_Status_new != 40) ) {   // EE  FN  ][
@@ -10932,7 +10998,7 @@ void loop() {
           }
         }
       }
-
+     */
       if ( Start_input == Off_Status ) {
         display_string[Memory_1] = Display_Memory_1[10];     // Off
         display_string[Memory_0] = Display_Memory_0[10];
