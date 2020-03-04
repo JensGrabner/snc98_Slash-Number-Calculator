@@ -8,34 +8,34 @@
 </settings>
 <grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.05" altunitdist="inch" altunit="inch"/>
 <layers>
-<layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
-<layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
-<layer number="3" name="Route3" color="4" fill="3" visible="no" active="no"/>
-<layer number="4" name="Route4" color="1" fill="4" visible="no" active="no"/>
-<layer number="5" name="Route5" color="4" fill="4" visible="no" active="no"/>
-<layer number="6" name="Route6" color="1" fill="8" visible="no" active="no"/>
-<layer number="7" name="Route7" color="4" fill="8" visible="no" active="no"/>
-<layer number="8" name="Route8" color="1" fill="2" visible="no" active="no"/>
-<layer number="9" name="Route9" color="4" fill="2" visible="no" active="no"/>
-<layer number="10" name="Route10" color="1" fill="7" visible="no" active="no"/>
-<layer number="11" name="Route11" color="4" fill="7" visible="no" active="no"/>
-<layer number="12" name="Route12" color="1" fill="5" visible="no" active="no"/>
-<layer number="13" name="Route13" color="4" fill="5" visible="no" active="no"/>
-<layer number="14" name="Route14" color="1" fill="6" visible="no" active="no"/>
-<layer number="15" name="Route15" color="4" fill="6" visible="no" active="no"/>
-<layer number="16" name="Bottom" color="1" fill="1" visible="no" active="no"/>
-<layer number="17" name="Pads" color="2" fill="1" visible="no" active="no"/>
-<layer number="18" name="Vias" color="2" fill="1" visible="no" active="no"/>
-<layer number="19" name="Unrouted" color="6" fill="1" visible="no" active="no"/>
-<layer number="20" name="Dimension" color="15" fill="1" visible="no" active="no"/>
-<layer number="21" name="tPlace" color="16" fill="1" visible="no" active="no"/>
-<layer number="22" name="bPlace" color="14" fill="1" visible="no" active="no"/>
-<layer number="23" name="tOrigins" color="15" fill="1" visible="no" active="no"/>
-<layer number="24" name="bOrigins" color="15" fill="1" visible="no" active="no"/>
-<layer number="25" name="tNames" color="7" fill="1" visible="no" active="no"/>
-<layer number="26" name="bNames" color="7" fill="1" visible="no" active="no"/>
-<layer number="27" name="tValues" color="7" fill="1" visible="no" active="no"/>
-<layer number="28" name="bValues" color="7" fill="1" visible="no" active="no"/>
+<layer number="1" name="Top" color="4" fill="1" visible="yes" active="no"/>
+<layer number="2" name="Route2" color="1" fill="3" visible="yes" active="no"/>
+<layer number="3" name="Route3" color="4" fill="3" visible="yes" active="no"/>
+<layer number="4" name="Route4" color="1" fill="4" visible="yes" active="no"/>
+<layer number="5" name="Route5" color="4" fill="4" visible="yes" active="no"/>
+<layer number="6" name="Route6" color="1" fill="8" visible="yes" active="no"/>
+<layer number="7" name="Route7" color="4" fill="8" visible="yes" active="no"/>
+<layer number="8" name="Route8" color="1" fill="2" visible="yes" active="no"/>
+<layer number="9" name="Route9" color="4" fill="2" visible="yes" active="no"/>
+<layer number="10" name="Route10" color="1" fill="7" visible="yes" active="no"/>
+<layer number="11" name="Route11" color="4" fill="7" visible="yes" active="no"/>
+<layer number="12" name="Route12" color="1" fill="5" visible="yes" active="no"/>
+<layer number="13" name="Route13" color="4" fill="5" visible="yes" active="no"/>
+<layer number="14" name="Route14" color="1" fill="6" visible="yes" active="no"/>
+<layer number="15" name="Route15" color="4" fill="6" visible="yes" active="no"/>
+<layer number="16" name="Bottom" color="1" fill="1" visible="yes" active="no"/>
+<layer number="17" name="Pads" color="2" fill="1" visible="yes" active="no"/>
+<layer number="18" name="Vias" color="2" fill="1" visible="yes" active="no"/>
+<layer number="19" name="Unrouted" color="6" fill="1" visible="yes" active="no"/>
+<layer number="20" name="Dimension" color="15" fill="1" visible="yes" active="no"/>
+<layer number="21" name="tPlace" color="16" fill="1" visible="yes" active="no"/>
+<layer number="22" name="bPlace" color="14" fill="1" visible="yes" active="no"/>
+<layer number="23" name="tOrigins" color="15" fill="1" visible="yes" active="no"/>
+<layer number="24" name="bOrigins" color="15" fill="1" visible="yes" active="no"/>
+<layer number="25" name="tNames" color="7" fill="1" visible="yes" active="no"/>
+<layer number="26" name="bNames" color="7" fill="1" visible="yes" active="no"/>
+<layer number="27" name="tValues" color="7" fill="1" visible="yes" active="no"/>
+<layer number="28" name="bValues" color="7" fill="1" visible="yes" active="no"/>
 <layer number="29" name="tStop" color="7" fill="3" visible="no" active="no"/>
 <layer number="30" name="bStop" color="7" fill="6" visible="no" active="no"/>
 <layer number="31" name="tCream" color="7" fill="4" visible="no" active="no"/>
@@ -44,8 +44,8 @@
 <layer number="34" name="bFinish" color="6" fill="6" visible="no" active="no"/>
 <layer number="35" name="tGlue" color="7" fill="4" visible="no" active="no"/>
 <layer number="36" name="bGlue" color="7" fill="5" visible="no" active="no"/>
-<layer number="37" name="tTest" color="7" fill="1" visible="no" active="no"/>
-<layer number="38" name="bTest" color="7" fill="1" visible="no" active="no"/>
+<layer number="37" name="tTest" color="7" fill="1" visible="yes" active="no"/>
+<layer number="38" name="bTest" color="7" fill="1" visible="yes" active="no"/>
 <layer number="39" name="tKeepout" color="4" fill="11" visible="no" active="no"/>
 <layer number="40" name="bKeepout" color="1" fill="11" visible="no" active="no"/>
 <layer number="41" name="tRestrict" color="4" fill="10" visible="no" active="no"/>
@@ -53,19 +53,19 @@
 <layer number="43" name="vRestrict" color="2" fill="10" visible="no" active="no"/>
 <layer number="44" name="Drills" color="7" fill="1" visible="no" active="no"/>
 <layer number="45" name="Holes" color="7" fill="1" visible="no" active="no"/>
-<layer number="46" name="Milling" color="3" fill="1" visible="no" active="no"/>
-<layer number="47" name="Measures" color="7" fill="1" visible="no" active="no"/>
-<layer number="48" name="Document" color="7" fill="1" visible="no" active="no"/>
-<layer number="49" name="Reference" color="7" fill="1" visible="no" active="no"/>
-<layer number="50" name="dxf" color="7" fill="1" visible="no" active="no"/>
-<layer number="51" name="tDocu" color="6" fill="1" visible="no" active="no"/>
-<layer number="52" name="bDocu" color="7" fill="1" visible="no" active="no"/>
-<layer number="53" name="tGND_GNDA" color="7" fill="9" visible="no" active="no"/>
-<layer number="54" name="bGND_GNDA" color="1" fill="9" visible="no" active="no"/>
-<layer number="56" name="wert" color="7" fill="1" visible="no" active="no"/>
-<layer number="57" name="tCAD" color="7" fill="1" visible="no" active="no"/>
-<layer number="59" name="tCarbon" color="7" fill="1" visible="no" active="no"/>
-<layer number="60" name="bCarbon" color="7" fill="1" visible="no" active="no"/>
+<layer number="46" name="Milling" color="3" fill="1" visible="yes" active="no"/>
+<layer number="47" name="Measures" color="7" fill="1" visible="yes" active="no"/>
+<layer number="48" name="Document" color="7" fill="1" visible="yes" active="no"/>
+<layer number="49" name="Reference" color="7" fill="1" visible="yes" active="no"/>
+<layer number="50" name="dxf" color="7" fill="1" visible="yes" active="no"/>
+<layer number="51" name="tDocu" color="6" fill="1" visible="yes" active="no"/>
+<layer number="52" name="bDocu" color="7" fill="1" visible="yes" active="no"/>
+<layer number="53" name="tGND_GNDA" color="7" fill="9" visible="yes" active="no"/>
+<layer number="54" name="bGND_GNDA" color="1" fill="9" visible="yes" active="no"/>
+<layer number="56" name="wert" color="7" fill="1" visible="yes" active="no"/>
+<layer number="57" name="tCAD" color="7" fill="1" visible="yes" active="no"/>
+<layer number="59" name="tCarbon" color="7" fill="1" visible="yes" active="no"/>
+<layer number="60" name="bCarbon" color="7" fill="1" visible="yes" active="no"/>
 <layer number="90" name="Modules" color="7" fill="1" visible="yes" active="yes"/>
 <layer number="91" name="Nets" color="2" fill="1" visible="yes" active="yes"/>
 <layer number="92" name="Busses" color="1" fill="1" visible="yes" active="yes"/>
@@ -30416,25 +30416,25 @@ This is the "EZ" version, which has limited top masking for improved ease of ass
 </library>
 <library name="BaseApp">
 <packages>
-<package name="SMADIODE">
+<package name="SMADIODE-WIDE">
 <wire x1="-2.15" y1="1.3" x2="2.15" y2="1.3" width="0.2032" layer="51"/>
 <wire x1="2.15" y1="1.3" x2="2.15" y2="-1.3" width="0.2032" layer="51"/>
 <wire x1="2.15" y1="-1.3" x2="-2.15" y2="-1.3" width="0.2032" layer="51"/>
 <wire x1="-2.15" y1="-1.3" x2="-2.15" y2="1.3" width="0.2032" layer="51"/>
 <wire x1="-3.789" y1="1.6" x2="3.816" y2="1.6" width="0.3048" layer="21"/>
 <wire x1="3.816" y1="-1.6" x2="-3.789" y2="-1.6" width="0.3048" layer="21"/>
-<wire x1="0.5715" y1="-0.6985" x2="0.5715" y2="0.6985" width="0.3048" layer="21"/>
-<wire x1="0.5715" y1="0.6985" x2="-0.5715" y2="0" width="0.3048" layer="21"/>
-<wire x1="-0.5715" y1="0" x2="0.5715" y2="-0.6985" width="0.3048" layer="21"/>
-<wire x1="-0.5715" y1="-0.6985" x2="-0.5715" y2="0" width="0.3048" layer="21"/>
+<wire x1="0.5715" y1="-0.9525" x2="0.5715" y2="0.9525" width="0.3048" layer="21"/>
+<wire x1="0.5715" y1="0.9525" x2="-0.5715" y2="0" width="0.3048" layer="21"/>
+<wire x1="-0.5715" y1="0" x2="0.5715" y2="-0.9525" width="0.3048" layer="21"/>
+<wire x1="-0.5715" y1="-0.9525" x2="-0.5715" y2="0" width="0.3048" layer="21"/>
+<wire x1="-0.5715" y1="0" x2="-0.5715" y2="0.9525" width="0.3048" layer="21"/>
 <rectangle x1="-2.825" y1="-1.1" x2="-2.175" y2="1.1" layer="51"/>
 <rectangle x1="2.175" y1="-1.1" x2="2.825" y2="1.1" layer="51" rot="R180"/>
 <rectangle x1="-1.75" y1="-1.225" x2="-1.075" y2="1.225" layer="51"/>
-<smd name="A" x="2.3495" y="0" dx="2.54" dy="2.54" layer="1" roundness="30" rot="R180"/>
-<smd name="C" x="-2.3495" y="0" dx="2.54" dy="2.54" layer="1" roundness="30"/>
+<smd name="A" x="3.3655" y="0" dx="3.048" dy="2.54" layer="1" roundness="50" rot="R180"/>
+<smd name="C" x="-3.3655" y="0" dx="3.048" dy="2.54" layer="1" roundness="50"/>
 <text x="-2.54" y="1.905" size="0.4064" layer="25" font="vector">&gt;NAME</text>
 <text x="-2.54" y="-2.286" size="0.4064" layer="27" font="vector">&gt;VALUE</text>
-<wire x1="-0.5715" y1="0" x2="-0.5715" y2="0.6985" width="0.3048" layer="21"/>
 </package>
 <package name="SOD-323">
 <wire x1="-0.85" y1="0.65" x2="0.85" y2="0.65" width="0.127" layer="21"/>
@@ -30450,8 +30450,8 @@ This is the "EZ" version, which has limited top masking for improved ease of ass
 <wire x1="0.9" y1="0.2" x2="1.2" y2="0.2" width="0.127" layer="51"/>
 <wire x1="1.2" y1="0.2" x2="1.2" y2="-0.2" width="0.127" layer="51"/>
 <wire x1="1.2" y1="-0.2" x2="0.9" y2="-0.2" width="0.127" layer="51"/>
-<smd name="A" x="-1" y="0" dx="1.4224" dy="0.8128" layer="1" roundness="30"/>
-<smd name="C" x="1" y="0" dx="1.4224" dy="0.8128" layer="1" roundness="30"/>
+<smd name="A" x="-1" y="0" dx="1" dy="0.8" layer="1"/>
+<smd name="C" x="1" y="0" dx="1" dy="0.8" layer="1"/>
 <text x="-1.8" y="0.9" size="0.8128" layer="25" font="vector">&gt;NAME</text>
 <text x="-2.1" y="-1.7" size="0.8128" layer="27" font="vector">&gt;VALUE</text>
 </package>
@@ -30460,16 +30460,18 @@ This is the "EZ" version, which has limited top masking for improved ease of ass
 <wire x1="1" y1="0.7" x2="1" y2="-0.7" width="0.1524" layer="51"/>
 <wire x1="1" y1="-0.7" x2="-1" y2="-0.7" width="0.1524" layer="51"/>
 <wire x1="-1" y1="-0.7" x2="-1" y2="0.7" width="0.1524" layer="51"/>
-<wire x1="-0.246" y1="0" x2="0.354" y2="0.4" width="0.2286" layer="21"/>
-<wire x1="0.354" y1="0.4" x2="0.354" y2="-0.4" width="0.2286" layer="21"/>
-<wire x1="0.354" y1="-0.4" x2="-0.246" y2="0" width="0.2286" layer="21"/>
-<wire x1="-1.778" y1="0.762" x2="1.778" y2="0.762" width="0.3048" layer="21"/>
-<wire x1="1.778" y1="-0.762" x2="-1.778" y2="-0.762" width="0.3048" layer="21"/>
-<smd name="A" x="1.85" y="0" dx="1.2" dy="0.7" layer="1" roundness="50"/>
-<smd name="C" x="-1.85" y="0" dx="1.2" dy="0.7" layer="1" roundness="50"/>
+<wire x1="-0.5" y1="0" x2="0.1" y2="0.4" width="0.1524" layer="51"/>
+<wire x1="0.1" y1="0.4" x2="0.1" y2="-0.4" width="0.1524" layer="51"/>
+<wire x1="0.1" y1="-0.4" x2="-0.5" y2="0" width="0.1524" layer="51"/>
+<wire x1="-1.778" y1="0.762" x2="1.778" y2="0.762" width="0.127" layer="21"/>
+<wire x1="1.778" y1="0.762" x2="1.778" y2="-0.762" width="0.127" layer="21"/>
+<wire x1="1.778" y1="-0.762" x2="-1.778" y2="-0.762" width="0.127" layer="21"/>
+<wire x1="-1.778" y1="-0.762" x2="-1.778" y2="0.762" width="0.127" layer="21"/>
+<rectangle x1="-0.7" y1="-0.7" x2="-0.5" y2="0.7" layer="51"/>
+<smd name="A" x="1.85" y="0" dx="1.2" dy="0.7" layer="1"/>
+<smd name="C" x="-1.85" y="0" dx="1.2" dy="0.7" layer="1"/>
 <text x="-1.1" y="1" size="0.4064" layer="25">&gt;NAME</text>
 <text x="-1.1" y="-1.284" size="0.4064" layer="27">&gt;VALUE</text>
-<wire x1="-0.408" y1="0.4" x2="-0.408" y2="-0.4" width="0.2286" layer="21"/>
 </package>
 <package name="SOT23-R">
 <wire x1="1.5724" y1="0.6604" x2="1.5724" y2="-0.6604" width="0.1524" layer="51"/>
@@ -30507,14 +30509,67 @@ This is the "EZ" version, which has limited top masking for improved ease of ass
 <text x="2.032" y="0.254" size="0.4064" layer="25">&gt;NAME</text>
 <text x="2.032" y="-0.508" size="0.4064" layer="27">&gt;VALUE</text>
 </package>
+<package name="280MIL-TH">
+<pad name="P$1" x="-3.556" y="0" drill="0.8" shape="long" rot="R90"/>
+<pad name="P$2" x="3.556" y="0" drill="0.8" shape="long" rot="R90"/>
+</package>
+<package name="SOD-123F">
+<wire x1="1.5" y1="-0.975" x2="-0.6" y2="-0.975" width="0.127" layer="51"/>
+<wire x1="-0.6" y1="-0.975" x2="-1.5" y2="-0.975" width="0.127" layer="51"/>
+<wire x1="-1.5" y1="0.975" x2="-1.5" y2="-0.975" width="0.127" layer="51"/>
+<wire x1="-1.38" y1="0.975" x2="1.38" y2="0.975" width="0.127" layer="21"/>
+<wire x1="1.5" y1="-0.975" x2="1.5" y2="0.975" width="0.127" layer="51"/>
+<circle x="-2.605" y="0" radius="0.1" width="0.2" layer="21"/>
+<circle x="-2.605" y="0" radius="0.1" width="0.2" layer="51"/>
+<wire x1="-2.405" y1="1.225" x2="-2.405" y2="-1.225" width="0.05" layer="39"/>
+<wire x1="-2.405" y1="1.225" x2="2.405" y2="1.225" width="0.05" layer="39"/>
+<wire x1="2.405" y1="-1.225" x2="2.405" y2="1.225" width="0.05" layer="39"/>
+<wire x1="2.405" y1="-1.225" x2="-2.405" y2="-1.225" width="0.05" layer="39"/>
+<text x="-2.54" y="1.397" size="1.27" layer="25">&gt;NAME</text>
+<text x="-2.54" y="-2.54" size="1.27" layer="27">&gt;VALUE</text>
+<wire x1="-1.5" y1="0.975" x2="-0.6" y2="0.975" width="0.127" layer="51"/>
+<wire x1="-0.6" y1="0.975" x2="1.5" y2="0.975" width="0.127" layer="51"/>
+<wire x1="-1.38" y1="-0.975" x2="1.38" y2="-0.975" width="0.127" layer="21"/>
+<smd name="C" x="-1.53" y="0" dx="1.25" dy="1.16" layer="1" roundness="25"/>
+<smd name="A" x="1.53" y="0" dx="1.25" dy="1.16" layer="1" roundness="25"/>
+<wire x1="0.5715" y1="-0.9525" x2="0.5715" y2="0.9525" width="0.3048" layer="21"/>
+<wire x1="0.5715" y1="0.9525" x2="-0.5715" y2="0" width="0.3048" layer="21"/>
+<wire x1="-0.5715" y1="0" x2="0.5715" y2="-0.9525" width="0.3048" layer="21"/>
+<wire x1="-0.5715" y1="-0.9525" x2="-0.5715" y2="0" width="0.3048" layer="21"/>
+<wire x1="-0.5715" y1="0" x2="-0.5715" y2="0.9525" width="0.3048" layer="21"/>
+</package>
+<package name="SMADIODE-SHORT">
+<wire x1="-2.15" y1="1.3" x2="2.15" y2="1.3" width="0.2032" layer="51"/>
+<wire x1="2.15" y1="1.3" x2="2.15" y2="-1.3" width="0.2032" layer="51"/>
+<wire x1="2.15" y1="-1.3" x2="-2.15" y2="-1.3" width="0.2032" layer="51"/>
+<wire x1="-2.15" y1="-1.3" x2="-2.15" y2="1.3" width="0.2032" layer="51"/>
+<wire x1="-3.789" y1="1.6" x2="3.816" y2="1.6" width="0.3048" layer="21"/>
+<wire x1="3.816" y1="-1.6" x2="-3.789" y2="-1.6" width="0.3048" layer="21"/>
+<wire x1="0.5715" y1="-0.6985" x2="0.5715" y2="0.6985" width="0.3048" layer="21"/>
+<wire x1="0.5715" y1="0.6985" x2="-0.5715" y2="0" width="0.3048" layer="21"/>
+<wire x1="-0.5715" y1="0" x2="0.5715" y2="-0.6985" width="0.3048" layer="21"/>
+<wire x1="-0.5715" y1="-0.6985" x2="-0.5715" y2="0" width="0.3048" layer="21"/>
+<wire x1="-0.5715" y1="0" x2="-0.5715" y2="0.6985" width="0.3048" layer="21"/>
+<rectangle x1="-2.825" y1="-1.1" x2="-2.175" y2="1.1" layer="51"/>
+<rectangle x1="2.175" y1="-1.1" x2="2.825" y2="1.1" layer="51" rot="R180"/>
+<rectangle x1="-1.75" y1="-1.225" x2="-1.075" y2="1.225" layer="51"/>
+<smd name="A1" x="2.3495" y="0" dx="2.54" dy="2.54" layer="1" roundness="30" rot="R180"/>
+<smd name="C1" x="-2.3495" y="0" dx="2.54" dy="2.54" layer="1" roundness="30"/>
+<text x="-2.54" y="1.905" size="0.4064" layer="25" font="vector">&gt;NAME</text>
+<text x="-2.54" y="-2.286" size="0.4064" layer="27" font="vector">&gt;VALUE</text>
+</package>
 </packages>
 <symbols>
 <symbol name="DIODE">
 <wire x1="-1.27" y1="-1.27" x2="1.27" y2="0" width="0.254" layer="94"/>
 <wire x1="1.27" y1="0" x2="-1.27" y2="1.27" width="0.254" layer="94"/>
-<wire x1="1.27" y1="1.27" x2="1.27" y2="0" width="0.254" layer="94"/>
 <wire x1="-1.27" y1="1.27" x2="-1.27" y2="-1.27" width="0.254" layer="94"/>
-<wire x1="1.27" y1="0" x2="1.27" y2="-1.27" width="0.254" layer="94"/>
+<wire x1="1.905" y1="-1.016" x2="1.905" y2="-1.27" width="0.254" layer="94"/>
+<wire x1="1.905" y1="-1.27" x2="1.27" y2="-1.27" width="0.254" layer="94"/>
+<wire x1="1.27" y1="-1.27" x2="1.27" y2="0" width="0.254" layer="94"/>
+<wire x1="0.635" y1="1.016" x2="0.635" y2="1.27" width="0.254" layer="94"/>
+<wire x1="1.27" y1="0" x2="1.27" y2="1.27" width="0.254" layer="94"/>
+<wire x1="1.27" y1="1.27" x2="0.635" y2="1.27" width="0.254" layer="94"/>
 <pin name="A" x="-2.54" y="0" visible="off" length="short" direction="pas"/>
 <pin name="C" x="2.54" y="0" visible="off" length="short" direction="pas" rot="R180"/>
 <text x="-2.54" y="2.54" size="1.27" layer="95">&gt;NAME</text>
@@ -30527,7 +30582,16 @@ This is the "EZ" version, which has limited top masking for improved ease of ass
 <gate name="G$1" symbol="DIODE" x="0" y="0"/>
 </gates>
 <devices>
-<device name="SMA" package="SMADIODE">
+<device name="280MIL-TH" package="280MIL-TH">
+<connects>
+<connect gate="G$1" pin="A" pad="P$1"/>
+<connect gate="G$1" pin="C" pad="P$2"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="SMA-WIDE" package="SMADIODE-WIDE">
 <connects>
 <connect gate="G$1" pin="A" pad="A"/>
 <connect gate="G$1" pin="C" pad="C"/>
@@ -30567,6 +30631,24 @@ This is the "EZ" version, which has limited top masking for improved ease of ass
 <connects>
 <connect gate="G$1" pin="A" pad="1"/>
 <connect gate="G$1" pin="C" pad="3"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="SOD-123F" package="SOD-123F">
+<connects>
+<connect gate="G$1" pin="A" pad="A"/>
+<connect gate="G$1" pin="C" pad="C"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="SMA-SHORT" package="SMADIODE-SHORT">
+<connects>
+<connect gate="G$1" pin="A" pad="A1"/>
+<connect gate="G$1" pin="C" pad="C1"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -38498,12 +38580,12 @@ INFINEON http://www.infineon.com/upload/Image/Packages/hlg05823.gif</description
 <attribute name="TME_EU" value="DMG2305UX-7"/>
 </part>
 <part name="FRAME2" library="frames" deviceset="LETTER_L" device="" value="frame"/>
-<part name="D4" library="BaseApp" deviceset="DIODE" device="SMA" value="SD103CW">
+<part name="D4" library="BaseApp" deviceset="DIODE" device="SOD-123F" value="SD103CW">
 <attribute name="MF" value="MULTICOMP"/>
 <attribute name="MPN" value="SD103CW-7-F"/>
 <attribute name="OC_FARNELL" value="2306221"/>
 </part>
-<part name="D5" library="BaseApp" deviceset="DIODE" device="SMA" value="SD103CW">
+<part name="D5" library="BaseApp" deviceset="DIODE" device="SOD-123F" value="SD103CW">
 <attribute name="MF" value="MULTICOMP"/>
 <attribute name="MPN" value="SD103CW-7-F"/>
 <attribute name="OC_FARNELL" value="2306221"/>
@@ -38562,7 +38644,7 @@ INFINEON http://www.infineon.com/upload/Image/Packages/hlg05823.gif</description
 <attribute name="MPN" value="IRLML6244TRPBF"/>
 <attribute name="OC_FARNELL" value="1864517"/>
 </part>
-<part name="D3" library="BaseApp" deviceset="DIODE" device="SMA" value="SD103CW">
+<part name="D3" library="BaseApp" deviceset="DIODE" device="SOD-123F" value="SD103CW">
 <attribute name="MF" value="MULTICOMP"/>
 <attribute name="MPN" value="SD103CW-7-F"/>
 <attribute name="OC_FARNELL" value="2306221"/>
@@ -38691,12 +38773,12 @@ INFINEON http://www.infineon.com/upload/Image/Packages/hlg05823.gif</description
 </part>
 <part name="GND13" library="SparkFun" deviceset="GND" device=""/>
 <part name="GND14" library="SparkFun" deviceset="GND" device=""/>
-<part name="D7" library="BaseApp" deviceset="DIODE" device="SMA" value="SD103CW">
+<part name="D7" library="BaseApp" deviceset="DIODE" device="SOD-123F" value="SD103CW">
 <attribute name="MF" value="MULTICOMP"/>
 <attribute name="MPN" value="SD103CW-7-F"/>
 <attribute name="OC_FARNELL" value="2306221"/>
 </part>
-<part name="D8" library="BaseApp" deviceset="DIODE" device="SMA" value="SD103CW">
+<part name="D8" library="BaseApp" deviceset="DIODE" device="SOD-123F" value="SD103CW">
 <attribute name="MF" value="MULTICOMP"/>
 <attribute name="MPN" value="SD103CW-7-F"/>
 <attribute name="OC_FARNELL" value="2306221"/>
@@ -38749,7 +38831,7 @@ INFINEON http://www.infineon.com/upload/Image/Packages/hlg05823.gif</description
 </part>
 <part name="GND-ISO10" library="SparkFun-Aesthetics" deviceset="GND-ISO" device=""/>
 <part name="GND-ISO11" library="SparkFun-Aesthetics" deviceset="GND-ISO" device=""/>
-<part name="D11" library="BaseApp" deviceset="DIODE" device="SMA" value="SD103CW">
+<part name="D11" library="BaseApp" deviceset="DIODE" device="SOD-123F" value="SD103CW">
 <attribute name="MF" value="MULTICOMP"/>
 <attribute name="MPN" value="SD103CW-7-F"/>
 <attribute name="OC_FARNELL" value="2306221"/>
@@ -38762,7 +38844,7 @@ INFINEON http://www.infineon.com/upload/Image/Packages/hlg05823.gif</description
 <attribute name="TME_EU" value="CC0805KRX7R9153"/>
 </part>
 <part name="GND2" library="SparkFun" deviceset="GND" device=""/>
-<part name="D12" library="BaseApp" deviceset="DIODE" device="SMA" value="SD103CW">
+<part name="D12" library="BaseApp" deviceset="DIODE" device="SOD-123F" value="SD103CW">
 <attribute name="MF" value="MULTICOMP"/>
 <attribute name="MPN" value="SD103CW-7-F"/>
 <attribute name="OC_FARNELL" value="2306221"/>
@@ -38798,7 +38880,7 @@ INFINEON http://www.infineon.com/upload/Image/Packages/hlg05823.gif</description
 </part>
 <part name="GND3" library="SparkFun" deviceset="GND" device=""/>
 <part name="GND4" library="SparkFun" deviceset="GND" device=""/>
-<part name="D9" library="BaseApp" deviceset="DIODE" device="SMA" value="SD103CW">
+<part name="D9" library="BaseApp" deviceset="DIODE" device="SOD-123F" value="SD103CW">
 <attribute name="MF" value="MULTICOMP"/>
 <attribute name="MPN" value="SD103CW-7-F"/>
 <attribute name="OC_FARNELL" value="2306221"/>
@@ -38808,7 +38890,7 @@ INFINEON http://www.infineon.com/upload/Image/Packages/hlg05823.gif</description
 <attribute name="MPN" value=""/>
 <attribute name="OC_FARNELL" value="unknown"/>
 </part>
-<part name="D10" library="BaseApp" deviceset="DIODE" device="SMA" value="SD103CW">
+<part name="D10" library="BaseApp" deviceset="DIODE" device="SOD-123F" value="SD103CW">
 <attribute name="MF" value="MULTICOMP"/>
 <attribute name="MPN" value="SD103CW-7-F"/>
 <attribute name="OC_FARNELL" value="2306221"/>

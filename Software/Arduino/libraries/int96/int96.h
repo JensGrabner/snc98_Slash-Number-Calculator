@@ -92,10 +92,10 @@ public:
 
 //Misc operators
 
-  int96_a operator>>(int8_t nShift) const;
-  int96_a operator<<(int8_t nShift) const;
-  int96_a& operator>>=(int8_t nShift);
-  int96_a& operator<<=(int8_t nShift);
+  int96_a operator>>(uint8_t nShift) const;
+  int96_a operator<<(uint8_t nShift) const;
+  int96_a& operator>>=(uint8_t nShift);
+  int96_a& operator<<=(uint8_t nShift);
 
   int96_a  operator^(const  int96_a& value) const;
   int96_a  operator|(const  int96_a& value) const;
@@ -126,9 +126,10 @@ public:
   BOOL IsZero() const;
   void Zero();
   void Negate();
+  void cbrt(int96_a& test);
   BOOL IsNegative() const;
   BOOL IsPositive() const;
-  void Modulus(const int96_a& divisor,  int96_a& Quotient,  int96_a& Remainder) const;
+  void Modulus(const int96_a& divisor, int96_a& Quotient, int96_a& Remainder) const;
   void mul_div95(const int96_a& mul, int96_a& rVal) const;
 
 //Serialization

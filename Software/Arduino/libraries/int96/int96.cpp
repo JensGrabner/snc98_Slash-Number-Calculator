@@ -257,6 +257,70 @@ void int96_a::Negate() {
     InverseTwosComplement();
 }
 
+void int96_a::cbrt(int96_a& test) {
+/*
+  https://code-examples.net/en/q/71e23e 
+
+  qbrt(2^95)/2^32 = 0,7937005259841
+
+  f_1(x) = 0,6042181313*x + 0,4531635984
+  -->
+  f_2(x) = 0,4795682486*x + 0,3596761864 // * 0,7937005259841
+*/	
+  int96_a A(*this);
+  
+  int96_a init;
+  int96_a pow_2;
+    
+  uint8_t nShift = 63;
+
+  int96_a div95_a;   // 0,47956825
+          div95_a.hi  = 1029864972; //  4.12 bits of relative accuracy
+          div95_a.mid = 0;
+          div95_a.lo  = 0;
+
+  int96_a add_c;   // 0,35967619  
+          add_c.hi  =  772398729;  //  4.12 bits of relative accuracy 
+          add_c.mid = 0;
+          add_c.lo  = 0;
+
+  int96_a div_3;   // 0,33333333  
+          div_3.hi  = 0x2AAAAAAA;  //   1234567890123 
+          div_3.mid = 0xAB000000;  // 0,3333333333339
+          div_3.lo  = 0;
+ 
+  if ( A.IsPositive()) {
+  	while (test.hi < 268435456) {  // 2^28
+      nShift += 1;
+      test  <<= 3;
+    }
+  	
+  	test.mul_div95(div95_a, test);
+  	test     += add_c;
+    test    >>= nShift;
+    
+    for ( uint8_t index = 0; index < 3; index += 1 ) { 
+      init   = A;               // init ->  4.12 bits
+      pow_2  = test;            //    1 ->  8.13 bits
+      pow_2 *= pow_2;           //    2 -> 16.27 bits
+      init  /= pow_2;           //    3 -> 32.54 bits
+      if (init.lo == test.lo) { // exact
+        index = 3;
+      }
+      else {
+        test  += test;
+        test  += init;
+        test.mul_div95(div_3, test);
+      }
+    }
+  }
+  else {
+  	test.Negate();
+  	test.cbrt(test);
+    test.Negate();
+  }
+}
+
 int8_t int96_a::operator==(const int96_a& value) const {
   return (hi  == value.hi) && (mid == value.mid) && (lo  == value.lo);
 }
@@ -378,11 +442,9 @@ void int96_a::InverseTwosComplement() {
   lo  = ~lo;
 }
 
-int96_a int96_a::operator>>(int8_t nShift) const {
+int96_a int96_a::operator>>(uint8_t nShift) const {
   int96_a rVal;
 
-  if ( nShift >= 0)
-  {
     if ( nShift == 32)
     {
       rVal.lo  = mid;
@@ -425,18 +487,13 @@ int96_a int96_a::operator>>(int8_t nShift) const {
       rVal.mid = 0;
       rVal.hi  = 0;
     }
-  }
-  else if ( nShift < 0)
-    rVal.operator<<(-nShift);
 
   return rVal;
 }
 
-int96_a int96_a::operator<<(int8_t nShift) const {
+int96_a int96_a::operator<<(uint8_t nShift) const {
   int96_a rVal;
 
-  if ( nShift >= 0)
-  {
     if ( nShift == 32)
     {
       rVal.lo  = 0;
@@ -479,19 +536,16 @@ int96_a int96_a::operator<<(int8_t nShift) const {
       rVal.mid = 0;
       rVal.lo  = 0;
     }
-  }
-  else if ( nShift < 0)
-    rVal.operator>>(-nShift);
 
   return rVal;
 }
 
-int96_a& int96_a::operator>>=(int8_t nShift) {
+int96_a& int96_a::operator>>=(uint8_t nShift) {
   *this = (*this >> nShift);
   return *this;
 }
 
-int96_a& int96_a::operator<<=(int8_t nShift) {
+int96_a& int96_a::operator<<=(uint8_t nShift) {
   *this = (*this << nShift);
   return *this;
 }
@@ -608,7 +662,7 @@ void int96_a::mul_div95(const int96_a& mul, int96_a& rVal) const {
   rVal.mid = sum_hi;
   rVal.hi  = sum_hi >> 32;
 
-  rVal    += 1;
+  // rVal    += 1;
 
   if ( (bANegative && !bBNegative) || (!bANegative && bBNegative)) rVal.Negate();
 }

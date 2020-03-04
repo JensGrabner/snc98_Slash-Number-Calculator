@@ -4,4 +4,4 @@
 "3 ";"6k8 ";"R-EU_M0805 ";"M0805 ";"R7_b, R8_b, R33_b ";"RESISTOR_b, European s ";" ";" ";"unknown ";"RC0805FR-076K8 ";
 "12 ";"B3F-4150 ";"TACTILE_SWITCHTACTILE_SWITCH_PTH-12MM ";"TACTILE-PTH-12MM ";"S1_b, S2_b, S3_b, S4_b, S5_b, S6_b, S7_b, S8_b, S9_b, S10_b, S11_b, S12_b ";"Momentary Switch ";" ";" ";"unknown ";"B3F-4050 ";
 "1 ";"M09LOCK-LONGPADS ";"M09LOCK-LONGPADS ";"1X09_LOCK_LONGPADS ";"JP1_b ";"Header 9 ";" ";" ";"unknown ";" ";
-"12 ";"SD103C ";"DIODE280MIL-TH ";"280MIL-TH ";"D6_b, D7_b, D8_b, D9_b, D13_b, D14_b, D22_b, D23_b, D24_b, D25_b, D26_b, D27_b ";" ";"MULTICOMP ";"SD103CW-7-F ";"2306221 ";" ";
+"12 ";"SD103AW-DIO ";"DIODESOD-123 ";"SOD-123F ";"D01_b, D02_b, D03_b, D04_b, D05_b, D06_b, D07_b, D08_b, D09_b, D10_b, D11_b, D12_b ";" ";"MULTICOMP ";"SD103AW-DIO-7-F ";"2306221 ";" ";
