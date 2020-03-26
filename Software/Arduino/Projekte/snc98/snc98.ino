@@ -6,23 +6,23 @@
 
    Copyright (c) 2020 Jens Grabner
 
-   Permission is hereby granted, free of charge, to any person obtaining 
-   a copy of this software and associated documentation files 
-   (the "Software"), to deal in the Software without restriction, 
-   including without limitation the rights to use, copy, modify, merge, 
-   publish, distribute, sublicense, and/or sell copies of the Software, 
-   and to permit persons to whom the Software is furnished to do so, 
+   Permission is hereby granted, free of charge, to any person obtaining
+   a copy of this software and associated documentation files
+   (the "Software"), to deal in the Software without restriction,
+   including without limitation the rights to use, copy, modify, merge,
+   publish, distribute, sublicense, and/or sell copies of the Software,
+   and to permit persons to whom the Software is furnished to do so,
    subject to the following conditions:
 
-   The above copyright notice and this permission notice shall be 
+   The above copyright notice and this permission notice shall be
    included in all copies or substantial portions of the Software.
 
-   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, 
-   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF 
-   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. 
-   IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY 
-   CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
-   TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+   EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+   MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+   IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+   CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+   TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
    SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 **********************************************************************/
@@ -71,7 +71,7 @@
 #include <string.h>
 #include <stdint.h>
 #include <stdlib.h>         // for itoa(); ltoa();
-#include <math.h>           // for sqrtf();
+// #include <math.h>           // for sqrtf();
 #include <inttypes.h>
 
 #include <itoa_ljust.h>
@@ -101,7 +101,7 @@ char  display_string_itoa_[33];
                        // 17 - Display_Status Test
                        // 18 - sqrt(x) : in 1.00 .. 100.00 _>_ out 1.00 .. 10.00
                        // 19 - 5 x sqrt(2)
-                       // 20 - reduce test 
+                       // 20 - reduce test
                        // 21 - "=" - Output -- mem_stack_calc()
                        // 22 - reduce test spezial
                        // 23 - On - Off - Test
@@ -119,8 +119,8 @@ char  display_string_itoa_[33];
                        // 35 - DS18B20 (0x28) Digital Thermometer, 12bit
                        // 36 - tanh Test 0.000010 .. 100.
                        // 37 - tanh Test -22.000 .. +22.001 Step 0.003.
-                       // 38 - atanh Test 0.0 to 1.0  10 x  540       = 5400 
-                       // 39 - acosh Test 1.0 to 10.995  8 x 1800 + 200 = 14600 
+                       // 38 - atanh Test 0.0 to 1.0  10 x  540       = 5400
+                       // 39 - acosh Test 1.0 to 10.995  8 x 1800 + 200 = 14600
                        // 40 - Test Cordic
                        // 41 - sin Test  0 .. 90.000 Step +0.005  = 18000 - 100 ms
                        // 42 - tan Test  0.005 .. 89.995 Step +0.005  = 18000 - 100 ms
@@ -130,6 +130,8 @@ char  display_string_itoa_[33];
                        // 46 - atan Test 0.3332 .. 0.7500 Step +0.00004 -- cordic Test
                        // 47 - Test Reduce
                        // 48 - Time_test Reduce_Number()  --  Valua from Test 46 + 27
+                       // 49 - Profiling Reduce_Number()
+                       // 50 - Reduce_Number() - Output internal Number
 
 #define sin_    3
 #define cos_    2
@@ -143,15 +145,15 @@ uint8_t mem_pointer        =   1;   //     mem_stack 0 .. 39
 uint8_t mem_stack_max      =   2;   // Start in Standardmode
 
 #define operation_test_max    4  //  0 .. 3  Stacktiefe
-#define Switch_down_max    1200  //                  140  %    
+#define Switch_down_max    1200  //                  140  %
 #define Switch_down_start  1000  //  1020  ... 1020  100  %   ... 1000  <<--
 #define Switch_up_b         800  //   750  ..   840   60  %   ...  800
-#define Switch_down_b       600  //   570  ..   600   20  %   ...  600		
+#define Switch_down_b       600  //   570  ..   600   20  %   ...  600
 #define Switch_up_start     400  //   360  ...  360    0  %   ...  500  <<--
 #define Switch_down_extra   200  //                  -20  %   ...  400
                                  //                  -40  %   ...  200
 #define Average               4  //     4
-#define Max_Buffer           24  // Count of Switches	
+#define Max_Buffer           24  // Count of Switches
 
 #define Beep_p A0      //  A0   Pin A7
 #define Beep_m A4      //  A4   Pin A3
@@ -250,7 +252,6 @@ uint32_t time_test     = 0;
 #define int32_max_2  0x100000000ULL  // 4294967296 = 2^32
 #define int32_max     2147302920     // = int32_2_max * int32_2_max - 1
 #define int32_2_max        46339     // = sqrt(int32_max + 1)
-#define tuning_fraction     1024     // 1024
 #define int30_max     1073651460     // = int32_max / 2
 #define int15_max          32767     // = 2^15 - 1
 #define uint62_max 0x4000000000000000ULL  // 4611686018427387904 = 2^62
@@ -509,8 +510,8 @@ AVRational_32  temp_32_corr_b    = {0, int32_max, int32_max, 0};
 AVRational_32  temp_32_corr_c    = {0, int32_max, int32_max, 0};
 
  /*
-  Quadratic Fit:  y=a+bx+cx^2	
-  Coefficient Data:	
+  Quadratic Fit:  y=a+bx+cx^2
+  Coefficient Data:
   a =	2.1384175E-14
   b =	6.2447861E-14
   c =	-3.4948250E-15
@@ -552,33 +553,33 @@ static const AVRational_32 cbrt_10_plus   = { 0, cbrt_10_num, cbrt_10_denom, 0};
 static const AVRational_32 cbrt_100_plus  = { 1, cbrt_100_num, cbrt_100_denom, 0};
 
 // ---  circle_to cordic  ---  1 Grad  =  160978210179491618,6144
-#define circle_to_expo               20       
-#define circle_to_num         916970662  // 
-#define circle_to_denom      1582289134  // 
+#define circle_to_expo               20
+#define circle_to_num         916970662  //
+#define circle_to_denom      1582289134  //
 static const AVRational_32  circle_to = {circle_to_expo, circle_to_num, circle_to_denom, 0};
 
 // ---  circle_Konstante (circle) ---  360
-#define circle_expo                3       
-#define circle_num         773029044  // 
-#define circle_denom      2147302900  // 
+#define circle_expo                3
+#define circle_num         773029044  //
+#define circle_denom      2147302900  //
 static const AVRational_32  circle = {circle_expo, circle_num, circle_denom, 0};
 static const AVRational_32  circle_div_x = {-circle_expo, circle_denom, circle_num, 0};
 
 // ---  circle_Konstante (circle) ---  180
-#define circle_2_expo                2       
-#define circle_2_num        2147302800  // 
-#define circle_2_denom      1192946000  // 
+#define circle_2_expo                2
+#define circle_2_num        2147302800  //
+#define circle_2_denom      1192946000  //
 static const AVRational_32  circle_2 = {circle_2_expo, circle_2_num, circle_2_denom, 0};
 
 // ---  circle_Konstante (circle) ---  90
-#define circle_4_expo                2       
-#define circle_4_num        1932572610  // 
-#define circle_4_denom      2147302900  // 
+#define circle_4_expo                2
+#define circle_4_num        1932572610  //
+#define circle_4_denom      2147302900  //
 static const AVRational_32  circle_4 = {circle_4_expo, circle_4_num, circle_4_denom, 0};
 
 // ---  Tau_Konstante (2_Pi) ---
-#define Tau_expo                1       
-#define Tau_num        1135249722  // 
+#define Tau_expo                1
+#define Tau_num        1135249722  //
 #define Tau_denom      1806806049  // Fehler ..  1,34e-17
 static const AVRational_32   Tau = {Tau_expo, Tau_num, Tau_denom, 0};
 static const AVRational_32   Tau_div_x = {-Tau_expo, Tau_denom, Tau_num, 0};
@@ -612,20 +613,20 @@ static const AVRational_32  one_e_div_x = {e_expo, e_denom, e_num, 0};
 // https://infogalactic.com/info/Factorial#Approximations_of_factorial
 // ---  fa_0_Konstante  ---     1/12
 #define fa_0_expo            -1 // 0,083333
-#define fa_0_num     1789419100 
-#define fa_0_denom   2147302920 // 
+#define fa_0_num     1789419100
+#define fa_0_denom   2147302920 //
 static const AVRational_32  fa_0 = {fa_0_expo, fa_0_num, fa_0_denom, 0};
 
 // ---  fa_1_Konstante  ---     1/30
 #define fa_1_expo            -1 // 0,033333
 #define fa_1_num      715767640
-#define fa_1_denom   2147302920 // 
+#define fa_1_denom   2147302920 //
 static const AVRational_32  fa_1 = {fa_1_expo, fa_1_num, fa_1_denom, 0};
 
 // ---  fa_2_Konstante  ---     53/210
 #define fa_2_expo            -1 // 0,252381
 #define fa_2_num     2147302897
-#define fa_2_denom    850818129 // 
+#define fa_2_denom    850818129 //
 static const AVRational_32  fa_2 = {fa_2_expo, fa_2_num, fa_2_denom, 0};
 
 // ---  fa_3_Konstante  ---     195/371
@@ -643,28 +644,28 @@ static const AVRational_32  fa_4 = {fa_4_expo, fa_4_num, fa_4_denom, 0};
 // ---  fa_5_Konstante  ---     29944523/19733142
 #define fa_5_expo             0 // 1,517474
 #define fa_5_num     2126061133
-#define fa_5_denom   1401053082  
+#define fa_5_denom   1401053082
 static const AVRational_32  fa_5 = {fa_5_expo, fa_5_num, fa_5_denom, 0};
 
 // ---  fa_6_Konstante  ---     109535241009/48264275462  ..  not used
 
-/*   
+/*
   0.00000 bis 9.00000
   Reciprocal Quadratic: y=1/(1+dx+ex^2)
   Coefficient Data:            x(d+ex)
   d =	-1.0487902e-014
   e =	 3.7774125e-015
 */
-// ---  fa_d_Konstante  ---     
+// ---  fa_d_Konstante  ---
 #define fa_d_expo           -14 // -1.0487902e-014
 #define fa_d_num    -2144775959
-#define fa_d_denom   2045000000  
+#define fa_d_denom   2045000000
 static const AVRational_32  fa_d = {fa_d_expo, fa_d_num, fa_d_denom, 0};
-                                
-// ---  fa_e_Konstante  ---     
+
+// ---  fa_e_Konstante  ---
 #define fa_e_expo           -14 // 3.7774125e-015
 #define fa_e_num      811086012
-#define fa_e_denom   2147200000  
+#define fa_e_denom   2147200000
 static const AVRational_32  fa_e = {fa_e_expo, fa_e_num, fa_e_denom, 0};
 
 /*                           // 2,269489
@@ -674,16 +675,16 @@ static const AVRational_32  fa_e = {fa_e_expo, fa_e_num, fa_e_denom, 0};
   a =	 6.3626912e-014
   b =	-3.5082454e-015
 */
-// ---  fa_a_Konstante  ---     
+// ---  fa_a_Konstante  ---
 #define fa_a_expo           -13 // 6.3626912e-014
 #define fa_a_num     1365990267
-#define fa_a_denom   2146875000  
+#define fa_a_denom   2146875000
 static const AVRational_32  fa_a = {fa_a_expo, fa_a_num, fa_a_denom, 0};
-                                
-// ---  fa_b_Konstante  ---     
+
+// ---  fa_b_Konstante  ---
 #define fa_b_expo           -14 // -3.5082454e-015
 #define fa_b_num     -736731534
-#define fa_b_denom   2100000000  
+#define fa_b_denom   2100000000
 static const AVRational_32  fa_b = {fa_b_expo, fa_b_num, fa_b_denom, 0};
 
 /*
@@ -692,16 +693,16 @@ static const AVRational_32  fa_b = {fa_b_expo, fa_b_num, fa_b_denom, 0};
   Coefficient Data:
   c =	 3.0803574e-014
 */
-// ---  fa_c_Konstante  ---     
+// ---  fa_c_Konstante  ---
 #define fa_c_expo           -14 // 3.0803574e-014
 #define fa_c_num     2140848393
-#define fa_c_denom    695000000  
+#define fa_c_denom    695000000
 static const AVRational_32  fa_c = {fa_c_expo, fa_c_num, fa_c_denom, 0};
 
 // ---  fa_ln_2pi_2_Konstante  ---
 #define fa_ln_2pi_2_expo             0
 #define fa_ln_2pi_2_num     1474345081
-#define fa_ln_2pi_2_denom   1604400107 // Fehler .. +1,17e-19 
+#define fa_ln_2pi_2_denom   1604400107 // Fehler .. +1,17e-19
 static const AVRational_32  fa_ln_2pi_2 = {fa_ln_2pi_2_expo, fa_ln_2pi_2_num, fa_ln_2pi_2_denom, 0};
 
 // ---  ln2_Konstante  ---
@@ -721,7 +722,7 @@ static const AVRational_32   log_2_div_x = {log_2_expo, log_2_denom, log_2_num, 
 // ---  Null_no_Konstante  ---
 #define Null_no_expo            0
 #define Null_no_num             0
-#define Null_no_denom  2147302920  // 
+#define Null_no_denom  2147302920  //
 static const AVRational_32 Null_no = {Null_no_expo, Null_no_num, Null_no_denom, 0};
 
 char    expo_temp_str[]    = "#00";
@@ -733,58 +734,6 @@ char    Expo_string_temp[] = "###" ;
  int16_t expo_temp_16_b         = 0;
  int16_t expo_temp_16_diff      = 0;
  int16_t expo_temp_16_diff_abs  = 0;
-uint64_t num_temp_u64_a     = 1;  // Reduce
-uint64_t num_temp_u64_b     = 1;  // Reduce
-uint64_t denom_test_u64     = 1;
-uint64_t denom_temp_u64_a   = 1;  // Reduce
-uint64_t denom_temp_u64_b   = 1;  // Reduce
-
-uint16_t count_reduce = 0;
-
-  uint64_t b0_num =       0;
-  uint64_t b1_num =       0;
-  uint64_t b2_num =       1;
-  uint64_t b3_num =       1;
-
-  uint64_t b0_denum =     1;
-  uint64_t b1_denum =     1;
-  uint64_t b2_denum =     0;
-  uint64_t b3_denum =     0;
-
-  uint64_t b_num_avg =    1;
-  uint64_t b_denum_avg =  0;
-
-  uint64_t a0_num =       0;
-  uint64_t a1_num =       0;
-  uint64_t a2_num =       1;
-  uint64_t a3_num =       1;
-
-  uint64_t a0_denum =     1;
-  uint64_t a1_denum =     1;
-  uint64_t a2_denum =     0;
-  uint64_t a3_denum =     0;
-
-  uint64_t a_num_avg =    1;
-  uint64_t a_denum_avg =  0;
-
-uint64_t x0_a_64 =      1;
-uint64_t x0_a_64_test = 1;
-uint64_t x0_a_64_corr = 1;
-uint64_t x0_a_64_max  = 1;
-uint32_t x0_a_32 =      1;
-
-uint64_t x0_b_64 =      1;
-uint64_t x0_b_64_test = 1;
-uint64_t x0_b_64_corr = 1;
-uint64_t x0_b_64_max  = 1;
-uint32_t x0_b_32 =      1;
-
-uint64_t x0_a_64_mul  = 1;
-uint64_t x0_a_64_div  = 1;
-
-boolean first_value     = false;
-boolean exact_value     = false;
-boolean NoOverflowSoFar = true;
 
   int8_t  k_  = 0;
 uint64_t  x1_ = 0;
@@ -793,6 +742,9 @@ uint64_t  p1_ = 0;
 uint64_t  q1_ = 1;
 uint64_t  p0_ = 1;
 uint64_t  q0_ = 0;
+
+  uint32_t x0_a_32;
+  uint32_t x0_b_32;
 
  int64_t calc_temp_64_a     = 1;
 uint64_t calc_temp_64_a_abs = 1;
@@ -804,14 +756,9 @@ uint64_t calc_temp_64_c_abs = 1;
  int64_t calc_temp_64_d     = 1;
 uint64_t calc_temp_64_d_abs = 1;
 
-uint64_t old_num_u64_a0  = 1;
-uint64_t old_num_u64_b0  = 1;
-uint64_t old_denum_u64_0 = 1;
-
 uint64_t calc_temp_u64_0 = 1;
 uint64_t calc_temp_u64_1 = 1;
 uint64_t calc_temp_u64_2 = 1;
-// int64_t gcd_temp_64     = 1;
 
 uint32_t num_temp_u32    = 1;
 uint32_t denom_temp_u32  = 1;
@@ -863,9 +810,9 @@ AVRational_32_plus mem_stack_calc[mem_stack_max_c + 1] = {   // after calc
   { 0, int32_max,  int32_max, 0, 0 }
 };
 
-// ---  circle_Tau  ---  360 / Tau  = 
-#define to_deg           12  
-#define to_rad           13   
+// ---  circle_Tau  ---  360 / Tau  =
+#define to_deg           12
+#define to_rad           13
 
 static const AVRational_32 to_xx[14] = {
   { -1, 1250000000,  473176473, 0 },   // 0  7  ..  1 Liter =  (1 / 3,785411784) US-gal
@@ -1008,7 +955,7 @@ static const uint8_t led_font[count_ascii] = {
    83, 103,  49,  45,   7,  28,  42,  60,  73, 110,  27,  57, 100,  15,  35,   8,     //  ¦PQRSTUVWXYZ[\]^_¦
    32,  95, 124,  88,  94, 123,  43, 111, 116,  16,  14, 120,  24,  21,  84,  92,     //  ¦`abcdefghijklmno¦
    83,  53,  80, 108,  70,  29,  43, 106,   9, 102,   3,  24,  29,   5,   1,  54};    //  ¦pqrstuvwxyz{|}~ ¦
-   
+
 uint8_t count_led[8] = {      // 1 .. 7
   0
 };
@@ -1514,7 +1461,7 @@ void Print_Operation(uint8_t Switch_up) {
       case 170:                //    Int
         Serial.print("(Int)");
         break;
- 
+
       case 171:               //    Frac
         Serial.print("Frac");
         break;
@@ -1888,7 +1835,7 @@ void Memory_to_Input_Operation() {
       }
       else {
         left_right_mem_extra( 0, 12 );
-      }      
+      }
     }
     else {
       left_right_mem_extra( 0, mem_extra_test );
@@ -1928,7 +1875,7 @@ void Memory_to_Input_Operation() {
 
   temp_Memory_1[0] = display_string[Memory_1];
   temp_Memory_0[0] = display_string[Memory_0];
-  
+
   if ( (Start_input == Input_Operation_0) || (Start_input == Input_Memory) || (Start_input == M_Plus_spezial) ) {
     mem_save = false;
     mem_exchange = false;
@@ -1952,38 +1899,38 @@ void Mux_change(uint8_t change) {
 
     case 1:
       digitalWrite(Out_A, HIGH);
-      break;  	
+      break;
 
     case 2:
       digitalWrite(Out_B, HIGH);
-      break;  	
+      break;
 
     case 3:
       digitalWrite(Out_A, LOW);
-      break;  	
+      break;
 
     case 4:
       digitalWrite(Out_C, HIGH);
-      break;  	
+      break;
 
     case 5:
       digitalWrite(Out_A, HIGH);
-      break;  	
+      break;
 
     case 6:
       digitalWrite(Out_B, LOW);
-      break;  	
+      break;
 
     case 7:
       digitalWrite(Out_A, LOW);
-      break;  	
+      break;
 
     case 0:
       digitalWrite(Out_C, LOW);
       time_10ms = true;
-      break;  	
+      break;
   }
-  
+
   index_Display = change;
   Display_on();
 }
@@ -2051,7 +1998,7 @@ void Error_String(uint8_t a) {
 }
 
 void Clear_String() {   // String loeschen -- Eingabe Mantisse
-  
+
   strcpy( display_string, string_start );          // normal
 
   display_string[Memory_1] = mem_str_1[mem_pointer];
@@ -2149,11 +2096,11 @@ void Put_Expo() {
       }
 	  }
 	  else {
-      Error_String('U');  // expo < -99	  
+      Error_String('U');  // expo < -99
   	}
 	}
 	else {
-    Error_String('^');    // expo > 99	  
+    Error_String('^');    // expo > 99
 	}
 }
 
@@ -2235,10 +2182,10 @@ void Get_Expo_( uint8_t test ) {
       mem_stack_input[mem_pointer].expo = mem_stack_input[mem_pointer].expo + Point_pos - 2;
       break;
   }
-  
+
   if ( test == 1 ) {
     if (abs(mem_stack_input[ mem_pointer ].num) >= mem_stack_input[ mem_pointer ].denom ) {
-      mem_stack_input[ mem_pointer ].expo -= 1;
+      --mem_stack_input[ mem_pointer ].expo;
     }
   }
 }
@@ -2322,13 +2269,52 @@ void Get_Mantisse() {          // " -1.2345678#- 1 5# 1 9."
     Serial.print(" x 10^ ");
     Serial.println(mem_stack_input[mem_pointer].expo);
   }
-  
+
   Mantisse_change = false;
 }
 
 AVRational_32 Reduce_Number( int8_t expo ) {
 	AVRational_32 Reduce;
-			
+
+  uint16_t count_reduce;
+
+  uint64_t a_num_avg;
+  uint64_t a_denum_avg;
+
+  uint64_t x0_a_64_mul;
+  uint64_t x0_a_64_div;
+
+  boolean first_value;
+
+  uint64_t x0_a_64;
+  uint64_t x0_a_64_test;
+  uint64_t x0_a_64_corr;
+  uint64_t x0_a_64_max;
+
+  uint64_t x0_b_64;
+  uint64_t x0_b_64_test;
+  uint64_t x0_b_64_corr;
+  uint64_t x0_b_64_max;
+
+  uint64_t old_num_u64_a0;
+  uint64_t old_num_u64_b0;
+
+  uint64_t num_temp_u64_a;
+  uint64_t num_temp_u64_b;
+  uint64_t denom_temp_u64_a;
+  uint64_t denom_temp_u64_b;
+  
+  uint64_t a_num_[4];
+  uint64_t a_denum_[4];
+
+  uint64_t b_num_[4];
+  uint64_t b_denum_[4];
+
+  static const uint8_t _0 = 0;
+  static const uint8_t _1 = 1;
+  static const uint8_t _2 = 2;
+  static const uint8_t _3 = 3;
+
   if ( Debug_Level == 48 ) {
     time_test = micros();
   }
@@ -2341,10 +2327,11 @@ AVRational_32 Reduce_Number( int8_t expo ) {
 	int8_t   test_cmp_32 = 0;
   int8_t   test_temp_8 = 0;
 
-  if ( num_temp_u64 > denom_temp_u64 ) {
-    test_temp_8     =  1;
-  }
-  else {
+  test_temp_8     =  1;
+  if ( num_temp_u64 < denom_temp_u64 ) {
+  	if ( Debug_Level == 49 ) {
+       Serial.println("Red_Nbr_01");
+    }
     test_temp_8     = -1;          // num_temp_u64 <--> denom_temp_u64
     calc_temp_u64_0 = denom_temp_u64;
     denom_temp_u64  = num_temp_u64;
@@ -2352,7 +2339,6 @@ AVRational_32 Reduce_Number( int8_t expo ) {
   }
 
   count_reduce = 0;
-  exact_value  = false;
   first_value  = false;
 
  /**
@@ -2378,66 +2364,65 @@ AVRational_32 Reduce_Number( int8_t expo ) {
   num_temp_u64_b   = num_temp_u64;
   denom_temp_u64_b = denom_temp_u64;
 
-  a1_num   = 1;                     // p1
-  a2_num   = num_temp_u64_a;
-  if ( denom_temp_u64_a > 0 ) {
-    a2_num  /= denom_temp_u64_a;    // p2
-  }
-  a1_denum = 0;                     // q1
-  a2_denum = 1;                     // q2
+  a_num_[_1]   = 1;                     // p1
+  a_num_[_2]   = num_temp_u64_a;
+  a_num_[_2]  /= denom_temp_u64_a;      // p2
 
-  b1_num   = 1;                     // p1
-  b2_num   = num_temp_u64_b;
-  --b2_num;
-  if ( denom_temp_u64_b > 0 ) {
-    b2_num  /= denom_temp_u64_b;    // p2
-  }
-  ++b2_num;
-  b1_denum = 0;                     // q1
-  b2_denum = 1;                     // q2
+  a_denum_[_1] = 0;                     // q1
+  a_denum_[_2] = 1;                     // q2
+
+  b_num_[_1]   = 1;                     // p1
+  b_num_[_2]   = num_temp_u64_b;
+  --b_num_[_2];
+  b_num_[_2]  /= denom_temp_u64_b;      // p2
+
+  ++b_num_[_2];
+  b_denum_[_1] = 0;                     // q1
+  b_denum_[_2] = 1;                     // q2
 
   old_num_u64_a0    = num_temp_u64_a;
   num_temp_u64_a    = denom_temp_u64_a;
   denom_temp_u64_a  = old_num_u64_a0;
-  denom_temp_u64_a -= a2_num * num_temp_u64_a;
+  denom_temp_u64_a -= a_num_[_2] * num_temp_u64_a;
 
-  x0_a_64 = num_temp_u64_a;
-  if ( denom_temp_u64_a > 0 ) {
-    x0_a_64 /= denom_temp_u64_a;
-  }
-  else {
-    x0_a_64 = 1;
+  x0_a_64  = num_temp_u64_a;
+  x0_a_64 /= denom_temp_u64_a;
+  if ( denom_temp_u64_a == 0 ) {
+  	if ( Debug_Level == 49 ) {
+       Serial.println("Red_Nbr_04");
+    }
+    x0_a_64  = 1;
     first_value = true;
-    exact_value = true;    //   denom_temp_u64_a == 0
     old_num_u64_a0 = 0;    // break out
   }
 
   old_num_u64_b0    = num_temp_u64_b;
   num_temp_u64_b    = denom_temp_u64_b;
-  denom_temp_u64_b  = b2_num * num_temp_u64_b;
+  denom_temp_u64_b  = b_num_[_2] * num_temp_u64_b;
   denom_temp_u64_b -= old_num_u64_b0;
-    
-  x0_b_64 = num_temp_u64_b;
+
+    x0_b_64  = num_temp_u64_b;
   --x0_b_64;
-  if ( denom_temp_u64_b > 0 ) {
     x0_b_64 /= denom_temp_u64_b;    // p2
-  }
-  else {
+  if ( denom_temp_u64_b == 0 ) {
+  	if ( Debug_Level == 49 ) {
+       Serial.println("Red_Nbr_05");
+    }
     x0_b_64 = 0;
   }
   ++x0_b_64;
 
-  a3_num    = a1_num;
-  a3_num   += a2_num * x0_a_64;
-  a3_denum  = a1_denum;
-  a3_denum += a2_denum * x0_a_64;
+  a_num_[_3]    = a_num_[_1];
+  a_num_[_3]   += a_num_[_2] * x0_a_64;
+  a_denum_[_3]  = a_denum_[_1];
+  a_denum_[_3] += a_denum_[_2] * x0_a_64;
 
-  b3_num    = b2_num * x0_b_64;
-  b3_num   -= b1_num;
-  b3_denum  = b2_denum * x0_b_64;
-  b3_denum -= b1_denum;
+  b_num_[_3]    = b_num_[_2] * x0_b_64;
+  b_num_[_3]   -= b_num_[_1];
+  b_denum_[_3]  = b_denum_[_2] * x0_b_64;
+  b_denum_[_3] -= b_denum_[_1];
 
-  count_reduce += 1;
+  ++count_reduce;
 
   if ( Debug_Level == 20 ) {
     x0_a_32 = x0_a_64;
@@ -2445,37 +2430,40 @@ AVRational_32 Reduce_Number( int8_t expo ) {
     Serial.print(count_reduce);
     Serial.print(" = ");
     Serial.println(x0_a_32);
-    x0_a_32 = a3_num;
+    x0_a_32 = a_num_[_3];
     Serial.print(x0_a_32);
     Serial.print(" / ");
-    x0_a_32 = a3_denum;
+    x0_a_32 = a_denum_[_3];
     Serial.println(x0_a_32);
   }
 
-  if ( a3_num > int32_max ) {
+  if ( a_num_[_3] > int32_max ) {
+  	if ( Debug_Level == 49 ) {
+       Serial.println("Red_Nbr_06");
+    }
     x0_a_64_mul  = expo_test_000;
-    x0_a_64_mul /= a3_num;
-    a3_num      *= x0_a_64_mul;
-    a3_denum    *= x0_a_64_mul;
-    x0_a_64_div  = a3_num;
+    x0_a_64_mul /= a_num_[_3];
+    a_num_[_3]     *= x0_a_64_mul;
+    a_denum_[_3]   *= x0_a_64_mul;
+    x0_a_64_div  = a_num_[_3];
     x0_a_64_div /= int32_max;
-    a3_num      += x0_a_64_div / 2;
-    a3_num      /= x0_a_64_div;
-    a3_denum    += x0_a_64_div / 2;
-    a3_denum    /= x0_a_64_div;
-    --a3_num;
-    --a3_denum;
+    a_num_[_3]     += x0_a_64_div / 2;
+    a_num_[_3]     /= x0_a_64_div;
+    a_denum_[_3]   += x0_a_64_div / 2;
+    a_denum_[_3]   /= x0_a_64_div;
+    --a_num_[_3];
+    --a_denum_[_3];
 
-    a.num   = a3_num;
-    a.denom = a3_denum;
-    b.num   = a2_num;
-    b.denom = a2_denum;
+    a.num   = a_num_[_3];
+    a.denom = a_denum_[_3];
+    b.num   = a_num_[_2];
+    b.denom = a_denum_[_2];
 
     if ( Debug_Level == 15 ) {
-      x0_a_32 = a3_num;
+      x0_a_32 = a_num_[_3];
       Serial.print(x0_a_32);
       Serial.print(" / ");
-      x0_a_32 = a3_denum;
+      x0_a_32 = a_denum_[_3];
       Serial.println(x0_a_32);
     }
     old_num_u64_a0 = 0;    // break out
@@ -2487,20 +2475,23 @@ AVRational_32 Reduce_Number( int8_t expo ) {
     Serial.print(count_reduce);
     Serial.print(" = ");
     Serial.println(x0_b_32);
-    x0_a_32 = b3_num;
+    x0_a_32 = b_num_[_3];
     Serial.print(x0_a_32);
     Serial.print(" / ");
-    x0_a_32 = b3_denum;
+    x0_a_32 = b_denum_[_3];
     Serial.println(x0_a_32);
   }
 
   if ( denom_temp_u64 == 0 ) {
+  	if ( Debug_Level == 49 ) {
+       Serial.println("Red_Nbr_07");
+    }
     a.num   = 0;
     a.denom = int32_max;
   }
   else {
     while ( old_num_u64_a0 > 0 ) {
-    	    	
+
       ++count_reduce;
 
     	if ( Debug_Level == 22 ) {
@@ -2508,20 +2499,20 @@ AVRational_32 Reduce_Number( int8_t expo ) {
         Serial.println(count_reduce);
     	}
 
-      a0_num = a1_num;
-      a1_num = a2_num;
-      a2_num = a3_num;
-      a0_denum = a1_denum;
-      a1_denum = a2_denum;
-      a2_denum = a3_denum;
+      a_num_[_0]   = a_num_[_1];
+      a_num_[_1]   = a_num_[_2];
+      a_num_[_2]   = a_num_[_3];
+      a_denum_[_0] = a_denum_[_1];
+      a_denum_[_1] = a_denum_[_2];
+      a_denum_[_2] = a_denum_[_3];
 
-      b0_num = b1_num;
-      b1_num = b2_num;
-      b2_num = b3_num;
-      b0_denum = b1_denum;
-      b1_denum = b2_denum;
-      b2_denum = b3_denum;
-
+      b_num_[_0]   = b_num_[_1];
+      b_num_[_1]   = b_num_[_2];
+      b_num_[_2]   = b_num_[_3];
+      b_denum_[_0] = b_denum_[_1];
+      b_denum_[_1] = b_denum_[_2];
+      b_denum_[_2] = b_denum_[_3];
+     
       old_num_u64_a0    = denom_temp_u64_a;
       denom_temp_u64_a  = num_temp_u64_a;
       denom_temp_u64_a -= x0_a_64 * old_num_u64_a0;
@@ -2532,38 +2523,93 @@ AVRational_32 Reduce_Number( int8_t expo ) {
       denom_temp_u64_b -= num_temp_u64_b;
       num_temp_u64_b    = old_num_u64_b0;
 
-      x0_a_64_test = x0_a_64;
-      x0_a_64 = num_temp_u64_a;
-      if ( denom_temp_u64_a > 0 ) {
+        x0_a_64_test = x0_a_64;
+        x0_a_64  = num_temp_u64_a;
         x0_a_64 /= denom_temp_u64_a;
-      }
-      else {
-        x0_a_64 = 1;
-        exact_value = true;    //   denom_temp_u64_a == 0
+      if ( denom_temp_u64_a == 0 ) {
+        if ( Debug_Level == 49 ) {
+          Serial.println("Red_Nbr_08");
+        }
+        x0_a_64  = 1;
         old_num_u64_a0 = 0;    // break out
       }
-
-      x0_b_64_test = x0_b_64;
-      x0_b_64 = num_temp_u64_b;
-      --x0_b_64;
-      if ( denom_temp_u64_b > 0 ) {
-        x0_b_64 /= denom_temp_u64_b;    // p2
+  
+      if ( Debug_Level == 50 ) {
+        x0_a_32 =  x0_a_64;
+        Serial.print(" ");
+        if (x0_a_32 < 100000) {
+          Serial.print("0");
+        }
+        if (x0_a_32 < 10000) {
+          Serial.print("0");
+        }
+        if (x0_a_32 < 1000) {
+          Serial.print("0");
+        }
+        if (x0_a_32 < 100) {
+          Serial.print("0");
+        }
+        if (x0_a_32 < 10) {
+          Serial.print("0");
+        }
+        Serial.println(x0_a_32);
       }
-      else {
-        x0_b_64 = 0;
+
+        x0_b_64_test = x0_b_64;
+        x0_b_64  = num_temp_u64_b;
+      --x0_b_64;
+        x0_b_64 /= denom_temp_u64_b;    // p2
+      if ( denom_temp_u64_b == 0 ) {
+        if ( Debug_Level == 49 ) {
+          Serial.println("Red_Nbr_09");
+        }
+        x0_b_64  = 0;
         old_num_u64_a0 = 0;    // break out
       }
       ++x0_b_64;
 
-      a3_num    = a1_num;
-      a3_num   += a2_num * x0_a_64;
-      a3_denum  = a1_denum;
-      a3_denum += a2_denum * x0_a_64;
+      if ( Debug_Level == 50 ) {
+        x0_b_32 =  x0_b_64;
+        Serial.print(" ");
+        if (x0_b_32 < 100000) {
+          Serial.print("0");
+        }
+        if (x0_b_32 < 10000) {
+          Serial.print("0");
+        }
+        if (x0_b_32 < 1000) {
+          Serial.print("0");
+        }
+        if (x0_b_32 < 100) {
+          Serial.print("0");
+        }
+        if (x0_b_32 < 10) {
+          Serial.print("0");
+        }
+        Serial.println(x0_b_32);
+      }
 
-      b3_num    = b2_num * x0_b_64;
-      b3_num   -= b1_num;
-      b3_denum  = b2_denum * x0_b_64;
-      b3_denum -= b1_denum;
+      if ( a_num_[_3] >= int32_max ) {
+        x0_a_64  = int32_max;
+        x0_a_64 -= a_num_[_1];
+        x0_a_64 /= a_num_[_2];
+      }
+
+      if ( b_num_[_3] >= int32_max ) {
+        x0_b_64  = int32_max;
+        x0_b_64 -= b_num_[_1];
+        x0_b_64 /= b_num_[_2];
+      }      
+
+      a_num_[_3]    = a_num_[_1];
+      a_num_[_3]   += a_num_[_2] * x0_a_64;
+      a_denum_[_3]  = a_denum_[_1];
+      a_denum_[_3] += a_denum_[_2] * x0_a_64;
+
+      b_num_[_3]    = b_num_[_2] * x0_b_64;
+      b_num_[_3]   -= b_num_[_1];
+      b_denum_[_3]  = b_denum_[_2] * x0_b_64;
+      b_denum_[_3] -= b_denum_[_1];
 
       if ( Debug_Level == 20 ) {
         x0_a_32 = x0_a_64;
@@ -2571,10 +2617,10 @@ AVRational_32 Reduce_Number( int8_t expo ) {
         Serial.print(count_reduce);
         Serial.print(" = ");
         Serial.println(x0_a_32);
-        x0_a_32 = a2_num;
+        x0_a_32 = a_num_[_2];
         Serial.print(x0_a_32);
         Serial.print(" / ");
-        x0_a_32 = a2_denum;
+        x0_a_32 = a_denum_[_2];
         Serial.println(x0_a_32);
       }
       if ( Debug_Level == 20 ) {
@@ -2583,95 +2629,91 @@ AVRational_32 Reduce_Number( int8_t expo ) {
         Serial.print(count_reduce);
         Serial.print(" = ");
         Serial.println(x0_b_32);
-        x0_b_32 = b2_num;
+        x0_b_32 = b_num_[_2];
         Serial.print(x0_b_32);
         Serial.print(" / ");
-        x0_b_32 = b2_denum;
+        x0_b_32 = b_denum_[_2];
         Serial.println(x0_b_32);
       }
 
       if ( denom_temp_u64_a == 0 ) {
-        a.num   = a2_num;
-        a.denom = a2_denum;
-        b.num   = a1_num;
-        b.denom = a1_denum;
+        if ( Debug_Level == 49 ) {
+          Serial.println("Red_Nbr_10");
+        }
+        a.num   = a_num_[_2];
+        a.denom = a_denum_[_2];
+        b.num   = a_num_[_1];
+        b.denom = a_denum_[_1];
       }
 
       if ( denom_temp_u64_b == 0 ) {
-        a.num   = b2_num;
-        a.denom = b2_denum;
-        b.num   = b1_num;
-        b.denom = b1_denum;
+        if ( Debug_Level == 49 ) {
+          Serial.println("Red_Nbr_11");
+        }
+        a.num   = b_num_[_2];
+        a.denom = b_denum_[_2];
+        b.num   = b_num_[_1];
+        b.denom = b_denum_[_1];
       }
 
-      if ( b3_num >= int32_max ) {
-
-        x0_b_64 = int32_max;
-        x0_b_64 -= b1_num;
-        if ( b2_num > 0 ) {
-          x0_b_64 /= b2_num;
-          b3_num   = b2_num;
-          b3_denum = b2_denum;
-        }
-        else {
-          if ( Debug_Level == 20 ) {
-            Serial.println("tuning_fraction");
-          }
-          x0_b_64  = tuning_fraction;
-          b2_num   = 0;
-          b2_denum = 0;
-        }
-
-        b3_num    = b2_num * x0_b_64;
-        b3_num   -= b1_num;
-        b3_denum  = b2_denum * x0_b_64;
-        b3_denum -= b1_denum;
-
-        if ( denom_temp_u64_b == 0 ) {
-          exact_value = true;    //   denom_temp_u64_b == 0
+      if ( b_num_[_3] >= int32_max ) {
+        if ( Debug_Level == 49 ) {
+          Serial.println("Red_Nbr_12");
         }
 
         if ( x0_b_64 == 0 ) {
           if ( Debug_Level == 20 ) {
             Serial.print("-> x0_b_64 == 0 <- b2_num = ");
-            x0_b_32 = b2_num;
+            x0_b_32 = b_num_[_2];
             Serial.println(x0_b_32);
+          }
+          if ( Debug_Level == 49 ) {
+            Serial.println("Red_Nbr_15");
           }
           x0_b_64_corr  = int32_max;
           x0_b_64_corr *= x0_b_64_test;
-          x0_b_64_corr /= b2_num;
+          x0_b_64_corr /= b_num_[_2];
           if ( Debug_Level == 20 ) {
             Serial.print("x0_b_64_corr = ");
             x0_b_32 = x0_b_64_corr;
             Serial.println(x0_b_32);
             Serial.print("b1_num = ");
-            x0_b_32 = b1_num;
+            x0_b_32 = b_num_[_1];
             Serial.println(x0_b_32);
             Serial.print("count_reduce = ");
             Serial.println(count_reduce);
           }
 
           if ( x0_b_64_corr > 8 ) {
-            if  ( count_reduce > 2 ) {
-              b3_num    = b1_num * x0_b_64_corr;
-              b3_num   -= b0_num;
-              b3_denum  = b1_denum * x0_b_64_corr;
-              b3_denum -= b0_denum;
+            if ( count_reduce > 2 ) {
+              if ( Debug_Level == 49 ) {
+                Serial.println("Red_Nbr_16");
+              }
+              b_num_[_3]    = b_num_[_1] * x0_b_64_corr;
+              b_num_[_3]   -= b_num_[_0];
+              b_denum_[_3]  = b_denum_[_1] * x0_b_64_corr;
+              b_denum_[_3] -= b_denum_[_0];
             }
             else {
-              b3_num   = b1_num;
-              b3_denum = b1_denum;
+              if ( Debug_Level == 49 ) {
+                Serial.println("Red_Nbr_17");
+              }
+              b_num_[_3]   = b_num_[_1];
+              b_denum_[_3] = b_denum_[_1];
             }
           }
           else {
-            b3_num   = b2_num;
-            b3_denum = b2_denum;
+            if ( Debug_Level == 49 ) {
+              Serial.println("Red_Nbr_18");
+            }
+            b_num_[_3]   = b_num_[_2];
+            b_denum_[_3] = b_denum_[_2];
           }
 
-          a.num   = b3_num;
-          a.denom = b3_denum;
-          b.num   = b2_num;
-          b.denom = b2_denum;
+          a.num   = b_num_[_3];
+          a.denom = b_denum_[_3];
+          b.num   = b_num_[_2];
+          b.denom = b_denum_[_2];
         }
         else {
           if ( Debug_Level == 47 ) {
@@ -2683,18 +2725,23 @@ AVRational_32 Reduce_Number( int8_t expo ) {
            */
            Serial.println("_");
           }
+          if ( Debug_Level == 49 ) {
+            Serial.println("Red_Nbr_19");
+          }
+          a.num   = b_num_[_1];
+          a.denom = b_denum_[_1];
+          b.num   = b_num_[_0];
+          b.denom = b_denum_[_0];
 
-          a.num   = b1_num;
-          a.denom = b1_denum;
-          b.num   = b0_num;
-          b.denom = b0_denum;
-
-          if ( b2_num < int32_max ) {
-            if ( b2_num > b1_num ) {
-              a.num   = b2_num;
-              a.denom = b2_denum;
-              b.num   = b1_num;
-              b.denom = b1_denum;
+          if ( b_num_[_2] < int32_max ) {
+            if ( b_num_[_2] > b_num_[_1] ) {
+              if ( Debug_Level == 49 ) {
+                Serial.println("Red_Nbr_20");
+              }
+              a.num   = b_num_[_2];
+              a.denom = b_denum_[_2];
+              b.num   = b_num_[_1];
+              b.denom = b_denum_[_1];
             }
           }
         }
@@ -2703,62 +2750,45 @@ AVRational_32 Reduce_Number( int8_t expo ) {
           // x0_b_32 = x0_b_64;
           // Serial.print("__--x0_b_32 = ");
           // Serial.println(x0_b_32);
-          x0_b_32 = b1_num;
+          x0_b_32 = b_num_[_1];
           Serial.print(x0_b_32);
           Serial.print(" b1 / b1 ");
-          x0_b_32 = b1_denum;
+          x0_b_32 = b_denum_[_1];
           Serial.println(x0_b_32);
-          x0_b_32 = b2_num;
+          x0_b_32 = b_num_[_2];
           Serial.print(x0_b_32);
           Serial.print(" b2 / b2 ");
-          x0_b_32 = b2_denum;
+          x0_b_32 = b_denum_[_2];
           Serial.println(x0_b_32);
         }
 
-        old_num_u64_a0 = 0;
+        old_num_u64_a0 = 0;    // break out
       }
 
-      if ( a3_num >= int32_max ) {
-
-        x0_a_64 = int32_max;
-        x0_a_64 -= a1_num;
-        if ( a2_num > 0 ) {
-          x0_a_64 /= a2_num;
-        }
-        else {
-          if ( Debug_Level == 20 ) {
-            Serial.println("tuning_fraction");
-          }
-          x0_a_64  = tuning_fraction;
-          a2_num   = 0;
-          a2_denum = 0;
-        }
-
-        a3_num    = a1_num;
-        a3_num   += a2_num * x0_a_64;
-        a3_denum  = a1_denum;
-        a3_denum += a2_denum * x0_a_64;
-
-        if ( denom_temp_u64_a == 0 ) {
-          exact_value = true;    //   denom_temp_u64_a == 0
+      if ( a_num_[_3] >= int32_max ) {
+        if ( Debug_Level == 49 ) {
+          Serial.println("Red_Nbr_21");
         }
 
         if ( x0_a_64 == 0 ) {
+          if ( Debug_Level == 49 ) {
+            Serial.println("Red_Nbr_24");
+          }
           if ( Debug_Level == 20 ) {
             Serial.print("-> x0_a_64 == 0 <- a2_num = ");
-            x0_a_32 = a2_num;
+            x0_a_32 = a_num_[_2];
             Serial.println(x0_a_32);
           }
-          x0_a_64_corr  = int32_max;
-          x0_a_64_corr *= x0_a_64_test;
-          x0_a_64_corr /= a2_num;
+            x0_a_64_corr  = int32_max;
+            x0_a_64_corr *= x0_a_64_test;
+            x0_a_64_corr /= a_num_[_2];
           --x0_a_64_corr;
           if ( Debug_Level == 20 ) {
             Serial.print("x0_a_64_corr = ");
             x0_a_32 = x0_a_64_corr;
             Serial.println(x0_a_32);
             Serial.print("a1_num = ");
-            x0_a_32 = a1_num;
+            x0_a_32 = a_num_[_1];
             Serial.println(x0_a_32);
             Serial.print("count_reduce = ");
             Serial.println(count_reduce);
@@ -2766,33 +2796,45 @@ AVRational_32 Reduce_Number( int8_t expo ) {
 
           if ( x0_a_64_corr > 8 ) {
             if ( count_reduce > 2 ) {
-              a3_num    = a1_num * x0_a_64_corr;
-              a3_num   += a0_num;
-              a3_denum  = a1_denum * x0_a_64_corr;
-              a3_denum += a0_denum;
+              if ( Debug_Level == 49 ) {
+                Serial.println("Red_Nbr_25");
+              }
+              a_num_[_3]    = a_num_[_1] * x0_a_64_corr;
+              a_num_[_3]   += a_num_[_0];
+              a_denum_[_3]  = a_denum_[_1] * x0_a_64_corr;
+              a_denum_[_3] += a_denum_[_0];
             }
             else {
-              a3_num   = a1_num;
-              a3_denum = a1_denum;
+              if ( Debug_Level == 49 ) {
+                Serial.println("Red_Nbr_26");
+              }
+              a_num_[_3]   = a_num_[_1];
+              a_denum_[_3] = a_denum_[_1];
             }
           }
           else {
-            a3_num = a2_num;
-            a3_denum = a2_denum;
+            if ( Debug_Level == 49 ) {
+              Serial.println("Red_Nbr_27");
+            }
+            a_num_[_3]   = a_num_[_2];
+            a_denum_[_3] = a_denum_[_2];
           }
 
-          a.num   = a3_num;
-          a.denom = a3_denum;
-          b.num   = a2_num;
-          b.denom = a2_denum;
+          a.num   = a_num_[_3];
+          a.denom = a_denum_[_3];
+          b.num   = a_num_[_2];
+          b.denom = a_denum_[_2];
         }
         else {
-          a_num_avg    = a1_num * a2_denum;
-          a_num_avg   += a1_denum * a2_num;
-          a_denum_avg  = a1_denum * a2_denum;
+          if ( Debug_Level == 49 ) {
+            Serial.println("Red_Nbr_28");
+          }
+          a_num_avg    = a_num_[_1] * a_denum_[_2];
+          a_num_avg   += a_denum_[_1] * a_num_[_2];
+          a_denum_avg  = a_denum_[_1] * a_denum_[_2];
           a_denum_avg *= 2;
-          a_num_avg   *= a3_denum;
-          a_denum_avg *= a3_num;
+          a_num_avg   *= a_denum_[_3];
+          a_denum_avg *= a_num_[_3];
 
           if ( a_num_avg >= a_denum_avg ) {
             if ( Debug_Level == 20 ) {
@@ -2801,18 +2843,23 @@ AVRational_32 Reduce_Number( int8_t expo ) {
               x0_a_32 =  x0_a_64;
               Serial.println(x0_a_32);
             }
+            if ( Debug_Level == 49 ) {
+              Serial.println("Red_Nbr_29");
+            }
+            a.num   = a_num_[_1];
+            a.denom = a_denum_[_1];
+            b.num   = a_num_[_0];
+            b.denom = a_denum_[_0];
 
-            a.num     = a1_num;
-            a.denom   = a1_denum;
-            b.num   = a0_num;
-            b.denom = a0_denum;
-
-            if ( a2_num < int32_max ) {
-              if ( a2_num > a1_num ) {
-                a.num   = a2_num;
-                a.denom = a2_denum;
-                b.num   = a1_num;
-                b.denom = a1_denum;
+            if ( a_num_[_2] < int32_max ) {
+              if ( a_num_[_2] > a_num_[_1] ) {
+                if ( Debug_Level == 49 ) {
+                  Serial.println("Red_Nbr_30");
+                }
+                a.num   = a_num_[_2];
+                a.denom = a_denum_[_2];
+                b.num   = a_num_[_1];
+                b.denom = a_denum_[_1];
               }
             }
           }
@@ -2823,16 +2870,25 @@ AVRational_32 Reduce_Number( int8_t expo ) {
               x0_a_32 = x0_a_64_max;
               Serial.println(x0_a_32);
             }
+            if ( Debug_Level == 49 ) {
+              Serial.println("Red_Nbr_31");
+            }
             if ( old_num_u64_a0 == 0 ) {
+              if ( Debug_Level == 49 ) {
+                Serial.println("Red_Nbr_32");
+              }
               b.num   = a.num;
               b.denom = a.denom;
             }
             else {
-              b.num   = a1_num;
-              b.denom = a1_denum;
+              if ( Debug_Level == 49 ) {
+                Serial.println("Red_Nbr_33");
+              }
+              b.num   = a_num_[_1];
+              b.denom = a_denum_[_1];
             }
-            a.num   = a2_num;
-            a.denom = a2_denum;            
+            a.num   = a_num_[_2];
+            a.denom = a_denum_[_2];
           }
         }
 
@@ -2840,29 +2896,32 @@ AVRational_32 Reduce_Number( int8_t expo ) {
           // x0_b_32 = x0_b_64;
           // Serial.print("__--x0_b_32 = ");
           // Serial.println(x0_b_32);
-          x0_b_32 = a1_num;
+          x0_b_32 = a_num_[_1];
           Serial.print(x0_b_32);
           Serial.print(" a1 / a1 ");
-          x0_b_32 = a1_denum;
+          x0_b_32 = a_denum_[_1];
           Serial.println(x0_b_32);
-          x0_b_32 = a2_num;
+          x0_b_32 = a_num_[_2];
           Serial.print(x0_b_32);
           Serial.print(" a2 / a2 ");
-          x0_b_32 = a2_denum;
+          x0_b_32 = a_denum_[_2];
           Serial.println(x0_b_32);
         }
 
-        old_num_u64_a0 = 0;
+        old_num_u64_a0 = 0;    // break out
       }
     }
   }
 
   if ( first_value == true ) {
+    if ( Debug_Level == 49 ) {
+      Serial.println("Red_Nbr_34");
+    }
   	first_value = false;
-    a.num   = b2_num;
-    a.denom = b2_denum;
-    b.num   = b1_num;
-    b.denom = b1_denum;
+    a.num   = b_num_[_2];
+    a.denom = b_denum_[_2];
+    b.num   = b_num_[_1];
+    b.denom = b_denum_[_1];
   }
 
   if ( Debug_Level == 22 ) {
@@ -2876,9 +2935,9 @@ AVRational_32 Reduce_Number( int8_t expo ) {
     b_64.denom *= b.denom;
     test_cmp_64 = compare(b_64, a_64);
   }
-    
+
   test_cmp_32 = compare(b, a);
-  
+
   if ( Debug_Level == 22 ) {
     Serial.print(b.num);
     Serial.print("  _  /  _  ");
@@ -2907,10 +2966,16 @@ AVRational_32 Reduce_Number( int8_t expo ) {
   }
 
   if ( test_cmp_32 > 0 ) {
+    if ( Debug_Level == 49 ) {
+      Serial.println("Red_Nbr_35");
+    }
     a = compare_extra(a, b);
   }
 
   if ( test_cmp_32 < 0 ) {
+    if ( Debug_Level == 49 ) {
+      Serial.println("Red_Nbr_36");
+    }
     a = compare_extra(b, a);
   }
 
@@ -2918,6 +2983,9 @@ AVRational_32 Reduce_Number( int8_t expo ) {
   denom_temp_u32 = a.denom;
 
   if ( test_temp_8 < 0 ) {
+    if ( Debug_Level == 49 ) {
+      Serial.println("Red_Nbr_37");
+    }
   	num_temp_u32   = a.denom;  // Tausch
     denom_temp_u32 = a.num;    // Tausch
   }
@@ -2925,21 +2993,21 @@ AVRational_32 Reduce_Number( int8_t expo ) {
   Expand_Number();
   if ( (count_wait % 5) == 4 ) {
     display_b[12] = led_font[(count % 12) + 1];
-    count += 1;	
+    ++count;
     Display_change = true;
   }
-  count_wait += 1;
-  
+  ++count_wait;
+
   if ( Debug_Level == 48 ) {
    	Serial.print(micros() - time_test);
    	Serial.print("  ");
    	Serial.println(count_reduce);
   }
-  
+
  	Reduce.expo  = expo;
  	Reduce.num   = num_temp_u32;
  	Reduce.denom = denom_temp_u32;
- 	
+
  	return Reduce;
 }
 
@@ -2991,12 +3059,12 @@ void Display_Number(AVRational_32 Display_Input) {
  *   23.50001 -->  24
  *  -23.50001 --> -24
  */
- 
+
    int8_t temp_denom         = -120;
   uint8_t display_digit_abs  = abs(display_digit);
-  
+
   if ( Display_Input.denom < 9 ) {
-  	temp_denom = Display_Input.denom;    
+  	temp_denom = Display_Input.denom;
   }
 
   uint8_t temp_char = display_string[Operation];
@@ -3037,8 +3105,8 @@ void Display_Number(AVRational_32 Display_Input) {
   else {
     display_big *= expo_10[display_digit_abs];
   }
-  display_big += (abs(Display_Input.denom) / 2);
-  display_big -= 1;
+    display_big += (abs(Display_Input.denom) / 2);
+  --display_big;
   display_number = display_big / Display_Input.denom;
 
   if (abs(display_number) == expo_10[display_digit_abs]) {
@@ -3188,10 +3256,10 @@ void Display_Number(AVRational_32 Display_Input) {
   }
 
   if ( to_temperature == true ) {
-    display_string[2] -= 1;
+    --display_string[2];
   }
   to_temperature   = false;
-  
+
   if ( display_digit < 0 ) {
   	display_digit_abs += 2;
     while ( display_string[display_digit_abs] == '0' ) {
@@ -3217,7 +3285,7 @@ void Display_Number(AVRational_32 Display_Input) {
     Serial.println(Zero_count);
     Serial.println(display_digit_abs);
   }
-  
+
   temp_Memory_1[0] = display_string[Memory_1];
   temp_Memory_0[0] = display_string[Memory_0];
 }
@@ -3257,7 +3325,8 @@ void Display_Off() {
 }
 
 void Expand_Reduce_add() {
-	
+  uint64_t denom_test_u64;
+
   calc_temp_64_d  = calc_temp_64_a;
   calc_temp_64_d += calc_temp_64_b;
 
@@ -3267,7 +3336,7 @@ void Expand_Reduce_add() {
   }
 
   num_temp_u64    = abs(calc_temp_64_d);  // max:  9223372036854775807
-  
+
   denom_temp_u64  = calc_temp_64_c_abs;
   denom_test_u64  = denom_temp_u64;
   denom_test_u64 /= 5;
@@ -3372,9 +3441,7 @@ void Expand_Reduce_add() {
       }
 
       temp_32 = Reduce_Number( temp_32.expo );              // reduce
-      // temp_32.num   = num_temp_u32;
       temp_32.num  *= test_signum_8;
-      // temp_32.denom = denom_temp_u32;
     }
     else {
       temp_32.num   = 0;
@@ -3389,32 +3456,27 @@ AVRational_32 one_x_n_add(AVRational_32 a, uint8_t n) {
   denom_temp_u64 = abs(a.denom);
 
   if ( n == 0 ) {
-    Error_String('0');  
+    Error_String('0');
   }
-	
+
   while ( a.expo < 0 ) {
     denom_temp_u64 *= 10;
-    a.expo += 1;
+    ++a.expo;
   }
-	
+
 	denom_temp_u64 *= n;
 	num_temp_u64   += denom_temp_u64;
                      // num_temp_u64 ,  denom_temp_u64
-  temp_32 = Reduce_Number( 0 );   // reduce
-  // temp_32.num    = num_temp_u32;
-  // temp_32.denom  = denom_temp_u32;
-	// temp_32.expo   = 0;
-	
-	return temp_32;
+	return Reduce_Number( 0 );   // reduce
 }
 
 AVRational_32 div_u32(AVRational_32 a, uint32_t denom_x) {
   if ( a.num == 0 ) {
-    return a;	
+    return a;
   }
 
   if ( denom_x == 1 ) {
-    return a;	
+    return a;
   }
 
   if ( a.num > 0 ) {
@@ -3425,41 +3487,39 @@ AVRational_32 div_u32(AVRational_32 a, uint32_t denom_x) {
   }
 
   num_temp_u64    = abs(a.num);
-  denom_temp_u64  = abs(a.denom);  
+  denom_temp_u64  = abs(a.denom);
   temp_32.expo    = a.expo;
-  
+
   denom_temp_u64 *= denom_x;
 
   while ( num_temp_u64 < denom_temp_u64 ) {
     num_temp_u64   *= 5;
     denom_temp_u64 /= 2;
-    temp_32.expo   -= 1;
-  }    
+    --temp_32.expo;
+  }
 
   calc_temp_16_0 = num_temp_u64 / denom_temp_u64;
   if ( calc_temp_16_0 > 2 ) {
     denom_temp_u64 *= 10;
-    temp_32.expo   += 1;
+    ++temp_32.expo;
   }
                      // num_temp_u64 ,  denom_temp_u64
   temp_32 = Reduce_Number( temp_32.expo );   // reduce
-  // temp_32.num    = num_temp_u32;
-  // temp_32.denom  = denom_temp_u32;
 
   if ( temp_32.num == 0 ) {
     temp_32.expo = 0;
   }
 
   temp_32.num *= test_signum_8;
-  return temp_32;  
+  return temp_32;
 }
 
 AVRational_32 mul_spezial(AVRational_32 a, AVRational_32 b, uint64_t corr) {
   if ( a.num == 0 ) {
-    return a;	
+    return a;
   }
   if ( b.num == 0 ) {
-    return b;	
+    return b;
   }
   temp_64.expo   = a.expo;
   temp_64.expo  += b.expo;
@@ -3517,8 +3577,6 @@ AVRational_32 mul_spezial(AVRational_32 a, AVRational_32 b, uint64_t corr) {
   }
 
   temp_32 = Reduce_Number( temp_32.expo );                // reduce
-  // temp_32.num   = num_temp_u32;
-  // temp_32.denom = denom_temp_u32;
 
   if ( temp_32.num == 0 ) {
     temp_32.expo = 0;
@@ -3530,10 +3588,10 @@ AVRational_32 mul_spezial(AVRational_32 a, AVRational_32 b, uint64_t corr) {
 
 AVRational_32 mul(AVRational_32 a, AVRational_32 b) {
   if ( a.num == 0 ) {
-    return a;	
+    return a;
   }
   if ( b.num == 0 ) {
-    return b;	
+    return b;
   }
   if ( a.expo == 0 ) {
     if ( a.num == a.denom ) {   // a = 1.000
@@ -3680,7 +3738,7 @@ AVRational_32 add(AVRational_32 a, AVRational_32 b, int8_t c) {
     calc_temp_64_b   = b.num;
     calc_temp_64_b  *= a.denom;
     temp_64.expo     = a.expo;
-  	if ( c == 3 ) { 
+  	if ( c == 3 ) {
 	    calc_temp_64_b /= 2;
 	  }
   }
@@ -3691,7 +3749,7 @@ AVRational_32 add(AVRational_32 a, AVRational_32 b, int8_t c) {
     calc_temp_64_a  *= a.denom;
     temp_64.expo     = b.expo;
     expo_temp_16    *= -1;
-  	if ( c == 3 ) { 
+  	if ( c == 3 ) {
 	    calc_temp_64_a /= 2;
 	  }
   }
@@ -3702,7 +3760,7 @@ AVRational_32 add(AVRational_32 a, AVRational_32 b, int8_t c) {
   calc_temp_64_b_abs  = abs(calc_temp_64_b);
 
   if ( c == 3 ) {
-    calc_temp_64_c_abs += calc_temp_64_c_abs / 2;    
+    calc_temp_64_c_abs += calc_temp_64_c_abs / 2;
   }
   else {
     calc_temp_64_c_abs *= c;
@@ -3715,7 +3773,7 @@ AVRational_32 add(AVRational_32 a, AVRational_32 b, int8_t c) {
   else {
     calc_temp_64_a  = calc_temp_64_a_abs;
   }
- 
+
   if ( expo_temp_16 >  0 ) {
     if ( expo_temp_16 <  10 ) {
       calc_temp_64_b_abs += (expo_10[expo_temp_16] / 2);
@@ -3726,7 +3784,7 @@ AVRational_32 add(AVRational_32 a, AVRational_32 b, int8_t c) {
       calc_temp_64_b_abs /= expo_10_[expo_temp_16 - 10];
     }
   }
-  
+
   if ( calc_temp_64_b < 0 ) {
     calc_temp_64_b  = calc_temp_64_b_abs;
     calc_temp_64_b *= -1;
@@ -3827,7 +3885,7 @@ AVRational_32 floor_(AVRational_32 a, int8_t expo_test) {
       return temp_32;
     }
   }
-  
+
   if ( a.expo < 0 ) {
     temp_32.num   = int32_max;
     temp_32.num  *= test_signum_8;
@@ -3835,14 +3893,14 @@ AVRational_32 floor_(AVRational_32 a, int8_t expo_test) {
     temp_32.expo  = expo_min_input;
     return temp_32;
   }
-  
+
   num_temp_u64 *= expo_10[temp_32.expo];
   temp_64.num   = num_temp_u64;
   temp_64.num  /= denom_temp_u64;
-  
+
   temp_32.num   = temp_64.num;
   temp_32.denom = expo_10[temp_32.expo];
-  
+
   num_temp_u32  = int32_max;
   if ( temp_32.num > temp_32.denom ) {
     num_temp_u32 /= temp_32.num;
@@ -3850,10 +3908,10 @@ AVRational_32 floor_(AVRational_32 a, int8_t expo_test) {
   else {
     num_temp_u32 /= temp_32.denom;
   }
-  
-  temp_32.num   *= num_temp_u32;     // Expand Number 
+
+  temp_32.num   *= num_temp_u32;     // Expand Number
   temp_32.num   *= test_signum_8;
-  temp_32.denom *= num_temp_u32;     // Expand Number 
+  temp_32.denom *= num_temp_u32;     // Expand Number
 
   return temp_32;
 }
@@ -3876,10 +3934,10 @@ int8_t compare(AVRational_32 a, AVRational_32 b) {
   uint64_t test_a = abs(a.num);
   uint64_t test_b = abs(b.num);
   int8_t   comp = 0;
-	
+
   test_a *= b.denom;
   test_b *= a.denom;
-  
+
   if ( a.expo > b.expo ) {
     comp = 1;
     return comp;
@@ -3899,17 +3957,17 @@ int8_t compare(AVRational_32 a, AVRational_32 b) {
     comp = -1;
     return comp;
   }
-	
+
   return comp;
 }
 int8_t compare(Rational_32 a, Rational_32 b) {
   uint64_t test_a = a.num;
   uint64_t test_b = b.num;
   int8_t   comp = 0;
-	
+
   test_a *= b.denom;
   test_b *= a.denom;
-	
+
   if ( test_a > test_b ) {
     comp = 1;
     return comp;
@@ -3919,15 +3977,15 @@ int8_t compare(Rational_32 a, Rational_32 b) {
     comp = -1;
     return comp;
   }
-	
+
   return comp;
 }
 int8_t compare(Rational_64 a, Rational_64 b) {
 	  int8_t comp    = 0;
   uint64_t test_a  = 0;  // Factor
   uint64_t test_b  = 0;	 // Factor
-  uint32_t test_print = 0;  	
-  
+  uint32_t test_print = 0;
+
   while ( comp == 0 ) {
     test_a  = a.num;  // Factor
     test_a /= a.denom;
@@ -3943,10 +4001,10 @@ int8_t compare(Rational_64 a, Rational_64 b) {
       comp = -1;
       return comp;
     }
-  
+
     test_a *= a.denom;
     a.num  -= test_a;
-  
+
     if ( a.num == 0 ) {
       if ( Debug_Level == 22 ) {
       	test_print = a.denom;
@@ -3966,10 +4024,10 @@ int8_t compare(Rational_64 a, Rational_64 b) {
         comp = -1;
         return comp;
       }
-  
+
       return comp;
     }
-  
+
     test_b *= b.denom;
     b.num  -= test_b;
 
@@ -3990,7 +4048,7 @@ int8_t compare(Rational_64 a, Rational_64 b) {
 
     test_a  *= a.num;
     a.denom -= test_a;
-  
+
     if ( a.denom == 0 ) {
       if ( Debug_Level == 22 ) {
       	test_print = a.num;
@@ -4013,7 +4071,7 @@ int8_t compare(Rational_64 a, Rational_64 b) {
 
       return comp;
     }
-  
+
     test_b  *= b.num;
     b.denom -= test_b;
   }
@@ -4024,29 +4082,29 @@ Rational_32 compare_extra(Rational_32 a, Rational_32 b) {
 	Rational_64 calc;
 	Rational_64 input;
 	int8_t comp = 0;
-  uint64_t test = 0; 
-	  	
+  uint64_t test = 0;
+
   input.num   = num_temp_u64;
   input.denom = denom_temp_u64;
-	
+
   calc.num  = a.num;
   calc.num *= b.denom;
   test      = b.num;
   test     *= a.denom;
   calc.num += test;
-	
+
   calc.denom  = a.denom;
   calc.denom *= b.denom;
   calc.denom *= 2;
-	
+
   comp = compare(calc, input);
-	
+
   if ( comp > 0 ) {
-    return a;	
+    return a;
   }
-	
+
   if ( comp < 0 ) {
-    return b;	
+    return b;
   }
 
   if ( a.num > b.num ) {
@@ -4060,9 +4118,9 @@ Rational_32 compare_extra(Rational_32 a, Rational_32 b) {
 void calc_stack(uint8_t count_stack) {
   if ( count_stack > 1 ) {
     if ( (Found_constant == true) || count_stack > 2 ) {
-    	
+
       Beep__off();
-    	
+
     	if ( count_stack > 2 ) {
     	  Found_constant = false;
     	}
@@ -4072,33 +4130,33 @@ void calc_stack(uint8_t count_stack) {
       number_stack[ count_stack ].expo = mem_stack_calc[ count_stack ].expo;
 
       while ( count_stack > 1 ) {
-    	
-        count_stack -= 1;   	
+
+        --count_stack;
 
         number_stack[ count_stack ].num = mem_stack_calc[ count_stack ].num;
         number_stack[ count_stack ].denom = mem_stack_calc[ count_stack ].denom;
         number_stack[ count_stack ].expo = mem_stack_calc[ count_stack ].expo;
-      
+
         temp_operation = mem_stack_calc[ count_stack ].op;
-      
+
         count = 0;
         count_wait = 0;
         switch (temp_operation) {
-      	
+
           case 213: //    _* *_
           case 42:  //    _*_
           	number_stack[ count_stack ] = mul(number_stack[ count_stack ], number_stack[ count_stack + 1 ]);
             break;
 
           case 216: //    _+ +_
-          case 43:  //    _+_ 
+          case 43:  //    _+_
           	number_stack[ count_stack ] = add( number_stack[ count_stack ], number_stack[ count_stack + 1 ], 1 );
             break;
 
           case 45:  //    _-_
           	number_stack[ count_stack ] = add( number_stack[ count_stack ], number_stack[ count_stack + 1 ], -1 );
             break;
-                    
+
           case 47:  //    _/_
           	number_stack[ count_stack ] = mul(number_stack[ count_stack ], div_x(number_stack[ count_stack + 1 ]));
             break;
@@ -4114,7 +4172,7 @@ void calc_stack(uint8_t count_stack) {
           case 212: //    _- -_
            	number_stack[ count_stack ] = add( number_stack[ count_stack + 1 ], number_stack[ count_stack ], -1 );
             break;
-                    
+
           case 214: //    _/ /_
           	number_stack[ count_stack ] = mul(number_stack[ count_stack + 1 ], div_x(number_stack[ count_stack ]));
             break;
@@ -4128,26 +4186,26 @@ void calc_stack(uint8_t count_stack) {
             break;
 
           case 219: //    _HM HM_
-          case 124: //    _HM_ 
+          case 124: //    _HM_
           	number_stack[ count_stack ] = div_x( add( div_x(number_stack[ count_stack ]), number_stack[ count_stack + 1 ], 6 ));
             break;
 
           case 220: //    _AM AM_
-          case 128: //    _AM_ 
+          case 128: //    _AM_
           	number_stack[ count_stack ] = add( number_stack[ count_stack ], number_stack[ count_stack + 1 ], 2 );
             break;
 
           case 221: //    _GM GM_
-          case 129: //    _GM_ 
+          case 129: //    _GM_
             number_stack[ count_stack ] = sqrt(mul(number_stack[ count_stack ], number_stack[ count_stack + 1 ]));
             break;
 
           case 222: //    _AGM AGM_
-          case 151: //    _AGM_ 
+          case 151: //    _AGM_
           	number_stack[ count_stack ] = agm(number_stack[ count_stack ], number_stack[ count_stack + 1 ]);
             break;
 
-          case 152: //    _mod_ 
+          case 152: //    _mod_
       	  	number_stack[ count_stack ] = mul(frac(mul(number_stack[ count_stack     ], div_x(number_stack[ count_stack + 1 ]))), number_stack[ count_stack + 1 ]);
             break;
 
@@ -4156,21 +4214,21 @@ void calc_stack(uint8_t count_stack) {
             break;
 
           case 215: //    _// //_
-          case 92:  //    _//_ 
+          case 92:  //    _//_
           	number_stack[ count_stack ] = div_x( add( div_x(number_stack[ count_stack ]), number_stack[ count_stack + 1 ], 3 ));
             break;
 
-          case 94:  //    _/p/_ 
+          case 94:  //    _/p/_
           	number_stack[ count_stack ] = sqrt(add( square(number_stack[ count_stack ]), square(number_stack[ count_stack + 1 ]), 1 ));
             break;
 
-          case 211: //   _/p/ /p/_ 
+          case 211: //   _/p/ /p/_
           	number_stack[ count_stack ] = sqrt(add( square(number_stack[ count_stack ]), square(number_stack[ count_stack + 1 ]), -1 ));
             break;
 
           default:
             number_stack[ count_stack ] = number_stack[ count_stack + 1 ];
-        }      
+        }
       }
 
       mem_stack_calc[ 0 ].num    = number_stack[ 1 ].num;
@@ -4181,20 +4239,20 @@ void calc_stack(uint8_t count_stack) {
       mem_stack_input[ 0 ].num   = number_stack[ 1 ].num;
       mem_stack_input[ 0 ].denom = number_stack[ 1 ].denom;
       mem_stack_input[ 0 ].expo  = number_stack[ 1 ].expo;
-      
+
       mem_extra_left_right( 0, 0 );
-      
+
       Beep__on();
     }
   }
 }
 
-// Finds the integer square root of a positive number  
-uint32_t Isqrt( uint64_t num ) {  
+// Finds the integer square root of a positive number
+uint32_t sqrt(uint64_t num) {
 
-  if ( 0 == num ) { 
-    return 0; 
-  }  // Avoid zero divide  
+  if ( 0 == num ) {
+    return 0;
+  }  // Avoid zero divide
 
   uint64_t n   = 1;
            n <<= 61;        // input 60 .. 62 bit
@@ -4202,8 +4260,8 @@ uint32_t Isqrt( uint64_t num ) {
            n >>= 35;        // 33 - Initial estimate, never low
            n  *= 11;        //  3   (11 / 32)(2 + x) input 1 .. 4
   uint64_t n1  = 1;
-  
-  for ( uint8_t index = 0; index < 3; index += 1 ) { 
+
+  for ( uint8_t index = 0; index < 3; index += 1 ) {
   	n1  = num;
   	n1 /= n;
     if (n1 == n) { // exact
@@ -4212,29 +4270,26 @@ uint32_t Isqrt( uint64_t num ) {
     else {
       n1 += n;
       n1 /= 2;
-      n  = n1;  
+      n  = n1;
     }
   }
 
-  return n1;  
-} // end Isqrt()  
-
+  return n1;
+} // end sqrt()
+// -->  40 Zeilen
 AVRational_32 sqrt(AVRational_32 a) {
   if ( a.num == 0 ) {
-    return a;	
+    return a;
   }
 
   num_temp_u64    = abs(a.num);
   num_temp_u64   *= abs(a.denom);
-  calc_temp_u32   = Isqrt(num_temp_u64);
+  calc_temp_u32   = sqrt(num_temp_u64);
   denom_temp_u64  = calc_temp_u32;
   num_temp_u64   += denom_temp_u64 * denom_temp_u64;
   denom_temp_u64 *= abs(a.denom);
   denom_temp_u64 *= 2;
   temp_32 = Reduce_Number( a.expo );
-  // temp_32.num     = num_temp_u32;
-  // temp_32.denom   = denom_temp_u32;
-  // temp_32.expo  = a.expo;
 
   if ( a.expo < 4 ) {
     temp_32.expo += 110;
@@ -4260,50 +4315,50 @@ AVRational_32 sqrt(AVRational_32 a) {
 
   return temp_32;
 }
-// -->  62 Zeilen
+// -->  53 Zeilen
 AVRational_32 cbrt(AVRational_32 a) {
 	int8_t test = 0;
   if ( a.num == 0 ) {
-    return a;	
+    return a;
   }
 
   temp_32_b2 = abs_x(a);
 
   int96_a a_num_calc   = temp_32_b2.num;
-  
+
   a_num_calc   *= temp_32_b2.denom;
   a_num_calc   *= temp_32_b2.denom;
-  
+
   a_num_calc.cbrt(a_num_calc);
   temp_32_b2.num = a_num_calc.lo;
-  
+
   temp_32_b2.expo  = a.expo;
-  temp_32_b2.expo -= 1;
-  
+  --temp_32_b2.expo;
+
   if ( a.expo < 5 ) {
     temp_32_b2.expo += 111;  // 111 = 3 * 37
   }
-	
+
   temp_32_b2.expo /= 3;
   if ( a.expo < 5 ) {
     temp_32_b2.expo -= 37;
   }
 
   switch (uint8_t(a.expo + 111) % 3) {
-  	
+
     case 0:
-    	temp_32_b2.expo += 1;
+    	++temp_32_b2.expo;
     	break;
 
     case 1:
     	temp_32_b2 = mul( temp_32_b2, cbrt_10_plus );  // 2,15^3 =  10.0
     	break;
-  	
+
     case 2:
     	temp_32_b2 = mul( temp_32_b2, cbrt_100_plus ); // 4,64^3 = 100.0
-    	break;  	
-  } 
- 
+    	break;
+  }
+
   temp_32_b1 = mul( temp_32_b2, temp_32_b2 );
   temp_32_b1 = mul( a, div_x(temp_32_b1) );
                                                   // = (a + b/2) / 1.5
@@ -4312,8 +4367,8 @@ AVRational_32 cbrt(AVRational_32 a) {
   if (a.num < 0) {
     temp_32_b2.num *= -1;
   }
- 
-  return temp_32_b2;  
+
+  return temp_32_b2;
 }
 
 AVRational_32 add_mul_div_x(AVRational_32 mul_, AVRational_32 div_x_) {
@@ -4326,20 +4381,20 @@ AVRational_32 factorial(AVRational_32 a) {
  * method found in Abremowitz and Stegun, Handbook of Mathematical Functions
  *
  * http://www.realtimerendering.com/resources/GraphicsGems/gemsiii/sqfinal.c
- * 
+ *
  * https://infogalactic.com/info/Factorial#Approximations_of_factorial
- * 
+ *
  * info --> http://dx.doi.org/10.3247/sl2math08.005
- * 2008_MTH_Nemes_GammaApproximationUpdate.pdf .. Formula (4.1) 
+ * 2008_MTH_Nemes_GammaApproximationUpdate.pdf .. Formula (4.1)
  * http://www.luschny.de/math/factorial/approx/SimpleCases.html#AhighPrecisionApproximation
  * http://www.luschny.de/math/factorial/approx/Approximations%20for%20the%20Factorial%20Function.pdf  page 8
  */
   // int32_t   fac_cor_num = 0;
   uint8_t   fac_test    = 10;
   uint8_t   fac_count   = 10;
- // int64_t   fac_corr    = 0; 
- // uint32_t  test_mul    = 1;  
-  
+ // int64_t   fac_corr    = 0;
+ // uint32_t  test_mul    = 1;
+
   boolean input_near_null = false; //     -1.000 < input < 0.000
 
   if ( a.expo == 0 ) { //  input = 1.000 or 0.000
@@ -4359,12 +4414,12 @@ AVRational_32 factorial(AVRational_32 a) {
   if ( a.num > 0 ) {
     if ( a.expo > 2 ) { //  input > 300
       a.denom = 4; // Error_String('[');
-      Error_first = true; 
+      Error_first = true;
       return a;
     }
-    
+
     temp_32_corr_a = mul( a, add( fa_a, mul( fa_b, a ), 1 ) );
-    
+
     if ( a.expo == 2 ) { //  input > 71.00
       num_temp_u64    = a.num;
       denom_temp_u64  = a.denom;
@@ -4376,17 +4431,17 @@ AVRational_32 factorial(AVRational_32 a) {
         return a;
     	}
     }
-    
+
     temp_32_corr_c = add( facc_a, mul( a, add( facc_b, mul( facc_c, a ), 1 ) ), 1 );
    // return temp_32_corr_c;
-    
+
     temp_32_corr     = clone( log_1e0 );
-    temp_32_corr_0_1 = clone( log_1e0 );    
+    temp_32_corr_0_1 = clone( log_1e0 );
     if ( a.expo < 0 ) {
       a                = add( a, log_1e0, 1 );
-      temp_32_corr_0_1 = div_x( a );      
+      temp_32_corr_0_1 = div_x( a );
     }
-     
+
     num_temp_u64    = 0;
     if ( a.expo >= 0 ) {
       num_temp_u64   = abs(a.num);
@@ -4399,39 +4454,39 @@ AVRational_32 factorial(AVRational_32 a) {
     temp_32_fac      = add( a, log_1e0, 1 );
     if ( fac_test < 5 ) {
       while ( fac_count < 5 ) {
-        fac_count += 1;
+        ++fac_count;
         temp_32_corr = mul( temp_32_fac, temp_32_corr );
         temp_32_fac  = add( temp_32_fac, log_1e0, 1 );
       }
       temp_32_corr = div_x( temp_32_corr );
-      a = add( mul_5_0, frac(a), 1 );      
+      a = add( mul_5_0, frac(a), 1 );
     }
 
     while ( fac_test > 66 ) {
       temp_32_corr_0_1 = mul( a, temp_32_corr_0_1 );
       a                = add( a, log_1e0, -1 );
-      fac_test        -= 1;
+      --fac_test;
       if ( fac_test == 66 ) {
-        temp_32_fac    = add( a, log_1e0, 1 );     
+        temp_32_fac    = add( a, log_1e0, 1 );
       }
     }
-    
+
     temp_32_mul = add_mul_div_x( fa_5, temp_32_fac );
     temp_32_mul = add_mul_div_x( fa_4, temp_32_mul );
     temp_32_mul = add_mul_div_x( fa_3, temp_32_mul );
     temp_32_mul = add_mul_div_x( fa_2, temp_32_mul );
     temp_32_mul = add_mul_div_x( fa_1, temp_32_mul );
 
-    temp_32_mul = mul( fa_0, div_x( temp_32_mul ) );    
+    temp_32_mul = mul( fa_0, div_x( temp_32_mul ) );
     temp_32_mul = add( temp_32_mul, add( mul( add( a, exp2_1_2, 1 ), log_(temp_32_fac) ), temp_32_fac, -1 ), 1 );
     temp_32_mul = exp( add( temp_32_mul, fa_ln_2pi_2, 1 ));
-    
-    temp_32_mul = mul( temp_32_mul, temp_32_corr ); 	
+
+    temp_32_mul = mul( temp_32_mul, temp_32_corr );
     temp_32_mul = mul( temp_32_mul, temp_32_corr_0_1 );
-    
+
     temp_32_mul = add( temp_32_mul, mul( temp_32_mul, temp_32_corr_a ), -1 );
-    
-    temp_32_mul = add( temp_32_mul, mul( temp_32_corr_c, temp_32_mul ), 1 ); 
+
+    temp_32_mul = add( temp_32_mul, mul( temp_32_corr_c, temp_32_mul ), 1 );
 
     if ( input_near_null == true ) {
       return mul( temp_32_corr_b, temp_32_mul );
@@ -4441,15 +4496,15 @@ AVRational_32 factorial(AVRational_32 a) {
     }
   }
   else {
-  	a.denom = 2; // Error_String('u');  // input <= 0	
-  	Error_first = true;      
+  	a.denom = 2; // Error_String('u');  // input <= 0
+  	Error_first = true;
     return a;
   }
 }
 
 AVRational_32 sin_cos_tan(AVRational_32 a) {
 	cordic_test = 0;
-	
+
 	if ( a.num == 0 ) {
 	  return a;
 	}
@@ -4459,7 +4514,7 @@ AVRational_32 sin_cos_tan(AVRational_32 a) {
   else {
     temp_32_mul = mul( a, circle_div_x );
   }
- 
+
   if ( temp_32_mul.expo > 5 ) { //  input > 300000
     if ( temp_32_mul.num > 0 ) {
       temp_32_mul.denom = 6;  // Error_String('^');  input >  300000
@@ -4467,7 +4522,7 @@ AVRational_32 sin_cos_tan(AVRational_32 a) {
     else {
       temp_32_mul.denom = 5;  // Error_String('U');  input < -300000
     }
-    temp_32_mul.num = int32_max; 
+    temp_32_mul.num = int32_max;
     Error_first = true;
     return temp_32_mul;
   }
@@ -4480,7 +4535,7 @@ AVRational_32 sin_cos_tan(AVRational_32 a) {
       else {
         temp_32_mul.denom = 5;  // Error_String('U');  input < -277777,77
       }
-      temp_32_mul.num = int32_max; 
+      temp_32_mul.num = int32_max;
       Error_first = true;
       return temp_32_mul;
   	}
@@ -4505,29 +4560,29 @@ AVRational_32 sin_cos_tan(AVRational_32 a) {
     temp_64.denom *= expo_10[ abs( temp_32_mul.expo ) ];
     cordic_test    = temp_64.num / temp_64.denom;
     if ( temp_32_mul.num > 0 ) {
-      cordic_test += 1;
+      ++cordic_test;
     }
     if ( temp_32_mul.num < 0 ) {
-      cordic_test -= 1;
+      --cordic_test;
     }
-  }  
-  
+  }
+
   if ( temp_32_mul.expo < -78 ) {
   	temp_32_mul.num   = 0;
-  	temp_32_mul.denom = int32_max; 
+  	temp_32_mul.denom = int32_max;
   	temp_32_mul.expo  = 0;
   }
-  
+
   if ( Debug_Level == 40 ) {
     Serial.print("cordic_test = ");
-    Serial.println(cordic_test);    
+    Serial.println(cordic_test);
   }
 
   switch (cordic_test) {
-    	
-    case 5:                  //  
-    case 4:                  //  
-      return add( exp2_1_2, temp_32_mul, -1 );	
+
+    case 5:                  //
+    case 4:                  //
+      return add( exp2_1_2, temp_32_mul, -1 );
     	break;
 
     case 3:                  //
@@ -4535,7 +4590,7 @@ AVRational_32 sin_cos_tan(AVRational_32 a) {
     	break;
 
     case 2:                  //
-      return add( exp2_1_4, temp_32_mul, -1 );	
+      return add( exp2_1_4, temp_32_mul, -1 );
       break;
 
     case -1:                 //
@@ -4543,21 +4598,21 @@ AVRational_32 sin_cos_tan(AVRational_32 a) {
       break;
 
     case -2:                 //
-      return add( exp2_1_4, temp_32_mul, 1 );	
+      return add( exp2_1_4, temp_32_mul, 1 );
       break;
-    	  
+
     case -3:                 //
-      return add( min_x( exp2_1_4 ), temp_32_mul, -1 );	
+      return add( min_x( exp2_1_4 ), temp_32_mul, -1 );
       break;
 
     case -4:                 //
     case -5:                 //
-      return add( exp2_1_2, temp_32_mul, 1 );	
+      return add( exp2_1_2, temp_32_mul, 1 );
   	  break;
-  	  
+
     case 1:                  //
   	default:
-  		return temp_32_mul; 
+  		return temp_32_mul;
   	  break;
   }
 }
@@ -4567,13 +4622,13 @@ AVRational_32 cordic(int8_t function) {
 	int64_t test_cordic   = 0;
 	int64_t cordic_add    = 0;
 	uint8_t index_count   = 0;
-	
+
 	uint8_t cordic_tab_   = 0;
-	
+
 	int96_a temp_cordic   = 0;
-	   
+
   uint8_t k_count       = 1;
-  
+
   int64_t x_cordic      = 1;
   int64_t y_cordic      = 0;
   int64_t z_cordic      = 0;
@@ -4587,92 +4642,92 @@ AVRational_32 cordic(int8_t function) {
   if ( Error_first == true ) {
     return temp_32_corr_a;
   }
-  
+
   if ( ( temp_32_corr_a.expo <  -8 ) || ( temp_32_corr_a.num == 0 ) ) {
 
     if ( function == sin_ ) {
       switch (cordic_test) {
-    	
-        case -5: 
-    	  case -4: 
+
+        case -5:
+    	  case -4:
           temp_32_corr_a = min_x( temp_32_corr_a ); [[fallthrough]];
-        case  5: 
-        case  4: 
+        case  5:
+        case  4:
         case  0:
       	  return mul( Tau, temp_32_corr_a );
           break;
-  	  
-    	  case  3: 
+
+    	  case  3:
         case  2:
           return log_1e0;
   	     break;
 
-        case -2: 
+        case -2:
         case -3:
           return min_x( log_1e0 );
           break;
 
-        default: 
+        default:
   	      break;
-      }      
+      }
     }
     if ( function == cos_ ) {
       switch (cordic_test) {
-    	
+
         case -5:
-    	  case -4: 
-        case  5: 
+    	  case -4:
+        case  5:
         case  4:
           return min_x( log_1e0 );
           break;
-  	  
+
         case  0:
           return log_1e0;
   	     break;
 
-    	  case  3: 
+    	  case  3:
         case -3:
           temp_32_corr_a = min_x( temp_32_corr_a ); [[fallthrough]];
-        case  2: 
+        case  2:
         case -2:
           return mul( Tau, temp_32_corr_a );
           break;
 
-        default: 
+        default:
   	      break;
-      }      
+      }
     }
     if ( function == tan_ ) {
       switch (cordic_test) {
-  	
-        case  5: 
+
+        case  5:
         case  4:
           temp_32_corr_a = min_x( temp_32_corr_a ); [[fallthrough]];
-        case -5: 
-  	    case -4: 
+        case -5:
+  	    case -4:
         case  0:
           return mul( Tau, temp_32_corr_a );
         break;
- 	  
-  	    case  3: 
+
+  	    case  3:
         case -2:
           temp_32_corr_a = min_x( temp_32_corr_a ); [[fallthrough]];
-        case  2: 
+        case  2:
         case -3:
         	if ( abs( temp_32_corr_a.num ) > 0 ) {
         		return div_x( mul( Tau, temp_32_corr_a ) );
         	}
         	else {
-            temp_32_corr_a.num = int32_max; 
+            temp_32_corr_a.num = int32_max;
             temp_32_corr_a.denom = 8;  // Error_String('x');
             Error_first = true;
         	}
           return temp_32_corr_a;
   	    break;
 
-        default: 
+        default:
   	      break;
-      }      
+      }
     }
 
   }
@@ -4686,44 +4741,44 @@ AVRational_32 cordic(int8_t function) {
 
     tz_cordic     = int64_t(temp_cordic);
     tz_cordic    *= d_cordic;
-  
+
     tx_cordic     = tx_cordic << 62;
     tx_cordic    += tx_cordic >> 1;
     tx_cordic    += tx_cordic >> 3;
     tx_cordic    += tx_cordic >> 6; // 7903817346035220480
-  } 
-  
-  if ( function == atan_ ) {  
+  }
+
+  if ( function == atan_ ) {
     tx_cordic  = temp_32_corr_a.num;
     tx_cordic  = tx_cordic << 31;
     ty_cordic  = temp_32_corr_a.denom;
     ty_cordic  = ty_cordic << 31;
     tz_cordic  = 0;
-    
+
     while ( temp_32_corr_a.expo < 0 ) {
     	tx_cordic += tx_cordic >> 1; // * 1.5
-    	tx_cordic  = tx_cordic >> 4; // / 16   	
+    	tx_cordic  = tx_cordic >> 4; // / 16
     	ty_cordic += ty_cordic >> 1; // * 1.5
     	y_cordic   = ty_cordic;
     	ty_cordic -= y_cordic >> 2;
-    	ty_cordic -= y_cordic >> 3; // * 0.625 = / 1.6   	
-      temp_32_corr_a.expo += 1;
+    	ty_cordic -= y_cordic >> 3; // * 0.625 = / 1.6
+      ++temp_32_corr_a.expo;
     }
-    
+
     tx_cordic += tx_cordic >> 1; // * 1,5
     tx_cordic -= tx_cordic >> 3; // * 0,875 = 1,3125
     ty_cordic += ty_cordic >> 1; // * 1,5
     ty_cordic -= ty_cordic >> 3; // * 0,875 = 1,3125
-  }    
+  }
 
   x_cordic  = tx_cordic;
   y_cordic  = ty_cordic;
  /*
   if ( Debug_Level == 40 ) {
-    itoa_(tz_cordic, display_string_itoa_);   	
-    Serial.println(display_string_itoa_);    
+    itoa_(tz_cordic, display_string_itoa_);
+    Serial.println(display_string_itoa_);
   }
- */ 
+ */
   for ( uint8_t index_a = 0; index_a < 32; index_a += 1 ) {  // 32
     index_count = cordic_tab[index_tab];
     index_count = index_count >> 4;
@@ -4737,24 +4792,24 @@ AVRational_32 cordic(int8_t function) {
           cordic_tab_ = cordic_tab_ >> 4;
         }
         cordic_add += cordic_tab_;
-        index_tab += 1;
+        ++index_tab;
       }
     }
     test_cordic  = test_cordic >> 1;
     test_cordic += cordic_add;
-   /*   
+   /*
     if ( Debug_Level == 40 ) {
-    	itoa_(test_cordic, display_string_itoa_);    	
-      Serial.println(display_string_itoa_);    
+    	itoa_(test_cordic, display_string_itoa_);
+      Serial.println(display_string_itoa_);
     }
    */
-    if ( function > 0 ) {   
+    if ( function > 0 ) {
       if ( tz_cordic < 0 ) {
       	d_cordic = 1;
       }
     }
-    
-    if ( function < 0 ) {   
+
+    if ( function < 0 ) {
       if ( tx_cordic > 0 ) {
       	d_cordic = 1;
       }
@@ -4767,39 +4822,39 @@ AVRational_32 cordic(int8_t function) {
     if ( Debug_Level == 40 ) {
     	Serial.print(k_count);
     	Serial.print(' ');
-      
+
       itoa_(tz_cordic, display_string_itoa_);
-      Serial.print(display_string_itoa_);    
+      Serial.print(display_string_itoa_);
 
     	Serial.print(' ');
       itoa_(tx_cordic, display_string_itoa_);
-      Serial.print(display_string_itoa_); 
+      Serial.print(display_string_itoa_);
 
     	Serial.print(' ');
       itoa_(ty_cordic, display_string_itoa_);
-      Serial.println(display_string_itoa_); 
+      Serial.println(display_string_itoa_);
     }
    */
     x_cordic  = tx_cordic;
     y_cordic  = ty_cordic;
-    k_count  += 1;  
+    ++k_count;
     d_cordic  = -1;
   }
 
   if ( function > 0 ) {
     x_cordic   = x_cordic >> 31;
     y_cordic   = y_cordic >> 31;
-  
+
     x_cordic  *= tz_cordic;
     y_cordic  *= tz_cordic;
-   
+
     tx_cordic += y_cordic >> 32;
     ty_cordic -= x_cordic >> 32;
 
-    temp_32_corr_a.expo  = -1; 
+    temp_32_corr_a.expo  = -1;
     denom_temp_u64  = 920348428214616521;  // 32
   }
- 
+
   if ( function < 0 ) {
   	z_cordic             = 1;
   	z_cordic             = z_cordic << 63;
@@ -4808,31 +4863,31 @@ AVRational_32 cordic(int8_t function) {
   	temp_cordic         /= ty_cordic;
    /*
     if ( Debug_Level == 40 ) {
-      Serial.print("temp_cordic = ");  
-      itoa_(temp_cordic, display_string_itoa_);   	
-      Serial.println(display_string_itoa_);    
+      Serial.print("temp_cordic = ");
+      itoa_(temp_cordic, display_string_itoa_);
+      Serial.println(display_string_itoa_);
     }
-   */ 
+   */
   	tz_cordic           -= int64_t(temp_cordic);
    /*
     if ( Debug_Level == 40 ) {
-      Serial.print("z_cordic = ");  
-      itoa_(z_cordic, display_string_itoa_);   	
-      Serial.println(display_string_itoa_);    
+      Serial.print("z_cordic = ");
+      itoa_(z_cordic, display_string_itoa_);
+      Serial.println(display_string_itoa_);
     }
    */
-    temp_32_corr_a.expo  = 0; 
-  	num_temp_u64         = tz_cordic;  	    
+    temp_32_corr_a.expo  = 0;
+  	num_temp_u64         = tz_cordic;
     denom_temp_u64       = 9223372036854775802;  // 32 - round -- 45° = pi() / 4;
 
     if ( Debug_Level == 46 ) {
     	Serial.print("  ");
     	Serial.print(micros() - time_test);
     	Serial.print("  ");
-      itoa_(num_temp_u64, display_string_itoa_);   	
-      Serial.println(display_string_itoa_);    
+      itoa_(num_temp_u64, display_string_itoa_);
+      Serial.println(display_string_itoa_);
     }
-  } 
+  }
 
   if ( function == sin_ ) {
     num_temp_u64    = ty_cordic;
@@ -4843,57 +4898,44 @@ AVRational_32 cordic(int8_t function) {
   if ( function == tan_ ) {
     num_temp_u64         = ty_cordic;
     denom_temp_u64       = tx_cordic;
-    temp_32_corr_a.expo  = 0; 
+    temp_32_corr_a.expo  = 0;
   }
 
   if ( (function == tan_) || (function == atan_) ) {
     while ( num_temp_u64 < expo_test_0a ) {
       num_temp_u64        *= 10;
-      temp_32_corr_a.expo -= 1;
+      --temp_32_corr_a.expo;
     }
     if ( num_temp_u64 < expo_test_0b ) {
       num_temp_u64        *= 5;
       denom_temp_u64      /= 2;
-      temp_32_corr_a.expo -= 1;      
-    }  
+      --temp_32_corr_a.expo;
+    }
   }
- 
+
   if ( (function == sin_) || (function == cos_) ){
     if ( abs(cordic_test) > 1 ) {
       if ( abs(cordic_test) < 4 ) {
         if ( function == sin_ ) {
-          num_temp_u64    = tx_cordic;  	
+          num_temp_u64    = tx_cordic;
         }
         if ( function == cos_ ) {
-          num_temp_u64    = ty_cordic;  	
+          num_temp_u64    = ty_cordic;
         }
       }
     }
     while ( num_temp_u64 < 276104528464384956 ) {
       num_temp_u64        *= 10;
-      temp_32_corr_a.expo -= 1;
+      --temp_32_corr_a.expo;
     }
     if ( num_temp_u64 > 2761045284643849563 ) {
       denom_temp_u64      *= 10;
-      temp_32_corr_a.expo += 1;
+      ++temp_32_corr_a.expo;
     }
   }
- /*
-  if ( Debug_Level == 40 ) {
-    Serial.print("63 0 xx ");
-      
-    itoa_(num_temp_u64, display_string_itoa_);
-    Serial.print(display_string_itoa_); 
 
-    Serial.print(" / ");
-    itoa_(denom_temp_u64, display_string_itoa_);
-    Serial.println(display_string_itoa_); 
-  }
- */  
   temp_32_corr_a = Reduce_Number( temp_32_corr_a.expo );
-  // temp_32_corr_a.num   = num_temp_u32;
-  // temp_32_corr_a.denom = denom_temp_u32;
-  
+
   if ( function == sin_ ) {
     if ( cordic_test < 0 ) {
       return min_x( temp_32_corr_a );
@@ -4906,7 +4948,7 @@ AVRational_32 cordic(int8_t function) {
   }
   if ( function == tan_ ) {
     switch (cordic_test) {
-  	
+
       case  3:
       case -2:
       	temp_32_corr_a = min_x( temp_32_corr_a ); [[fallthrough]];
@@ -4914,16 +4956,16 @@ AVRational_32 cordic(int8_t function) {
       case -3:
       	return div_x( temp_32_corr_a );
   	    break;
-      	
+
       case  5:
       case  4:
       case -1:
       	return min_x( temp_32_corr_a );
   	    break;
 
-      default: 
+      default:
 	      break;
-    }      
+    }
   }
   if ( function == atan_ ) {
   	if ( abs( cordic_test ) >= 16 ) {
@@ -4944,12 +4986,12 @@ AVRational_32 cordic(int8_t function) {
       return mul( temp_32_corr_a, to_xx[to_deg] );
     }
   }
-  
+
   return temp_32_corr_a;
 }
 
 AVRational_32 sin(AVRational_32 a) {
-	temp_32_corr_a = sin_cos_tan( a );  
+	temp_32_corr_a = sin_cos_tan( a );
   return cordic( sin_ );
 }
 
@@ -4967,18 +5009,18 @@ AVRational_32 asin(AVRational_32 a) {
 }
 
 AVRational_32 sinh(AVRational_32 a) {
-  if ( a.expo < -8 ) { //  input <= abs(3.000e-9) 
+  if ( a.expo < -8 ) { //  input <= abs(3.000e-9)
     return a;
-  }  
+  }
   temp_32_exp = exp(a);
   return add( temp_32_exp, temp_32_exp , -6 );
 }
 
 AVRational_32 asinh(AVRational_32 a) {
-  if ( a.expo < -6 ) { //  input <= abs(3.000e-7) 
+  if ( a.expo < -6 ) { //  input <= abs(3.000e-7)
     return a;
-  } 
-  if ( a.expo < -3 ) { //  input <= abs(3.000e-4) 
+  }
+  if ( a.expo < -3 ) { //  input <= abs(3.000e-4)
     return add( a, mul( cubic( a ), exp2_1_6 ), -1 );
   }
 
@@ -4996,20 +5038,20 @@ AVRational_32 cos(AVRational_32 a) {
 }
 
 AVRational_32 test_asin_acos(AVRational_32 a) {
-	
-  if ( a.expo == 0 ) { //  input  = 0.3000 .. 1.000 
+
+  if ( a.expo == 0 ) { //  input  = 0.3000 .. 1.000
     if ( abs( a.num ) > a.denom ) {
       if ( a.num > 0 ) {
         a.denom = 6;  // Error_String('^');  input >  1
       }
       else {
         a.denom = 5;  // Error_String('U');  input < -1
-      }  
+      }
       Error_first = true;
       return a;
     }
   }
-  if ( a.expo > 0 ) {  //  input >= 3.000 
+  if ( a.expo > 0 ) {  //  input >= 3.000
     if ( a.num > 0 ) {
       a.denom = 6;  // Error_String('^');  input >  3
     }
@@ -5022,7 +5064,7 @@ AVRational_32 test_asin_acos(AVRational_32 a) {
 }
 
 AVRational_32 acos(AVRational_32 a) {
-	
+
 	temp_32_corr_a = test_asin_acos( a );
 	if ( Error_first == true ) {
 	  return temp_32_corr_a;
@@ -5034,8 +5076,8 @@ AVRational_32 acos(AVRational_32 a) {
     }
     return Pi_2;
 	}
-   
-  if ( a.expo == 0 ) { //  input  = 0.3000 .. 1.000 
+
+  if ( a.expo == 0 ) { //  input  = 0.3000 .. 1.000
     if ( abs( a.num ) == a.denom ) {
       if ( a.num < 0 ) {
         if ( Rad_in_out == false ) {
@@ -5049,15 +5091,15 @@ AVRational_32 acos(AVRational_32 a) {
 }
 
 AVRational_32 cosh(AVRational_32 a) {
-  if ( a.expo < -8 ) { //  input <= abs(3.000e-9) 
+  if ( a.expo < -8 ) { //  input <= abs(3.000e-9)
     return log_1e0;
-  }  
+  }
   temp_32_exp = exp(a);
   return add( temp_32_exp, temp_32_exp, 6 );
 }
 
 AVRational_32 acosh(AVRational_32 a) {
-	if ( a.num < 0 ) { 
+	if ( a.num < 0 ) {
     a.denom = 2;  // Error_String('u');  input < 1
     Error_first = true;
     return a;
@@ -5094,27 +5136,27 @@ boolean reverse = false;
 	if ( a.num == 0 ) {
 	  return a;
 	}
-	
+
   if ( a.num > 0 ) {
     cordic_test +=  1;
   }
   if ( a.num < 0 ) {
     cordic_test -=  1;
     a.num       *= -1;
-  }  	
+  }
   if ( a.expo == 0 ) {
     if ( (a.num / 4) > (a.denom / 3) ) { //  input >= abs(1.333)
       cordic_test *= 2;
-      a = div_x( a );      
+      a = div_x( a );
     }
   }
   if ( a.expo > 0 ) { //  input >= abs(3.000)
     cordic_test *= 2;
     a = div_x( a );
-     
-    if ( a.expo < -3 ) { //  input <= abs(3.000e-4) 
+
+    if ( a.expo < -3 ) { //  input <= abs(3.000e-4)
       reverse = true;
-    }   
+    }
   }
 
   if ( a.expo < -3 ) { //  input <= abs(3.000e-4)
@@ -5122,7 +5164,7 @@ boolean reverse = false;
   	if ( reverse == true ) {
       temp_32_corr_a = add( Pi_2, temp_32_corr_a, -1 );
   	}
-    
+
     if ( cordic_test < 0 ) {
       temp_32_corr_a = min_x( temp_32_corr_a );
     }
@@ -5130,26 +5172,26 @@ boolean reverse = false;
       return mul( temp_32_corr_a, to_xx[to_deg] );
     }
     return temp_32_corr_a;
-  }   
+  }
 
   temp_32_corr_a = clone( a );
- 
+
   if ( a.expo < 0 ) { //  input <= abs(0.300)
     temp_32_corr_b = clone( exp2_1_3 );
     cordic_test *= 4;
   }
 
-  if ( a.expo == 0 ) { 
+  if ( a.expo == 0 ) {
   	if ( (a.num / 3) > (a.denom / 4) ) { //  input > abs(0.750)
   		temp_32_corr_b = min_x( exp2_1_3 );
       cordic_test *= 16;
   	}
   }
-  
+
   if ( abs( cordic_test ) >= 4 ) {
   	temp_32_corr_a = mul( add( a, temp_32_corr_b, 1 ), div_x( add( exp2_0_1,  mul( a, min_x( temp_32_corr_b ) ), 1) ) );
   }
-  
+
   if ( Debug_Level == 46 ) {
   	time_test = micros();
   }
@@ -5158,10 +5200,10 @@ boolean reverse = false;
 }
 
 AVRational_32 tanh(AVRational_32 a) {
-  if ( a.expo < -8 ) { //  input <= abs(3.000e-9) 
+  if ( a.expo < -8 ) { //  input <= abs(3.000e-9)
     return a;
-  }  
-  if ( a.expo == 1 ) { //  input >= 12.000 
+  }
+  if ( a.expo == 1 ) { //  input >= 12.000
     if ( ( abs( a.num ) / 6 ) >= ( a.denom / 5 ) ) {
       if ( a.num > 0 ) {
         return log_1e0;
@@ -5171,7 +5213,7 @@ AVRational_32 tanh(AVRational_32 a) {
       }
     }
   }
-  if ( a.expo > 1 ) { //  input >= 30.000 
+  if ( a.expo > 1 ) { //  input >= 30.000
     if ( a.num > 0 ) {
       return log_1e0;
     }
@@ -5184,13 +5226,13 @@ AVRational_32 tanh(AVRational_32 a) {
 }
 
 AVRational_32 atanh(AVRational_32 a) {
-  if ( a.expo < -6 ) { //  input <= abs(3.000e-7) 
+  if ( a.expo < -6 ) { //  input <= abs(3.000e-7)
     return a;
-  }  
-  if ( a.expo < -3 ) { //  input <= abs(3.000e-4) 
+  }
+  if ( a.expo < -3 ) { //  input <= abs(3.000e-4)
     return add( a, mul( cubic( a ), exp2_1_3 ), 1 );
-  }  
-  if ( a.expo == 0 ) { //  input  = 1.000 
+  }
+  if ( a.expo == 0 ) { //  input  = 1.000
     if ( abs( a.num ) == a.denom ) {
       if ( a.num > 0 ) {
         return __1e90;
@@ -5205,12 +5247,12 @@ AVRational_32 atanh(AVRational_32 a) {
       }
       else {
         a.denom = 5;  // Error_String('U');  input < -1
-      }  
+      }
       Error_first = true;
       return a;
-    }  
+    }
   }
-  if ( a.expo > 0 ) {  //  input >= 3.000 
+  if ( a.expo > 0 ) {  //  input >= 3.000
     if ( a.num > 0 ) {
       a.denom = 6;  // Error_String('^');  input >  3
     }
@@ -5220,7 +5262,7 @@ AVRational_32 atanh(AVRational_32 a) {
     Error_first = true;
     return a;
   }
-  
+
   expo_temp_8        = 0;
   calc_temp_64_a_abs = abs(a.num);
   denom_temp_u64     = abs(a.denom);
@@ -5231,14 +5273,11 @@ AVRational_32 atanh(AVRational_32 a) {
   denom_temp_u64    *= 3;
   while ( num_temp_u64 >= denom_temp_u64 ) {
     denom_temp_u64 *= expo_10[1];
-    expo_temp_8 += 1;
+    ++expo_temp_8;
   }
   num_temp_u64 *= 3;
-  
+
   temp_32 = Reduce_Number( expo_temp_8 );              // reduce
-  // temp_32.num   = num_temp_u32;
-  // temp_32.denom = denom_temp_u32;
-  // temp_32.expo  = expo_temp_8;
 
   temp_32_exp = mul( log_( temp_32 ), exp2_1_2 );
   if ( a.num < 0 ) {
@@ -5286,7 +5325,7 @@ AVRational_32 exp2(AVRational_32 a, AVRational_32 corr) {
   }
 
   temp_32_log = abs_x(a);
-  
+
   if ( temp_32_log.expo  < -9 ) { //  input < 3.3e-10
   	Error_String('X');
   	Error_first = true;
@@ -5300,9 +5339,9 @@ AVRational_32 exp2(AVRational_32 a, AVRational_32 corr) {
       return temp_32_log;
     }
   }
-  
+
   if ( temp_32_log.expo  >  3 ) { //  input > 3000
-  	Error_String('['); 
+  	Error_String('[');
   	Error_first = true;
     return temp_32_log;
   }
@@ -5313,7 +5352,7 @@ AVRational_32 exp2(AVRational_32 a, AVRational_32 corr) {
   }
 
   if ( temp_32_log.expo ==  2 ) { //  input > 1066_2/3
-    Error_String('['); 
+    Error_String('[');
     Error_first = true;
     return temp_32_log;
   }
@@ -5325,7 +5364,7 @@ AVRational_32 exp2(AVRational_32 a, AVRational_32 corr) {
       return temp_32_log;
     }
   }
-  
+
   temp_32_ext  = mul ( a, corr );
   temp_32_test = frac( temp_32_ext );
   if ( temp_32_test.denom < 9 ) {
@@ -5343,37 +5382,37 @@ AVRational_32 exp2(AVRational_32 a, AVRational_32 corr) {
 
   while ( temp_32_log.num < temp_32_log.denom ) {
     temp_32_log = mul( exp2_1_2_div_x, temp_32_log );
-    count_x -= 1;
+    --count_x;
   }
-  
+
   while ( temp_32_log.expo < -2 ) {
     temp_32_log = mul( exp2_1_8_div_x, temp_32_log );
     count_x -= 3;
   }
-  
+
   while ( temp_32_log.expo > -2 ) {
     temp_32_log = mul( exp2_1_8, temp_32_log );
     count_x += 3;
   }
-  
+
   temp_32_log = mul( ln2, temp_32_log );   // e^x   Change
 
   while ( temp_32_log.num < temp_32_log.denom ) {
     temp_32_log = mul( exp2_1_2_div_x, temp_32_log );
-    count_x -= 1;
+    --count_x;
   }
-  
+
   if ( temp_32_log.num > temp_32_log.denom ) {
     if ( (temp_32_log.num - temp_32_log.denom ) >= temp_32_log.denom ) {
       temp_32_log = mul( exp2_1_2, temp_32_log );
-      count_x += 1;
+      ++count_x;
     }
   }
 
   temp_32_ext = mul( log_1e0, temp_32_log );
-  
+
   while ( count_horner > 1 ) {
-    count_horner -= 1;
+    --count_horner;
     temp_32_log = one_x_n_add(temp_32_log, count_horner);
     if ( count_horner > 1 ) {
       temp_32_log = mul(temp_32_ext, temp_32_log);
@@ -5382,18 +5421,18 @@ AVRational_32 exp2(AVRational_32 a, AVRational_32 corr) {
 
   while ( count_x > 0 ) {
     temp_32_log = mul( temp_32_log, temp_32_log );
-    count_x -= 1;
+    --count_x;
   }
 
   while ( count_x < 0 ) {
     temp_32_log = sqrt( temp_32_log );
-    count_x += 1;
+    ++count_x;
   }
-  
+
   if ( test_signum_log < 0 ) {
     return div_x( temp_32_log );
   }
-  
+
   return temp_32_log;
 }
 
@@ -5427,7 +5466,7 @@ AVRational_32 powx_extra(AVRational_32 base, AVRational_32 expo_) {
     }
     else {
       return min_x(powx(min_x(base), expo_));
-    }          	
+    }
   }
 }
 
@@ -5442,14 +5481,14 @@ AVRational_32 powx_(AVRational_32 base, AVRational_32 expo_) {
   while (expo_32 > 0) {
     if ((expo_32 & 0x1UL) == 0x1UL) {
       result  = mul( result, base );
-      wait_8 += 1;
+      ++wait_8;
     }
-        
+
     expo_32 = expo_32 >> 1;
     base = square( base );
-    wait_8 += 1;
+    ++wait_8;
   }
-	
+
 	if ( expo_.num < 0 ) {
 	  return div_x( result );
 	}
@@ -5460,7 +5499,7 @@ AVRational_32 powx(AVRational_32 a, AVRational_32 b) {
   if ( b.num == 0 ) {
     return clone( log_1e0 );
   }
-  
+
   if ( a.num > 0 ) {
     if ( b.expo == 0 ) {
       if ( b.num == b.denom ) {
@@ -5469,9 +5508,9 @@ AVRational_32 powx(AVRational_32 a, AVRational_32 b) {
     }
     temp_32_pow = mul( log2(a), b );
     temp_32_ext = mul( log_1e0, temp_32_pow );
-    
+
     temp_32_pow = abs_x(temp_32_pow);
-  
+
     if ( temp_32_pow.expo == -9 ) { //  input < 1e-9
       if ( temp_32_pow.num < temp_32_pow.denom ) {
         temp_32_pow.denom = 3;   // Error_String('X');
@@ -5480,7 +5519,7 @@ AVRational_32 powx(AVRational_32 a, AVRational_32 b) {
     }
 
     if ( temp_32_pow.expo > 3 ) { //  input > 3000
-      temp_32_pow.denom = 4;   // Error_String('['); 
+      temp_32_pow.denom = 4;   // Error_String('[');
       return temp_32_pow;
     }
 
@@ -5489,7 +5528,7 @@ AVRational_32 powx(AVRational_32 a, AVRational_32 b) {
     }
 
     if ( temp_32_pow.expo ==  2 ) { //  input > 1066_2/3
-      temp_32_pow.denom = 4;   // Error_String('['); 
+      temp_32_pow.denom = 4;   // Error_String('[');
       return temp_32_pow;
     }
 
@@ -5524,7 +5563,7 @@ AVRational_32 logx(AVRational_32 a, AVRational_32 b) {
     }
     temp_32_ext = div_x( log_( b ));
     temp_32 = mul( temp_32_ext, log_(a) );
-    
+
     return temp_32;
   }
   else {
@@ -5551,8 +5590,8 @@ AVRational_32 log10(AVRational_32 a) {
     return temp_32;
   }
   else {
-  	a.denom = 2; // Error_String('u');  input <= 0	
-  	Error_first = true;      
+  	a.denom = 2; // Error_String('u');  input <= 0
+  	Error_first = true;
     return a;
   }
 }
@@ -5565,7 +5604,7 @@ AVRational_32 log_(AVRational_32 a) {
   AVRational_32  temp_32_log_5  = {0, int32_max, int32_max, 0};
   AVRational_32  temp_32_log_x  = {0, int32_max, int32_max, 0};
   uint32_t  denom_x         = 1;
-  int8_t    test_signum_log = 0;	
+  int8_t    test_signum_log = 0;
   uint8_t   index_tab       = 0;
   uint8_t   log_tab_        = 0;
   int8_t    test_temp_8     = 0;
@@ -5587,15 +5626,15 @@ AVRational_32 log_(AVRational_32 a) {
     test_signum_log = -1;
     a = div_x( a );
   }
-  
+
   if ( a.num > 0 ) {
     if ( a.num > a.denom ) {
-      test_temp_8   = 1;      
+      test_temp_8   = 1;
       num_u64_loc   = a.num;
       denom_u64_loc = a.denom;
     }
     if ( a.num < a.denom ) {
-      test_temp_8   = -1;      
+      test_temp_8   = -1;
       num_u64_loc   = a.denom;
       denom_u64_loc = a.num;
       a.num         = num_u64_loc;
@@ -5606,17 +5645,17 @@ AVRational_32 log_(AVRational_32 a) {
     a.expo = 0;
     if ( num_temp_u32 > 30 ) {
       denom_temp_u32 *= 10;
-      test_expo += 1;      
+      ++test_expo;
     }
     if ( num_temp_u32 > 3 ) {
       denom_temp_u32 *= 10;
-      test_expo += 1;      
+      ++test_expo;
     }
     Expand_Number();
     temp_32_log.num   = num_temp_u32;
     temp_32_log.denom = denom_temp_u32;
     temp_32_log.expo  = test_expo;
-    
+
     temp_32_log = mul( temp_32_log, log_to_10_div_x ) ;
     if ( test_temp_8 == 0 ) {   // a.num == a.denom
      	if ( test_signum_log == 0 ) {
@@ -5630,7 +5669,7 @@ AVRational_32 log_(AVRational_32 a) {
      	}
       return temp_32_log;
     }
-        
+
     test_temp_u64 = test_temp_u64 << 63;
     num_log_u64   = 0;
     denom_log_u64 = 0xB8AA3B295C17F0BCULL; //  13306513097844322492; >> Fehler -1,92e-20
@@ -5638,10 +5677,10 @@ AVRational_32 log_(AVRational_32 a) {
     for ( uint8_t index_a = 0; index_a < 11; index_a += 1 ) {
       if ( Debug_Level == 43 ) {
         itoa_(num_u64_loc, display_string_itoa_);
-        Serial.print(mul_count);  	
-        Serial.print(" ");  	
-        Serial.println(display_string_itoa_);    
-      }       
+        Serial.print(mul_count);
+        Serial.print(" ");
+        Serial.println(display_string_itoa_);
+      }
     	index_count = log_tab[index_tab];
     	index_count = index_count >> 4;
     	log_add = 0;
@@ -5653,10 +5692,10 @@ AVRational_32 log_(AVRational_32 a) {
           log_tab_= log_tab_ >> 4;
         }
         log_add += log_tab_;
-        index_tab += 1;
+        ++index_tab;
       }
       if ( index_count == 0 ) {
-        index_tab += 1;
+        ++index_tab;
       }
       else {
         test_temp_u64  = test_temp_u64 >> 1;
@@ -5669,51 +5708,46 @@ AVRational_32 log_(AVRational_32 a) {
       }
       if ( index_a == 7 ) {
       	num_temp_u64   = num_u64_loc;
-      	denom_temp_u64 = denom_u64_loc;     	
+      	denom_temp_u64 = denom_u64_loc;
         temp_32_log_x  = Reduce_Number( 0 );
         num_u64_loc    = temp_32_log_x.num;
-        denom_u64_loc  = temp_32_log_x.denom;        
+        denom_u64_loc  = temp_32_log_x.denom;
       }
-      
+
       mul_count *= 2;
    	}
-      
+
     temp_32_log_a.num   = 0;
-    temp_32_log_a.denom = int32_max;    
+    temp_32_log_a.denom = int32_max;
     temp_32_log_a.expo  = 0;
-    
+
     if ( num_log_u64 > 0 ) {
 
       num_temp_u64   = num_u64_loc;
-      denom_temp_u64 = denom_u64_loc;     	
+      denom_temp_u64 = denom_u64_loc;
       a = Reduce_Number( 0 );
-      // a.num    = num_temp_u32;
-      // a.denom  = denom_temp_u32;
-      // a.expo   = 0;        
 
       while ( num_log_u64 < expo_test_0a ) {
-        temp_32_log_a.expo -= 1;
+        --temp_32_log_a.expo;
         num_log_u64       *= 10;
       }
-      
+
       num_temp_u64     = num_log_u64;
-      denom_temp_u64   = denom_log_u64;    
+      denom_temp_u64   = denom_log_u64;
       temp_32_log_a = Reduce_Number( temp_32_log_a.expo );
-      // temp_32_log_a.num   = num_temp_u32;
-      // temp_32_log_a.denom = denom_temp_u32;
     }
 
     while ( ( a.num - a.denom ) < ( a.denom >> 11 ) ) {
       a        = square(a);
       denom_x *= 2;
-      count_x += 1;
+      ++count_x;
     }
-    
+
     temp_32_log_3 = div_x( add( a, exp2_0_1, 1 ));
     temp_32_log_1 = mul( add( a, exp2_0_1, -1 ), temp_32_log_3);
     temp_32_log_2 = mul( temp_32_log_1, temp_32_log_1 );
     temp_32_log_3 = add( mul( temp_32_log_2, exp2_3_5 ), exp2_0_1, 1 );
-    
+
     temp_32_log_4 = mul( temp_32_log_2, exp2_1_3 );
     temp_32_log_5 = add( mul( temp_32_log_3, temp_32_log_4 ), exp2_0_1, 1);
     temp_32_log_b = mul( mul( temp_32_log_1, temp_32_log_5 ), exp2_1_2_div_x );
@@ -5722,7 +5756,7 @@ AVRational_32 log_(AVRational_32 a) {
       temp_32_log_b = div_u32( temp_32_log_b, denom_x );
     }
     if ( num_log_u64 > 0 ) {
-      temp_32_log_b = add( temp_32_log_b, temp_32_log_a, 1 );	
+      temp_32_log_b = add( temp_32_log_b, temp_32_log_a, 1 );
     }
 
     if ( test_temp_8 < 0 ) {
@@ -5730,16 +5764,16 @@ AVRational_32 log_(AVRational_32 a) {
     }
 
    	temp_32_log = add( temp_32_log, temp_32_log_b, 1 );
-    
+
     if ( test_signum_log < 0 ) {
       temp_32_log = min_x( temp_32_log );
     }
-    
-    return temp_32_log;    
+
+    return temp_32_log;
   }
   else {
-  	a.denom = 2;  // Error_String('u');  input <= 0	 
-  	Error_first = true;     
+  	a.denom = 2;  // Error_String('u');  input <= 0
+  	Error_first = true;
     return a;
   }
 }
@@ -5750,7 +5784,7 @@ AVRational_32 agm(AVRational_32 a, AVRational_32 b) {
   for ( uint8_t index_z = 0; index_z < 9; index_z += 1 ) {
     if ((temp_32_a.num * temp_32_b.denom) == (temp_32_b.num * temp_32_a.denom)) {
       return temp_32_b;
-    } 
+    }
     if ((temp_32_a.num * temp_32_a1.denom) == (temp_32_a1.num * temp_32_a.denom)) {
       return temp_32_b;
     }
@@ -5758,22 +5792,22 @@ AVRational_32 agm(AVRational_32 a, AVRational_32 b) {
     temp_32_b1 = sqrt(mul(temp_32_a, temp_32_b));
     if ((temp_32_a1.num * temp_32_b1.denom) == (temp_32_b1.num * temp_32_a1.denom)) {
       return temp_32_b;
-    } 
+    }
     if ((temp_32_a.num * temp_32_a1.denom) == (temp_32_a1.num * temp_32_a.denom)) {
       return temp_32_b;
-    }  
+    }
     temp_32_a  = add( temp_32_a1, temp_32_b1, 2 );
     temp_32_b  = sqrt(mul(temp_32_a1, temp_32_b1));
   }
-  return temp_32_b;       // 
+  return temp_32_b;       //
 }
 
 AVRational_32 square(AVRational_32 a) {
-  return mul(a, a);          
+  return mul(a, a);
 }
 
 AVRational_32 cubic(AVRational_32 a) {
-  return mul(a, square(a));  
+  return mul(a, square(a));
 }
 
 void copy_input_left_right( uint8_t left, uint8_t right ) {
@@ -5791,7 +5825,7 @@ void copy_calc_left_right( uint8_t left, uint8_t right ) {
   mem_stack_calc[ left ].op_priority = mem_stack_calc[ right ].op_priority;
 }
 
-void mem_extra_left_right( uint8_t left, uint8_t right ) {		
+void mem_extra_left_right( uint8_t left, uint8_t right ) {
   mem_extra_stack[ left ].num   = mem_stack_input[ right ].num;
   mem_extra_stack[ left ].denom = mem_stack_input[ right ].denom;
   mem_extra_stack[ left ].expo  = mem_stack_input[ right ].expo;
@@ -5828,7 +5862,7 @@ void add_operation_to_mem( uint8_t deep_step, char op_add ) {
     Start_input += deep_step;
     left_right_mem_extra( 0, 0 );
   }
-    
+
   if ( Start_input == Display_Result ) {
     left_right_mem_extra( 0, 0 );
     mem_stack_count = 1;
@@ -5916,8 +5950,8 @@ void Test_all_function() {
         gcd_temp_32 = denom_temp_u32 / num_temp_u32;
         while ( gcd_temp_32 > 2 ) {
           --calc_32.expo;
-          gcd_temp_32    /= 10;
-          num_temp_u32   *= 10;
+          gcd_temp_32  /= 10;
+          num_temp_u32 *= 10;
         }
       }
       Expand_Number();
@@ -6030,8 +6064,8 @@ void Test_all_function() {
         gcd_temp_32 = denom_temp_u32 / num_temp_u32;
         while ( gcd_temp_32 > 2 ) {
           --calc_32.expo;
-          gcd_temp_32    /= 10;
-          num_temp_u32   *= 10;
+          gcd_temp_32  /= 10;
+          num_temp_u32 *= 10;
         }
       }
       Expand_Number();
@@ -6083,8 +6117,8 @@ void Test_all_function() {
         gcd_temp_32 = denom_temp_u32 / num_temp_u32;
         while ( gcd_temp_32 > 2 ) {
           --calc_32.expo;
-          gcd_temp_32    /= 10;
-          num_temp_u32   *= 10;
+          gcd_temp_32  /= 10;
+          num_temp_u32 *= 10;
         }
       }
       Expand_Number();
@@ -6127,7 +6161,7 @@ void Test_all_function() {
       if ( num_temp_u32 > denom_temp_u32 ) {
         gcd_temp_32 = num_temp_u32 / denom_temp_u32;
         while ( gcd_temp_32 > 2 ) {
-          calc_32.expo   += 1;
+          ++calc_32.expo;
           gcd_temp_32    /= 10;
           denom_temp_u32 *= 10;
         }
@@ -6135,7 +6169,7 @@ void Test_all_function() {
       else {
         gcd_temp_32 = denom_temp_u32 / num_temp_u32;
         while ( gcd_temp_32 > 2 ) {
-          calc_32.expo   -= 1;
+          --calc_32.expo;
           gcd_temp_32    /= 10;
           num_temp_u32   *= 10;
         }
@@ -6201,13 +6235,13 @@ void Test_all_function() {
       Serial.print(test_32.expo);
       Serial.println(" -> ");
 
-      num_temp_u32_  += 1;
-      
+      ++num_temp_u32_;
+
       if ( num_temp_u32_ == 300 ) {
-        calc_32.expo    += 1;
+        ++calc_32.expo;
         denom_temp_u32_ *= 10;
       }
-      
+
       if ( num_temp_u32_ == denom_temp_u32_ ) {
         num_temp_u32_   = 100;
         denom_temp_u32_ = 100;
@@ -6235,13 +6269,13 @@ void Test_all_function() {
 
       temp_32_log2.num = num_temp_u32;
       temp_32_log2.denom = denom_temp_u32;
-      
+
       temp_32_cbrt = exp2(temp_32_log2, exp2_0_1);
 
       temp_32_cbrt.num  += index;
       temp_32_cbrt.num  /= index;
       temp_32_cbrt.num  *= index;
-      
+
       temp_32_xxx = log2(temp_32_cbrt);
 
       Serial.print(temp_32_cbrt.num);
@@ -6250,7 +6284,7 @@ void Test_all_function() {
       Serial.print("  ");
       Serial.print(temp_32_cbrt.expo);
       Serial.print("  ");
-       
+
       Serial.print(temp_32_xxx.num);
       Serial.print("  ");
       Serial.print(temp_32_xxx.denom);
@@ -6259,12 +6293,12 @@ void Test_all_function() {
       Serial.println(" -> ");
 
       num_temp_u32_  += 3;
-      
+
       if ( num_temp_u32_ == 301 ) {
-        temp_32_log2.expo    += 1;
+        ++temp_32_log2.expo;
         denom_temp_u32_ *= 10;
       }
-      
+
       if ( num_temp_u32_ == denom_temp_u32_ ) {
         num_temp_u32_   = 100;
         denom_temp_u32_ = 100;
@@ -6282,7 +6316,7 @@ void Test_all_function() {
 
     num_temp_u32_   =   1;
     denom_temp_u32_ = 200;
-    Serial.println(" ");            // 
+    Serial.println(" ");            //
     for ( uint16_t index = 0; index <= 14200; index += 1 ) {
       temp_32_cbrt.expo = 0;
       Serial.print(index);
@@ -6292,22 +6326,22 @@ void Test_all_function() {
       denom_temp_u32 = denom_temp_u32_;
       if ( num_temp_u32 > 300 ) {
       	denom_temp_u32 *= 10;
-      	temp_32_cbrt.expo += 1;
+      	++temp_32_cbrt.expo;
       }
       if ( num_temp_u32 > 3000 ) {
       	denom_temp_u32 *= 10;
-      	temp_32_cbrt.expo += 1;
+      	++temp_32_cbrt.expo;
       }
       Expand_Number();
-      
+
       temp_32_cbrt.num   = num_temp_u32;
       temp_32_cbrt.denom = denom_temp_u32;
-      
+
       if ( index == 0 ) {
       	temp_32_cbrt.num  = temp_32_cbrt.denom;
         temp_32_cbrt.expo = -20;
       }
-      
+
       temp_32_xxx = factorial(temp_32_cbrt);
    /*
       Serial.print(temp_32_cbrt.num);
@@ -6316,7 +6350,7 @@ void Test_all_function() {
       Serial.print("  ");
       Serial.print(temp_32_cbrt.expo);
       Serial.println("  ");
-   */       
+   */
       Serial.print(temp_32_xxx.num);
       Serial.print("  ");
       Serial.print(temp_32_xxx.denom);
@@ -6363,13 +6397,13 @@ void Test_all_function() {
       Serial.print(test_32.expo);
       Serial.println(" -> ");
 
-      num_temp_u32_  += 1;
-      
+      ++num_temp_u32_;
+
       if ( num_temp_u32_ == 30 ) {
-        calc_32.expo    += 1;
+        ++calc_32.expo;
         denom_temp_u32_ *= 10;
       }
-      
+
       if ( num_temp_u32_ == denom_temp_u32_ ) {
       	if ( calc_32.expo < 1 ) {
           num_temp_u32_   = 10;
@@ -6457,20 +6491,6 @@ void Test_all_function() {
         calc_32.expo    =     1;
         denom_temp_u32_ = 10000;
       }
-
-     /*      
-      if ( num_temp_u32_ == 30 ) {
-        calc_32.expo    += 1;
-        denom_temp_u32_ *= 10;
-      }
- 
-      if ( num_temp_u32_ == denom_temp_u32_ ) {
-      	if ( calc_32.expo < 1 ) {
-          num_temp_u32_   = 10;
-          denom_temp_u32_ = 10;
-      	}
-      }
-     */
     }
     test_index = false;
     time_end = millis();
@@ -6485,7 +6505,7 @@ void Test_all_function() {
     calc_32.expo    = expo_test;
     denom_temp_u32_ =   200;
     Serial.println(" ");
-     
+
     while ( expo_test < 1 ) {
       for ( int16_t index = 60; index < 600; index += 1 ) {
         num_temp_u32   = index;
@@ -6513,7 +6533,7 @@ void Test_all_function() {
             Serial.print(test_32.denom);
             Serial.print("  ");
             Serial.print(test_32.expo);
-            Serial.println(" -> ");       	
+            Serial.println(" -> ");
           }
         }
         else {
@@ -6523,20 +6543,20 @@ void Test_all_function() {
           Serial.print(calc_32.denom);
           Serial.print("  ");
           Serial.print(calc_32.expo);
-          Serial.print("  "); 
-    	
+          Serial.print("  ");
+
           test_32 = atanh(calc_32);
           Serial.print(test_32.num);
           Serial.print("  ");
           Serial.print(test_32.denom);
           Serial.print("  ");
           Serial.print(test_32.expo);
-          Serial.println(" -> ");       	
+          Serial.println(" -> ");
         }
       }
-    	expo_test += 1;
-    } 
-                        
+    	++expo_test;
+    }
+
     expo_test    = 0;
 
     denom_temp_u32_ = 20000;
@@ -6554,15 +6574,15 @@ void Test_all_function() {
         Serial.print(calc_32.denom);
         Serial.print("  ");
         Serial.print(calc_32.expo);
-        Serial.print("  "); 
-    	
+        Serial.print("  ");
+
         test_32 = atanh(calc_32);
         Serial.print(test_32.num);
         Serial.print("  ");
         Serial.print(test_32.denom);
         Serial.print("  ");
         Serial.print(test_32.expo);
-        Serial.println(" -> ");       	
+        Serial.println(" -> ");
 
         denom_temp_u32  = denom_temp_u32_;
       }
@@ -6582,15 +6602,15 @@ void Test_all_function() {
         Serial.print(calc_32.denom);
         Serial.print("  ");
         Serial.print(calc_32.expo);
-        Serial.print("  "); 
-    	
+        Serial.print("  ");
+
         test_32 = atanh(calc_32);
         Serial.print(test_32.num);
         Serial.print("  ");
         Serial.print(test_32.denom);
         Serial.print("  ");
         Serial.print(test_32.expo);
-        Serial.println(" -> ");       	
+        Serial.println(" -> ");
 
         denom_temp_u32  = denom_temp_u32_;
       }
@@ -6610,15 +6630,15 @@ void Test_all_function() {
         Serial.print(calc_32.denom);
         Serial.print("  ");
         Serial.print(calc_32.expo);
-        Serial.print("  "); 
-    	
+        Serial.print("  ");
+
         test_32 = atanh(calc_32);
         Serial.print(test_32.num);
         Serial.print("  ");
         Serial.print(test_32.denom);
         Serial.print("  ");
         Serial.print(test_32.expo);
-        Serial.println(" -> ");       	
+        Serial.println(" -> ");
 
         denom_temp_u32  = denom_temp_u32_;
       }
@@ -6638,15 +6658,15 @@ void Test_all_function() {
         Serial.print(calc_32.denom);
         Serial.print("  ");
         Serial.print(calc_32.expo);
-        Serial.print("  "); 
-     	
+        Serial.print("  ");
+
         test_32 = atanh(calc_32);
         Serial.print(test_32.num);
         Serial.print("  ");
         Serial.print(test_32.denom);
         Serial.print("  ");
         Serial.print(test_32.expo);
-        Serial.println(" -> ");       	
+        Serial.println(" -> ");
 
         denom_temp_u32  = denom_temp_u32_;
       }
@@ -6666,15 +6686,15 @@ void Test_all_function() {
         Serial.print(calc_32.denom);
         Serial.print("  ");
         Serial.print(calc_32.expo);
-        Serial.print("  "); 
-    	
+        Serial.print("  ");
+
         test_32 = atanh(calc_32);
         Serial.print(test_32.num);
         Serial.print("  ");
         Serial.print(test_32.denom);
         Serial.print("  ");
         Serial.print(test_32.expo);
-        Serial.println(" -> ");       	
+        Serial.println(" -> ");
 
         denom_temp_u32  = denom_temp_u32_;
       }
@@ -6697,15 +6717,15 @@ void Test_all_function() {
         Serial.print(calc_32.denom);
         Serial.print("  ");
         Serial.print(calc_32.expo);
-        Serial.print("  "); 
-     	
+        Serial.print("  ");
+
         test_32 = atanh(calc_32);
         Serial.print(test_32.num);
         Serial.print("  ");
         Serial.print(test_32.denom);
         Serial.print("  ");
         Serial.print(test_32.expo);
-        Serial.println(" -> ");       	
+        Serial.println(" -> ");
 
         denom_temp_u32  = denom_temp_u32_;
       }
@@ -6718,7 +6738,7 @@ void Test_all_function() {
   }
   if ( Debug_Level == 39 ) {
     time_start = millis();
-    
+
     uint64_t index_test      = 2000;
     uint64_t index_count     = 0;
     uint64_t index_count_add = 1;
@@ -6728,7 +6748,7 @@ void Test_all_function() {
     uint64_t num_temp_u64_x   = 2000000000;
     uint64_t denom_temp_u64_x = 2000000000;
 
-    for ( uint8_t index = 0; index < 8; index += 1 ) {    
+    for ( uint8_t index = 0; index < 8; index += 1 ) {
       while ( index_count < index_test ) {
 
         if ( num_temp_u64_x > 6000000000 ) {
@@ -6739,32 +6759,22 @@ void Test_all_function() {
         num_temp_u64 = num_temp_u64_x;
         denom_temp_u64 = denom_temp_u64_x;
         calc_32 = Reduce_Number( index_expo );              // reduce
-        // calc_32.num   = num_temp_u32;
-        // calc_32.denom = denom_temp_u32;
-        // calc_32.expo  = index_expo;
-      /*    
-        Serial.print(calc_32.num);
-        Serial.print("  ");
-        Serial.print(calc_32.denom);
-        Serial.print("  ");
-        Serial.print(calc_32.expo);
-        Serial.println("  ");
-      */
+
         test_32 = acosh(calc_32);
         Serial.print(test_32.num);
         Serial.print("  ");
         Serial.print(test_32.denom);
         Serial.print("  ");
         Serial.print(test_32.expo);
-        Serial.println("    ");       	
+        Serial.println("    ");
 
-      	num_temp_u64_x += index_count_add; 
+      	num_temp_u64_x += index_count_add;
       	index_count    += index_count_add;
       }
       index_count_add *= expo_10[1];
       index_test      *= expo_10[1];
     }
-    
+
     test_index = false;
     time_end = millis();
     time_diff = time_end - time_start;
@@ -6776,7 +6786,7 @@ void Test_all_function() {
 
     num_temp_u32_   =   1;
     denom_temp_u32_ = 200;
-    Serial.println(" ");            // 
+    Serial.println(" ");            //
     for ( uint16_t index = 0; index <= 18000; index += 1 ) {
       temp_32_cbrt.expo = 0;
       Serial.print(index);
@@ -6786,46 +6796,46 @@ void Test_all_function() {
       denom_temp_u32 = denom_temp_u32_;
       if ( num_temp_u32 < 600 ) {
       	num_temp_u32 *= 10;
-      	temp_32_cbrt.expo -= 1;
+      	--temp_32_cbrt.expo;
       }
       if ( num_temp_u32 < 61 ) {
       	num_temp_u32 *= 10;
-      	temp_32_cbrt.expo -= 1;
+      	--temp_32_cbrt.expo;
       }
       if ( num_temp_u32 > 600 ) {
       	denom_temp_u32 *= 10;
-      	temp_32_cbrt.expo += 1;
+      	++temp_32_cbrt.expo;
       }
       if ( num_temp_u32 > 6000 ) {
       	denom_temp_u32 *= 10;
-      	temp_32_cbrt.expo += 1;
+      	++temp_32_cbrt.expo;
       }
       Expand_Number();
-      
+
       temp_32_cbrt.num   = num_temp_u32;
       temp_32_cbrt.denom = denom_temp_u32;
-      
+
       if ( index == 0 ) {
       	temp_32_cbrt.num  = temp_32_cbrt.denom;
         temp_32_cbrt.expo = -20;
       }
-      
+
       temp_32_xxx = sin(temp_32_cbrt);
-   /* 
+   /*
       Serial.print(temp_32_cbrt.num);
       Serial.print("  ");
       Serial.print(temp_32_cbrt.denom);
       Serial.print("  ");
       Serial.print(temp_32_cbrt.expo);
       Serial.println("  ");
-   */     
+   */
       Serial.print(temp_32_xxx.num);
       Serial.print("  ");
       Serial.print(temp_32_xxx.denom);
       Serial.print("  ");
       Serial.print(temp_32_xxx.expo);
       Serial.println(" -> ");
- 
+
     }
     test_index = false;
     time_end = millis();
@@ -6838,7 +6848,7 @@ void Test_all_function() {
 
     num_temp_u32_   =   1;
     denom_temp_u32_ = 200;
-    Serial.println(" ");            // 
+    Serial.println(" ");            //
     for ( uint16_t index = 1; index < 18000; index += 1 ) {
       temp_32_cbrt.expo = 0;
       Serial.print(index);
@@ -6848,41 +6858,41 @@ void Test_all_function() {
       denom_temp_u32 = denom_temp_u32_;
       if ( num_temp_u32 < 600 ) {
       	num_temp_u32 *= 10;
-      	temp_32_cbrt.expo -= 1;
+      	--temp_32_cbrt.expo;
       }
       if ( num_temp_u32 < 61 ) {
       	num_temp_u32 *= 10;
-      	temp_32_cbrt.expo -= 1;
+      	--temp_32_cbrt.expo;
       }
       if ( num_temp_u32 > 600 ) {
       	denom_temp_u32 *= 10;
-      	temp_32_cbrt.expo += 1;
+      	++temp_32_cbrt.expo;
       }
       if ( num_temp_u32 > 6000 ) {
       	denom_temp_u32 *= 10;
-      	temp_32_cbrt.expo += 1;
+      	++temp_32_cbrt.expo;
       }
       Expand_Number();
-      
+
       temp_32_cbrt.num   = num_temp_u32;
       temp_32_cbrt.denom = denom_temp_u32;
-            
+
       temp_32_xxx = tan(temp_32_cbrt);
-   /* 
+   /*
       Serial.print(temp_32_cbrt.num);
       Serial.print("  ");
       Serial.print(temp_32_cbrt.denom);
       Serial.print("  ");
       Serial.print(temp_32_cbrt.expo);
       Serial.println("  ");
-   */     
+   */
       Serial.print(temp_32_xxx.num);
       Serial.print("  ");
       Serial.print(temp_32_xxx.denom);
       Serial.print("  ");
       Serial.print(temp_32_xxx.expo);
       Serial.println(" -> ");
- 
+
     }
     test_index = false;
     time_end = millis();
@@ -6893,7 +6903,7 @@ void Test_all_function() {
   if ( Debug_Level == 44 ) {
     time_start = millis();
 
-    Serial.println(" ");            // 
+    Serial.println(" ");            //
     for ( uint16_t index = 1; index < 10001; index += 1 ) {
       num_temp_u32   = index;
       denom_temp_u32 = 10000;
@@ -6902,25 +6912,25 @@ void Test_all_function() {
       Serial.print("  ");
       if ( num_temp_u32 < 4 ) {
       	num_temp_u32 *= 10;
-      	temp_32_cbrt.expo -= 1;
+      	--temp_32_cbrt.expo;
       }
       if ( num_temp_u32 < 31 ) {
       	num_temp_u32 *= 10;
-      	temp_32_cbrt.expo -= 1;
+      	--temp_32_cbrt.expo;
       }
       if ( num_temp_u32 < 301 ) {
       	num_temp_u32 *= 10;
-      	temp_32_cbrt.expo -= 1;
+      	--temp_32_cbrt.expo;
       }
       if ( num_temp_u32 < 3001 ) {
       	num_temp_u32 *= 10;
-      	temp_32_cbrt.expo -= 1;
+      	--temp_32_cbrt.expo;
       }
       Expand_Number();
-      
+
       temp_32_cbrt.num   = num_temp_u32;
       temp_32_cbrt.denom = denom_temp_u32;
-      
+
       temp_32_xxx = atan( temp_32_cbrt );
    /*
       Serial.print(temp_32_cbrt.num);
@@ -6929,7 +6939,7 @@ void Test_all_function() {
       Serial.print("  ");
       Serial.print(temp_32_cbrt.expo);
       Serial.println("  ");
-   */     
+   */
       Serial.print(temp_32_xxx.num);
       Serial.print("  ");
       Serial.print(temp_32_xxx.denom);
@@ -6947,7 +6957,7 @@ void Test_all_function() {
   if ( Debug_Level == 45 ) {
     time_start = millis();
 
-    Serial.println(" ");            // 
+    Serial.println(" ");            //
     for ( uint16_t index = 1; index < 10001; index += 1 ) {
       num_temp_u32   = index;
       denom_temp_u32 = 10000;
@@ -6956,25 +6966,25 @@ void Test_all_function() {
       Serial.print("  ");
       if ( num_temp_u32 < 4 ) {
       	num_temp_u32 *= 10;
-      	temp_32_cbrt.expo -= 1;
+      	--temp_32_cbrt.expo;
       }
       if ( num_temp_u32 < 31 ) {
       	num_temp_u32 *= 10;
-      	temp_32_cbrt.expo -= 1;
+      	--temp_32_cbrt.expo;
       }
       if ( num_temp_u32 < 301 ) {
       	num_temp_u32 *= 10;
-      	temp_32_cbrt.expo -= 1;
+      	--temp_32_cbrt.expo;
       }
       if ( num_temp_u32 < 3001 ) {
       	num_temp_u32 *= 10;
-      	temp_32_cbrt.expo -= 1;
+      	--temp_32_cbrt.expo;
       }
       Expand_Number();
-      
+
       temp_32_cbrt.num   = num_temp_u32;
       temp_32_cbrt.denom = denom_temp_u32;
-      
+
       temp_32_xxx = atan( temp_32_cbrt );
    /*
       Serial.print(temp_32_cbrt.num);
@@ -6983,7 +6993,7 @@ void Test_all_function() {
       Serial.print("  ");
       Serial.print(temp_32_cbrt.expo);
       Serial.println("  ");
-   */     
+   */
       Serial.print(temp_32_xxx.num);
       Serial.print("  ");
       Serial.print(temp_32_xxx.denom);
@@ -7001,7 +7011,7 @@ void Test_all_function() {
   if ( Debug_Level == 46 ) {
     time_start = millis();
 
-    Serial.println(" ");            // 
+    Serial.println(" ");            //
     for ( uint16_t index = 8330; index < 18751; index += 1 ) {  // 8330
       num_temp_u32   = index;
       denom_temp_u32 = 25000;
@@ -7009,17 +7019,17 @@ void Test_all_function() {
       Serial.print(index);
       Serial.print("  ");
       Expand_Number();
-      
+
       temp_32_cbrt.num   = num_temp_u32;
       temp_32_cbrt.denom = denom_temp_u32;
-   /*            
+   /*
       Serial.print(temp_32_cbrt.num);
       Serial.print("  ");
       Serial.print(temp_32_cbrt.denom);
       Serial.print("  ");
       Serial.print(temp_32_cbrt.expo);
       Serial.println("  ");
-   */     
+   */
       temp_32_xxx = atan( temp_32_cbrt );
     }
     test_index = false;
@@ -7035,7 +7045,7 @@ void Test_all_function() {
       denom_temp_u32 = 25000;
       temp_32_cbrt.expo = 0;
       Expand_Number();
-      
+
       temp_32_cbrt.num   = num_temp_u32;
       temp_32_cbrt.denom = denom_temp_u32;
 
@@ -7069,37 +7079,126 @@ void Test_all_function() {
 
       test_32 = cbrt(calc_32);
     }
-   */	   // Debug_Level == 34
+   */
+   	   // Debug_Level == 34
     for ( uint16_t index = 1; index <= 14200; index += 1 ) {
-     // Serial.print(index);
-     // Serial.print("  ");
       temp_32_cbrt.expo = 0;
       num_temp_u32   = index;
       denom_temp_u32 = 200;
       if ( num_temp_u32 < 6 ) {
       	num_temp_u32 *= 10;
-      	temp_32_cbrt.expo -= 1;
+      	--temp_32_cbrt.expo;
       }
       if ( num_temp_u32 < 60 ) {
       	num_temp_u32 *= 10;
-      	temp_32_cbrt.expo -= 1;
+      	--temp_32_cbrt.expo;
       }
       if ( num_temp_u32 > 600 ) {
       	denom_temp_u32 *= 10;
-      	temp_32_cbrt.expo += 1;
+      	++temp_32_cbrt.expo;
       }
       if ( num_temp_u32 > 6000 ) {
       	denom_temp_u32 *= 10;
-      	temp_32_cbrt.expo += 1;
+      	++temp_32_cbrt.expo;
       }
       Expand_Number();
-      
+
       temp_32_cbrt.num   = num_temp_u32;
       temp_32_cbrt.denom = denom_temp_u32;
-      
+
       temp_32_xxx = factorial(temp_32_cbrt);
     }
    
+    test_index = false;
+  }
+  if ( Debug_Level == 49 ) {
+   /* // sqrt
+    for ( int32_t index = 100; index <= 10000; index += 1 ) {
+      calc_32.expo = 0;
+      num_temp_u32 = index;
+      denom_temp_u32 = 100;
+      if ( num_temp_u32 > denom_temp_u32 ) {
+        gcd_temp_32 = num_temp_u32 / denom_temp_u32;
+        while ( gcd_temp_32 > 2 ) {
+          ++calc_32.expo;
+          gcd_temp_32    /= 10;
+          denom_temp_u32 *= 10;
+        }
+      }
+      else {
+        gcd_temp_32 = denom_temp_u32 / num_temp_u32;
+        while ( gcd_temp_32 > 2 ) {
+          --calc_32.expo;
+          gcd_temp_32  /= 10;
+          num_temp_u32 *= 10;
+        }
+      }
+      Expand_Number();
+
+      calc_32.num = num_temp_u32;
+      calc_32.denom = denom_temp_u32;
+
+      test_32 = sqrt(calc_32);
+
+    }
+    test_index = false;
+   */
+   /* // qbrt
+    for ( int32_t index = 10; index <= 10000; index += 1 ) {
+      calc_32.expo = 0;
+      num_temp_u32 = index;
+      denom_temp_u32 = 10;
+      if ( num_temp_u32 > denom_temp_u32 ) {
+        gcd_temp_32 = num_temp_u32 / denom_temp_u32;
+        while ( gcd_temp_32 > 2 ) {
+          ++calc_32.expo;
+          gcd_temp_32    /= 10;
+          denom_temp_u32 *= 10;
+        }
+      }
+      else {
+        gcd_temp_32 = denom_temp_u32 / num_temp_u32;
+        while ( gcd_temp_32 > 2 ) {
+          --calc_32.expo;
+          gcd_temp_32  /= 10;
+          num_temp_u32 *= 10;
+        }
+      }
+      Expand_Number();
+
+      calc_32.num = num_temp_u32;
+      calc_32.denom = denom_temp_u32;
+
+      test_32 = cbrt(calc_32);
+    }
+   */
+    num_temp_u32_   =   1;
+    denom_temp_u32_ = 200;
+    for ( uint16_t index = 0; index <= 14200; index += 10 ) {
+      temp_32_cbrt.expo = 0;
+      num_temp_u32   = num_temp_u32_;
+      num_temp_u32  *= index;
+      denom_temp_u32 = denom_temp_u32_;
+      if ( num_temp_u32 > 300 ) {
+      	denom_temp_u32 *= 10;
+      	++temp_32_cbrt.expo;
+      }
+      if ( num_temp_u32 > 3000 ) {
+      	denom_temp_u32 *= 10;
+      	++temp_32_cbrt.expo;
+      }
+      Expand_Number();
+
+      temp_32_cbrt.num   = num_temp_u32;
+      temp_32_cbrt.denom = denom_temp_u32;
+
+      if ( index == 0 ) {
+      	temp_32_cbrt.num  = temp_32_cbrt.denom;
+        temp_32_cbrt.expo = -20;
+      }
+
+      temp_32_xxx = factorial(temp_32_cbrt);
+    }
     test_index = false;
   }
 }
@@ -7127,7 +7226,7 @@ void Test_Switch_up_down() {
           break;
 
         case 3:
-        case 5: 
+        case 5:
         case 6:
         case 7:
           bit_3 = 0;           //     "EE"       Write to the bit.
@@ -7182,50 +7281,50 @@ void Test_Switch_up_down() {
           } [[fallthrough]];
 
         case 32768:       //    1
-        case 98304: 
+        case 98304:
 
         case 65536:       //    2
 
         case 131072:      //    3
-        case 196608: 
+        case 196608:
 
         case 262144:      //    4
-        case 786432: 
+        case 786432:
 
         case 524288:      //    5
 
         case 1048576:     //    6
-        case 1572864: 
+        case 1572864:
 
         case 2097152:    //    7
-        case 6291456: 
+        case 6291456:
 
         case 4194304:    //    8
 
         case 8388608:    //    9
-        case 12582912:  
+        case 12582912:
 
         case 2048:       //    )
-        case 3072:  
+        case 3072:
 
         case 1024:       //    (
 
         case 512:        //    _CE_
-        case 1536: 
+        case 1536:
 
         case 256:        //    _/_
-        case 384:  
+        case 384:
 
         case 64:         //    <--
-        case 192:  
+        case 192:
 
         case 32:         //    _-_
-        case 48:   
+        case 48:
 
         case 16:         //     _+_
 
         case 24:
- 
+
           Display_Status_old = 255;
           switch (Display_Status_new) {
 
@@ -7527,7 +7626,7 @@ void Test_Switch_up_down() {
               Switch_Code = 78;  //            new  MR(1)
               break;
 
-            case 32:  
+            case 32:
             case 96:
               Switch_Code = 103;  //           new  M_plus(1)
               break;
@@ -7536,7 +7635,7 @@ void Test_Switch_up_down() {
               Switch_Code = 87;  //            new  FIX_a_b/c
               break;
 
-            case 48:  
+            case 48:
             case 112:
               Switch_Code = 161;  //           new  Min(1)
               break;
@@ -7550,7 +7649,7 @@ void Test_Switch_up_down() {
               Switch_Code = 50;
               break;
 
-            case 1:  
+            case 1:
             case 3:
               Switch_Code = 203;  //           new  EE(2)
               break;
@@ -7575,7 +7674,7 @@ void Test_Switch_up_down() {
               Switch_Code = 79;  //            new  MR(2)
               break;
 
-            case 32:  
+            case 32:
             case 96:
               Switch_Code = 104;  //           new  M_plus(2)
               break;
@@ -7584,7 +7683,7 @@ void Test_Switch_up_down() {
               Switch_Code = 95;  //            new  FIX_2
               break;
 
-            case 48:  
+            case 48:
             case 112:
               Switch_Code = 162;  //           new  Min(2)
               break;
@@ -7599,7 +7698,7 @@ void Test_Switch_up_down() {
               Switch_Code = 51;
               break;
 
-            case 1:  
+            case 1:
             case 3:
               Switch_Code = 204;  //           new  EE(3)
               break;
@@ -7624,7 +7723,7 @@ void Test_Switch_up_down() {
               Switch_Code = 80;  //            new  MR(3)
               break;
 
-            case 32:  
+            case 32:
             case 96:
               Switch_Code = 105;  //           new  M_plus(3)
               break;
@@ -7633,7 +7732,7 @@ void Test_Switch_up_down() {
               Switch_Code = 96;  //            new  FIX_3
               break;
 
-            case 48:   
+            case 48:
             case 112:
               Switch_Code = 163;  //           new  Min(3)
               break;
@@ -7648,7 +7747,7 @@ void Test_Switch_up_down() {
               Switch_Code = 52;
               break;
 
-            case 1:  
+            case 1:
             case 3:
               Switch_Code = 205;  //           new  EE(4)
               break;
@@ -7673,7 +7772,7 @@ void Test_Switch_up_down() {
               Switch_Code = 81;  //            new  MR(4)
               break;
 
-            case 32:  
+            case 32:
             case 96:
               Switch_Code = 106;  //           new  M_plus(4)
               break;
@@ -7682,7 +7781,7 @@ void Test_Switch_up_down() {
               Switch_Code = 97;  //            new  FIX_4
               break;
 
-            case 48:  
+            case 48:
             case 112:
               Switch_Code = 164;  //           new  Min(4)
               break;
@@ -7696,7 +7795,7 @@ void Test_Switch_up_down() {
               Switch_Code = 53;
               break;
 
-            case 1:  
+            case 1:
             case 3:
               Switch_Code = 206;  //           new  EE(5)
               break;
@@ -7721,7 +7820,7 @@ void Test_Switch_up_down() {
               Switch_Code = 82;  //            new  MR(5)
               break;
 
-            case 32:  
+            case 32:
             case 96:
               Switch_Code = 107;  //           new  M_plus(5)
               break;
@@ -7730,7 +7829,7 @@ void Test_Switch_up_down() {
               Switch_Code = 98;  //            new  FIX_5
               break;
 
-            case 48:  
+            case 48:
             case 112:
               Switch_Code = 165;  //           new  Min(5)
               break;
@@ -7745,7 +7844,7 @@ void Test_Switch_up_down() {
               Switch_Code = 54;
               break;
 
-            case 1:  
+            case 1:
             case 3:
               Switch_Code = 207;  //           new  EE(6)
               break;
@@ -7770,7 +7869,7 @@ void Test_Switch_up_down() {
               Switch_Code = 83;  //            new  MR(6)
               break;
 
-            case 32:  
+            case 32:
             case 96:
               Switch_Code = 108;  //           new  M_plus(6)
               break;
@@ -7779,7 +7878,7 @@ void Test_Switch_up_down() {
               Switch_Code = 99;  //            new  FIX_6
               break;
 
-            case 48:  
+            case 48:
             case 112:
               Switch_Code = 166;  //           new  Min(6)
               break;
@@ -7794,7 +7893,7 @@ void Test_Switch_up_down() {
               Switch_Code = 55;
               break;
 
-            case 1:  
+            case 1:
             case 3:
               Switch_Code = 208;  //           new  EE(7)
               break;
@@ -7819,7 +7918,7 @@ void Test_Switch_up_down() {
               Switch_Code = 84;  //            new  MR(7)
               break;
 
-            case 32:  
+            case 32:
             case 96:
               Switch_Code = 109;  //           new  M_plus(7)
               break;
@@ -7828,7 +7927,7 @@ void Test_Switch_up_down() {
               Switch_Code = 100;  //           new  FIX_7
               break;
 
-            case 48:  
+            case 48:
             case 112:
               Switch_Code = 167;  //           new  Min(7)
               break;
@@ -7842,7 +7941,7 @@ void Test_Switch_up_down() {
               Switch_Code = 56;
               break;
 
-            case 1:  
+            case 1:
             case 3:
               Switch_Code = 209;  //           new  EE(8)
               break;
@@ -7867,7 +7966,7 @@ void Test_Switch_up_down() {
               Switch_Code = 85;  //            new  MR(8)
               break;
 
-            case 32:  
+            case 32:
             case 96:
               Switch_Code = 110;  //           new  M_plus(8)
               break;
@@ -7876,7 +7975,7 @@ void Test_Switch_up_down() {
               Switch_Code = 101;  //           new  FIX_8
               break;
 
-            case 48:  
+            case 48:
             case 112:
               Switch_Code = 168;  //           new  Min(8)
               break;
@@ -7891,7 +7990,7 @@ void Test_Switch_up_down() {
               Switch_Code = 57;
               break;
 
-            case 1:  
+            case 1:
             case 3:
               Switch_Code = 210;  //           new  EE(9)
               break;
@@ -7916,7 +8015,7 @@ void Test_Switch_up_down() {
               Switch_Code = 86;  //            new  MR(9)
               break;
 
-            case 32:  
+            case 32:
             case 96:
               Switch_Code = 111;  //           new  M_plus(9)
               break;
@@ -7925,7 +8024,7 @@ void Test_Switch_up_down() {
               Switch_Code = 102;  //           new  FIX_E24
               break;
 
-            case 48:  
+            case 48:
             case 112:
               Switch_Code = 169;  //           new  Min(9)
               break;
@@ -7948,7 +8047,7 @@ void Test_Switch_up_down() {
               Switch_Code = 115;  //                log10(x)
               break;
 
-            case 24:  
+            case 24:
             case 40:
               Switch_Code = 123;  //           new  Off
               break;
@@ -7970,7 +8069,7 @@ void Test_Switch_up_down() {
               Switch_Code = 112;  //                ln(x)
               break;
 
-            case 32:  
+            case 32:
             case 48:
               Switch_Code = 175;  //                _EE-1_ ">"
               break;
@@ -7997,12 +8096,12 @@ void Test_Switch_up_down() {
               Switch_Code = 34;   //                 lb
               break;
 
-            case 24:  
+            case 24:
             case 40:
               Switch_Code = 91;   //           new   Light up
               break;
 
-            case 32:  
+            case 32:
             case 48:
               Switch_Code = 174;  //                _EE+1_ "<"
               break;
@@ -8031,7 +8130,7 @@ void Test_Switch_up_down() {
               Switch_Code = 129;   //                _GM_
               break;
 
-            case 24:  
+            case 24:
             case 40:
               Switch_Code = 38;   //           new   _EE+3_
               break;
@@ -8053,9 +8152,9 @@ void Test_Switch_up_down() {
               Switch_Code = 124;   //                _HM_
               break;
 
-            case 24:  
-            case 32:  
-            case 40:  
+            case 24:
+            case 32:
+            case 40:
             case 48:       //     EE +  =  + _*_      three Switch pressed
               Display_rotate = true;
               Switch_Code = 176;   //          new   _Cha_Dis_Dir_on_
@@ -8079,7 +8178,7 @@ void Test_Switch_up_down() {
               Switch_Code = 171;  //                 Frac
               break;
 
-            case 24:  
+            case 24:
             case 40:
               Switch_Code = 93;   //           new   Light down
               break;
@@ -8108,7 +8207,7 @@ void Test_Switch_up_down() {
               Switch_Code = 94;   //           new   _/p/_  Phytagoras
               break;
 
-            case 24:  
+            case 24:
             case 40:
               Switch_Code = 39;   //           new   _EE-3_
               break;
@@ -8153,7 +8252,7 @@ void Test_Switch_up_down() {
               Switch_Code = 36;   //           new   Pi()
               break;
 
-            case 24:  
+            case 24:
             case 40:
           	  Switch_Code = 153;  //           new   Std_on_off
               break;
@@ -8208,11 +8307,11 @@ void copy_stack_input_2_calc( uint8_t left, uint8_t right ) {
   if ( Start_input < Display_Result ) {
     mem_stack_calc[ left ].num = mem_stack_input[ right ].num;
     mem_stack_calc[ left ].denom = mem_stack_input[ right ].denom;
-    mem_stack_calc[ left ].expo = mem_stack_input[ right ].expo; 		
+    mem_stack_calc[ left ].expo = mem_stack_input[ right ].expo;
   }
   mem_stack_calc[ left ].op = temp_operation;
   mem_stack_calc[ left ].op_priority = Start_input;
-  mem_stack_count += 1;
+  ++mem_stack_count;
   mem_pointer = mem_stack_count;
 }
 
@@ -8249,7 +8348,7 @@ void Function_2_display() {
   Display_Number(mem_stack_input[mem_pointer]);
 }
 
-void Function_1_number() {	
+void Function_1_number() {
   Beep__off();
   if ( Start_input < Input_Memory ) {      // Input Number
     Get_Number( 0 );
@@ -8268,11 +8367,11 @@ void Function_1_number() {
     mem_exchange = false;
     Start_input = Input_Operation_0;
     mem_pointer = 0;
-    
+
     count = 0;
     count_wait = 0;
     switch (Switch_Code) {
-    	
+
       case 33:                 //    _1/x_
       	mem_stack_input[ mem_pointer ] = div_x(mem_stack_input[ mem_pointer ]);
       	break;
@@ -8296,7 +8395,7 @@ void Function_1_number() {
       case 67:                 //    _tan_
     	  mem_stack_input[ mem_pointer ] = tan(mem_stack_input[ mem_pointer ]);
         break;
-    	  
+
       case 68:                 //    _asin_
     	  mem_stack_input[ mem_pointer ] = asin(mem_stack_input[ mem_pointer ]);
         break;
@@ -8308,7 +8407,7 @@ void Function_1_number() {
       case 70:                 //    _atan_
     	  mem_stack_input[ mem_pointer ] = atan(mem_stack_input[ mem_pointer ]);
         break;
-    	  
+
       case 71:                 //    _sinh_
     	  mem_stack_input[ mem_pointer ] = sinh(mem_stack_input[ mem_pointer ]);
     	  break;
@@ -8320,15 +8419,15 @@ void Function_1_number() {
     	case 73:                 //    _tanh_
     	  mem_stack_input[ mem_pointer ] = tanh(mem_stack_input[ mem_pointer ]);
     	  break;
-    	  
+
     	case 74:                 //    _asinh_
     	  mem_stack_input[ mem_pointer ] = asinh(mem_stack_input[ mem_pointer ]);
     	  break;
-    	  
+
     	case 75:                 //    _acosh_
     	  mem_stack_input[ mem_pointer ] = acosh(mem_stack_input[ mem_pointer ]);
     	  break;
-    	  
+
       case 76:                 //    _atanh_
       	mem_stack_input[ mem_pointer ] = atanh(mem_stack_input[ mem_pointer ]);
         break;
@@ -8336,19 +8435,19 @@ void Function_1_number() {
       case 113:                //    e^x
     	  mem_stack_input[ mem_pointer ] = exp(mem_stack_input[ mem_pointer ]);
     	  break;
-    	  
+
       case 114:                //    2^x
     	  mem_stack_input[ mem_pointer ] = exp2(mem_stack_input[ mem_pointer ], exp2_0_1);
     	  break;
-    	  
+
     	case 115:                //    _log10_
     	  mem_stack_input[ mem_pointer ] = log10(mem_stack_input[ mem_pointer ]);
     	  break;
-    	  
+
       case 116:                //    10^x
     	  mem_stack_input[ mem_pointer ] = exp10(mem_stack_input[ mem_pointer ]);
     	  break;
-    	  
+
     	case 117:                //    _x^2_
     	  mem_stack_input[ mem_pointer ] = square(mem_stack_input[ mem_pointer ]);
     	  break;
@@ -8363,11 +8462,11 @@ void Function_1_number() {
 
     	case 170:                //    _Int_
     		mem_stack_input[ mem_pointer ] = floor_(mem_stack_input[ mem_pointer ], 8);
-    		break; 
-    	
+    		break;
+
     	case 171:                //    _Frac_
     		mem_stack_input[ mem_pointer ] = frac(mem_stack_input[ mem_pointer ]);
-    		break; 
+    		break;
 
     	case 172:                //    _x^3_
     	  mem_stack_input[ mem_pointer ] = cubic(mem_stack_input[ mem_pointer ]);
@@ -8389,10 +8488,10 @@ void Function_1_number() {
     	  Get_Mantisse();
     	  if ( display_string[Plus_Minus_Expo] == '-' ) {
     	    display_string[Plus_Minus_Expo] = '=';
-    	  }   	
+    	  }
     	  if ( display_string[Plus_Minus_Expo] == '#' ) {
     	    display_string[Plus_Minus_Expo] = '_';
-    	  }   	
+    	  }
       }
     }
     else {
@@ -8412,7 +8511,7 @@ void change_number() {
     Get_Mantisse();
   }
 }
-	
+
 boolean Test_buffer = false;
 uint8_t Number_of_buffer = 0;
 // Create a RingBufCPP object designed to hold a Max_Buffer of Switch_down
@@ -8426,7 +8525,7 @@ static const unsigned char PS_128 = (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);
 
 // the setup routine runs once when you press reset:
 void setup() {
- 
+
   // pinMode(On_Off_PIN, INPUT_PULLUP);
   pinMode(On_Off_PIN, OUTPUT);
   digitalWrite(On_Off_PIN, LOW);
@@ -8506,7 +8605,7 @@ void setup() {
 
 // the loop routine runs over and over again forever:
 void loop() {
-	
+
 	if ( Countdown_OFF < Countdown_Off_0 ) {
 		if ( Countdown_OFF > 0 ) {
       digitalWrite(On_Off_PIN, HIGH);
@@ -8787,7 +8886,8 @@ void loop() {
             if ( expo_temp_16 > (expo_min_in_3 + 34) ) {
               Expo_change = true;
               --expo_temp_16;
-              expo_temp_16 = (expo_temp_16 * 3) - 102;
+              expo_temp_16 *= 3;
+              expo_temp_16 -= 102;
               Put_Expo();
             }
           }
@@ -8802,7 +8902,7 @@ void loop() {
             max_input = false;
             mem_pointer = mem_stack_count;
             Clear_String();
-            Start_input = Start_Mode;          
+            Start_input = Start_Mode;
           }
           if ( Start_input > Input_Operation_0 ) {
             if ( Start_input < Display_Input_Error ) {
@@ -8815,7 +8915,7 @@ void loop() {
           if ( Start_input == Input_Mantisse ) {
             if ( display_string[ 2 ]  == '_' ) {
               if ( mem_stack_count > 1 ) {
-                mem_stack_count -= 1;
+                --mem_stack_count;
                 mem_pointer = mem_stack_count;
                 max_input = false;
                 Start_input = Start_Mode;
@@ -9041,14 +9141,14 @@ void loop() {
           	}
           }
           if ( Start_input > Input_Memory ) {   // no Number Input
-          	
+
             Init_expo = false;
             mem_pointer = 0;
 
             if ( Start_input > Input_Operation_0 ) {
               First_operation = false;
               Input_Operation_2_function();
-              mem_pointer = mem_stack_count;            	                           
+              mem_pointer = mem_stack_count;
               First_operation = false;
             }
 
@@ -9150,11 +9250,11 @@ void loop() {
               }
             }
             if ( mem_stack_count > 2 ) {
-              mem_stack_count -= 1;
+              --mem_stack_count;
             }
             if ( Constant_arithmetic == true ) {
               mem_stack_test = mem_stack_count;
-            }          
+            }
             if ( Start_input > Input_Operation_0 ) {
               Input_Operation_2_function();
             }
@@ -9162,10 +9262,10 @@ void loop() {
             if ( Start_input == Display_Result ) {
               if ( Debug_Level == 21 ) {
                 Serial.println("--xxxx--");
-              }          	
+              }
               mem_pointer = mem_stack_count;
-              mem_stack_count -= 1;
-              if ( temp_operation > p_p ) {          //    
+              --mem_stack_count;
+              if ( temp_operation > p_p ) {          //
                 copy_calc_left_right( 2, 0 );
               }
               else {
@@ -9355,7 +9455,7 @@ void loop() {
             }
             else {
               if ( mem_stack_count > 1 ) {
-                mem_stack_count -= 1;
+                --mem_stack_count;
                 max_input = false;
                 Start_input = Input_Operation_0;
               }
@@ -9455,7 +9555,7 @@ void loop() {
           else {
             display_digit  = fix_extra_test;
           }
-          
+
           Display_Number(mem_stack_input[mem_pointer]);
           display_string[Memory_1] = Display_Memory_1[5];
           display_string[Memory_0] = Display_Memory_0[5];
@@ -9478,7 +9578,7 @@ void loop() {
           if ( (Start_input == Input_Mantisse) || (Start_input == Input_Expo) || (Start_input == Input_Operation_0) ) {
             if ( Start_input == Input_Operation_0 ) {
               mem_save = false;
-              mem_exchange = false;        	
+              mem_exchange = false;
             }
             M_Plus_past = true;
             Function_1_number();
@@ -9488,7 +9588,7 @@ void loop() {
           }
           if ( Start_input == M_Plus_spezial ) {
           	copy_input_left_right( mem_pointer, 0 );
-            mem_stack_input[ 0 ] = add( mem_extra_stack[ mem_extra_test ], mem_extra_stack[ mem_extra_max_4 ], 1 );  
+            mem_stack_input[ 0 ] = add( mem_extra_stack[ mem_extra_test ], mem_extra_stack[ mem_extra_max_4 ], 1 );
           }
           if ( Start_input == Display_Result ) {
             mem_stack_count = 1;
@@ -9515,7 +9615,7 @@ void loop() {
               mem_pointer     = 1;
               mem_stack_count = 1;
             }
-          }          
+          }
           if ( Start_input == Display_M_Plus ) {
             left_right_mem_extra( 0, 0 );
             Start_input = Display_Result;
@@ -9666,7 +9766,7 @@ void loop() {
           break;
 
         case 154:                 //    _Std_up_
-          Display_mode = false;          
+          Display_mode = false;
           display_string[1] = Std_mode_string[0];
           display_string[2] = Std_mode_string[1];
           display_string[3] = Std_mode_string[2];
@@ -9865,14 +9965,14 @@ void loop() {
                 mem_stack_input[ mem_pointer ] = add( to_xx[ to_extra_test + 2 ], mul(to_xx[ to_extra_test ], mem_stack_input[ mem_pointer ]), 1 );
                 if ( mem_stack_input[ mem_pointer ].expo == 0 ) {
                   if ( abs(mem_stack_input[ mem_pointer ].num) < abs(mem_stack_input[ mem_pointer ].denom) ) {
-                    to_temperature = true; 
+                    to_temperature = true;
                   }
                 }
                 if ( mem_stack_input[ mem_pointer ].expo < 0 ) {
                   to_temperature = true;
                 }
               }
-             
+
               Error_Test();
               mem_pointer = mem_stack_count;
               if ( Start_input != Display_Error ) {
@@ -9966,7 +10066,7 @@ void loop() {
           }
           break;
 
-        case 122:                 //    Beep_On_Off    
+        case 122:                 //    Beep_On_Off
         case 211:                 //    _/p/ /p/_
         case 212:                 //    _- -_
         case 213:                 //    _* *_
@@ -10004,7 +10104,7 @@ void loop() {
         }
       }
     }
-    
+
     if ( Switch_Code == 93 ) {          //    Light_down
       Switch_Code = 0;
     }
@@ -10019,7 +10119,7 @@ void loop() {
 
     if ( pgm_count_a > 0 ) {
       Switch_Code  = pgm_content_a[pgm_count_a];            //    _=_
-      pgm_count_a -= 1;
+      --pgm_count_a;
     }
 
     index_5min  = 255;
@@ -10088,13 +10188,13 @@ void loop() {
         Display_Status_new = 152;
         Display_Off();
         Countdown_OFF = Countdown_Off_2;      // Switch Off  2x Beep
-      } 
+      }
     }
   }
 
   if ( Display_new == true ) { // Display refresh
   	if ( display_string[5] == 'E' ) {
-      if ( Switch_Code_old > EE_9 ) {         //    
+      if ( Switch_Code_old > EE_9 ) {         //
         Beep__on();
       }
       if ( Debug_Level == 31 ) {
@@ -10198,16 +10298,16 @@ void loop() {
     Display_new = false;
     Display_change = true;
   }
- 
+
   if ( switch_Pos_0 == true ) {
     for ( index_a = 0; index_a < Switch_Count; index_a += 1 ) {
       if (taste[index_a] > Switch_up_b) {
         taste[index_a] = Switch_down_max;
       }
     }
-    switch_Pos_0 = false; 	
+    switch_Pos_0 = false;
   }
- 
+
   if ( time_10ms == true ) {   // here al that will make in 95 Hz
     time_10ms = false;
     ++count_10ms;              // (10 + 30/57) ms
@@ -10734,7 +10834,7 @@ void loop() {
           break;
 
         case 48:       // MS
-        case 112:      // MS 
+        case 112:      // MS
           if ( (Number_count != Zero_count) || (mem_save == true) || (Start_input == Display_Result) || (Start_input == Input_Operation_0) || (Start_input == Input_Memory) || (Start_input == M_Plus_spezial) ) {
             display_string[Memory_1] = Display_Memory_1[3];      // MS
             display_string[Memory_0] = Display_Memory_0[3];
@@ -10864,7 +10964,7 @@ void loop() {
           if ( Start_input == Input_Memory ) {
           	Beep__off();
             display_string[Memory_1] = temp_Memory_1[0];
-            display_string[Memory_0] = temp_Memory_0[0];          	
+            display_string[Memory_0] = temp_Memory_0[0];
           }
           break;
 
@@ -10891,7 +10991,7 @@ void loop() {
           display_string[Memory_1] = Display_Memory_1[14];
           display_string[Memory_0] = Display_Memory_0[14];
           break;
- 
+
         default:
         	Beep__off();
           break;
@@ -10947,7 +11047,7 @@ void loop() {
             display_string[Memory_0] = temp_Memory_0[0]; // mem_str_0[mem_pointer];
             if ( Start_input == Input_Memory ) {
               Start_input = Input_Operation_0;
-            }          
+            }
             break;
 
           case 0:         // __
@@ -11378,7 +11478,7 @@ uint16_t temp_pwm = test_pwm;
         pinMode(Beep_p, INPUT_PULLUP); // Pin A7
         Beep_count = max_Beep_count;
         Beep_on = false;
-      } 
+      }
     }
     else {       //  0 .. 63
       if ( Beep_on_off == true ) {
@@ -11395,4 +11495,4 @@ uint16_t temp_pwm = test_pwm;
       }
     }
   }
-} 
+}
