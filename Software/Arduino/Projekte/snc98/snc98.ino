@@ -2200,12 +2200,17 @@ void Get_Mantisse() {          // " -1.2345678#- 1 5# 1 9."
   Zero_after_Point = 0;
   Zero_index       = 2;
   
+  First_char = display_string[Zero_index];
   if (Point_pos == 2) {
     Zero_index = 3;
     while (display_string[Zero_index] == '0') {
       ++Zero_after_Point;
       ++Zero_index;
     }
+    First_char = display_string[Zero_index]; 
+    if ( First_char == '.' ) {
+      First_char = display_string[Zero_index + 1];
+    }   
   }
   
   if ( Debug_Level == 8 ) {
@@ -2220,7 +2225,6 @@ void Get_Mantisse() {          // " -1.2345678#- 1 5# 1 9."
     Serial.print("  Zero_after_Point = ");
     Serial.println(Zero_after_Point);    
   }
-  First_char = display_string[Zero_index];
   Zero_index_a = 2;
   Number_pos   = 0;
 
@@ -2277,10 +2281,13 @@ void Get_Mantisse() {          // " -1.2345678#- 1 5# 1 9."
       denom_temp_u32 *= expo_10[1];
   	}
   }
-
+ 
   if ( Zero_after_Point > 2 ) {
-  	Zero_after_Point = 2;
+    if ( Repeat_pos == 0 ) {
+      Zero_after_Point = 2;
+    }
   }
+
   num_temp_u32   /= expo_10[Zero_after_Point];
   denom_temp_u32 /= expo_10[Zero_after_Point];
     
@@ -2294,21 +2301,38 @@ void Get_Mantisse() {          // " -1.2345678#- 1 5# 1 9."
     Serial.print("  Number_count = ");
     Serial.print(Number_count);
     Serial.print("  Point_pos = ");
-    Serial.println(Point_pos);
+    Serial.print(Point_pos);
+    Serial.print("  First_char = ");
+    Serial.println(First_char);
   }
 
   if ( Repeat_pos > 0 ) {
-    if ( First_char < '3' ) {
-    	if ( Repeat_number == Number_count ) {
-    	  if ( num_temp_u32 < expo_10[Repeat_number] ) {
-          num_temp_u32   *= expo_10[1];
-          denom_temp_u32 *= expo_10[1];
-          num_temp_u32   += num_temp_u32 / expo_10[Repeat_number];
-    	  }
-    	}
+    while ( (num_temp_u32 * 10) < denom_temp_u32 ) {
+    	num_temp_u32 *= expo_10[1];
+    	--mem_stack_input[mem_pointer].expo;  	
+    }
+ 	  while ( num_temp_u32 < expo_10[Repeat_number] ) {
+      num_temp_u32   *= expo_10[1];
+      denom_temp_u32 *= expo_10[1];
+      num_temp_u32   += num_temp_u32 / expo_10[Repeat_number];
 	  }
     num_temp_u32   -= num_temp_u32   / expo_10[Repeat_number];
     denom_temp_u32 -= denom_temp_u32 / expo_10[Repeat_number];
+  }
+
+  if ( Debug_Level == 8 ) {
+    Serial.print(" ");
+    Serial.print(num_temp_u32);
+    Serial.print(" / ");
+    Serial.print(denom_temp_u32);
+    Serial.print("  Repeat_number = ");
+    Serial.print(Repeat_number);
+    Serial.print("  Number_count = ");
+    Serial.print(Number_count);
+    Serial.print("  Point_pos = ");
+    Serial.print(Point_pos);
+    Serial.print("  First_char = ");
+    Serial.println(First_char);
   }
   
   Expand_Number();
@@ -11279,7 +11303,6 @@ void loop() {
     Test_all_function();
   }
 }
-
 
 /// --------------------------
 /// Timer ISR Timer Routine
