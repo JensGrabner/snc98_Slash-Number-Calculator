@@ -4452,12 +4452,12 @@ AVRational_32 cbrt(AVRational_32 a) {
     	temp_32_b2 = mul( temp_32_b2, cbrt_100_plus ); // 4,64^3 = 100.0
     	break;
   }
-
+ 
   temp_32_b1 = mul( temp_32_b2, temp_32_b2 );
-  temp_32_b1 = mul( a, div_x(temp_32_b1) );
+  temp_32_b1 = mul( abs_x(a), div_x(temp_32_b1) );
                                                   // = (a + b/2) / 1.5
   temp_32_b2 = add( temp_32_b2, temp_32_b1, 9 );  // = (2a + b ) / 3
-
+ 
   if (a.num < 0) {
     temp_32_b2.num *= -1;
   }
