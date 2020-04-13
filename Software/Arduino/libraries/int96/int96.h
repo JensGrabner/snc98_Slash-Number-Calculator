@@ -44,7 +44,7 @@ to maintain a single distribution point for the source code.
 ////////// Classes ///////////////////////
 
 class  int96_a {
-	
+
 public:
 //constructors / destructors
 //Actual member data variables
