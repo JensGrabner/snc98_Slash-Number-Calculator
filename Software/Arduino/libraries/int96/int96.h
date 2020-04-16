@@ -74,12 +74,12 @@ public:
   int96_a& operator--();
   int96_a  operator*(const  int96_a& value) const;
   int96_a  operator/(const  int96_a& value) const;
-  int96_a  operator%(const  int96_a& value) const;
+ // int96_a  operator%(const  int96_a& value) const;
   int96_a& operator*=(const  int96_a& value);
   int96_a& operator/=(const  int96_a& value);
   int96_a& operator+=(const  int96_a& value);
   int96_a& operator-=(const  int96_a& value);
-  int96_a& operator%=(const  int96_a& value);
+ // int96_a& operator%=(const  int96_a& value);
   int96_a  operator~() const;
 
 //equality operators
@@ -129,7 +129,7 @@ public:
   void cbrt(int96_a& test);
   BOOL IsNegative() const;
   BOOL IsPositive() const;
-  void Modulus(const int96_a& divisor, int96_a& Quotient, int96_a& Remainder) const;
+  void Modulus(const int96_a& divisor, int96_a& Quotient) const;
   void mul_div95(const int96_a& mul, int96_a& rVal) const;
 
 //Serialization

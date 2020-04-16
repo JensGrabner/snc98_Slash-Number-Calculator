@@ -271,11 +271,12 @@ void int96_a::cbrt(int96_a& test) {
   
   int96_a init;
   int96_a pow_2;
+ /*
   int96_a A_64;
           A_64.hi  = 0;
           A_64.mid = A.hi;
           A_64.lo  = A.mid;
-    
+ */   
   uint8_t nShift = 63;
 
   int96_a div95_a;   // 0,47956825
@@ -304,10 +305,10 @@ void int96_a::cbrt(int96_a& test) {
     test    >>= nShift;
     
     for ( uint8_t index = 0; index < 3; index += 1 ) { 
-      init   = A_64;            // init ->  4.12 bits
+      init   = A;               // init ->  4.12 bits
       pow_2  = test;            //    1 ->  8.13 bits
       pow_2 *= pow_2;           //    2 -> 16.27 bits
-      init  /= pow_2.mid;       //    3 -> 32.54 bits - 96_bit / 64_bit
+      init  /= pow_2;           //    3 -> 32.54 bits - 96_bit / 64_bit
       if (init.lo == test.lo) { // exact
         index = 3;
       }
@@ -760,33 +761,24 @@ int96_a& int96_a::operator&=(const int96_a& value) {
   return *this;
 }
 
-int96_a& int96_a::operator%=(const int96_a& value) {
-  *this = *this % value;
-  return *this;
-}
-
-int96_a int96_a::operator%(const int96_a& value) const {
-  int96_a Remainder;
-  int96_a Quotient;
-  Modulus(value, Quotient, Remainder);
-  return Remainder;
-}
- 
 int96_a int96_a::operator/(const int96_a& value) const {
-  int96_a Remainder;
   int96_a Quotient;
-  Modulus(value, Quotient, Remainder);
+  Modulus(value, Quotient);
   return Quotient;
 }
 
-void int96_a::Modulus(const int96_a& divisor, int96_a& Quotient, int96_a& Remainder) const {
+void int96_a::Modulus(const int96_a& divisor, int96_a& Quotient) const {
   //Correctly handle negative values
   int96_a tempDividend(*this);
   int96_a tempDivisor(divisor);
+  int96_a initDividend;
   uint64_t Dividend_64;
   uint64_t Divisor_64;
+  uint8_t nShift = 0;
+  bool test_32 = false;
   BOOL bDividendNegative = FALSE;
   BOOL bDivisorNegative = FALSE;
+  
   if ( tempDividend.IsNegative()) {
     bDividendNegative = TRUE;
     tempDividend.Negate();
@@ -795,55 +787,38 @@ void int96_a::Modulus(const int96_a& divisor, int96_a& Quotient, int96_a& Remain
     bDivisorNegative = TRUE;
     tempDivisor.Negate();
   }
-   
-  //Handle the special case's
-  if ( tempDivisor.IsZero() ) {
-    //force a Divide by Zero exception
-  #ifdef __GNUC__
-    /*
-    _asm
-    {
-      movl $0, %eax
-      div      %eax
-    }
-    */
-  #else
-    _asm
-    {
-      mov EAX, 0
-      div EAX
-    }
-  #endif
+  
+  initDividend = tempDividend;
+  
+  Dividend_64 = tempDividend.hi;
+  while ( Dividend_64 > 0 ) {
+  	nShift       += 1;
+  	Dividend_64 >>= 1;
   }
-  else if ( tempDividend.IsZero() ) {
-    Quotient  = int96_a(0);
-    Remainder = int96_a(0);
+  tempDividend >>= nShift;
+
+  if ( tempDivisor.mid == 0 ) {
+    test_32 = true;
   }
   else {
-    if ( tempDividend.hi == 0 ) {
-      if ( tempDivisor.hi == 0 ) {
-        Dividend_64  = tempDividend;
-        Divisor_64   = tempDivisor;
-        Dividend_64 /= Divisor_64;
-        Quotient     = Dividend_64;
-      }
+    tempDivisor  >>= nShift;
+  }
+  Quotient       = int96_a(0);
+  
+  if ( tempDivisor.hi == 0 ) {  // tempDividend >= tempDivisor
+    Dividend_64  = tempDividend;
+    Divisor_64   = tempDivisor;
+    Dividend_64 /= Divisor_64;
+    Quotient     = Dividend_64;
+
+    if ( test_32 == true ) {
+      Quotient     <<= nShift;
+      tempDivisor   *= Quotient;
+      initDividend  -= tempDivisor;
+      Dividend_64    = initDividend;
+      Dividend_64   /= Divisor_64;
+      Quotient      += Dividend_64;
     }
-   /*
-    else {
-      Remainder.Zero();
-      for (int8_t i=0; i<96; i++)
-      {
-        Remainder += tempDividend.GetBit(i);
-        BOOL bBit  = (Remainder >= tempDivisor);
-        Quotient.SetBit(i, bBit);
-        if ( bBit)
-          Remainder -= tempDivisor;
-    
-        if ( (i!=95) && !Remainder.IsZero())
-          Remainder <<= 1;
-      }
-    }
-   */
   }
 
   if ( (bDividendNegative && !bDivisorNegative) || (!bDividendNegative && bDivisorNegative)) {

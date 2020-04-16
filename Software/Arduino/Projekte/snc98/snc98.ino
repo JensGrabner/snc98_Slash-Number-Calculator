@@ -2264,19 +2264,8 @@ void Get_Mantisse() {          // " -1.2345678#- 1 5# 1 9."
 
   Repeat_number += 3;
   Repeat_number -= Repeat_pos;
-
-  if ( Repeat_pos == 0 ) {
-    if ( Point_pos > 0 ) {
-      if ( Number_count > Point_pos ) {
-        Number_pos  = Number_count;
-        Number_pos -= Point_pos;
-        Number_pos -= 1;
-        num_temp_u32   /= expo_10[Number_pos];
-        denom_temp_u32 /= expo_10[Number_pos];
-      }
-    }
-  }
-  else {
+ 
+  if ( Repeat_pos > 0 ) {
     if ( (Repeat_pos - Point_pos) > 1 ) {
       denom_temp_u32 *= expo_10[1];
     }
@@ -2344,6 +2333,12 @@ void Get_Mantisse() {          // " -1.2345678#- 1 5# 1 9."
   mem_stack_input[mem_pointer].denom = denom_temp_u32;
 
   Error_Test();
+  
+  if ( Repeat_number == 11 ) {
+    if ( First_char > '2' ) {
+      mem_stack_input[mem_pointer].expo -= 1;
+    }
+  }
 
   if ( Debug_Level == 8 ) {
     Serial.print("= ");
@@ -4952,7 +4947,7 @@ AVRational_32 cordic(int8_t function) {
   if ( function < 0 ) {
     z_cordic             = 1;
     z_cordic             = z_cordic << 63;
-     temp_cordic          = z_cordic;
+    temp_cordic          = z_cordic;
     temp_cordic         *= tx_cordic;
     temp_cordic         /= ty_cordic;
    /*
