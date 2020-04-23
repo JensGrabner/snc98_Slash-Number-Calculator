@@ -65,14 +65,14 @@
 // Original:  http://www.naughter.com/int96.html
 // https://github.com/JensGrabner/snc98_Slash-Number-Calculator/tree/master/Software/Arduino/libraries/int96
 
-#include <r128.h>
+// #include <r128.h>
 // Original:  https://github.com/fahickman/r128
 
 #include <string.h>
 #include <stdint.h>
 #include <stdlib.h>         // for itoa(); ltoa();
 // #include <math.h>           // for sqrtf();
-#include <inttypes.h>
+// #include <inttypes.h>
 
 #include <itoa_ljust.h>
 // https://github.com/JensGrabner/snc98_Slash-Number-Calculator/tree/master/Software/Arduino/libraries/itoa_ljust
@@ -516,7 +516,7 @@ AVRational_32  temp_32_corr_c    = {0, int32_max, int32_max, 0};
   Coefficient Data:
   a =  2.1384175E-14
   b =  6.2447861E-14
-  c =  -3.4948250E-15
+  c = -3.4948250E-15
  */
 // --- facc_a_Konstante  ---
 #define facc_a_expo           -14
@@ -2350,6 +2350,7 @@ void Get_Mantisse() {          // " -1.2345678#- 1 5# 1 9."
   }
 
   Mantisse_change = false;
+  Repeat_pos = 0;
 }
 
 AVRational_32 Reduce_Number( int8_t expo ) {

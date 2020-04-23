@@ -271,12 +271,7 @@ void int96_a::cbrt(int96_a& test) {
   
   int96_a init;
   int96_a pow_2;
- /*
-  int96_a A_64;
-          A_64.hi  = 0;
-          A_64.mid = A.hi;
-          A_64.lo  = A.mid;
- */   
+
   uint8_t nShift = 63;
 
   int96_a div95_a;   // 0,47956825
