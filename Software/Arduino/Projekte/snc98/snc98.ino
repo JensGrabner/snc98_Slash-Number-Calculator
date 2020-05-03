@@ -133,6 +133,7 @@ char  display_string_itoa_[33];
                        // 49 - Profiling Reduce_Number()
                        // 50 - Reduce_Number() - Output internal Number
                        // 51 - display_string
+                       // 52 - test exp2()
 
 #define sin_    3
 #define cos_    2
@@ -313,8 +314,8 @@ AVRational_32       temp_32_ext   = {0, int32_max, int32_max, 0};
 AVRational_32       temp_32_pow   = {0, int32_max, int32_max, 0};
 AVRational_64       temp_64       = {0, int32_max, int32_max};
 AVRational_32_plus  temp_32_plus  = {0, int32_max, int32_max, ' ', 0};
+AVRational_32 Tau_temp_32_corr_a  = {0, int32_max, int32_max};
 
-int8_t   test_signum_log  = 0;
 int8_t   cordic_test      = 0;
 
 int8_t  temp_expo  = 0;          // <-- expo
@@ -2422,6 +2423,7 @@ AVRational_32 Reduce_Number( int8_t expo ) {
  /**
   *  https://hg.python.org/cpython/file/3.5/Lib/fractions.py#l252
   *  https://ffmpeg.org/doxygen/2.8/rational_8c_source.html#l00035
+  *  https://github.com/FFmpeg/FFmpeg/blob/master/libavutil/rational.c
   *  http://link.springer.com/article/10.1007%2Fs00607-008-0013-8
   *  https://math.boku.ac.at/udt/vol05/no2/3zhabitsk10-2.pdf  Page_5
   */
@@ -4447,7 +4449,7 @@ AVRational_32 cbrt(AVRational_32 a) {
       break;
   }
  
-  temp_32_b1 = mul( temp_32_b2, temp_32_b2 );
+  temp_32_b1 = square( temp_32_b2 );
   temp_32_b1 = mul( abs_x(a), div_x(temp_32_b1) );
                                                   // = (a + b/2) / 1.5
   temp_32_b2 = add( temp_32_b2, temp_32_b1, 9 );  // = (2a + b ) / 3
@@ -4574,10 +4576,10 @@ AVRational_32 factorial(AVRational_32 a) {
 
     temp_32_mul = add( temp_32_mul, mul( temp_32_mul, temp_32_corr_a ), -1 );
 
-    temp_32_mul = add( temp_32_mul, mul( temp_32_corr_c, temp_32_mul ), 1 );
+    temp_32_mul = add( temp_32_mul, mul( temp_32_mul, temp_32_corr_c ), 1 );
 
     if ( input_near_null == true ) {
-      return mul( temp_32_corr_b, temp_32_mul );
+      return mul( temp_32_mul, temp_32_corr_b );
     }
     else {
       return temp_32_mul;
@@ -4726,7 +4728,9 @@ AVRational_32 cordic(int8_t function) {
   int64_t tz_cordic     = 0;
 
   int64_t d_cordic      = -1;
-
+  
+  Tau_temp_32_corr_a    =  mul( Tau, temp_32_corr_a );
+  
   if ( Error_first == true ) {
     return temp_32_corr_a;
   }
@@ -4738,11 +4742,11 @@ AVRational_32 cordic(int8_t function) {
 
         case -5:
         case -4:
-          temp_32_corr_a = min_x( temp_32_corr_a ); [[fallthrough]];
+          Tau_temp_32_corr_a = min_x( Tau_temp_32_corr_a ); [[fallthrough]];
         case  5:
         case  4:
         case  0:
-          return mul( Tau, temp_32_corr_a );
+          return Tau_temp_32_corr_a;
           break;
 
         case  3:
@@ -4775,10 +4779,10 @@ AVRational_32 cordic(int8_t function) {
 
         case  3:
         case -3:
-          temp_32_corr_a = min_x( temp_32_corr_a ); [[fallthrough]];
+          Tau_temp_32_corr_a = min_x( Tau_temp_32_corr_a ); [[fallthrough]];
         case  2:
         case -2:
-          return mul( Tau, temp_32_corr_a );
+          return Tau_temp_32_corr_a;
           break;
 
         default:
@@ -4790,20 +4794,20 @@ AVRational_32 cordic(int8_t function) {
 
         case  5:
         case  4:
-          temp_32_corr_a = min_x( temp_32_corr_a ); [[fallthrough]];
+          Tau_temp_32_corr_a = min_x( Tau_temp_32_corr_a ); [[fallthrough]];
         case -5:
         case -4:
         case  0:
-          return mul( Tau, temp_32_corr_a );
+          return Tau_temp_32_corr_a;
           break;
 
         case  3:
         case -2:
-          temp_32_corr_a = min_x( temp_32_corr_a ); [[fallthrough]];
+          Tau_temp_32_corr_a = min_x( Tau_temp_32_corr_a ); [[fallthrough]];
         case  2:
         case -3:
-          if ( abs( temp_32_corr_a.num ) > 0 ) {
-            return div_x( mul( Tau, temp_32_corr_a ) );
+          if ( abs( Tau_temp_32_corr_a.num ) > 0 ) {
+            return div_x( Tau_temp_32_corr_a );
           }
           else {
             temp_32_corr_a.num = int32_max;
@@ -5389,7 +5393,8 @@ AVRational_32 exp2(AVRational_32 a, AVRational_32 corr) {
   AVRational_32 temp_32_test  = {0, int32_max, int32_max, 0};
   int8_t  count_x             = 0;
   uint8_t count_horner        = 8;
-  test_signum_log             = 0;
+  int8_t  test_signum_log     = 0;
+  AVRational_32  b  = {0, int32_max, int32_max, 0};
 
   if ( a.num > 0 ) {
     test_signum_log =  1;
@@ -5506,14 +5511,58 @@ AVRational_32 exp2(AVRational_32 a, AVRational_32 corr) {
     }
   }
 
-  while ( count_x > 0 ) {
-    temp_32_log = mul( temp_32_log, temp_32_log );
-    --count_x;
-  }
+  if ( count_x > 0 ) {
+    b        = frac(temp_32_log);
+    while ( count_x > 0 ) {
+    	if ( b.expo < -2 ) {
+        b    = square_one(b);
+        --count_x;
+    	}
+    	else {
+        temp_32_log = add(log_1e0, b, 1);
+        count_x *= -1;
+    	}
+    	
+      if ( Debug_Level == 52 ) {
+        Serial.print(count_x);
+        Serial.print(" ) ( ");
+        Serial.print(b.num);
+        Serial.print(" / ");
+        Serial.print(b.denom);
+        Serial.print(" ) * 10^ ");
+        Serial.println(b.expo);
+      }
+    }
+    while ( count_x < 0 ) {
+      temp_32_log = square( temp_32_log );
+      ++count_x;
 
-  while ( count_x < 0 ) {
-    temp_32_log = sqrt( temp_32_log );
-    ++count_x;
+      if ( Debug_Level == 52 ) {
+        Serial.print(count_x);
+        Serial.print(" ) ( ");
+        Serial.print(temp_32_log.num);
+        Serial.print(" / ");
+        Serial.print(temp_32_log.denom);
+        Serial.print(" ) * 10^ ");
+        Serial.println(temp_32_log.expo);
+      }
+    }
+  }
+  else {
+  	while ( count_x < 0 ) {
+      temp_32_log = sqrt( temp_32_log );
+      ++count_x;
+
+      if ( Debug_Level == 52 ) {
+        Serial.print(count_x);
+        Serial.print(" ) ( ");
+        Serial.print(temp_32_log.num);
+        Serial.print(" / ");
+        Serial.print(temp_32_log.denom);
+        Serial.print(" ) * 10^ ");
+        Serial.println(temp_32_log.expo);
+      }
+    }
   }
 
   if ( test_signum_log < 0 ) {
@@ -5837,11 +5886,13 @@ AVRational_32 log_(AVRational_32 a) {
         denom_x *= 2;
       }
     }
-
-
+ 
+    // exp2_0_1      = 1
+    // temp_32_log_3 = a - 1
+    
     temp_32_log_3 = div_x( add( a, exp2_0_1, 1 ));
     temp_32_log_1 = mul( add( a, exp2_0_1, -1 ), temp_32_log_3);
-    temp_32_log_2 = mul( temp_32_log_1, temp_32_log_1 );
+    temp_32_log_2 = square( temp_32_log_1 );
     temp_32_log_3 = add( mul( temp_32_log_2, exp2_3_5 ), exp2_0_1, 1 );
 
     temp_32_log_4 = mul( temp_32_log_2, exp2_1_3 );
@@ -5903,6 +5954,12 @@ AVRational_32 square(AVRational_32 a) {
 }
 
 AVRational_32 square_one(AVRational_32 a) {
+/********************
+ *                  *
+ *   a.expo < -2    *
+ *                  *
+ ********************/
+	
   uint8_t expo     = 0;
   
   expo             = abs(a.expo);
@@ -6875,6 +6932,12 @@ void Test_all_function() {
         denom_temp_u64 = denom_temp_u64_x;
         calc_32 = Reduce_Number( index_expo );              // reduce
 
+        Serial.print(calc_32.num);
+        Serial.print("  ");
+        Serial.print(calc_32.denom);
+        Serial.print("  ");
+        Serial.print(calc_32.expo);
+        Serial.print("  ");
         test_32 = acosh(calc_32);
         Serial.print(test_32.num);
         Serial.print("  ");
