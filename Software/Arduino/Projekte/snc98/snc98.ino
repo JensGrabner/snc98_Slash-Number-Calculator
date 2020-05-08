@@ -84,7 +84,7 @@ char  display_string_itoa_[33];
 #include <OneWireHub.h>
 // https://github.com/orgua/OneWireHub
 
-#define Debug_Level  0 //  0 - not Debug --> 47 downsize programm ??
+#define Debug_Level  0 //  0 - not Debug
                        //  1 - Test intern 1ms - Task by 100 ms
                        //  2 - Test intern 1ms - Task by 1000 ms
                        //  3 - Test Switch "=" up / down (analog)
@@ -306,9 +306,17 @@ AVRational_32       temp_32_b1    = {0, int32_max, int32_max, 0};
 AVRational_32       temp_32_b2    = {0, int32_max, int32_max, 0};
 AVRational_32       temp_32_cbrt  = {0, int32_max, int32_max, 0};
 AVRational_32       temp_32_xxx   = {0, int32_max, int32_max, 0};
-AVRational_32       temp_32_log   = {0, int32_max, int32_max, 0};
+
 AVRational_32       temp_32_log_a = {0, int32_max, int32_max, 0};
 AVRational_32       temp_32_log_b = {0, int32_max, int32_max, 0};
+AVRational_32       temp_32_log_1 = {0, int32_max, int32_max, 0};
+AVRational_32       temp_32_log_2 = {0, int32_max, int32_max, 0};
+AVRational_32       temp_32_log_3 = {0, int32_max, int32_max, 0};
+AVRational_32       temp_32_log_4 = {0, int32_max, int32_max, 0};
+AVRational_32       temp_32_log_x = {0, int32_max, int32_max, 0};
+AVRational_32       b             = {0, int32_max, int32_max, 0};;
+
+AVRational_32       temp_32_log   = {0, int32_max, int32_max, 0};
 AVRational_32       temp_32_log2  = {0, int32_max, int32_max, 0};
 AVRational_32       temp_32_ext   = {0, int32_max, int32_max, 0};
 AVRational_32       temp_32_pow   = {0, int32_max, int32_max, 0};
@@ -460,6 +468,16 @@ static const AVRational_32 exp2_3_5   = { 0, num_exp2_3_5, denum_exp2_3_5, 0};
 #define denum_exp2_1_2   2147302920   // 1/2
 static const AVRational_32 exp2_1_2   = { 0, num_exp2_1_2, denum_exp2_1_2, 0};
 static const AVRational_32 exp2_1_2_div_x   = { 0, denum_exp2_1_2, num_exp2_1_2, 0};
+
+#define num_exp2_2_3     1431535280
+#define denum_exp2_2_3   2147302920   // 2/3
+static const AVRational_32 exp2_2_3   = { 0, num_exp2_2_3, denum_exp2_2_3, 0};
+static const AVRational_32 exp2_2_3_div_x   = { 0, denum_exp2_2_3, num_exp2_2_3, 0};
+
+#define num_exp2_5_6     1789419100
+#define denum_exp2_5_6   2147302920   // 5/6
+static const AVRational_32 exp2_5_6   = { 0, num_exp2_5_6, denum_exp2_5_6, 0};
+static const AVRational_32 exp2_5_6_div_x   = { 0, denum_exp2_5_6, num_exp2_5_6, 0};
 
 #define num_exp2_1_3      715767640
 #define denum_exp2_1_3   2147302920   // 1/3
@@ -5733,13 +5751,6 @@ AVRational_32 log10(AVRational_32 a) {
 }
 
 AVRational_32 log_(AVRational_32 a) {
-  AVRational_32  temp_32_log_1  = {0, int32_max, int32_max, 0};
-  AVRational_32  temp_32_log_2  = {0, int32_max, int32_max, 0};
-  AVRational_32  temp_32_log_3  = {0, int32_max, int32_max, 0};
-  AVRational_32  temp_32_log_4  = {0, int32_max, int32_max, 0};
-  AVRational_32  temp_32_log_5  = {0, int32_max, int32_max, 0};
-  AVRational_32  temp_32_log_x  = {0, int32_max, int32_max, 0};
-  AVRational_32  b  = {0, int32_max, int32_max, 0};
   uint32_t  denom_x         = 1;
   int8_t    test_signum_log = 0;
   uint8_t   index_tab       = 0;
@@ -5754,6 +5765,7 @@ AVRational_32 log_(AVRational_32 a) {
   uint64_t  denom_log_u64   = 0;
   uint64_t  num_u64_loc     = 0;
   uint64_t  denom_u64_loc   = 0;
+  boolean   test            = false;
 
   if ( a.expo > 0 ) {
     test_signum_log =  1;
@@ -5873,31 +5885,34 @@ AVRational_32 log_(AVRational_32 a) {
       temp_32_log_a  = Reduce_Number( temp_32_log_a.expo );
     }
 
-    if ( ( a.num - a.denom ) < ( a.denom >> 11 ) ) {
-      b        = frac(a);
-      while ( b.expo < -3 ) {
-        b        = square_one(b);
-        denom_x *= 2;
+    b = frac(a);
+    while ( (test == false) && (b.expo < -3) ) {
+      if ( b.expo == -4 ) {
+        if ( b.num > b.denom ) {
+          test = true;
+        }
       }
-      a = add(log_1e0, b, 1);
-     
-      while ( ( a.num - a.denom ) < ( a.denom >> 11 ) ) {
-        a        = square(a);
-        denom_x *= 2;
-      }
+      b        = square_one(b);
+      denom_x *= 2;
     }
- 
-    // exp2_0_1      = 1
-    // temp_32_log_3 = a - 1
-    
-    temp_32_log_3 = div_x( add( a, exp2_0_1, 1 ));
-    temp_32_log_1 = mul( add( a, exp2_0_1, -1 ), temp_32_log_3);
-    temp_32_log_2 = square( temp_32_log_1 );
-    temp_32_log_3 = add( mul( temp_32_log_2, exp2_3_5 ), exp2_0_1, 1 );
 
-    temp_32_log_4 = mul( temp_32_log_2, exp2_1_3 );
-    temp_32_log_5 = add( mul( temp_32_log_3, temp_32_log_4 ), exp2_0_1, 1);
-    temp_32_log_b = mul( mul( temp_32_log_1, temp_32_log_5 ), exp2_1_2_div_x );
+  // http:\\elib.mi.sanu.ac.rs\files\journals\tm\22\tm1212.pdf
+  //
+  //          1          (2n + 1)            6n + 3
+  // ln( 1 + --- ) = ----------------- = ---------------
+  //          n       n(2n + 2) + 1/3     6n*n + 6n + 1
+  // 
+  // 1479 < n < 7208
+                                                           // ln(1 + x) =
+    temp_32_log_1 = div_x( b );                            //    n = 1/x
+
+    temp_32_log_2 = mul( temp_32_log_1, exp2_1_2_div_x );  //   2n
+    temp_32_log_2 = add( temp_32_log_2, exp2_0_1, 1 );     //  (2n + 1)
+    temp_32_log_3 = add( temp_32_log_2, exp2_0_1, 1 );     //  (2n + 2)
+    temp_32_log_4 = mul( temp_32_log_1, temp_32_log_3 );   // n(2n + 2)
+    temp_32_log_4 = add( temp_32_log_4, exp2_1_3, 1 );     // n(2n + 2) + 1/3
+    
+    temp_32_log_b = mul( temp_32_log_2, div_x( temp_32_log_4 ));
 
     if ( denom_x > 1 ) {
       temp_32_log_b = div_u32( temp_32_log_b, denom_x );
