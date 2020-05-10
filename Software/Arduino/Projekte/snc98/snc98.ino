@@ -134,6 +134,7 @@ char  display_string_itoa_[33];
                        // 50 - Reduce_Number() - Output internal Number
                        // 51 - display_string
                        // 52 - test exp2()
+                       // 53 - table log_tab[]
 
 #define sin_    3
 #define cos_    2
@@ -311,8 +312,6 @@ AVRational_32       temp_32_log_a = {0, int32_max, int32_max, 0};
 AVRational_32       temp_32_log_b = {0, int32_max, int32_max, 0};
 AVRational_32       temp_32_log_1 = {0, int32_max, int32_max, 0};
 AVRational_32       temp_32_log_2 = {0, int32_max, int32_max, 0};
-AVRational_32       temp_32_log_3 = {0, int32_max, int32_max, 0};
-AVRational_32       temp_32_log_4 = {0, int32_max, int32_max, 0};
 AVRational_32       temp_32_log_x = {0, int32_max, int32_max, 0};
 AVRational_32       b             = {0, int32_max, int32_max, 0};;
 
@@ -373,8 +372,10 @@ static const uint8_t log_tab[] = {
   0x71, 0x6B, 0xA3, 0x12, 0xC3, 0x62, 0x80,        //  7
   0x70, 0x5B, 0x9D, 0xB4, 0x5D, 0x21, 0x2E,        //  8
   0x70, 0x16, 0xFE, 0x46, 0x3F, 0x23, 0xB6,        //  9
-  0x65, 0xC2, 0x70, 0x72, 0xFD, 0xDF };            // 10
-
+  0x65, 0xC2, 0x70, 0x72, 0xFD, 0xDF,              // 10
+  0x61, 0x70, 0xF8, 0x35, 0x63, 0x6F,              // 11
+  0x60, 0x5C, 0x49, 0x94, 0x34, 0x03};             // 12
+  
 static const uint8_t cordic_tab[] = {
   0x90, 0x3B, 0x58, 0xCE, 0x0A, 0xC3, 0x76, 0x9E, 0xCF,  //  0
   0x81, 0xAF, 0x0E, 0xF3, 0xCA, 0xC5, 0x8D, 0xFA,        //  1
@@ -482,6 +483,10 @@ static const AVRational_32 exp2_5_6_div_x   = { 0, denum_exp2_5_6, num_exp2_5_6,
 #define num_exp2_1_3      715767640
 #define denum_exp2_1_3   2147302920   // 1/3
 static const AVRational_32 exp2_1_3   = { 0, num_exp2_1_3, denum_exp2_1_3, 0};
+
+#define num_exp2__1_3     -715767640
+#define denum_exp2__1_3   2147302920   // - 1/3
+static const AVRational_32 exp2__1_3   = { 0, num_exp2__1_3, denum_exp2__1_3, 0};
 
 #define num_exp2_1_6     2147302920
 #define denum_exp2_1_6   1288381752   // 1/6
@@ -5760,7 +5765,6 @@ AVRational_32 log_(AVRational_32 a) {
   uint64_t  test_temp_u64   = 1;
   uint64_t  log_add         = 0;
   uint8_t   index_count     = 0;
-  uint16_t  mul_count       = 1;
   uint64_t  num_log_u64     = 0;
   uint64_t  denom_log_u64   = 0;
   uint64_t  num_u64_loc     = 0;
@@ -5788,6 +5792,9 @@ AVRational_32 log_(AVRational_32 a) {
       a.num         = num_u64_loc;
       a.denom       = denom_u64_loc;
     }
+    num_u64_loc   = num_u64_loc << 33;
+    denom_u64_loc = denom_u64_loc << 33;
+    
     num_temp_u32    = a.expo;
     denom_temp_u32  = 1;
     a.expo = 0;
@@ -5822,10 +5829,16 @@ AVRational_32 log_(AVRational_32 a) {
     num_log_u64   = 0;
     denom_log_u64 = 0xB8AA3B295C17F0BCULL; //  13306513097844322492; >> Fehler -1,92e-20
 
-    for ( uint8_t index_a = 0; index_a < 11; index_a += 1 ) {
+    if ( Debug_Level == 43 ) {
+      itoa_(num_u64_loc, display_string_itoa_);
+      Serial.print("x ");
+      Serial.println(display_string_itoa_);
+    }
+
+    for ( uint8_t index_a = 0; index_a < 13; index_a += 1 ) {
       if ( Debug_Level == 43 ) {
-        itoa_(num_u64_loc, display_string_itoa_);
-        Serial.print(mul_count);
+        itoa_(denom_u64_loc, display_string_itoa_);
+        Serial.print(index_a);
         Serial.print(" ");
         Serial.println(display_string_itoa_);
       }
@@ -5849,20 +5862,15 @@ AVRational_32 log_(AVRational_32 a) {
         test_temp_u64  = test_temp_u64 >> 1;
         test_temp_u64 += log_add;
       }
+      if ( Debug_Level == 53 ) {
+        itoa_(test_temp_u64, display_string_itoa_);
+        Serial.print("test_temp_u64 ");
+        Serial.println(display_string_itoa_);
+      }
       if ( ( num_u64_loc - denom_u64_loc ) > ( denom_u64_loc >> index_a ) ) {
         num_log_u64   += test_temp_u64;
-        num_u64_loc   *= mul_count;
-        denom_u64_loc *= ( mul_count + 1 );
+       	denom_u64_loc += ( denom_u64_loc >> index_a );
       }
-      if ( index_a == 7 ) {
-        num_temp_u64   = num_u64_loc;
-        denom_temp_u64 = denom_u64_loc;
-        temp_32_log_x  = Reduce_Number( 0 );
-        num_u64_loc    = temp_32_log_x.num;
-        denom_u64_loc  = temp_32_log_x.denom;
-      }
-
-      mul_count *= 2;
     }
 
     temp_32_log_a.num   = 0;
@@ -5886,7 +5894,7 @@ AVRational_32 log_(AVRational_32 a) {
     }
 
     b = frac(a);
-    while ( (test == false) && (b.expo < -3) ) {
+    while ( test == false ) {
       if ( b.expo == -4 ) {
         if ( b.num > b.denom ) {
           test = true;
@@ -5902,18 +5910,22 @@ AVRational_32 log_(AVRational_32 a) {
   // ln( 1 + --- ) = ----------------- = ---------------
   //          n       n(2n + 2) + 1/3     6n*n + 6n + 1
   // 
-  // 1479 < n < 7208
+  //          1            (2n + 1)     
+  // ln( 1 + --- ) = --------------------
+  //          n        (2n + 1)^2 - 1/3
+  //                   ----------------
+  //                           2  
+  // 2958 < n < 7212
                                                            // ln(1 + x) =
     temp_32_log_1 = div_x( b );                            //    n = 1/x
 
-    temp_32_log_2 = mul( temp_32_log_1, exp2_1_2_div_x );  //   2n
-    temp_32_log_2 = add( temp_32_log_2, exp2_0_1, 1 );     //  (2n + 1)
-    temp_32_log_3 = add( temp_32_log_2, exp2_0_1, 1 );     //  (2n + 2)
-    temp_32_log_4 = mul( temp_32_log_1, temp_32_log_3 );   // n(2n + 2)
-    temp_32_log_4 = add( temp_32_log_4, exp2_1_3, 1 );     // n(2n + 2) + 1/3
+    temp_32_log_1 = mul( temp_32_log_1, exp2_1_2_div_x ); //   2n
+    temp_32_log_1 = add( temp_32_log_1, exp2_0_1, 1 );    //  (2n + 1)
+    temp_32_log_2 = square( temp_32_log_1 );              //  (2n + 1)^2
+    temp_32_log_2 = add( temp_32_log_2, exp2__1_3, 2 );   //  ((2n + 1)^2 - 1/3)/2
     
-    temp_32_log_b = mul( temp_32_log_2, div_x( temp_32_log_4 ));
-
+    temp_32_log_b = mul( temp_32_log_1, div_x( temp_32_log_2 ));
+   
     if ( denom_x > 1 ) {
       temp_32_log_b = div_u32( temp_32_log_b, denom_x );
     }
