@@ -374,7 +374,8 @@ static const uint8_t log_tab[] = {
   0x70, 0x16, 0xFE, 0x46, 0x3F, 0x23, 0xB6,        //  9
   0x65, 0xC2, 0x70, 0x72, 0xFD, 0xDF,              // 10
   0x61, 0x70, 0xF8, 0x35, 0x63, 0x6F,              // 11
-  0x60, 0x5C, 0x49, 0x94, 0x34, 0x03};             // 12
+  0x60, 0x5C, 0x49, 0x94, 0x34, 0x03,              // 12
+  0x60, 0x17, 0x13, 0xD6, 0x24, 0xE7};             // 13
   
 static const uint8_t cordic_tab[] = {
   0x90, 0x3B, 0x58, 0xCE, 0x0A, 0xC3, 0x76, 0x9E, 0xCF,  //  0
@@ -461,6 +462,10 @@ static const AVRational_32 exp2_1_8_div_x   = { 1, denum_exp2_1_8, num_exp2_1_8,
 #define denum_exp2_1_4   2147302920   // 1/4
 static const AVRational_32 exp2_1_4   = { 0, num_exp2_1_4, denum_exp2_1_4, 0};
 
+#define num_exp2__1_4     -536825730
+#define denum_exp2__1_4   2147302920   // -1/4
+static const AVRational_32 exp2__1_4   = { 0, num_exp2__1_4, denum_exp2__1_4, 0};
+
 #define num_exp2_3_5     1288381752
 #define denum_exp2_3_5   2147302920   // 3/5
 static const AVRational_32 exp2_3_5   = { 0, num_exp2_3_5, denum_exp2_3_5, 0};
@@ -518,7 +523,9 @@ static const AVRational_32 log_to_10_div_x   = { 0, denum_log_to_10, num_log_to_
 static const AVRational_32 mul_5_0   = { 1, int30_max, int32_max, 0};
 static const AVRational_32 mul_6_0   = { 1, int32_max_16, int32_max, 0};
 static const AVRational_32 __1e90    = { 90, int32_max, int32_max, 0};
+static const AVRational_32 min__1e90 = { 90, -int32_max, int32_max, 0};
 static const AVRational_32 log_1e0   = { 0, int32_max, int32_max, 0};
+static const AVRational_32 log__1e0  = { 0, -int32_max, int32_max, 0};
 static const AVRational_32 _10e0     = { 1, int32_max, int32_max, 0};
 static const AVRational_32 log_1e1   = { 0, num_log1e1, denum_log1e1, 0};
 static const AVRational_32 log_5e8   = { 1, num_log5e8, denum_log5e8, 0};
@@ -4715,7 +4722,7 @@ AVRational_32 sin_cos_tan(AVRational_32 a) {
       break;
 
     case -3:                 //
-      return add( min_x( exp2_1_4 ), temp_32_mul, -1 );
+      return add( exp2__1_4, temp_32_mul, -1 );
       break;
 
     case -4:                 //
@@ -4779,7 +4786,7 @@ AVRational_32 cordic(int8_t function) {
 
         case -2:
         case -3:
-          return min_x( log_1e0 );
+          return log__1e0;
           break;
 
         default:
@@ -4793,7 +4800,7 @@ AVRational_32 cordic(int8_t function) {
         case -4:
         case  5:
         case  4:
-          return min_x( log_1e0 );
+          return log__1e0;
           break;
 
         case  0:
@@ -5297,7 +5304,7 @@ boolean reverse = false;
 
   if ( a.expo == 0 ) {
     if ( (a.num / 3) > (a.denom / 4) ) { //  input > abs(0.750)
-      temp_32_corr_b = min_x( exp2_1_3 );
+      temp_32_corr_b = exp2__1_3;
       cordic_test *= 16;
     }
   }
@@ -5323,7 +5330,7 @@ AVRational_32 tanh(AVRational_32 a) {
         return log_1e0;
       }
       else {
-        return min_x( log_1e0 );
+        return log__1e0;
       }
     }
   }
@@ -5332,7 +5339,7 @@ AVRational_32 tanh(AVRational_32 a) {
       return log_1e0;
     }
     else {
-      return min_x( log_1e0 );
+      return log__1e0;
     }
   }
   temp_32_exp = exp(a);
@@ -5352,7 +5359,7 @@ AVRational_32 atanh(AVRational_32 a) {
         return __1e90;
       }
       else {
-        return min_x( __1e90 );
+        return min__1e90;
       }
     }
     if ( abs( a.num ) > a.denom ) {
@@ -5835,7 +5842,7 @@ AVRational_32 log_(AVRational_32 a) {
       Serial.println(display_string_itoa_);
     }
 
-    for ( uint8_t index_a = 0; index_a < 13; index_a += 1 ) {
+    for ( uint8_t index_a = 0; index_a < 14; index_a += 1 ) {
       if ( Debug_Level == 43 ) {
         itoa_(denom_u64_loc, display_string_itoa_);
         Serial.print(index_a);
@@ -5896,8 +5903,13 @@ AVRational_32 log_(AVRational_32 a) {
     b = frac(a);
     while ( test == false ) {
       if ( b.expo == -4 ) {
-        if ( b.num > b.denom ) {
+        if ( b.num > b.denom ) {                         // b > 1,0
           test = true;
+        }
+        else {
+          if ( ( b.denom - b.num ) < ( b.num >> 2 ) ) {  // b > 0,8
+            test = true;
+          }
         }
       }
       b        = square_one(b);
@@ -5915,9 +5927,10 @@ AVRational_32 log_(AVRational_32 a) {
   //          n        (2n + 1)^2 - 1/3
   //                   ----------------
   //                           2  
-  // 2958 < n < 7212
+  // 4508 < n < 9017
                                                            // ln(1 + x) =
-    temp_32_log_1 = div_x( b );                            //    n = 1/x
+   // return div_x( b );
+    temp_32_log_1 = div_x( b );                           //    n = 1/x
 
     temp_32_log_1 = mul( temp_32_log_1, exp2_1_2_div_x ); //   2n
     temp_32_log_1 = add( temp_32_log_1, exp2_0_1, 1 );    //  (2n + 1)
