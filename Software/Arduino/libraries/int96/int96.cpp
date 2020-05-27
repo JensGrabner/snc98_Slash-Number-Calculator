@@ -48,6 +48,8 @@ to maintain a single distribution point for the source code.
 
 */
 
+
+
 // Copyright (c) 2017 Jens Grabner
 // Email: jens@grabner-online.org
 // https://github.com/JensGrabner/snc98_Slash-Number-Calculator/tree/master/Software/Arduino/libraries/int96
@@ -261,7 +263,7 @@ void int96_a::cbrt(int96_a& test) {
 /*
   https://code-examples.net/en/q/71e23e 
 
-  qbrt(2^95)/2^32 = 0,7937005259841
+  cbrt(2^95)/2^32 = 0,7937005259841
 
   f_1(x) = 0,6042181313*x + 0,4531635984
   -->
@@ -289,7 +291,8 @@ void int96_a::cbrt(int96_a& test) {
           div_3.mid = 0xAB000000;  // 0,3333333333339
           div_3.lo  = 0;
  
-  if ( A.IsPositive()) {
+  if ( A.IsPositive()) 
+  {
     while (test.hi < 0x10000000) {  // 2^28
       nShift += 1;
       test  <<= 3;
@@ -304,17 +307,20 @@ void int96_a::cbrt(int96_a& test) {
       pow_2  = test;            //    1 ->  8.13 bits
       pow_2 *= pow_2;           //    2 -> 16.27 bits
       init  /= pow_2;           //    3 -> 32.54 bits - 96_bit / 64_bit
-      if (init.lo == test.lo) { // exact
+      if (init.lo == test.lo)   // exact
+      {
         index = 3;
       }
-      else {
+      else 
+      {
         test  += test;
         test  += init;
         test.mul_div95(div_3, test);
       }
     }
   }
-  else {
+  else 
+  {
     test.Negate();
     test.cbrt(test);
     test.Negate();
@@ -662,9 +668,8 @@ void int96_a::mul_div95(const int96_a& mul, int96_a& rVal) const {
   rVal.mid = sum_hi;
   rVal.hi  = sum_hi >> 32;
 
-  // rVal    += 1;
-
-  if ( (bANegative && !bBNegative) || (!bANegative && bBNegative)) rVal.Negate();
+  if ( (bANegative && !bBNegative) || (!bANegative && bBNegative))
+    rVal.Negate();
 }
 
 BOOL int96_a::GetBit(int8_t nIndex) const {
@@ -787,15 +792,16 @@ void int96_a::Modulus(const int96_a& divisor, int96_a& Quotient) const {
   
   Dividend_64 = tempDividend.hi;
   while ( Dividend_64 > 0 ) {
-  	nShift       += 1;
-  	Dividend_64 >>= 1;
+    nShift       += 1;
+    Dividend_64 >>= 1;
   }
   tempDividend >>= nShift;
 
   if ( tempDivisor.mid == 0 ) {
     test_32 = true;
   }
-  else {
+  else
+  {
     tempDivisor  >>= nShift;
   }
   Quotient       = int96_a(0);
