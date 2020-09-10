@@ -779,11 +779,13 @@ void int96_a::Modulus(const int96_a& divisor, int96_a& Quotient) const {
   BOOL bDividendNegative = FALSE;
   BOOL bDivisorNegative = FALSE;
   
-  if ( tempDividend.IsNegative()) {
+  if ( tempDividend.IsNegative())
+  {
     bDividendNegative = TRUE;
     tempDividend.Negate();
   }
-  if ( tempDivisor.IsNegative()) {
+  if ( tempDivisor.IsNegative())
+  {
     bDivisorNegative = TRUE;
     tempDivisor.Negate();
   }
@@ -791,13 +793,15 @@ void int96_a::Modulus(const int96_a& divisor, int96_a& Quotient) const {
   initDividend = tempDividend;
   
   Dividend_64 = tempDividend.hi;
-  while ( Dividend_64 > 0 ) {
+  while ( Dividend_64 > 0 )
+  {
     nShift       += 1;
     Dividend_64 >>= 1;
   }
   tempDividend >>= nShift;
 
-  if ( tempDivisor.mid == 0 ) {
+  if ( tempDivisor.mid == 0 )
+  {
     test_32 = true;
   }
   else
@@ -806,13 +810,15 @@ void int96_a::Modulus(const int96_a& divisor, int96_a& Quotient) const {
   }
   Quotient       = int96_a(0);
   
-  if ( tempDivisor.hi == 0 ) {  // tempDividend >= tempDivisor
+  if ( tempDivisor.hi == 0 )   // tempDividend >= tempDivisor
+  {
     Dividend_64  = tempDividend;
     Divisor_64   = tempDivisor;
     Dividend_64 /= Divisor_64;
     Quotient     = Dividend_64;
 
-    if ( test_32 == true ) {
+    if ( test_32 == true )
+    {
       Quotient     <<= nShift;
       tempDivisor   *= Quotient;
       initDividend  -= tempDivisor;
