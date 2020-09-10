@@ -84,7 +84,7 @@ char  display_string_itoa_[33];
 #include <OneWireHub.h>
 // https://github.com/orgua/OneWireHub
 
-#define Debug_Level 34 //  0 - not Debug
+#define Debug_Level  0 //  0 - not Debug
 											 //  1 - Test intern 1ms - Task by 100 ms
 											 //  2 - Test intern 1ms - Task by 1000 ms
 											 //  3 - Test Switch "=" up / down (analog)
@@ -4532,19 +4532,6 @@ AVRational_32 factorial(AVRational_32 a) {
 		}
 
 		temp_32_corr_a = mul( a, add( fa_a, mul( fa_b, a ), 1 ) );
-
-		if ( a.expo == 2 ) { //  input > 71.00
-			num_temp_u64    = a.num;
-			denom_temp_u64  = a.denom;
-			num_temp_u64   *= 100;
-			denom_temp_u64 *=  71;
-			if ( num_temp_u64 > denom_temp_u64 ) {
-				a.denom = 4; // Error_String('[');
-				Error_first = true;
-				return a;
-			}
-		}
-
 		temp_32_corr_c = add( facc_a, mul( a, add( facc_b, mul( facc_c, a ), 1 ) ), 1 );
 
 		temp_32_corr     = clone( log_1e0 );
@@ -4610,8 +4597,8 @@ AVRational_32 factorial(AVRational_32 a) {
 	else {
 		temp_32_mul = frac( a );
     if ( (temp_32_mul.expo == -90) || (temp_32_mul.num == 0) ) {
-  	  a.denom = 2; // Error_String('u');	// input <= 0
-	    Error_first = true;
+			a.denom = 4; // Error_String('[');
+			Error_first = true;
 		  return a;
     }
 
@@ -6556,7 +6543,7 @@ void Test_all_function() {
 			}
 			Expand_Number();
 
-			temp_32_cbrt.num   = num_temp_u32;
+			temp_32_cbrt.num   = -num_temp_u32;
 			temp_32_cbrt.denom = denom_temp_u32;
 	   /*
 			Serial.print(temp_32_cbrt.num);
@@ -6566,7 +6553,7 @@ void Test_all_function() {
 			Serial.print(temp_32_cbrt.expo);
 		 */
 		 
-		 //  if ( (index % 200) != 0 )  {
+		   if ( (index % 200) != 0 )  {
 	  		Serial.print(index);
 	  		Serial.print("  ");
      
@@ -6578,7 +6565,7 @@ void Test_all_function() {
 	  		Serial.print("  ");
 	  		Serial.print(test_32.expo);
 	  		Serial.println(" -> ");
-		 // }
+		  }
 		}
 		test_index = false;
 		time_end = millis();
