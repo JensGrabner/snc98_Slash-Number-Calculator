@@ -135,6 +135,7 @@ char  display_string_itoa_[33];
 											 // 51 - display_string
 											 // 52 - test exp2()
 											 // 53 - table log_tab[]
+											 // 54 - Display_Memory_x( x )
 
 #define sin_    3
 #define cos_    2
@@ -240,6 +241,10 @@ uint32_t time_test     = 0;
 #define _PI_        36
 #define _e_         44
 
+#define M_plus_0   134
+#define M_minus_0  224
+#define M_mul_0    233
+#define M_div_0    242
 #define Min_0      160
 #define M_xch_0    178
 #define MR_0        77
@@ -527,6 +532,11 @@ AVRational_32  temp_32_corr_0_1  = {0, int32_max, int32_max, 0};
 AVRational_32  temp_32_corr_a    = {0, int32_max, int32_max, 0};
 AVRational_32  temp_32_corr_b    = {0, int32_max, int32_max, 0};
 AVRational_32  temp_32_corr_c    = {0, int32_max, int32_max, 0};
+
+#define expo_71             2
+#define num_71     1524585059
+#define denum_71   2147302900   // 71/100
+static const AVRational_32 test_71   = { expo_71, num_71, denum_71, 0};
 
  /*
 	Quadratic Fit:  y=a+bx+cx^2
@@ -1043,7 +1053,7 @@ static char Std_mode_string[ Std_string_count ]   = "       " ;
 
 uint8_t Cursor_pos = 2;       //
 uint8_t Point_pos = 0;        //
-uint8_t Repeat_pos = 0;        //
+uint8_t Repeat_pos = 0;       //
 uint8_t Null_count = 0;       //
 uint8_t Expo_count_temp = 0;
 uint8_t Expo_count = 0;       //   Anzahl der Expo_Ziffern  --  maximal 2
@@ -1061,8 +1071,10 @@ uint8_t Switch_Code = 0;
 uint8_t Switch_Code_old = 0;
 uint8_t Switch_Test = 0;
 uint8_t Start_mem = 0;
+uint8_t Mem_Display_old = 0;
 uint8_t Display_Status_new = 0;    // Switch up / down
 uint8_t Display_Status_old = 0;
+uint8_t Display_Status_mem = 0;    // 1, 2, 3, 4
 // https://github.com/Chris--A
 // https://github.com/Chris--A/BitBool#reference-a-single-bit-of-another-object-or-bitbool---
 auto bit_0 = toBitRef( Display_Status_new, 0 );  // ( "0" ) Create a bit reference to first bit.
@@ -1072,11 +1084,13 @@ auto bit_3 = toBitRef( Display_Status_new, 3 );  // ( "EE" )
 auto bit_4 = toBitRef( Display_Status_new, 4 );  // ( "FN" )
 auto bit_5 = toBitRef( Display_Status_new, 5 );  // ( "=" )
 auto bit_6 = toBitRef( Display_Status_new, 6 );  // ( "M+" )
-auto bit_7 = toBitRef( Display_Status_new, 7 );  // ( "M-" )
-uint8_t Display_Memory = 0;    // 0 .. 12
+// auto bit_7 = toBitRef( Display_Status_new, 7 );  // ( "+ - x /" )
+
+// uint8_t Display_Memory = 0;    // 0 .. 12
 																	 //01234567890123456789012
 static char    Display_Memory_1[] = "  mmE]{F mFm=OUX}_F_^Om";
 static char    Display_Memory_0[] = "1 r__[zn=+Fc_V,_m_F-O^c";
+static char    Memory_p_min_m_d[] = "++-*,";
 
 boolean max_input = false;
 boolean Mantisse_change = false;
@@ -1349,9 +1363,53 @@ void Print_Operation(uint8_t Switch_up) {
 			case 141:                //    M_plus(7)
 			case 142:                //    M_plus(8)
 			case 143:                //    M_plus(9)
-				extra_test_13  = Switch_Code % 9;
-				extra_test_13 += 1;
+				extra_test_13 = Switch_Code - M_plus_0;
 				Serial.print("(M_plus(");
+				Serial.print(extra_test_13);
+				Serial.print("))");
+				break;
+
+			case 225:                //    M_minus(1)
+			case 226:                //    M_minus(2)
+			case 227:                //    M_minus(3)
+			case 228:                //    M_minus(4)
+			case 229:                //    M_minus(5)
+			case 230:                //    M_minus(6)
+			case 231:                //    M_minus(7)
+			case 232:                //    M_minus(8)
+			case 233:                //    M_minus(9)
+				extra_test_13 = Switch_Code - M_minus_0;
+				Serial.print("(M_minus(");
+				Serial.print(extra_test_13);
+				Serial.print("))");
+				break;
+
+			case 234:                //    M_mul(1)
+			case 235:                //    M_mul(2)
+			case 236:                //    M_mul(3)
+			case 237:                //    M_mul(4)
+			case 238:                //    M_mul(5)
+			case 239:                //    M_mul(6)
+			case 240:                //    M_mul(7)
+			case 241:                //    M_mul(8)
+			case 242:                //    M_mul(9)
+				extra_test_13 = Switch_Code - M_mul_0;
+				Serial.print("(M_mul(");
+				Serial.print(extra_test_13);
+				Serial.print("))");
+				break;
+
+			case 243:                //    M_div(1)
+			case 244:                //    M_div(2)
+			case 245:                //    M_div(3)
+			case 246:                //    M_div(4)
+			case 247:                //    M_div(5)
+			case 248:                //    M_div(6)
+			case 249:                //    M_div(7)
+			case 250:                //    M_div(8)
+			case 251:                //    M_div(9)
+				extra_test_13 = Switch_Code - M_div_0;
+				Serial.print("(M_div(");
 				Serial.print(extra_test_13);
 				Serial.print("))");
 				break;
@@ -3390,14 +3448,6 @@ void Display_Number(AVRational_32 Display_Input) {
 	Display_Memory_x( 23 );
 }
 
-void Display_Memory_Plus() {
-	display_string[Operation] = ' ';
-	display_string[Memory_1] = Display_Memory_1[9];  // m;
-	display_string[Memory_0] = '0' + mem_extra_test;
-	
-	Display_Memory_x( 23 );
-}
-
 void Put_input_Point() {
 	Point_pos = Cursor_pos;
 	display_string[Cursor_pos] = '.';
@@ -4050,23 +4100,19 @@ int8_t compare(AVRational_32 a, AVRational_32 b) {
 	test_b *= a.denom;
 
 	if ( a.expo > b.expo ) {
-		comp = 1;
-		return comp;
+		return  1;
 	}
 
 	if ( a.expo < b.expo ) {
-		comp = -1;
-		return comp;
+		return -1;
 	}
 
 	if ( test_a > test_b ) {
-		comp = 1;
-		return comp;
+		return 1;
 	}
 
 	if ( test_a < test_b ) {
-		comp = -1;
-		return comp;
+		return -1;
 	}
 
 	return comp;
@@ -4080,13 +4126,11 @@ int8_t compare(Rational_32 a, Rational_32 b) {
 	test_b *= a.denom;
 
 	if ( test_a > test_b ) {
-		comp = 1;
-		return comp;
+		return 1;
 	}
 
 	if ( test_a < test_b ) {
-		comp = -1;
-		return comp;
+		return -1;
 	}
 
 	return comp;
@@ -4104,13 +4148,11 @@ int8_t compare(Rational_64 a, Rational_64 b) {
 		test_b /= b.denom;
 
 		if ( test_a > test_b ) {
-			comp = 1;
-			return comp;
+			return 1;
 		}
 
 		if ( test_a < test_b ) {
-			comp = -1;
-			return comp;
+			return -1;
 		}
 
 		test_a *= a.denom;
@@ -4127,13 +4169,11 @@ int8_t compare(Rational_64 a, Rational_64 b) {
 			 }
 
 			if ( a.denom > b.denom ) {
-				comp = 1;
-				return comp;
+				return 1;
 			}
 
 			if ( a.denom < b.denom ) {
-				comp = -1;
-				return comp;
+				return -1;
 			}
 
 			return comp;
@@ -4148,8 +4188,7 @@ int8_t compare(Rational_64 a, Rational_64 b) {
 		test_b /= b.num;
 
 		if ( test_a > test_b ) {
-			comp = -1;
-			return comp;
+			return -1;
 		}
 
 		if ( test_a < test_b ) {
@@ -4507,8 +4546,15 @@ AVRational_32 factorial(AVRational_32 a) {
  */
 	uint8_t   fac_test    = 10;
 	uint8_t   fac_count   = 10;
-
+	 int8_t   test        = compare( a, test_71 );
+	
 	boolean input_near_null = false; //     -1.000 < input < 0.000
+	
+	if ( test > 0 ) { //  input > abs(71)
+		a.denom = 4; // Error_String('[');
+		Error_first = true;
+		return a;
+	}
 
 	if ( a.expo == 0 ) { //  input = 1.000 or 0.000
 		if ( (a.num == a.denom) || (a.num == 0) ) {
@@ -4524,13 +4570,7 @@ AVRational_32 factorial(AVRational_32 a) {
 		}
 	}
 
-	if ( a.num > 0 ) {
-		if ( a.expo > 2 ) { //  input > 300
-			a.denom = 4; // Error_String('[');
-			Error_first = true;
-			return a;
-		}
-
+	if ( a.num > 0 ) {		
 		temp_32_corr_a = mul( a, add( fa_a, mul( fa_b, a ), 1 ) );
 		temp_32_corr_c = add( facc_a, mul( a, add( facc_b, mul( facc_c, a ), 1 ) ), 1 );
 
@@ -7426,12 +7466,17 @@ void Test_Switch_up_down() {
 
 				case 1:
 					bit_3 = 0;           //     "EE"       Write to the bit.
+					if ( bit_5 == 1 ) {
+						bit_6 = 1;         //     "M+"
+						Display_Status_mem = 1;           //     "+"
+					}
 					break;
 
 				case 2:
 					bit_4 = 0;           //     "FN"       Write to the bit.
 					if ( bit_5 == 1 ) {
 						bit_6 = 1;         //     "M+"
+						Display_Status_mem = 1;           //     "+"
 					}
 					break;
 
@@ -7448,10 +7493,39 @@ void Test_Switch_up_down() {
 					bit_5 = 0;           //     "="        Write to the bit.
 					break;
 
-				case 128:              //   "x"
+				case 16:         //     _+_
+					if ( bit_5 == 1 ) {
+						bit_4 = 0;
+						bit_6 = 1;
+						Display_Status_mem = 1;           //     "+"
+					}
+					break;
+					
+				case 32:         //     _-_
+					if ( bit_5 == 1 ) {
+						bit_4 = 0;
+						bit_6 = 1;
+						Display_Status_mem = 2;           //     "-"
+					}
+					break;
+
+				case 128:              //   "x"				
+					if ( bit_5 == 1 ) {
+						bit_4 = 0;
+						bit_6 = 1;
+						Display_Status_mem = 3;           //     "x"
+					}
 					if ( Display_rotate == true ) {
 						Display_rotate = false;
 						Switch_Code = 177;    //             Dis_Cha_Dir_off
+					}
+					break;
+
+				case 256:        //    _/_
+					if ( bit_5 == 1 ) {
+						bit_4 = 0;
+						bit_6 = 1;
+						Display_Status_mem = 4;           //     "/"
 					}
 					break;
 
@@ -7463,6 +7537,7 @@ void Test_Switch_up_down() {
 					}
 					if ( bit_5 == 1 ) {
 						bit_6 = 1;         //     "M+"
+						Display_Status_mem = 1;           //     "+"
 					}
 					break;
 
@@ -7470,6 +7545,7 @@ void Test_Switch_up_down() {
 					bit_1 = 0;           //     "."        Write to the bit.
 					if ( bit_5 == 1 ) {
 						bit_6 = 1;         //     "M+"
+						Display_Status_mem = 1;           //     "+"
 					}
 					break;
 
@@ -7477,6 +7553,7 @@ void Test_Switch_up_down() {
 					bit_2 = 0;           //     "+/-"      Write to the bit.
 					if ( bit_5 == 1 ) {
 						bit_6 = 1;         //     "M+"
+						Display_Status_mem = 1;           //     "+"
 					}
 					break;
 
@@ -7492,53 +7569,9 @@ void Test_Switch_up_down() {
 				case 8:                //   "1/x"
 					if ( Display_mode == true ) {   //
 						Switch_Code = 154;   //              Std_on_off_up
-					} [[fallthrough]];
+					}
 
-				case 32768:       //    1
-				case 98304:
-
-				case 65536:       //    2
-
-				case 131072:      //    3
-				case 196608:
-
-				case 262144:      //    4
-				case 786432:
-
-				case 524288:      //    5
-
-				case 1048576:     //    6
-				case 1572864:
-
-				case 2097152:    //    7
-				case 6291456:
-
-				case 4194304:    //    8
-
-				case 8388608:    //    9
-				case 12582912:
-
-				case 2048:       //    )
-				case 3072:
-
-				case 1024:       //    (
-
-				case 512:        //    _CE_
-				case 1536:
-
-				case 256:        //    _/_
-				case 384:
-
-				case 64:         //    <--
-				case 192:
-
-				case 32:         //    _-_
-				case 48:
-
-				case 16:         //     _+_
-
-				case 24:
-
+				default:
 					Display_Status_old = 255;
 					switch (Display_Status_new) {
 
@@ -7550,9 +7583,7 @@ void Test_Switch_up_down() {
 						case 32:         // =
 						case 40:         // Display
 						case 48:         // MS
-						case 96:         // M_plus
-						case 112:
-						case 128:        // "+" "-" "x" "/"
+						case 64:         // M_plus
 							Display_Status_old = Display_Status_new;
 							break;
 					}
@@ -7744,7 +7775,6 @@ void Test_Switch_up_down() {
 					bit_5 = 1;           //     "="        Write to the bit.
 					break;
 
-
 				case 4096:             //  1
 					bit_0 = 1;           //     "0"         Write to the bit.
 					break;
@@ -7778,7 +7808,7 @@ void Test_Switch_up_down() {
 					bit_2 = 1;           //     "+/-"       Write to the bit.
 					break;
 
-				case 32768:       //    1
+				case 32768:       //   1
 				case 98304:
 					switch (Display_Status_new) {
 
@@ -7813,6 +7843,10 @@ void Test_Switch_up_down() {
 
 						case 96:
 							Switch_Code = 135;  //           new  M_plus(1)
+							if ( Display_Status_mem > 1 ) {
+								Switch_Code += ( 9 * Display_Status_mem );
+								Switch_Code += 72;
+							}
 							break;
 
 						case 40:
@@ -7860,6 +7894,10 @@ void Test_Switch_up_down() {
 
 						case 96:
 							Switch_Code = 136;  //           new  M_plus(2)
+							if ( Display_Status_mem > 1 ) {
+								Switch_Code += ( 9 * Display_Status_mem );
+								Switch_Code += 72;
+							}
 							break;
 
 						case 40:
@@ -7873,7 +7911,7 @@ void Test_Switch_up_down() {
 					}
 					break;
 
-				case 131072:      //    3
+				case 131072:     //    3
 				case 196608:
 					switch (Display_Status_new) {
 
@@ -7908,6 +7946,10 @@ void Test_Switch_up_down() {
 
 						case 96:
 							Switch_Code = 137;  //           new  M_plus(3)
+							if ( Display_Status_mem > 1 ) {
+								Switch_Code += ( 9 * Display_Status_mem );
+								Switch_Code += 72;
+							}
 							break;
 
 						case 40:
@@ -7921,7 +7963,7 @@ void Test_Switch_up_down() {
 					}
 					break;
 
-				case 262144:      //    4
+				case 262144:     //    4
 				case 786432:
 					switch (Display_Status_new) {
 
@@ -7956,6 +7998,10 @@ void Test_Switch_up_down() {
 
 						case 96:
 							Switch_Code = 138;  //           new  M_plus(4)
+							if ( Display_Status_mem > 1 ) {
+								Switch_Code += ( 9 * Display_Status_mem );
+								Switch_Code += 72;
+							}
 							break;
 
 						case 40:
@@ -8003,6 +8049,10 @@ void Test_Switch_up_down() {
 
 						case 96:
 							Switch_Code = 139;  //           new  M_plus(5)
+							if ( Display_Status_mem > 1 ) {
+								Switch_Code += ( 9 * Display_Status_mem );
+								Switch_Code += 72;
+							}
 							break;
 
 						case 40:
@@ -8016,7 +8066,7 @@ void Test_Switch_up_down() {
 					}
 					break;
 
-				case 1048576:     //    6
+				case 1048576:    //    6
 				case 1572864:
 					switch (Display_Status_new) {
 
@@ -8051,6 +8101,10 @@ void Test_Switch_up_down() {
 
 						case 96:
 							Switch_Code = 140;  //           new  M_plus(6)
+							if ( Display_Status_mem > 1 ) {
+								Switch_Code += ( 9 * Display_Status_mem );
+								Switch_Code += 72;
+							}
 							break;
 
 						case 40:
@@ -8064,7 +8118,7 @@ void Test_Switch_up_down() {
 					}
 					break;
 
-				case 2097152:     //    7
+				case 2097152:    //    7
 				case 6291456:
 					switch (Display_Status_new) {
 
@@ -8099,6 +8153,10 @@ void Test_Switch_up_down() {
 
 						case 96:
 							Switch_Code = 141;  //           new  M_plus(7)
+							if ( Display_Status_mem > 1 ) {
+								Switch_Code += ( 9 * Display_Status_mem );
+								Switch_Code += 72;
+							}
 							break;
 
 						case 40:
@@ -8146,6 +8204,10 @@ void Test_Switch_up_down() {
 
 						case 96:
 							Switch_Code = 142;  //           new  M_plus(8)
+							if ( Display_Status_mem > 1 ) {
+								Switch_Code += ( 9 * Display_Status_mem );
+								Switch_Code += 72;
+							}
 							break;
 
 						case 40:
@@ -8159,7 +8221,7 @@ void Test_Switch_up_down() {
 					}
 					break;
 
-				case 8388608:      //    9
+				case 8388608:    //    9
 				case 12582912:
 					switch (Display_Status_new) {
 
@@ -8194,6 +8256,10 @@ void Test_Switch_up_down() {
 
 						case 96:
 							Switch_Code = 143;  //           new  M_plus(9)
+							if ( Display_Status_mem > 1 ) {
+								Switch_Code += ( 9 * Display_Status_mem );
+								Switch_Code += 72;
+							}
 							break;
 
 						case 40:
@@ -8207,7 +8273,7 @@ void Test_Switch_up_down() {
 					}
 					break;
 
-				case 2048:        //    )
+				case 2048:       //    )
 				case 3072:
 					switch (Display_Status_new) {
 
@@ -8256,7 +8322,7 @@ void Test_Switch_up_down() {
 					}
 					break;
 
-				case 512:         //    _CE_
+				case 512:        //   _CE_
 				case 1536:
 					switch (Display_Status_new) {
 
@@ -8309,8 +8375,13 @@ void Test_Switch_up_down() {
 							break;
 
 						case 24:
-						case 40:
 							Switch_Code = 38;   //           new   _EE+3_
+							break;
+
+						case 32:
+						case 96:
+							bit_4 = 1;
+							bit_6 = 0;
 							break;
 					}
 					break;
@@ -8330,8 +8401,13 @@ void Test_Switch_up_down() {
 							Switch_Code = 124;   //                _HM_
 							break;
 
-						case 24:
 						case 32:
+						case 96:
+							bit_4 = 1;
+							bit_6 = 0;
+							break;
+
+						case 24:
 						case 40:
 						case 48:       //     EE +  =  + _*_      three Switch pressed
 							Display_rotate = true;
@@ -8388,8 +8464,13 @@ void Test_Switch_up_down() {
 							break;
 
 						case 24:
-						case 40:
 							Switch_Code = 39;   //           new   _EE-3_
+							break;
+
+						case 32:
+						case 96:
+							bit_4 = 1;
+							bit_6 = 0;
 							break;
 					}
 					break;
@@ -8412,6 +8493,12 @@ void Test_Switch_up_down() {
 
 						case 16:
 							Switch_Code = 92;   //           new   //
+							break;
+
+						case 32:
+						case 96:
+							bit_4 = 1;
+							bit_6 = 0;
 							break;
 					}
 					break;
@@ -8449,6 +8536,11 @@ void Test_Switch_up_down() {
 			}
 	}
 	Switch_old = Switch_down;
+
+	if ( Debug_Level == 54 ) {
+		 Serial.print("Display_Status_new = ");
+		 Serial.println(Display_Status_new);
+	}
 }
 
 void Mantisse_add_strg_eins() {
@@ -8690,6 +8782,95 @@ void Function_1_number() {
 	Display_Memory_x( 23 );
 }
 
+void Mem_plus_minus_mul_div( uint8_t operation ) {
+	mem_extra_test  = Switch_Code % 9;
+	mem_extra_test += 1;
+	mem_plus_test   = mem_extra_test;
+	if ( (Start_input == Input_Mantisse) || (Start_input == Input_Expo) || (Start_input == Input_Memory) || (Start_input == Input_Operation_0) ) {
+		if ( Start_input == Input_Operation_0 ) {
+			mem_save = false;
+			mem_exchange = false;
+		}
+		M_Plus_past = true;
+		Function_1_number();
+		mem_extra_left_right( mem_extra_max_4, 0 );
+		left_right_mem_extra( mem_pointer, 0 );
+		Start_input = M_Plus_spezial;
+	}
+	if ( Start_input == M_Plus_spezial ) {
+		copy_input_left_right( mem_pointer, 0 );
+		switch (operation) {
+
+			case 1: 
+				mem_stack_input[ 0 ] = add( mem_extra_stack[ mem_extra_test ], mem_extra_stack[ mem_extra_max_4 ], 1 );
+				break;
+
+			case 2: 
+				mem_stack_input[ 0 ] = add( mem_extra_stack[ mem_extra_test ], mem_extra_stack[ mem_extra_max_4 ], -1 );
+				break;
+
+			case 3: 
+				mem_stack_input[ 0 ] = mul( mem_extra_stack[ mem_extra_test ], mem_extra_stack[ mem_extra_max_4 ] );
+				break;
+
+			case 4: 
+				mem_stack_input[ 0 ] = mul( mem_extra_stack[ mem_extra_test ], div_x( mem_extra_stack[ mem_extra_max_4 ] ) );
+				break;
+		}				
+	}
+	if ( Start_input == Display_Result ) {
+		mem_stack_count = 1;
+		copy_input_left_right( 1, 0 );
+		mem_pointer = 0;
+		switch (operation) {
+
+			case 1: 
+				mem_stack_input[ 0 ] = add( mem_extra_stack[ mem_extra_test ], mem_extra_stack[ 0 ], 1 );
+				break;
+
+			case 2: 
+				mem_stack_input[ 0 ] = add( mem_extra_stack[ mem_extra_test ], mem_extra_stack[ 0 ], -1 );
+				break;
+
+			case 3: 
+				mem_stack_input[ 0 ] = mul( mem_extra_stack[ mem_extra_test ], mem_extra_stack[ 0 ] );
+				break;
+
+			case 4: 
+				mem_stack_input[ 0 ] = mul( mem_extra_stack[ mem_extra_test ], div_x( mem_extra_stack[ 0 ] ) );
+				break;
+		}				
+		if ( Debug_Level == 12 ) {
+			Serial.print("= ___M+ 64bit___ ");
+			Serial.print(mem_extra_stack[ mem_extra_test ].num);
+			Serial.print(" / ");
+			Serial.print(mem_extra_stack[ mem_extra_test ].denom);
+			Serial.print(" x 10^ ");
+			Serial.println(mem_extra_stack[ mem_extra_test ].expo);
+		}
+	}
+	if ( (Start_input == M_Plus_spezial) || (Start_input == Display_Result) ) {
+		Error_Test();
+		if ( Start_input != Display_Error ) {
+			mem_extra_left_right( mem_extra_test, 0 );
+			Display_Number(mem_stack_input[mem_pointer]);
+			display_string[Operation] = ' ';
+			display_string[Memory_1] = Display_Memory_1[9];  // m;
+			display_string[Memory_0] = '0' + mem_extra_test;
+	
+			Display_Memory_x( 23 );
+		}
+		else {
+			mem_pointer     = 1;
+			mem_stack_count = 1;
+		}
+	}
+	if ( Start_input == Display_M_Plus ) {
+		left_right_mem_extra( 0, 0 );
+		Start_input = Display_Result;
+	}	
+}
+
 void change_number() {
 	if ( Expo_change == true ) {
 		Get_Expo_change();
@@ -8700,36 +8881,54 @@ void change_number() {
 }
 
 void Display_Memory_x( uint8_t Mem_Display ) {
+
+	if ( Debug_Level == 54 ) {
+		 Serial.print("Mem_Display = ");
+		 Serial.println(Mem_Display);
+	}
+
+	switch (Mem_Display) {
+		case 23:
+			Display_Memory_1[ 19 ] = display_string[Memory_1];
+			Display_Memory_0[ 19 ] = display_string[Memory_0];
+			break;
+
+		case 24:
+			Display_Memory_1[ 19 ] = ' ';
+			Display_Memory_0[ 19 ] = ' ';
+			break;
+
+		case 25:
+			display_string[Memory_1] = mem_str_1[mem_pointer];
+			display_string[Memory_0] = mem_str_0[mem_pointer];
+			break;
+
+		case 17:
+			if ( Start_input <= Input_Operation_0 ) {
+				return;
+			}
+			if ( Start_input >= Display_Input_Error ) {
+				return;
+			}
+			break;
+
+		case 9:
+			display_string[Memory_1] = Display_Memory_1[Mem_Display];
+			display_string[Memory_0] = Memory_p_min_m_d[Display_Status_mem];
+			break;
+
+		default:
+			display_string[Memory_1] = Display_Memory_1[Mem_Display];
+			display_string[Memory_0] = Display_Memory_0[Mem_Display];
+			break;
+	}
 	
-	if ( Mem_Display == 23 ) {
-		Display_Memory_1[ 19 ] = display_string[Memory_1];
-		Display_Memory_0[ 19 ] = display_string[Memory_0];
-		return;
+	if ( Mem_Display_old == 3 ) {
+		display_string[Memory_1] = Display_Memory_1[Mem_Display_old];
+		display_string[Memory_0] = Display_Memory_0[Mem_Display_old];
 	}
 
-	if ( Mem_Display == 24 ) {
-		Display_Memory_1[ 19 ] = ' ';
-		Display_Memory_0[ 19 ] = ' ';
-		return;
-	}
-	
-	if ( Mem_Display == 25 ) {
-		display_string[Memory_1] = mem_str_1[mem_pointer];
-		display_string[Memory_0] = mem_str_0[mem_pointer];
-		return;
-	}
-
-	if ( Mem_Display == 17 ) {
-		if ( Start_input <= Input_Operation_0 ) {
-			return;
-		}
-		if ( Start_input >= Display_Input_Error ) {
-			return;
-		}
-	}
-
-	display_string[Memory_1] = Display_Memory_1[Mem_Display];
-	display_string[Memory_0] = Display_Memory_0[Mem_Display];
+	Mem_Display_old = Mem_Display;
 }
 
 boolean Test_buffer = false;
@@ -9785,54 +9984,43 @@ void loop() {
 				case 141:                //   _M_plus(7)
 				case 142:                //   _M_plus(8)
 				case 143:                //   _M_plus(9)
-					mem_extra_test  = Switch_Code % 9;
-					mem_extra_test += 1;
-					mem_plus_test  = mem_extra_test;
-					if ( (Start_input == Input_Mantisse) || (Start_input == Input_Expo) || (Start_input == Input_Memory) || (Start_input == Input_Operation_0) ) {
-						if ( Start_input == Input_Operation_0 ) {
-							mem_save = false;
-							mem_exchange = false;
-						}
-						M_Plus_past = true;
-						Function_1_number();
-						mem_extra_left_right( mem_extra_max_4, 0 );
-						left_right_mem_extra( mem_pointer, 0 );
-						Start_input = M_Plus_spezial;
-					}
-					if ( Start_input == M_Plus_spezial ) {
-						copy_input_left_right( mem_pointer, 0 );
-						mem_stack_input[ 0 ] = add( mem_extra_stack[ mem_extra_test ], mem_extra_stack[ mem_extra_max_4 ], 1 );
-					}
-					if ( Start_input == Display_Result ) {
-						mem_stack_count = 1;
-						copy_input_left_right( 1, 0 );
-						mem_pointer = 0;
-						mem_stack_input[ 0 ] = add( mem_extra_stack[ mem_extra_test ], mem_extra_stack[ 0 ], 1 );
-						if ( Debug_Level == 12 ) {
-							Serial.print("= ___M+ 64bit___ ");
-							Serial.print(mem_extra_stack[ mem_extra_test ].num);
-							Serial.print(" / ");
-							Serial.print(mem_extra_stack[ mem_extra_test ].denom);
-							Serial.print(" x 10^ ");
-							Serial.println(mem_extra_stack[ mem_extra_test ].expo);
-						}
-					}
-					if ( (Start_input == M_Plus_spezial) || (Start_input == Display_Result) ) {
-						Error_Test();
-						if ( Start_input != Display_Error ) {
-							mem_extra_left_right( mem_extra_test, 0 );
-							Display_Number(mem_stack_input[mem_pointer]);
-							Display_Memory_Plus();
-						}
-						else {
-							mem_pointer     = 1;
-							mem_stack_count = 1;
-						}
-					}
-					if ( Start_input == Display_M_Plus ) {
-						left_right_mem_extra( 0, 0 );
-						Start_input = Display_Result;
-					}
+					Mem_plus_minus_mul_div( 1 );
+					break;
+
+				case 225:                //   _M_minus(1)
+				case 226:                //   _M_minus(2)
+				case 227:                //   _M_minus(3)
+				case 228:                //   _M_minus(4)
+				case 229:                //   _M_minus(5)
+				case 230:                //   _M_minus(6)
+				case 231:                //   _M_minus(7)
+				case 232:                //   _M_minus(8)
+				case 233:                //   _M_minus(9)
+					Mem_plus_minus_mul_div( 2 );
+					break;
+
+				case 234:                //   _M_mul(1)
+				case 235:                //   _M_mul(2)
+				case 236:                //   _M_mul(3)
+				case 237:                //   _M_mul(4)
+				case 238:                //   _M_mul(5)
+				case 239:                //   _M_mul(6)
+				case 240:                //   _M_mul(7)
+				case 241:                //   _M_mul(8)
+				case 242:                //   _M_mul(9)
+					Mem_plus_minus_mul_div( 3 );
+					break;
+
+				case 243:                //   _M_div(1)
+				case 244:                //   _M_div(2)
+				case 245:                //   _M_div(3)
+				case 246:                //   _M_div(4)
+				case 247:                //   _M_div(5)
+				case 248:                //   _M_div(6)
+				case 249:                //   _M_div(7)
+				case 250:                //   _M_div(8)
+				case 251:                //   _M_div(9)
+					Mem_plus_minus_mul_div( 4 );
 					break;
 
 				case 120:                //    _EE_
@@ -10417,6 +10605,7 @@ void loop() {
 
 			Display_Status_new = 0;    // Switch up / down
 			Display_Status_old = 0;
+			Display_Status_mem = 0;
 
 			Print_Statepoint_after();
 			if ( Debug_Level == 23 ) {  // On - Off - Test
@@ -11117,6 +11306,7 @@ void loop() {
 			if ( Switch_down == 0 ) {
 				Display_Status_new = 0;
 				Mr_0_test = false;
+				Display_Status_mem = 0;
 			}
 
 			Display_Memory_x( 19 );
@@ -11326,15 +11516,13 @@ void loop() {
 					case 32:        // =
 					case 40:        // Display
 					case 48:        // MS
-					case 96:        // M_plus
-					case 128:       // "+" "-" "x" "/"
 						if ( mem_save == false ) {
 							Display_Status_new = 0;
 						}
 						Display_Memory_x( 19 );
 						break;
 				}
-
+			
 				if ( Start_input == Display_Result ) {
 					if ( bit_6 == 0 ) {
 						Display_Memory_x( 8 );
@@ -11350,6 +11538,11 @@ void loop() {
 					}
 				}
 
+				if ( Start_input == Input_Mantisse ) {
+					if ( bit_6 == 0 ) {
+						Display_Memory_x( 19 );
+					}
+				}
 			}
 
 			if ( Debug_Level == 17 ) {
