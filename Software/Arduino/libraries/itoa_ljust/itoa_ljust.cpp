@@ -258,10 +258,10 @@
                 dec_18.mid = 232830643;
                 dec_18.lo  = 2808348672;
                 
-        int96_a div95_dec_18;   // 39614081257 = 2^95 / dec_18
+        int96_a div95_dec_18;   // 39614081258 = 2^95 / dec_18
                 div95_dec_18.hi  = 0;
                 div95_dec_18.mid = 9;
-                div95_dec_18.lo  = 959375593;
+                div95_dec_18.lo  = 959375594;
          
         if ( u.hi == 0 ) {
         	  if ( u.mid == 0 ) {
@@ -284,9 +284,9 @@
         	  upper *= dec_18;
         	  u     -= upper;
         	  
-        	  low   = u.mid;
-        	  low <<= 32;
-        	  low  += u.lo;
+        	  low    = u.mid;
+        	  low  <<= 32;
+        	  low   += u.lo;
 
         	  if ( low > 999999999999999999 ) {
         	  	upp  += 1;
