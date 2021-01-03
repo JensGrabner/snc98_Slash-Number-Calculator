@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="yes"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.05" altunitdist="inch" altunit="inch"/>
+<grid distance="50" unitdist="mil" unit="mil" style="lines" multiple="1" display="yes" altdistance="0.05" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -40793,9 +40793,10 @@ INFINEON http://www.infineon.com/upload/Image/Packages/hlg05823.gif</description
 </net>
 <net name="D18_" class="0">
 <segment>
+<label x="38.1" y="99.06" size="1.778" layer="95" rot="R180"/>
 <pinref part="44" gate="G$1" pin="2"/>
-<label x="45.72" y="115.57" size="1.778" layer="95"/>
-<wire x1="44.45" y1="120.65" x2="44.45" y2="115.57" width="0.1524" layer="91"/>
+<wire x1="38.1" y1="99.06" x2="44.45" y2="99.06" width="0.1524" layer="91"/>
+<wire x1="44.45" y1="99.06" x2="44.45" y2="120.65" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="VCC" class="0">
