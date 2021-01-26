@@ -126,6 +126,7 @@ public:
   BOOL IsZero() const;
   void Zero();
   void Negate();
+  void div_3(int96_a& test);
   void cbrt(int96_a& test);
   BOOL IsNegative() const;
   BOOL IsPositive() const;

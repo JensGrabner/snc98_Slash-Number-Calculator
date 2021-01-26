@@ -259,6 +259,20 @@ void int96_a::Negate() {
     InverseTwosComplement();
 }
 
+void int96_a::div_3(int96_a& test) {
+
+  int96_a A(*this);
+
+  int96_a div_3;   // 0,33333333  
+          div_3.hi  = 0x2AAAAAAA;  //   1234567890123 
+          div_3.mid = 0xAB000000;  // 0,3333333333339
+          div_3.lo  = 0;
+ 
+  div_3 = A;
+	test.mul_div95(div_3, test);
+}
+
+
 void int96_a::cbrt(int96_a& test) {
 /*
   https://code-examples.net/en/q/71e23e 
@@ -282,7 +296,7 @@ void int96_a::cbrt(int96_a& test) {
           div95_a.lo  = 0;
 
   int96_a add_c;   // 0,35967619  
-          add_c.hi  =  772398729;  //  4.12 bits of relative accuracy 
+          add_c.hi  = 772398729;  //  4.12 bits of relative accuracy 
           add_c.mid = 0;
           add_c.lo  = 0;
 
