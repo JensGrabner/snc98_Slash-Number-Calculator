@@ -545,6 +545,7 @@ static const AVRational_32 test_71   = { expo_71, num_71, denum_71, 0};
 	c = -3.4948250E-15
  */
 // --- facc_a_Konstante  ---
+/*
 #define facc_a_expo           -14
 #define facc_a_num     2146971170
 #define facc_a_denom   1004000000
@@ -561,7 +562,7 @@ static const AVRational_32 facc_b   = { facc_b_expo, facc_b_num, facc_b_denom, 0
 #define facc_c_num     -750408824
 #define facc_c_denom   2147200000
 static const AVRational_32 facc_c   = { facc_c_expo, facc_c_num, facc_c_denom, 0};
-
+*/
 // --- sqrt(0.5)_Konstante  ---
 #define sqrt_0_5_expo           0
 #define sqrt_0_5_num   1311738121
@@ -676,26 +677,22 @@ static const AVRational_32  fa_4 = {fa_4_expo, fa_4_num, fa_4_denom, 0};
 #define fa_5_denom   1401053082
 static const AVRational_32  fa_5 = {fa_5_expo, fa_5_num, fa_5_denom, 0};
 
-// ---  fa_6_Konstante  ---     109535241009/48264275462  ..  not used
+// ---  fa_6_Konstante  ---     109535241009/48264275462
+//                              19976135/8802041     -> Fehler 1,037e-18
+#define fa_6_expo             0 // 2,269489
+#define fa_6_num     2137446445
+#define fa_6_denom    941818387
+static const AVRational_32  fa_6 = {fa_6_expo, fa_6_num, fa_6_denom, 0};
 
-/*                           // 2,269489
-	9.00000 bis 32.33333
-	Reciprocal Quadratic: y=1/(1+ax+bx^2)
-	Coefficient Data:            x(a+bx)
-	a =   6.3626912e-014
-	b =  -3.5082454e-015
-*/
-// ---  fa_a_Konstante  ---
-#define fa_a_expo           -13 // 6.3626912e-014
-#define fa_a_num     1365990267
-#define fa_a_denom   2146875000
-static const AVRational_32  fa_a = {fa_a_expo, fa_a_num, fa_a_denom, 0};
+// ---  fa_7_Konstante  ---     29404527905795295658/
+//                              9769214287853155785
+//                              527522494/175261453 -> Fehler  1,531e-18
+#define fa_7_expo             0 // 3,009917
+#define fa_7_num     2110089976
+#define fa_7_denom    701045812
+static const AVRational_32  fa_7 = {fa_7_expo, fa_7_num, fa_7_denom, 0};
 
-// ---  fa_b_Konstante  ---
-#define fa_b_expo           -14 // -3.5082454e-015
-#define fa_b_num     -736731534
-#define fa_b_denom   2100000000
-static const AVRational_32  fa_b = {fa_b_expo, fa_b_num, fa_b_denom, 0};
+static const AVRational_32 fa_x[] = { fa_7, fa_6, fa_5, fa_4, fa_3, fa_2, fa_1 };
 
 // ---  fa_ln_2pi_2_Konstante  ---
 #define fa_ln_2pi_2_expo             0
@@ -714,14 +711,7 @@ static const AVRational_32     ln_to_2 = {ln_to_2_expo, ln_to_2_num, ln_to_2_den
 #define ln_to_10_num        1784326399
 #define ln_to_10_denom       774923109// Fehler .. 2,956e-20
 static const AVRational_32     ln_to_10 = {ln_to_10_expo, ln_to_10_num, ln_to_10_denom, 0};
-/*
-// ---  ln2_Konstante  ---
-#define ln2_expo                0
-#define ln2_num         497083768
-#define ln2_denom       717140287  // Fehler .. -1.4e-19
-static const AVRational_32     ln2 = {ln2_expo, ln2_num, ln2_denom, 0};
-static const AVRational_32     ln2_div_x = {ln2_expo, ln2_denom, ln2_num, 0};
-*/
+
 // ---  log_2_Konstante  ---
 #define log_2_expo              0
 #define log_2_num       579001193
@@ -744,7 +734,7 @@ char    Expo_string_temp[] = "###" ;
  int16_t expo_temp_16_b         = 0;
  int16_t expo_temp_16_diff      = 0;
  int16_t expo_temp_16_diff_abs  = 0;
-
+/*
 	int8_t  k_  = 0;
 uint64_t  x1_ = 0;
 uint64_t  x0_ = 1;
@@ -752,7 +742,7 @@ uint64_t  p1_ = 0;
 uint64_t  q1_ = 1;
 uint64_t  p0_ = 1;
 uint64_t  q0_ = 0;
-
+*/
 	uint32_t x0_a_32;
 	uint32_t x0_b_32;
 
@@ -4588,6 +4578,8 @@ AVRational_32 factorial(AVRational_32 a) {
  * 2008_MTH_Nemes_GammaApproximationUpdate.pdf .. Formula (4.1)
  * http://www.luschny.de/math/factorial/approx/SimpleCases.html#AhighPrecisionApproximation
  * http://www.luschny.de/math/factorial/approx/Approximations%20for%20the%20Factorial%20Function.pdf  page 8
+ *
+ * https://www2.eecs.berkeley.edu/Pubs/TechRpts/1979/ERL-m-79-71.pdf
  */
 	uint8_t   fac_test    = 10;
 	uint8_t   fac_count   = 10;
@@ -4616,8 +4608,6 @@ AVRational_32 factorial(AVRational_32 a) {
 	}
 
 	if ( a.num > 0 ) {		
-		temp_32_corr_a = mul( a, add_mul_spezial( fa_a,  fa_b, a, 1 ) );
-		temp_32_corr_c = add_mul_spezial( facc_a, a, add_mul_spezial( facc_b, facc_c, a, 1 ), 1 );
 
 		temp_32_corr     = clone( log_1e0 );
 		temp_32_corr_0_1 = clone( log_1e0 );
@@ -4636,14 +4626,14 @@ AVRational_32 factorial(AVRational_32 a) {
 		fac_count  = num_temp_u64;
 
 		temp_32_fac      = add( a, log_1e0, 1 );
-		if ( fac_test < 5 ) {
-			while ( fac_count < 5 ) {
+		if ( fac_test < 6 ) {
+			while ( fac_count < 6 ) {
 				++fac_count;
 				temp_32_corr = mul( temp_32_fac, temp_32_corr );
 				temp_32_fac  = add( temp_32_fac, log_1e0, 1 );
 			}
 			temp_32_corr = div_x( temp_32_corr );
-			a = add( mul_5_0, frac(a), 1 );
+			a = add( mul_6_0, frac(a), 1 );
 		}
 
 		while ( fac_test > 66 ) {
@@ -4655,11 +4645,11 @@ AVRational_32 factorial(AVRational_32 a) {
 			}
 		}
 
-		temp_32_mul = add_mul_div_x( fa_5, temp_32_fac );
-		temp_32_mul = add_mul_div_x( fa_4, temp_32_mul );
-		temp_32_mul = add_mul_div_x( fa_3, temp_32_mul );
-		temp_32_mul = add_mul_div_x( fa_2, temp_32_mul );
-		temp_32_mul = add_mul_div_x( fa_1, temp_32_mul );
+		temp_32_mul = clone( temp_32_fac );
+
+		for ( uint8_t index = 0; index < 7; index += 1 ) {
+			temp_32_mul = add_mul_div_x( fa_x[index], temp_32_mul );
+		}
 
 		temp_32_mul = mul( fa_0, div_x( temp_32_mul ) );
 		temp_32_mul = add( temp_32_mul, add( mul( add( a, exp2_1_2, 1 ), loge(temp_32_fac) ), temp_32_fac, -1 ), 1 );
@@ -4667,10 +4657,6 @@ AVRational_32 factorial(AVRational_32 a) {
 
 		temp_32_mul = mul( temp_32_mul, temp_32_corr );
 		temp_32_mul = mul( temp_32_mul, temp_32_corr_0_1 );
-
-		temp_32_mul = add_mul_spezial( temp_32_mul, temp_32_mul, temp_32_corr_a , -1 );
-
-		temp_32_mul = add_mul_spezial( temp_32_mul, temp_32_mul, temp_32_corr_c , 1 );
 
 		if ( input_near_null == true ) {
 			return mul( temp_32_mul, temp_32_corr_b );
@@ -5582,17 +5568,7 @@ AVRational_32 exp(AVRational_32 a) {
 	
 	temp_x_0     = temp_denom;
 	temp_x_0    += temp_x_1;
-	/*	
-	if ( Debug_Level == 58 ) {
-		itoa_(temp_x_0, display_string_itoa_);
-		Serial.println(display_string_itoa_);
-		itoa_(temp_x_1, display_string_itoa_);
-		Serial.println(display_string_itoa_);
-		itoa_(temp_denom, display_string_itoa_);
-		Serial.println(display_string_itoa_);
-		Serial.println("------");
-	}
-	*/
+
 	while ( temp_x_0.hi < 1073741824 ) {
 		temp_x_0    *= 2;
 		temp_x_1    *= 2;
@@ -5626,6 +5602,13 @@ AVRational_32 exp(AVRational_32 a) {
 		
 		temp_x_0.mul_div95(temp_x_0, temp_x_0);
 		temp_denom.mul_div95(temp_denom, temp_denom);
+
+		if ( (count_wait % 20) == 19 ) {
+			display_b[12] = led_font[(count % 12) + 1];
+			++count;
+			Display_change = true;
+		}
+		++count_wait;
 	}	
 
 	while ( temp_x_0.hi > 0 ) {
@@ -5923,6 +5906,13 @@ AVRational_32 log2(AVRational_32 a) {
 				temp_num.mul_div95(temp_num, temp_num);
 				temp_denom.mul_div95(temp_denom, temp_denom);
 
+				if ( (count_wait % 30) == 24 ) {
+					display_b[12] = led_font[(count % 12) + 1];
+					++count;
+					Display_change = true;
+				}
+				++count_wait;
+
 				log2_add /= 2;
 				
 				if ( (temp_denom.hi - temp_num.hi) > temp_num.hi ) {
@@ -5972,6 +5962,13 @@ AVRational_32 log2(AVRational_32 a) {
 
 			temp_num.mul_div95(temp_num, temp_num);
 			temp_denom.mul_div95(temp_denom, temp_denom);
+
+			if ( (count_wait % 30) == 24 ) {
+				display_b[12] = led_font[(count % 12) + 1];
+				++count;
+				Display_change = true;
+			}
+			++count_wait;
 
 			if ( (temp_denom.hi - temp_num.hi) > temp_num.hi ) {
 				temp_num   *= 2;
@@ -6601,27 +6598,27 @@ void Test_all_function() {
 
       temp_32_log2.num = num_temp_u32;
       temp_32_log2.denom = denom_temp_u32;
-			
+		/*	
       Serial.print(temp_32_log2.num);
       Serial.print("  ");
       Serial.print(temp_32_log2.denom);
       Serial.print("  ");
       Serial.print(temp_32_log2.expo);
       Serial.print("  ");
-			
+		*/	
       temp_32_cbrt = exp2(temp_32_log2);
-		/*
+		
       temp_32_cbrt.num  += index;
       temp_32_cbrt.num  /= index;
       temp_32_cbrt.num  *= index;
-		*/
+		
       Serial.print(temp_32_cbrt.num);
       Serial.print("  ");
       Serial.print(temp_32_cbrt.denom);
       Serial.print("  ");
       Serial.print(temp_32_cbrt.expo);
       Serial.print("  ");
-		/*	
+			
       temp_32_xxx = log2(temp_32_cbrt);
 
       Serial.print(temp_32_xxx.num);
@@ -6629,7 +6626,7 @@ void Test_all_function() {
       Serial.print(temp_32_xxx.denom);
       Serial.print("  ");
       Serial.print(temp_32_xxx.expo);
-    */  
+      
       Serial.println(" -> ");
 
       num_temp_u32_  += 3;
@@ -6654,25 +6651,25 @@ void Test_all_function() {
 	if ( Debug_Level == 34 ) {
 		time_start = millis();
 
-		Serial.println(" ");            //
-
-		for ( uint16_t index = 1; index <= 14200; index += 1 ) {
+		Serial.println(" ");            // 14200
+                                    // 21300
+		for ( uint16_t index = 1; index <=  7100; index += 1 ) {
 			temp_32_cbrt.expo = 0;
 			num_temp_u32   = index;
-			denom_temp_u32 = 200;
-			if ( num_temp_u32 < 6 ) {
+			denom_temp_u32 = 100;
+			if ( num_temp_u32 < 3 ) {
 				num_temp_u32 *= 10;
 				--temp_32_cbrt.expo;
 			}
-			if ( num_temp_u32 < 60 ) {
+			if ( num_temp_u32 < 30 ) {
 				num_temp_u32 *= 10;
 				--temp_32_cbrt.expo;
 			}
-			if ( num_temp_u32 > 600 ) {
+			if ( num_temp_u32 > 300 ) {
 				denom_temp_u32 *= 10;
 				++temp_32_cbrt.expo;
 			}
-			if ( num_temp_u32 > 6000 ) {
+			if ( num_temp_u32 > 3000 ) {
 				denom_temp_u32 *= 10;
 				++temp_32_cbrt.expo;
 			}
@@ -6688,7 +6685,7 @@ void Test_all_function() {
 			Serial.print(temp_32_cbrt.expo);
 		 */
 		 
-		//	if ( (index % 200) != 0 )  {
+		//	if ( (index % 300) != 0 )  {
 	  		Serial.print(index);
 	  		Serial.print("  ");
      
