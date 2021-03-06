@@ -344,6 +344,8 @@ int32_t temp_num   = int32_max;  // <-- numerator
 int32_t temp_denom = int32_max;  // <-- denominator
 uint8_t temp_op    = 0;          // <-- operation
 
+int32_t temp_xxx   = 0;          // _=_
+
 #define expo_10_0            0x1UL   // 1
 #define expo_10_1            0xAUL   // 10
 #define expo_10_2           0x64UL   // 100
@@ -537,32 +539,6 @@ AVRational_32  temp_32_corr_c    = {0, int32_max, int32_max, 0};
 #define denum_71   2147302900   // 71/100
 static const AVRational_32 test_71   = { expo_71, num_71, denum_71, 0};
 
- /*
-	Quadratic Fit:  y=a+bx+cx^2
-	Coefficient Data:
-	a =  2.1384175E-14
-	b =  6.2447861E-14
-	c = -3.4948250E-15
- */
-// --- facc_a_Konstante  ---
-/*
-#define facc_a_expo           -14
-#define facc_a_num     2146971170
-#define facc_a_denom   1004000000
-static const AVRational_32 facc_a   = { facc_a_expo, facc_a_num, facc_a_denom, 0};
-
-// --- facc_b_Konstante  ---
-#define facc_b_expo           -13
-#define facc_b_num     1311405081
-#define facc_b_denom   2100000000
-static const AVRational_32 facc_b   = { facc_b_expo, facc_b_num, facc_b_denom, 0};
-
-// --- facc_c_Konstante  ---
-#define facc_c_expo           -14
-#define facc_c_num     -750408824
-#define facc_c_denom   2147200000
-static const AVRational_32 facc_c   = { facc_c_expo, facc_c_num, facc_c_denom, 0};
-*/
 // --- sqrt(0.5)_Konstante  ---
 #define sqrt_0_5_expo           0
 #define sqrt_0_5_num   1311738121
@@ -608,22 +584,22 @@ static const AVRational_32  circle_4 = {circle_4_expo, circle_4_num, circle_4_de
 
 // ---  Tau_Konstante (2_Pi) ---
 #define Tau_expo                1
-#define Tau_num        1135249722  //
-#define Tau_denom      1806806049  // Fehler ..  1,34e-17
+#define Tau_num        1068966896  //
+#define Tau_denom      1701313655  // Fehler .. -9,77e-19
 static const AVRational_32   Tau = {Tau_expo, Tau_num, Tau_denom, 0};
 static const AVRational_32   Tau_div_x = {-Tau_expo, Tau_denom, Tau_num, 0};
 
 // ---  Pi_Konstante  ---
 #define Pi_expo                 0
-#define Pi_num         1892082870
-#define Pi_denom        602268683  // Fehler ..  6,69e-18
+#define Pi_num         2137933792
+#define Pi_denom        680525462  // Fehler ..  -9,77e-19
 static const AVRational_32   Pi      = {Pi_expo, Pi_num, Pi_denom, 0};
 static const AVRational_32   Pi_neg  = {Pi_expo, -Pi_num, Pi_denom, 0};
 
 // ---  Pi_Konstante (Pi_2)  ---
 #define Pi_2_expo               0
-#define Pi_2_num        534483448
-#define Pi_2_denom      340262731  // Fehler .. -1,54e-18
+#define Pi_2_num       2137933792
+#define Pi_2_denom     1361050924  // Fehler ..  -9,77e-19
 static const AVRational_32  Pi_2 = {Pi_2_expo, Pi_2_num, Pi_2_denom, 0};
 
 // ---  e_Konstante  ---
@@ -734,15 +710,7 @@ char    Expo_string_temp[] = "###" ;
  int16_t expo_temp_16_b         = 0;
  int16_t expo_temp_16_diff      = 0;
  int16_t expo_temp_16_diff_abs  = 0;
-/*
-	int8_t  k_  = 0;
-uint64_t  x1_ = 0;
-uint64_t  x0_ = 1;
-uint64_t  p1_ = 0;
-uint64_t  q1_ = 1;
-uint64_t  p0_ = 1;
-uint64_t  q0_ = 0;
-*/
+
 	uint32_t x0_a_32;
 	uint32_t x0_b_32;
 
@@ -824,7 +792,7 @@ static const AVRational_32 to_xx[14] = {
 	{  0, 2145264480, 1191813600, 0 },   // 9  9  ..  to °F  9 / 5
 	{  1,-2145264480, 1206711270, 0 },   // 10  ..     -160 / 9
 	{  1, 2145264480,  670395150, 0 },   // 11  ..        32
-	{  2,  853380389, 1489429756, 0 },   // 12  ..     to deg
+	{  2,  853380389, 1489429756, 0 },   // 12  ..     to deg    Fehler -1,003e-19
 	{ -2, 1489429756,  853380389, 0 }    // 13  ..     to rad
 };
 
@@ -3976,14 +3944,14 @@ AVRational_32 add_mul_spezial(AVRational_32 a, AVRational_32 b, AVRational_32 c,
 
 AVRational_32 div_x(AVRational_32 a) {
 	temp_32.expo = -a.expo;
-	if ( a.num > 0 ) {
-		temp_32.num   = a.denom;
-		temp_32.denom = a.num;
+
+	if ( a.num < 0 ) {
+		a.num   *= -1;
+		a.denom *= -1;
 	}
-	else {
-		temp_32.num   = -a.denom;
-		temp_32.denom = -a.num;
-	}
+	temp_32.num   = a.denom;
+	temp_32.denom = a.num;
+
 	return temp_32;
 }
 
@@ -6212,11 +6180,13 @@ void add_operation_to_mem( uint8_t deep_step, char op_add ) {
 				Error_Test();
 				if ( Start_input != Display_Error ) {
 					if ( display_string[Operation] == op_add ) {
-						if ( display_string[Expo_point] == ' ' ) {
-							display_string[Expo_point] = '.';
-						}
-						else {
-							display_string[Expo_point] = ' ';
+						if ( Std_mode == 0 ) {
+							if ( display_string[Expo_point] == ' ' ) {
+								display_string[Expo_point] = '.';
+							}
+							else {
+								display_string[Expo_point] = ' ';
+							}
 						}
 						if ( display_string[Memory_1] != 'O' ) {
 							Display_Memory_x( 25 );
@@ -9842,6 +9812,26 @@ void loop() {
 						}
 						if ( mem_stack_count > 2 ) {
 							--mem_stack_count;
+							for ( index_i = 1; index_i < mem_stack_count; index_i += 1 ) {
+								if ( mem_stack_calc[index_i].op == 45 ) {     // _-_
+									mem_stack_calc[index_i].op = 43;            // _+_
+
+									mem_stack_calc[index_i + 1].num *= -1;
+								}
+								if ( mem_stack_calc[index_i].op == 47 ) {     // _/_
+									mem_stack_calc[index_i].op = 42;            // _*_
+
+									temp_xxx = mem_stack_calc[index_i + 1].num;
+									mem_stack_calc[index_i + 1].expo *= -1;
+
+									mem_stack_calc[index_i + 1].num   = mem_stack_calc[index_i + 1].denom;
+									mem_stack_calc[index_i + 1].denom = temp_xxx;										
+									if ( temp_xxx < 0 ) {
+										mem_stack_calc[index_i + 1].num   *= -1;
+										mem_stack_calc[index_i + 1].denom *= -1;										
+									}
+								}
+							}
 						}
 						if ( Constant_arithmetic == true ) {
 							mem_stack_test = mem_stack_count;
