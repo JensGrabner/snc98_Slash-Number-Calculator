@@ -142,6 +142,7 @@ char  display_string_itoa_[33];
 											 // 56 - % Test
 											 // 57 - new log2() Test
 											 // 58 - Test exp()
+											 // 59 - Test view 
 
 #define sin_    3
 #define cos_    2
@@ -326,7 +327,6 @@ AVRational_32       temp_32_xxx_  = {0, int32_max, int32_max, 0};
 AVRational_32       temp_32_log_a = {0, int32_max, int32_max, 0};
 AVRational_32       temp_32_log_b = {0, int32_max, int32_max, 0};
 AVRational_32       temp_32_log_1 = {0, int32_max, int32_max, 0};
-AVRational_32       temp_32_log_2 = {0, int32_max, int32_max, 0};
 AVRational_32       temp_32_log_x = {0, int32_max, int32_max, 0};
 AVRational_32       b             = {0, int32_max, int32_max, 0};;
 
@@ -346,6 +346,10 @@ int32_t temp_denom = int32_max;  // <-- denominator
 uint8_t temp_op    = 0;          // <-- operation
 
 int32_t temp_xxx   = 0;          // _=_
+
+int96_a  num_test     = 0;
+int96_a  denom_test   = 0;
+int64_t  num_test_64  = 0;
 
 #define expo_10_0            0x1UL   // 1
 #define expo_10_1            0xAUL   // 10
@@ -438,11 +442,6 @@ static const AVRational_32 exp2_1_32   = { -1, num_exp2_1_32, denum_exp2_1_32, 0
 #define denum_exp2_0_1   2147302920   // 1/1
 static const AVRational_32 exp2_0_1   = { 0, num_exp2_0_1, denum_exp2_0_1, 0};
 
-#define num_exp2_1_8     2147302920
-#define denum_exp2_1_8   1717842336   // 1/8
-static const AVRational_32 exp2_1_8   = { -1, num_exp2_1_8, denum_exp2_1_8, 0};
-static const AVRational_32 exp2_1_8_div_x   = { 1, denum_exp2_1_8, num_exp2_1_8, 0};
-
 #define num_exp2_1_4      536825730
 #define denum_exp2_1_4   2147302920   // 1/4
 static const AVRational_32 exp2_1_4   = { 0, num_exp2_1_4, denum_exp2_1_4, 0};
@@ -451,24 +450,10 @@ static const AVRational_32 exp2_1_4   = { 0, num_exp2_1_4, denum_exp2_1_4, 0};
 #define denum_exp2__1_4   2147302920   // -1/4
 static const AVRational_32 exp2__1_4   = { 0, num_exp2__1_4, denum_exp2__1_4, 0};
 
-#define num_exp2_3_5     1288381752
-#define denum_exp2_3_5   2147302920   // 3/5
-static const AVRational_32 exp2_3_5   = { 0, num_exp2_3_5, denum_exp2_3_5, 0};
-
 #define num_exp2_1_2     1073651460
 #define denum_exp2_1_2   2147302920   // 1/2
 static const AVRational_32 exp2_1_2   = { 0, num_exp2_1_2, denum_exp2_1_2, 0};
 static const AVRational_32 exp2_1_2_div_x   = { 0, denum_exp2_1_2, num_exp2_1_2, 0};
-
-#define num_exp2_2_3     1431535280
-#define denum_exp2_2_3   2147302920   // 2/3
-static const AVRational_32 exp2_2_3   = { 0, num_exp2_2_3, denum_exp2_2_3, 0};
-static const AVRational_32 exp2_2_3_div_x   = { 0, denum_exp2_2_3, num_exp2_2_3, 0};
-
-#define num_exp2_5_6     1789419100
-#define denum_exp2_5_6   2147302920   // 5/6
-static const AVRational_32 exp2_5_6   = { 0, num_exp2_5_6, denum_exp2_5_6, 0};
-static const AVRational_32 exp2_5_6_div_x   = { 0, denum_exp2_5_6, num_exp2_5_6, 0};
 
 #define num_exp2_1_3      715767640
 #define denum_exp2_1_3   2147302920   // 1/3
@@ -483,48 +468,33 @@ static const AVRational_32 exp2__1_3   = { 0, num_exp2__1_3, denum_exp2__1_3, 0}
 static const AVRational_32 exp2_1_6   = { -1, num_exp2_1_6, denum_exp2_1_6, 0};
 
 // ---  log2()_Konstante  ---
-#define num_log_to_2      717140287
-#define denum_log_to_2    497083768   // Fehler .. -2,02-19
-static const AVRational_32 log_to_2        = { 0, num_log_to_2, denum_log_to_2, 0};
-static const AVRational_32 log_to_2_div_x  = { 0, denum_log_to_2, num_log_to_2, 0};
-
-// ---  log10()_Konstante  ---
-#define num_log_to_10      774923109
-#define denum_log_to_10   1784326399  // Fehler ..  1,28e-20
-static const AVRational_32 log_to_10       = { 0, num_log_to_10, denum_log_to_10, 0};
-static const AVRational_32 log_to_10_div_x = { 0, denum_log_to_10, num_log_to_10, 0};
+#define num_lb_to_e       497083768
+#define denum_lb_to_e     717140287   // Fehler .. -2,02-19
+static const AVRational_32  lb_to_e   = { 0, num_lb_to_e, denum_lb_to_e, 0};
 
 // ---  log10()_Konstante  ---
 #define num_lb_to_10      579001193
-#define denum_lb_to_10   1923400330  // Fehler ..  2,09e-20
-static const AVRational_32 lb_to_10       = { 0, num_lb_to_10, denum_lb_to_10, 0};
-static const AVRational_32 lb_to_10_div_x = { 0, denum_lb_to_10, num_lb_to_10, 0};
+#define denum_lb_to_10   1923400330   // Fehler ..  2,09e-20
+static const AVRational_32 lb_to_10   = { 0, num_lb_to_10, denum_lb_to_10, 0};
+
+// ---  ln_to_10_Konstante  --- 
+#define num_ln_to_10     1784326399
+#define denom_ln_to_10    774923109   // Fehler .. 2,956e-20
+static const AVRational_32 ln_to_10   = {0, num_ln_to_10, denom_ln_to_10, 0};
 
 // ---  log()_Konstante  ---
 #define int32_max_125   1717842336     // = int32_max / 1.25
 #define int32_max_25     858921168     // = int32_max / 2.5
-#define num_log1e_2      -59102552
 #define int32_max_16    1288381752     // = int32_max * 0.6
-#define denum_log1e_2    128339561
-#define num_log1e1      1784326399
-#define denum_log1e1     774923109     // -6,8e-20
 #define num_log5e8      -441827468
 #define denum_log5e8     220581553
 #define num_log1e9      -265961484
 #define denum_log1e9     128339561
-static const AVRational_32 mul_5_0   = { 1, int30_max, int32_max, 0};
 static const AVRational_32 mul_6_0   = { 1, int32_max_16, int32_max, 0};
 static const AVRational_32 __1e90    = { 90, int32_max, int32_max, 0};
 static const AVRational_32 min__1e90 = { 90, -int32_max, int32_max, 0};
 static const AVRational_32 log_1e0   = { 0, int32_max, int32_max, 0};
 static const AVRational_32 log__1e0  = { 0, -int32_max, int32_max, 0};
-static const AVRational_32 _10e0     = { 1, int32_max, int32_max, 0};
-static const AVRational_32 log_1e1   = { 0, num_log1e1, denum_log1e1, 0};
-static const AVRational_32 log_5e8   = { 1, num_log5e8, denum_log5e8, 0};
-static const AVRational_32 log_1e9   = { 1, num_log1e9, denum_log1e9, 0};
-static const AVRational_32 log1e_2   = { 1, num_log1e_2, denum_log1e_2, 0};
-static const AVRational_32 log_125e6 = { 8, int32_max, int32_max_125, 0};
-static const AVRational_32 log_25e7  = { 8, int32_max, int32_max_25, 0};
 
 AVRational_32  temp_32_mul       = {0, int32_max, int32_max, 0};
 AVRational_32  temp_32_fac       = {1, int32_max_16, int32_max, 0}; // 6
@@ -684,25 +654,6 @@ static const AVRational_32 fa_x[] = { fa_7, fa_6, fa_5, fa_4, fa_3, fa_2, fa_1 }
 #define fa_ln_2pi_2_num     1474345081
 #define fa_ln_2pi_2_denom   1604400107 // Fehler .. +2,016e-19
 static const AVRational_32  fa_ln_2pi_2 = {fa_ln_2pi_2_expo, fa_ln_2pi_2_num, fa_ln_2pi_2_denom, 0};
-
-// ---  ln_to_2_Konstante  --- 
-#define ln_to_2_expo                0
-#define ln_to_2_num         497083768
-#define ln_to_2_denom       717140287  // Fehler .. 2,956e-20
-static const AVRational_32     ln_to_2 = {ln_to_2_expo, ln_to_2_num, ln_to_2_denom, 0};
-
-// ---  ln_to_10_Konstante  --- 
-#define ln_to_10_expo                0
-#define ln_to_10_num        1784326399
-#define ln_to_10_denom       774923109// Fehler .. 2,956e-20
-static const AVRational_32     ln_to_10 = {ln_to_10_expo, ln_to_10_num, ln_to_10_denom, 0};
-
-// ---  log_2_Konstante  ---
-#define log_2_expo              0
-#define log_2_num       579001193
-#define log_2_denom    1923400330  // Fehler .. -6,29e-21
-static const AVRational_32   log_2 = {log_2_expo, log_2_num, log_2_denom, 0};
-static const AVRational_32   log_2_div_x = {log_2_expo, log_2_denom, log_2_num, 0};
 
 // ---  Null_no_Konstante  ---
 #define Null_no_expo            0
@@ -887,6 +838,10 @@ static const uint16_t led_bright[led_bright_max + 3] = {
 #define max_Beep_count  105  //  65   Beep on
 #define min_Beep_count -25   // -25   Beep off  = 90
 
+uint8_t Countdown_view_end   = 0;
+#define Countdown_view_end_0  190  // 2 x 95 Hz .. 2 Sec
+boolean Countdown_view       = false;
+boolean is_view              = false;
 uint8_t Countdown_OFF = 0;
 #define Countdown_Off_3 240   // 156   --  Start_Off
 #define Countdown_Off_2 160   // 135   --  Start
@@ -991,8 +946,9 @@ boolean Init_expo = true;
 boolean Display_new = true;
 boolean Display_change = false;
 boolean Display_mode = false;
+#define Std_string_view  14  //
 #define Std_string_count  9  //
-static char Std_mode_string[ Std_string_count ]   = "       " ;
+static char Std_mode_string[ Std_string_view ] = " " ;
 
 uint8_t Cursor_pos = 2;       //
 uint8_t Point_pos = 0;        //
@@ -1429,6 +1385,22 @@ void Print_Operation(uint8_t Switch_up) {
 				Serial.print("(GM)");
 				break;
 
+			case 144:                 //    view_down
+				Serial.print("view_down");
+				break;
+
+			case 145:                 //    view_up
+				Serial.print("view_up");
+				break;
+
+			case 146:                 //    view_end
+				Serial.print("view_end");
+				break;
+
+			case 147:                 //    fail_view
+				Serial.print("fail_view");
+				break;
+
 			case 148:                 //    ->>
 				Serial.print("(->>)");
 				break;
@@ -1649,11 +1621,11 @@ void Print_Operation(uint8_t Switch_up) {
 			case 107:                 //    _Mr()_
 				Serial.print("(_Mr()_)");
 				break;
-
+		
 			case 108:                 //    _M_()_
 				Serial.print("(_M_()_)");
 				break;
-
+		
 			case 252:                 //    _+(%)_
 				Serial.print("(_+(%)_)");
 				break;
@@ -4606,10 +4578,6 @@ AVRational_32 factorial(AVRational_32 a) {
 			temp_32_mul = add( mul( fa_x[index], div_x( temp_32_mul ) ), temp_32_fac, 1 );
 		}
 
-		if ( Debug_Level == 59 ) {
-			Serial.println(" ----- ");
-		}
-
 		temp_32_mul = mul( fa_0, div_x( temp_32_mul ) );
 		temp_32_mul = add( temp_32_mul, add( mul( add( a, exp2_1_2, 1 ), loge(temp_32_fac) ), temp_32_fac, -1 ), 1 );
 		temp_32_mul = exp( add( temp_32_mul, fa_ln_2pi_2, 1 ));
@@ -5603,7 +5571,7 @@ AVRational_32 exp(AVRational_32 a) {
 }
 
 AVRational_32 exp2(AVRational_32 a) {
-	return exp( mul( ln_to_2, a ));
+	return exp( mul( lb_to_e, a ));
 }
 
 AVRational_32 exp10(AVRational_32 a) {
@@ -6020,7 +5988,7 @@ AVRational_32 log2(AVRational_32 a) {
 
 AVRational_32 loge(AVRational_32 a) {
 	if ( a.num > 0 ) {
-		return mul( log_to_2_div_x, log2(a) );
+		return mul( lb_to_e, log2(a) );
 	}
 	else {
 		a.denom = 2; // Error_String('u');  input <= 0
@@ -7519,12 +7487,12 @@ void Test_Switch_up_down() {
 					bit_5 = 0;           //     "="        Write to the bit.
 					break;
 
+				case 2048:       //     _)_
 				case 16:         //     _+_
 				case 32:         //     _-_
 				case 128:        //     _x_				
 				case 256:        //     _/_
 				case 1024:       //     _(_
-				case 2048:       //     _)_
 					if ( bit_5 == 1 ) {
 						bit_4 = 0;
 						bit_6 = 1;
@@ -7592,6 +7560,10 @@ void Test_Switch_up_down() {
 					}
 					break;
 			}
+
+		if ( is_view == true ) {
+			Switch_Code = 145;
+		}
 	}
 
 	if ( Switch_down > Switch_old ) {
@@ -8346,7 +8318,7 @@ void Test_Switch_up_down() {
 
 						case 32:
 						case 96:
-							Switch_Code = 108;  //           new   M_()
+							Switch_Code = 108;  //           new   _M_()_
 							bit_4 = 1;
 							bit_6 = 0;
 							break;
@@ -8596,9 +8568,21 @@ void Test_Switch_up_down() {
 				if ( Start_input < Input_Operation_5 ) {
 					bit_5 = 0;
 				}
+			}			
+
+		if ( is_view == true ) {
+			Switch_Code = 147;          //    fail_view
+			if ( Switch_down == 2052 ) {
+				Switch_Code = 145;        //    view_up
 			}
+			if ( ( Switch_delta == 512 ) || ( Switch_delta == 1024 ) ) {
+				Countdown_view_end = 1;   //    view_end
+			}
+		}
 	}
+
 	Switch_old = Switch_down;
+
 
 	if ( Debug_Level == 54 ) {
 		 Serial.print("Display_Status_new = ");
@@ -10237,6 +10221,48 @@ void loop() {
 					}
 					break;
 
+				case 144:                //    view_down
+					if ( (Start_input == Display_Result) || (Start_input == Display_M_Plus) || (Start_input == M_Plus_spezial) || (Start_input == Input_Operation_0) ) {
+						is_view    = true;
+						num_test   = abs( mem_stack_input[ mem_pointer ].num );
+						denom_test = mem_stack_input[ mem_pointer ].denom;
+						
+						if ( num_test.lo < denom_test.lo ) {
+							num_test   *= expo_10_[4];     // 1e14
+						}
+						else {
+							num_test   *= expo_10_[3];     // 1e13
+						}
+						num_test     += mem_stack_input[ mem_pointer ].denom / 2;
+						num_test     /= denom_test;
+						num_test_64   = num_test;
+						itoa_(num_test_64, display_string_itoa_);
+						if ( Debug_Level == 59 ) {
+							Serial.println(display_string_itoa_);
+						}
+						for ( index_mem = 0; index_mem < Std_string_view; index_mem += 1 ) {
+							Std_mode_string[index_mem]    = display_string[index_mem + 2];
+							display_string[index_mem + 2] = display_string_itoa_[index_mem];
+						}
+						Beep__on();
+					}
+					break;
+
+				case 145:                //    view_up
+					Countdown_view_end =  Countdown_view_end_0; 
+					Countdown_view     = true;
+					break;
+
+				case 146:                //    view_end
+					if ( (Start_input == Display_Result) || (Start_input == Display_M_Plus) || (Start_input == M_Plus_spezial) || (Start_input == Input_Operation_0) ) {
+						for ( index_mem = 0; index_mem < Std_string_view; index_mem += 1 ) {
+							display_string[index_mem + 2] = Std_mode_string[index_mem];
+						}
+						Beep__on();
+						is_view = false;
+					}
+					break;
+
 				case 149:                 //    __/
 					Print_Statepoint();
 					break;
@@ -10259,15 +10285,9 @@ void loop() {
 
 				case 153:                 //    _Std_down_
 					Display_mode = true;
-					Std_mode_string[0] = display_string[1];
-					Std_mode_string[1] = display_string[2];
-					Std_mode_string[2] = display_string[3];
-					Std_mode_string[3] = display_string[4];
-					Std_mode_string[4] = display_string[5];
-					Std_mode_string[5] = display_string[6];
-					Std_mode_string[6] = display_string[7];
-					Std_mode_string[7] = display_string[8];
-					Std_mode_string[8] = display_string[9];
+					for ( index_mem = 0; index_mem < Std_string_count; index_mem += 1 ) {
+						Std_mode_string[index_mem] = display_string[index_mem + 1];
+					}
 					if ( Std_mode == 1 ) {
 						Std_mode = 0;
 						if ( display_digit > 0 ) {
@@ -10321,20 +10341,14 @@ void loop() {
 						Serial.print(" -> Repeat_pos = ");
 						Serial.println(Repeat_pos);
 					}
+					Beep__off();
 					break;
 
 				case 154:                 //    _Std_up_
 					Display_mode = false;
-					display_string[1] = Std_mode_string[0];
-					display_string[2] = Std_mode_string[1];
-					display_string[3] = Std_mode_string[2];
-					display_string[4] = Std_mode_string[3];
-					display_string[5] = Std_mode_string[4];
-					display_string[6] = Std_mode_string[5];
-					display_string[7] = Std_mode_string[6];
-					display_string[8] = Std_mode_string[7];
-					display_string[9] = Std_mode_string[8];
-					Display_new = true;
+					for ( index_mem = 0; index_mem < Std_string_count; index_mem += 1 ) {
+						display_string[index_mem + 1] = Std_mode_string[index_mem];
+					}
 					Beep__off();
 					break;
 
@@ -10600,8 +10614,8 @@ void loop() {
 				case 253:                 //    _-(%)_
 				case 254:                 //    _*(%)_
 				case 255:                 //    _/(%)_
-			
 				case 122:                 //    Beep_On_Off
+				case 147:                 //    fail_view
 				case 211:                 //    _/p/ /p/_
 				case 212:                 //    _- -_
 				case 213:                 //    _* *_
@@ -10637,9 +10651,9 @@ void loop() {
 				case 102:                //    FIX_E24
 				case 177:                //    Dis_Cha_Dir_off
 				case 40:                 //    _(_
-				case 148:                 //    _->>_
-				case 150:                 //    ° ' ''
-				case 127:                 //    _-->_
+				case 148:                //    _->>_
+				case 150:                //    ° ' ''
+				case 127:                //    _-->_
 			*/
 				default:
 					Beep__off();
@@ -10663,7 +10677,12 @@ void loop() {
 					}
 				}
 				else {
-					Switch_Code = 0;
+					if ( Switch_Code == 108 ) {
+						Switch_Code = 144;
+					}
+					else {
+						Switch_Code = 0;
+					}
 				}
 			}
 		}
@@ -10959,6 +10978,14 @@ void loop() {
 		time_10ms = false;
 		++count_10ms;              // (10 + 30/57) ms
 		++index_10ms;
+
+		if ( Countdown_view == true ) {
+			--Countdown_view_end;
+			if ( Countdown_view_end == 0 ) {
+				Countdown_view = false;
+				Switch_Code = 146;
+			}
+		}
 
 		if ( Countdown_OFF > 0 ) {
 			--Countdown_OFF;
@@ -11421,7 +11448,7 @@ void loop() {
 					Serial.print("  Switch_old  ");
 					Serial.println(Switch_old);
 				}
-				Test_Switch_up_down();
+				Test_Switch_up_down();				
 			}
 		}
 
