@@ -347,9 +347,9 @@ uint8_t temp_op    = 0;          // <-- operation
 
 int32_t temp_xxx   = 0;          // _=_
 
-int96_a  num_test     = 0;
-int96_a  denom_test   = 0;
-int64_t  num_test_64  = 0;
+int96_a num_test    = 0;
+int96_a denom_test  = 0;
+int64_t num_test_64 = 0;
 
 #define expo_10_0            0x1UL   // 1
 #define expo_10_1            0xAUL   // 10
