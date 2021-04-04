@@ -382,28 +382,29 @@ static const uint64_t expo_10_[10] = {
 	expo_10_15, expo_10_16, expo_10_17, expo_10_18, expo_10_19 };
 
 static const uint8_t cordic_tab[] = {
-	0x90, 0x3B, 0x58, 0xCE, 0x0A, 0xC3, 0x76, 0x9E, 0xCF,  //  0
-	0x81, 0xAF, 0x0E, 0xF3, 0xCA, 0xC5, 0x8D, 0xFA,        //  1
-	0x80, 0x3D, 0x22, 0x50, 0xBF, 0xD7, 0x48, 0x32,        //  2
-	0x77, 0xE8, 0x47, 0x20, 0x33, 0x9F, 0x00,              //  3
-	0x70, 0xFF, 0x40, 0x8F, 0x8F, 0x07, 0x5D,              //  4
-	0x70, 0x1F, 0xFA, 0x01, 0x1F, 0xC7, 0x61,              //  5
-	0x63, 0xFF, 0xD0, 0x02, 0x3F, 0xE4,                    //  6
-	0x60, 0x7F, 0xFE, 0x80, 0x04, 0x81,                    //  7
-	0x5F, 0xFF, 0xF4, 0x00, 0x09,                          //  8
-	0x51, 0xFF, 0xFF, 0xA0, 0x01,                          //  9
-	0x50, 0x3F, 0xFF, 0xFD, 0x00,                          // 10
-	0x47, 0xFF, 0xFF, 0xE8,                                // 11
-	0x41, 0x00, 0x00, 0x00,                                // 12
-	0x40, 0x20, 0x00, 0x00,                                // 13
-	0x34, 0x00, 0x01,                                      // 14
-	0x30, 0x80, 0x00,                                      // 15
-	0x30, 0x10, 0x01,                                      // 16
-	0x22, 0x00,                                            // 17
-	0x20, 0x41,                                            // 18
-	0x18,                                                  // 19
-	0x12,                                                  // 20
-	0x00};
+	0x90, 0x3B, 0x58, 0xCE, 0x0A, 0xC3, 0x76, 0x9E, 0xCF,  //  0 - 4276394391812611791
+	0x81, 0xAF, 0x0E, 0xF3, 0xCA, 0xC5, 0x8D, 0xFA,        //  1 -  121332155204079098
+	0x80, 0x3D, 0x22, 0x50, 0xBF, 0xD7, 0x48, 0x32,        //  2 -   17207703790635058
+	0x77, 0xE8, 0x47, 0x20, 0x33, 0x9F, 0x00,              //  3 -    2225717017550592
+	0x70, 0xFF, 0x40, 0x8F, 0x8F, 0x07, 0x5D,              //  4 -     280652751505245
+	0x70, 0x1F, 0xFA, 0x01, 0x1F, 0xC7, 0x61,              //  5 -      35158621144929
+	0x63, 0xFF, 0xD0, 0x02, 0x3F, 0xE4,                    //  6 -       4397241352164
+	0x60, 0x7F, 0xFE, 0x80, 0x04, 0x81,                    //  7 -        549730649217
+	0x5F, 0xFF, 0xF4, 0x00, 0x09,                          //  8 -         68718690313
+	0x51, 0xFF, 0xFF, 0xA0, 0x01,                          //  9 -          8589910017
+	0x50, 0x3F, 0xFF, 0xFD, 0x00,                          // 10 -          1073741056
+	0x47, 0xFF, 0xFF, 0xE8,                                // 11 -           134217704
+	0x41, 0x00, 0x00, 0x00,                                // 12 -            16777216
+	0x40, 0x20, 0x00, 0x00,                                // 13 -             2097152
+	0x34, 0x00, 0x01,                                      // 14 -              262145
+	0x30, 0x80, 0x00,                                      // 15 -               32768 
+	0x30, 0x10, 0x01,                                      // 16 -                4097
+	0x22, 0x00,                                            // 17 -                 512
+	0x20, 0x41,                                            // 18 -                  65
+	0x18,                                                  // 19 -                   8
+	0x12,                                                  // 20 -                   2
+	0x00};                                                 // 21 -                   0
+	                      
 																							//  9214364837600034815 = 2^63 - 2^53 - 1
 #define expo_test_9          0x1129C0652ULL   //           4607182418 x 0,0000000005
 #define expo_test_6        0x430B178B370ULL   //        4607182418800 x 0,0000005
@@ -528,7 +529,7 @@ static const AVRational_32 sqrt_0_5   = { 0, sqrt_0_5_num, sqrt_0_5_denom, 0};
 static const AVRational_32 cbrt_10_plus   = { 0, cbrt_10_num, cbrt_10_denom, 0};
 static const AVRational_32 cbrt_100_plus  = { 1, cbrt_100_num, cbrt_100_denom, 0};
 
-// ---  circle_to cordic  ---  1 Grad  =  160978210179491618,6144
+// ---  circle_to cordic  ---  1 Grad  =  160978210179491618,6144888
 #define circle_to_expo               20
 #define circle_to_num         916970662  //
 #define circle_to_denom      1582289134  //
@@ -4892,7 +4893,7 @@ AVRational_32 cordic(int8_t function) {
 		Serial.println(display_string_itoa_);
 	}
  */
-	for ( uint8_t index_a = 0; index_a < 32; index_a += 1 ) {  // 31
+	for ( uint8_t index_a = 0; index_a < 32; index_a += 1 ) {  // 32
 		index_count = cordic_tab[index_tab];
 		index_count = index_count >> 4;
 		cordic_add = 0;
@@ -4937,7 +4938,7 @@ AVRational_32 cordic(int8_t function) {
 		tx_cordic -= d_cordic * (y_cordic >> k_count);
 		ty_cordic += d_cordic * (x_cordic >> k_count);
 		tz_cordic += d_cordic * test_cordic;
-	 /*
+  /*
 		if ( Debug_Level == 40 ) {
 			Serial.print(k_count);
 			Serial.print(' ');
@@ -4953,7 +4954,7 @@ AVRational_32 cordic(int8_t function) {
 			itoa_(ty_cordic, display_string_itoa_);
 			Serial.println(display_string_itoa_);
 		}
-	 */
+  */
 		x_cordic  = tx_cordic;
 		y_cordic  = ty_cordic;
 		++k_count;
@@ -4969,7 +4970,21 @@ AVRational_32 cordic(int8_t function) {
 
 		tx_cordic += y_cordic >> 32;
 		ty_cordic -= x_cordic >> 32;
+	/*
+		if ( Debug_Level == 40 ) {
+			Serial.print(" tz_cordic ");
+			itoa_(tz_cordic, display_string_itoa_);
+			Serial.print(display_string_itoa_);
 
+			Serial.print(" tx_cordic ");
+			itoa_(tx_cordic, display_string_itoa_);
+			Serial.print(display_string_itoa_);
+
+			Serial.print(" ty_cordic ");
+			itoa_(ty_cordic, display_string_itoa_);
+			Serial.println(display_string_itoa_);
+		}
+	*/
 		temp_32_corr_a.expo  = -1;
 		denom_temp_u64  = 920348428214616522;  // 32
 	}

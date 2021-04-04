@@ -6,51 +6,51 @@ History: PJN / 17-10-1999 1. Fix for the function FormatAsDecimal which was
                           failing when the number starts with a "10".
          PJN / 26-10-1999 1. Fixed bug in operator!=
                           2. Fixed bug in operator^
-                          3. Fixed bug in operator| 
+                          3. Fixed bug in operator|
                           4. Fixed bug in operator&
                           5. All relational and equality operators now return
                           "int" instead of BOOL
                           6. Provision of operators which convert back to
                           basic C types.
                           7. Improved the performance of operator*
-                          8. Fixed problem with 0/0 which was returning 0 
-                          instead of the correct value undefined i.e. divide 
+                          8. Fixed problem with 0/0 which was returning 0
+                          instead of the correct value undefined i.e. divide
                           by 0 exception
          PJN / 28-10-1999 1. Fixed another bug in operator!=
                           2. removed the use of MAXDWORD and replaced with 0xFFFFFFFF
          PJN / 14-11-1999 1. Fixed a bug in operator*
          PJN / 20-11-2002 1. Updated the copyright message in the header and cpp file
-                          2. Added missing stdafx.h/cpp to the download zip file 
+                          2. Added missing stdafx.h/cpp to the download zip file
                           3. Fixed a logic error in the operator< and operator> methods when
                           comparing negative and positive values. Thanks to Steffen Offermann
                           for reporting and fixing this problem.
          PJN / 26-03-2005 1. Code is now compatible with Cygwin/GCC. Note that the screen output
-                          conversion and MFC archived functions have been ifdefined out. Thanks 
+                          conversion and MFC archived functions have been ifdefined out. Thanks
                           to David Moloney for this nice addition.
          PJN / 31-01-2006 1. Updated copyright details.
                           2. Updated the code to exclude MFC specific logic using the preprocessor
-                          macro _AFX instead of _GNUC__. This allows the core of the class to be 
+                          macro _AFX instead of _GNUC__. This allows the core of the class to be
                           used in non MFC projects on windows compilers. Thanks to Larry Hastings
                           for this update.
                           3. Updated documentation to use the same style as the web site.
-         
+
 Copyright (c) 1998 - 2006 by PJ Naughter (Web: www.naughter.com, Email: pjna@naughter.com)
-  
+
 All rights reserved.
 
 Copyright / Usage Details:
 
-You are allowed to include the source code in any product (commercial, shareware, freeware or otherwise) 
-when your product is released in binary form. You are allowed to modify the source code in any way you want 
-except you cannot modify the copyright details at the top of each module. If you want to distribute source 
-code with your application, then you are only allowed to distribute versions released by the author. This is 
-to maintain a single distribution point for the source code. 
+You are allowed to include the source code in any product (commercial, shareware, freeware or otherwise)
+when your product is released in binary form. You are allowed to modify the source code in any way you want
+except you cannot modify the copyright details at the top of each module. If you want to distribute source
+code with your application, then you are only allowed to distribute versions released by the author. This is
+to maintain a single distribution point for the source code.
 
 */
 
 
 
-// Copyright (c) 2017 Jens Grabner
+// Copyright (c) 2021 Jens Grabner
 // Email: jens@grabner-online.org
 // https://github.com/JensGrabner/snc98_Slash-Number-Calculator/tree/master/Software/Arduino/libraries/int96
 
@@ -105,7 +105,7 @@ int96_a::int96_a(uint64_t value) {
 
 int96_a::int96_a(int8_t value) {
   if ( value < 0)
-  {  
+  {
     *this = int96_a(uint8_t(0)-value);
     TwosComplement();
   }
@@ -167,7 +167,7 @@ int96_a& int96_a::operator=(const int96_a& value) {
   hi  = value.hi;
   mid = value.mid;
   lo  = value.lo;
-  
+
   return *this;
 }
 
@@ -263,11 +263,11 @@ void int96_a::div_3(int96_a& test) {
 
   int96_a A(*this);
 
-  int96_a div_3;   // 0,33333333  
-          div_3.hi  = 0x2AAAAAAA;  //   1234567890123 
+  int96_a div_3;   // 0,33333333
+          div_3.hi  = 0x2AAAAAAA;  //   1234567890123
           div_3.mid = 0xAB000000;  // 0,3333333333339
           div_3.lo  = 0;
- 
+
   div_3 = A;
 	test.mul_div95(div_3, test);
 }
@@ -275,16 +275,16 @@ void int96_a::div_3(int96_a& test) {
 
 void int96_a::cbrt(int96_a& test) {
 /*
-  https://code-examples.net/en/q/71e23e 
+  https://code-examples.net/en/q/71e23e
 
   cbrt(2^95)/2^32 = 0,7937005259841
 
   f_1(x) = 0,6042181313*x + 0,4531635984
   -->
   f_2(x) = 0,4795682486*x + 0,3596761864 // * 0,7937005259841
-*/  
+*/
   int96_a A(*this);
-  
+
   int96_a init;
   int96_a pow_2;
 
@@ -295,28 +295,28 @@ void int96_a::cbrt(int96_a& test) {
           div95_a.mid = 0;
           div95_a.lo  = 0;
 
-  int96_a add_c;   // 0,35967619  
-          add_c.hi  = 772398729;  //  4.12 bits of relative accuracy 
+  int96_a add_c;   // 0,35967619
+          add_c.hi  = 772398729;  //  4.12 bits of relative accuracy
           add_c.mid = 0;
           add_c.lo  = 0;
 
-  int96_a div_3;   // 0,33333333  
-          div_3.hi  = 0x2AAAAAAA;  //   1234567890123 
+  int96_a div_3;   // 0,33333333
+          div_3.hi  = 0x2AAAAAAA;  //   1234567890123
           div_3.mid = 0xAB000000;  // 0,3333333333339
           div_3.lo  = 0;
- 
-  if ( A.IsPositive()) 
+
+  if ( A.IsPositive())
   {
     while (test.hi < 0x10000000) {  // 2^28
       nShift += 1;
       test  <<= 3;
     }
-    
+
     test.mul_div95(div95_a, test);
     test     += add_c;
     test    >>= nShift;
-    
-    for ( uint8_t index = 0; index < 3; index += 1 ) { 
+
+    for ( uint8_t index = 0; index < 3; index += 1 ) {
       init   = A;               // init ->  4.12 bits
       pow_2  = test;            //    1 ->  8.13 bits
       pow_2 *= pow_2;           //    2 -> 16.27 bits
@@ -325,7 +325,7 @@ void int96_a::cbrt(int96_a& test) {
       {
         index = 3;
       }
-      else 
+      else
       {
         test  += test;
         test  += init;
@@ -333,7 +333,7 @@ void int96_a::cbrt(int96_a& test) {
       }
     }
   }
-  else 
+  else
   {
     test.Negate();
     test.cbrt(test);
@@ -384,7 +384,7 @@ int8_t int96_a::operator<(const int96_a& value) const {
   {
     if ( value.IsPositive())
       return TRUE;
-  }  
+  }
   else if ( value.IsNegative())
     return FALSE;
 
@@ -395,7 +395,7 @@ int8_t int96_a::operator<(const int96_a& value) const {
   {
     if ( mid < value.mid)
       return IsPositive();
-    
+
     if ( mid == value.mid)
       return (lo  < value.lo) && IsPositive();
   }
@@ -604,16 +604,16 @@ int96_a int96_a::operator*(const int96_a& value) const {
            b6 *= A.hi;
 
   int96_a rVal;
-  
-  rVal.lo  = b1;
-  hi_mid   = b1 >> 32;
-  hi_mid  += b2;
-  hi_mid  += b4;
-  hi_mid  += b3 << 32;
-  hi_mid  += b5 << 32;
-  hi_mid  += b6 << 32;
-  rVal.mid = hi_mid;
-  rVal.hi  = hi_mid >> 32;
+
+  rVal.lo   = b1;
+  hi_mid    = b1 >> 32;
+  hi_mid   += b2;
+  hi_mid   += b4;
+  hi_mid   += b3 << 32;
+  hi_mid   += b5 << 32;
+  hi_mid   += b6 << 32;
+  rVal.mid  = hi_mid;
+  rVal.hi   = hi_mid >> 32;
 
   if ( (bANegative && !bBNegative) || (!bANegative && bBNegative))
     rVal.Negate();
@@ -637,7 +637,7 @@ void int96_a::mul_div95(const int96_a& mul, int96_a& rVal) const {
     bBNegative = TRUE;
     B.Negate();
   }
-  
+
   B += B;
 
   uint64_t sum_hi     = 0;
@@ -660,7 +660,7 @@ void int96_a::mul_div95(const int96_a& mul, int96_a& rVal) const {
            b7 *= B.hi;
   uint64_t b8  = A.lo;
            b8 *= B.mid;
-  
+
   sum_lo     = b8 >> 32;
   sum_lo    += b6 >> 32;
   sum_lo    += b7 & 0xFFFFFFFF;
@@ -668,16 +668,16 @@ void int96_a::mul_div95(const int96_a& mul, int96_a& rVal) const {
   sum_lo    += b3 & 0xFFFFFFFF;
   sum_mid    = b7 >> 32;
   sum_mid   += b5 >> 32;
-  sum_mid   += b3 >> 32;  
+  sum_mid   += b3 >> 32;
   sum_mid   += b4 & 0xFFFFFFFF;
   sum_mid   += b2 & 0xFFFFFFFF;
   sum_hi     = b1;
-  sum_hi    += b4 >> 32;  
-  sum_hi    += b2 >> 32; 
-  
+  sum_hi    += b4 >> 32;
+  sum_hi    += b2 >> 32;
+
   sum_mid   += sum_lo >> 32;     // carry
   sum_hi    += sum_mid >> 32;    // carry
-  
+
   rVal.lo  = sum_mid;
   rVal.mid = sum_hi;
   rVal.hi  = sum_hi >> 32;
@@ -792,7 +792,7 @@ void int96_a::Modulus(const int96_a& divisor, int96_a& Quotient) const {
   bool test_32 = false;
   BOOL bDividendNegative = FALSE;
   BOOL bDivisorNegative = FALSE;
-  
+
   if ( tempDividend.IsNegative())
   {
     bDividendNegative = TRUE;
@@ -803,9 +803,9 @@ void int96_a::Modulus(const int96_a& divisor, int96_a& Quotient) const {
     bDivisorNegative = TRUE;
     tempDivisor.Negate();
   }
-  
+
   initDividend = tempDividend;
-  
+
   Dividend_64 = tempDividend.hi;
   while ( Dividend_64 > 0 )
   {
@@ -823,7 +823,7 @@ void int96_a::Modulus(const int96_a& divisor, int96_a& Quotient) const {
     tempDivisor  >>= nShift;
   }
   Quotient       = int96_a(0);
-  
+
   if ( tempDivisor.hi == 0 )   // tempDividend >= tempDivisor
   {
     Dividend_64  = tempDividend;
@@ -921,7 +921,7 @@ CString int96_a::FormatAsHex(BOOL bLeadingZeros) const {
       if ( hi)
         sTemp.Format(_T("%08x"), mid);
       else
-        sTemp.Format(_T("%x"), mid);        
+        sTemp.Format(_T("%x"), mid);
       rVal += sTemp;
     }
   }
@@ -979,7 +979,7 @@ CString int96_a::FormatAsBinary(BOOL bLeadingZeros) const {
   }
   pszBuffer[nCurOffset] = _T('\0');
   rVal.ReleaseBuffer();
-  
+
   return rVal;
 }
 
