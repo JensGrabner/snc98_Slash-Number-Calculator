@@ -588,30 +588,33 @@ int96_a int96_a::operator*(const int96_a& value) const {
     B.Negate();
   }
 
+  int96_a  rVal;
   uint64_t hi_mid = 0;
 
-  uint64_t b1  = B.lo;
-           b1 *= A.lo;
-  uint64_t b2  = B.mid;
-           b2 *= A.lo;
-  uint64_t b3  = B.hi;
-           b3 *= A.lo;
-  uint64_t b4  = B.lo;
-           b4 *= A.mid;
-  uint64_t b5  = B.mid;
-           b5 *= A.mid;
-  uint64_t b6  = B.lo;
-           b6 *= A.hi;
+  hi_mid       = B.mid;		// 2
+  hi_mid      *= A.lo;		// 2
 
-  int96_a rVal;
+  uint64_t b_  = B.lo;		// 4
+           b_ *= A.mid;		// 4
+  hi_mid      += b_;
 
-  rVal.lo   = b1;
-  hi_mid    = b1 >> 32;
-  hi_mid   += b2;
-  hi_mid   += b4;
-  hi_mid   += b3 << 32;
-  hi_mid   += b5 << 32;
-  hi_mid   += b6 << 32;
+           b_  = B.lo;		// 1
+           b_ *= A.lo;		// 1
+  rVal.lo      = b_;
+  hi_mid      += b_ >> 32;
+           
+           b_  = B.hi;		// 3
+           b_ *= A.lo;		// 3
+  hi_mid      += b_ << 32;
+          
+           b_  = B.mid;		// 5
+           b_ *= A.mid;		// 5
+  hi_mid      += b_ << 32;
+
+           b_  = B.lo;		// 6
+           b_ *= A.hi;		// 6
+  hi_mid      += b_ << 32;
+
   rVal.mid  = hi_mid;
   rVal.hi   = hi_mid >> 32;
 
@@ -644,43 +647,48 @@ void int96_a::mul_div95(const int96_a& mul, int96_a& rVal) const {
   uint64_t sum_mid    = 0;
   uint64_t sum_lo     = 0;
 
-  uint64_t b1  = A.hi;
-           b1 *= B.hi;
-  uint64_t b2  = A.hi;
-           b2 *= B.mid;
-  uint64_t b3  = A.hi;
-           b3 *= B.lo;
-  uint64_t b4  = A.mid;
-           b4 *= B.hi;
-  uint64_t b5  = A.mid;
-           b5 *= B.mid;
-  uint64_t b6  = A.mid;
-           b6 *= B.lo;
-  uint64_t b7  = A.lo;
-           b7 *= B.hi;
-  uint64_t b8  = A.lo;
-           b8 *= B.mid;
+  sum_hi      = A.hi;		// 1
+  sum_hi     *= B.hi;		// 1
 
-  sum_lo     = b8 >> 32;
-  sum_lo    += b6 >> 32;
-  sum_lo    += b7 & 0xFFFFFFFF;
-  sum_lo    += b5 & 0xFFFFFFFF;
-  sum_lo    += b3 & 0xFFFFFFFF;
-  sum_mid    = b7 >> 32;
-  sum_mid   += b5 >> 32;
-  sum_mid   += b3 >> 32;
-  sum_mid   += b4 & 0xFFFFFFFF;
-  sum_mid   += b2 & 0xFFFFFFFF;
-  sum_hi     = b1;
-  sum_hi    += b4 >> 32;
-  sum_hi    += b2 >> 32;
+  uint64_t b_ = A.hi;		// 2		
+         b_  *= B.mid;	// 2
+  sum_mid     = b_ & 0xFFFFFFFF;
+  sum_hi     += b_ >> 32;
 
-  sum_mid   += sum_lo >> 32;     // carry
-  sum_hi    += sum_mid >> 32;    // carry
+         b_   = A.hi;		// 3
+         b_  *= B.lo;		// 3
+  sum_lo      = b_ & 0xFFFFFFFF;
+	sum_mid    += b_ >> 32;
 
-  rVal.lo  = sum_mid;
-  rVal.mid = sum_hi;
-  rVal.hi  = sum_hi >> 32;
+         b_   = A.mid;	// 4
+         b_  *= B.hi;		// 4
+  sum_mid    += b_ & 0xFFFFFFFF;
+  sum_hi     += b_ >> 32;
+
+         b_   = A.mid;	// 5
+         b_  *= B.mid;	// 5
+  sum_lo     += b_ & 0xFFFFFFFF;
+  sum_mid    += b_ >> 32;
+
+         b_   = A.mid;	// 6
+         b_  *= B.lo;		// 6
+  sum_lo     += b_ >> 32;
+
+         b_   = A.lo;		// 7
+         b_  *= B.hi;		// 7
+  sum_lo     += b_ & 0xFFFFFFFF;
+  sum_mid    += b_ >> 32;
+
+         b_   = A.lo;		// 8
+         b_  *= B.mid;	// 8
+  sum_lo     += b_ >> 32;
+
+  sum_mid    += sum_lo >> 32;     // carry
+  sum_hi     += sum_mid >> 32;    // carry
+
+  rVal.lo     = sum_mid;
+  rVal.mid    = sum_hi;
+  rVal.hi     = sum_hi >> 32;
 
   if ( (bANegative && !bBNegative) || (!bANegative && bBNegative))
     rVal.Negate();
