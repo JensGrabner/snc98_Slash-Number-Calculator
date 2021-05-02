@@ -48,13 +48,18 @@
 
 #include <Arduino.h>
 
-#include <OneWire.h>
+// #include <OneWire.h>
 // https://github.com/PaulStoffregen/OneWire
 
 #include <avr/wdt.h>
 
 #include <pins_arduino.h>  // ..\avr\variants\standard\pins_arduino.h
 // https://github.com/MCUdude/MightyCore
+
+#include <Wire.h>
+#include <Adafruit_MCP9808.h>
+// Create the MCP9808 temperature sensor object
+Adafruit_MCP9808 tempsensor = Adafruit_MCP9808();
 
 #include <BitBool.h>
 // https://github.com/Chris--A/BitBool
@@ -83,7 +88,7 @@ char  display_string_itoa_[33];
 #include <TimerOne.h>
 // https://github.com/PaulStoffregen/TimerOne
 
-#include <OneWireHub.h>
+// #include <OneWireHub.h>
 // https://github.com/orgua/OneWireHub
 
 #define Debug_Level  0 //  0 - not Debug
@@ -143,6 +148,7 @@ char  display_string_itoa_[33];
 											 // 57 - new log2() Test
 											 // 58 - Test exp()
 											 // 59 - Test view 
+											 // 60 - Test input( DISP_C ) or input( DISP_F )
 
 #define sin_    3
 #define cos_    2
@@ -498,8 +504,6 @@ static const AVRational_32 log_1e0   = { 0, int32_max, int32_max, 0};
 static const AVRational_32 log__1e0  = { 0, -int32_max, int32_max, 0};
 
 AVRational_32  temp_32_mul       = {0, int32_max, int32_max, 0};
-AVRational_32  temp_32_fac       = {1, int32_max_16, int32_max, 0}; // 6
-AVRational_32  temp_32_fac_sin   = {1, int32_max_16, int32_max, 0}; // 6
 AVRational_32  temp_32_corr      = {0, int32_max, int32_max, 0};
 AVRational_32  temp_32_corr_0_1  = {0, int32_max, int32_max, 0};
 AVRational_32  temp_32_corr_a    = {0, int32_max, int32_max, 0};
@@ -3137,13 +3141,61 @@ AVRational_32 Reduce_Number( int8_t expo ) {
 	return Reduce;
 }
 
-AVRational_32 input( int8_t temp ) {
-  if ( temp == DISP_C ) {
-  	return Pi;
+AVRational_32 input( int8_t chk ) {
+	// tempsensor.wake();   // wake up, ready to read!
+	// uint8_t t_8 = tempsensor.getResolution()
+  AVRational_32 temp = Null_no;
+	uint16_t t = tempsensor.read16(MCP9808_REG_AMBIENT_TEMP);
+	// tempsensor.shutdown_wake(1); // shutdown MSP9808 - power consumption ~0.1 mikro Ampere, stops temperature sampling
+
+	if ( Debug_Level == 60 ) {
+		Serial.print("uint16_t t_16: ");
+		Serial.println(t);
+	}
+
+  if (t != 0xFFFF) {
+    temp.num   = t & 0x0FFF;
+    temp.denom = 16;
+    if (t & 0x1000) {
+      temp.num -= 4096;
+    }
+    if ( temp.num > 530 ) {
+    	temp.denom *= 100;
+    	temp.expo  += 2;
+    } 
+    else {
+  	  if ( temp.num > 53 ) {
+    		temp.denom *= 10;
+    		temp.expo  += 1;
+    	}
+    }
+    if ( temp.num < 6 ) {
+    	temp.num   *= 10;
+    	temp.expo  -= 1;
+    }
   }
-  if ( temp == DISP_F ) {
-  	return Tau;
+
+	gcd_temp_32 = int32_max;
+	
+	if ( temp.num != 0 ) {
+		if (abs(temp.num) > temp.denom) {
+			gcd_temp_32 /= abs(temp.num);
+		}
+		else {
+			gcd_temp_32 /= temp.denom;
+		}
+		temp.num   *= gcd_temp_32;
+		temp.denom *= gcd_temp_32;
+	}
+	else {
+		temp.denom = int32_max;
+	}
+
+  if ( chk == DISP_F ) {
+  	return add( to_xx[ 11 ], mul(to_xx[ 9 ], temp), 1 );
   }
+
+ 	return temp;
 }
 
 void Expand_Number() {
@@ -4512,6 +4564,10 @@ AVRational_32 factorial(AVRational_32 a) {
 	uint8_t   fac_test    = 10;
 	uint8_t   fac_count   = 10;
 	 int8_t   test        = compare( a, test_71 );
+
+  AVRational_32  temp_32_mul_a   = {0, int32_max, int32_max, 0};
+  AVRational_32  temp_32_fac     = {1, int32_max_16, int32_max, 0}; // 6
+  AVRational_32  temp_32_fac_sin = {1, int32_max_16, int32_max, 0}; // 6
 	
 	boolean input_near_null = false; //     -1.000 < input < 0.000
 	
@@ -4576,11 +4632,12 @@ AVRational_32 factorial(AVRational_32 a) {
 		temp_32_mul = clone( temp_32_fac );
 
 		for ( uint8_t index = 0; index < 7; index += 1 ) {
-			temp_32_mul = add( mul( fa_x[index], div_x( temp_32_mul ) ), temp_32_fac, 1 );
+			temp_32_mul = add_mul_spezial(temp_32_fac, fa_x[index], div_x( temp_32_mul ), 1 );
 		}
 
 		temp_32_mul = mul( fa_0, div_x( temp_32_mul ) );
-		temp_32_mul = add( temp_32_mul, add( mul( add( a, exp2_1_2, 1 ), loge(temp_32_fac) ), temp_32_fac, -1 ), 1 );
+		temp_32_mul_a = add( a, exp2_1_2, 1 );
+		temp_32_mul = add( temp_32_mul, add_mul_spezial( min_x(temp_32_fac), temp_32_mul_a, loge(temp_32_fac), 1 ), 1 );
 		temp_32_mul = exp( add( temp_32_mul, fa_ln_2pi_2, 1 ));
 
 		temp_32_mul = mul( temp_32_mul, temp_32_corr );
@@ -4917,10 +4974,10 @@ AVRational_32 cordic(int8_t function) {
 			Serial.print(index_a);
 			Serial.print("  index_count : ");
 			Serial.println(index_count);
-		/*
+		
 			itoa_(test_cordic, display_string_itoa_);
 			Serial.println(display_string_itoa_);
-		*/
+		
 		}
 
 		if ( function > 0 ) {
@@ -4962,15 +5019,15 @@ AVRational_32 cordic(int8_t function) {
 	}
 
 	if ( function > 0 ) {
-		x_cordic   = x_cordic >> 31;
-		y_cordic   = y_cordic >> 31;
+		x_cordic   = x_cordic >> 31;   // 31
+		y_cordic   = y_cordic >> 31;   // 31
 
 		x_cordic  *= tz_cordic;
 		y_cordic  *= tz_cordic;
 
-		tx_cordic += y_cordic >> 32;
-		ty_cordic -= x_cordic >> 32;
-	/*
+		tx_cordic += y_cordic >> 32;   // 32
+		ty_cordic -= x_cordic >> 32;   // 32
+	
 		if ( Debug_Level == 40 ) {
 			Serial.print(" tz_cordic ");
 			itoa_(tz_cordic, display_string_itoa_);
@@ -4984,9 +5041,9 @@ AVRational_32 cordic(int8_t function) {
 			itoa_(ty_cordic, display_string_itoa_);
 			Serial.println(display_string_itoa_);
 		}
-	*/
+	
 		temp_32_corr_a.expo  = -1;
-		denom_temp_u64  = 920348428214616522;  // 32
+		denom_temp_u64  = 920348428214616521;  // 32  --  920348428214616521
 	}
 
 	if ( function < 0 ) {
@@ -5155,7 +5212,7 @@ AVRational_32 asinh(AVRational_32 a) {
 		return a;
 	}
 	if ( a.expo < -3 ) { //  input <= abs(3.000e-4)
-		return add_mul_spezial( a, cubic( a ), exp2_1_6 , -1 );
+		return add_mul_spezial( a, cubic( a ), exp2_1_6, -1 );
 	}
 
   if ( a.expo > 13 ) {
@@ -9105,10 +9162,35 @@ void setup() {
 	q.pull(&Switch_down);
 
 	digitalWrite(PWM_s, LOW);
+
+  // Make sure the sensor is found, you can also pass in a different i2c
+  // address with tempsensor.begin(0x19) for example, also can be left in blank for default address use
+  // Also there is a table with all addres possible for this sensor, you can connect multiple sensors
+  // to the same i2c bus, just configure each sensor with a different address and define multiple objects for that
+  //  A2 A1 A0 address
+  //  0  0  0   0x18  this is the default address
+  //  0  0  1   0x19
+  //  0  1  0   0x1A
+  //  0  1  1   0x1B
+  //  1  0  0   0x1C
+  //  1  0  1   0x1D
+  //  1  1  0   0x1E
+  //  1  1  1   0x1F
+	if (!tempsensor.begin(0x18)) {
+    while (1);
+  }
+
+  tempsensor.setResolution(3); // sets the resolution mode of reading, the modes are defined in the table bellow:
+  // Mode Resolution SampleTime
+  //  0    0.5°C       30 ms
+  //  1    0.25°C      65 ms
+  //  2    0.125°C     130 ms
+  //  3    0.0625°C    250 ms
 }
 
 // the loop routine runs over and over again forever:
 void loop() {
+  // tempsensor.shutdown_wake(1); // shutdown MSP9808 - power consumption ~0.1 mikro Ampere, stops temperature sampling
 
 	if ( Countdown_OFF < Countdown_Off_0 ) {
 		if ( Countdown_OFF > 0 ) {
@@ -10533,7 +10615,8 @@ void loop() {
 							to_temperature = false;
 							if ( to_extra_test < 8 ) {
 								mem_stack_input[ mem_pointer ] = mul(mem_stack_input[ mem_pointer ], to_xx[ to_extra_test ]);
-							} else {
+							} 
+							else {
 								mem_stack_input[ mem_pointer ] = add( to_xx[ to_extra_test + 2 ], mul(to_xx[ to_extra_test ], mem_stack_input[ mem_pointer ]), 1 );
 								if ( mem_stack_input[ mem_pointer ].expo == 0 ) {
 									if ( abs(mem_stack_input[ mem_pointer ].num) < abs(mem_stack_input[ mem_pointer ].denom) ) {
@@ -10556,6 +10639,7 @@ void loop() {
 										display_string[Memory_1] = Display_Memory_1[12];  // =
 									}
 									else {
+										display_string[Operation] = '_';
 										display_string[Memory_1] = 'O';
 									}
 									display_string[Memory_0]  = '0' + to_extra_test;
