@@ -17,7 +17,7 @@ to maintain a single distribution point for the source code.
 
 */
 
-// Copyright (c) 2017 Jens Grabner
+// Copyright (c) 2021 Jens Grabner
 // Email: jens@grabner-online.org
 // https://github.com/JensGrabner/snc98_Slash-Number-Calculator/tree/master/Software/Arduino/libraries/int96
 
@@ -128,6 +128,7 @@ public:
   void Negate();
   void div_3(int96_a& test);
   void cbrt(int96_a& test);
+  void icbrt(int96_a& res);
   BOOL IsNegative() const;
   BOOL IsPositive() const;
   void Modulus(const int96_a& divisor, int96_a& Quotient) const;

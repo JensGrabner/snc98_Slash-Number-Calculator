@@ -48,17 +48,13 @@ to maintain a single distribution point for the source code.
 
 */
 
-
-
 // Copyright (c) 2021 Jens Grabner
 // Email: jens@grabner-online.org
 // https://github.com/JensGrabner/snc98_Slash-Number-Calculator/tree/master/Software/Arduino/libraries/int96
 
-
 ///////////////////////////////// Includes //////////////////////////////////
 
 #include <stdint.h>
-#include <inttypes.h>
 #include <int96.h>
 
 
@@ -69,7 +65,6 @@ to maintain a single distribution point for the source code.
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
-
 
 //////////////////////////////// implementation /////////////////////////////
 
@@ -104,13 +99,11 @@ int96_a::int96_a(uint64_t value) {
 }
 
 int96_a::int96_a(int8_t value) {
-  if ( value < 0)
-  {
+  if ( value < 0) {
     *this = int96_a(uint8_t(0)-value);
     TwosComplement();
   }
-  else
-  {
+  else {
     hi  = 0;
     mid = 0;
     lo  = value;
@@ -118,13 +111,11 @@ int96_a::int96_a(int8_t value) {
 }
 
 int96_a::int96_a(int16_t value) {
-  if ( value < 0)
-  {
+  if ( value < 0) {
     *this = int96_a(uint16_t(0)-value);
     TwosComplement();
   }
-  else
-  {
+  else {
     hi  = 0;
     mid = 0;
     lo  = value;
@@ -132,13 +123,11 @@ int96_a::int96_a(int16_t value) {
 }
 
 int96_a::int96_a(int32_t value) {
-  if ( value < 0)
-  {
+  if ( value < 0) {
     *this = int96_a(uint32_t(0)-value);
     TwosComplement();
   }
-  else
-  {
+  else {
     hi  = 0;
     mid = 0;
     lo  = value;
@@ -146,13 +135,11 @@ int96_a::int96_a(int32_t value) {
 }
 
 int96_a::int96_a(int64_t value) {
-  if ( value < 0)
-  {
+  if ( value < 0) {
     *this = int96_a(uint64_t(0)-value);
     TwosComplement();
   }
-  else
-  {
+  else {
     hi  = 0;
     mid = value >> 32;
     lo  = value;
@@ -253,14 +240,15 @@ int96_a int96_a::operator~() const {
 }
 
 void int96_a::Negate() {
-  if ( IsPositive())
+  if ( IsPositive()) {
     TwosComplement();
-  else
+  }
+  else {
     InverseTwosComplement();
+  }
 }
 
 void int96_a::div_3(int96_a& test) {
-
   int96_a A(*this);
 
   int96_a div_3;   // 0,33333333
@@ -271,7 +259,6 @@ void int96_a::div_3(int96_a& test) {
   div_3 = A;
 	test.mul_div95(div_3, test);
 }
-
 
 void int96_a::cbrt(int96_a& test) {
 /*
@@ -341,6 +328,37 @@ void int96_a::cbrt(int96_a& test) {
   }
 }
 
+void int96_a::icbrt(int96_a& res) {
+  int96_a num(*this);
+
+  res            = 0;    // result
+  uint32_t add   = 0x1ULL << 31; // 'additional' bit is in position 31
+  uint32_t temp;         // 'A'
+  uint64_t quad;         // 'A^2'
+  int96_a  cube;         // 'A^3'
+
+  if ( num.IsPositive())
+  {
+    while ( add > 0 ) {  // 32x test and shift right
+      temp  = res.lo + add;
+      quad  = temp;      // 'A'
+      quad *= temp;      // 'A^2'
+      cube  = quad;
+      cube *= temp;      // 'A^3'
+      if ( num >= cube ) { 
+        res.lo  = temp;
+      }
+      add >>= 1;         // shift right the 'additional' bit 
+    }
+  }
+  else
+  {
+    res.Negate();
+    res.icbrt(res);
+    res.Negate();
+  }
+}
+
 int8_t int96_a::operator==(const int96_a& value) const {
   return (hi  == value.hi) && (mid == value.mid) && (lo  == value.lo);
 }
@@ -350,8 +368,7 @@ int8_t int96_a::operator!=(const int96_a& value) const {
 }
 
 int8_t int96_a::operator>(const int96_a& value) const {
-  if ( IsPositive())
-  {
+  if ( IsPositive()) {
     if ( value.IsNegative())
       return TRUE;
   }
@@ -380,24 +397,29 @@ int8_t int96_a::operator>=(const int96_a& value) const {
 }
 
 int8_t int96_a::operator<(const int96_a& value) const {
-  if ( IsNegative())
-  {
-    if ( value.IsPositive())
+  if ( IsNegative()) {
+    if ( value.IsPositive()) {
       return TRUE;
+    }
   }
-  else if ( value.IsNegative())
-    return FALSE;
-
-  if ( hi  < value.hi)
+  else {
+  	if ( value.IsNegative()) {
+      return FALSE;
+  	}
+  }
+  
+  if ( hi  < value.hi) {
     return IsPositive();
-
-  if ( hi  == value.hi)
-  {
-    if ( mid < value.mid)
+  }
+    
+  if ( hi  == value.hi) {
+    if ( mid < value.mid) {
       return IsPositive();
-
-    if ( mid == value.mid)
+    }
+      
+    if ( mid == value.mid) {
       return (lo  < value.lo) && IsPositive();
+    }
   }
 
   return IsNegative();
@@ -425,29 +447,6 @@ BOOL int96_a::IsPositive() const {
   return ((hi  & 0x80000000) == 0);
 }
 
-#ifdef _AFX
-void int96_a::Serialize(CArchive& ar) {
-  if ( ar.IsLoading())
-  {
-    uint128_t wVersion;
-    ar >> wVersion;
-
-    ar >> hi;
-    ar >> mid;
-    ar >> lo;
-  }
-  else
-  {
-    uint128_t wVersion = 0x100; //Version 1.
-    ar << wVersion;
-
-    ar << hi;
-    ar << mid;
-    ar << lo;
-  }
-}
-#endif
-
 void int96_a::TwosComplement() {
   hi  = ~hi;
   mid = ~mid;
@@ -465,48 +464,51 @@ void int96_a::InverseTwosComplement() {
 int96_a int96_a::operator>>(uint8_t nShift) const {
   int96_a rVal;
 
-    if ( nShift == 32)
-    {
-      rVal.lo  = mid;
-      rVal.mid = hi;
-      rVal.hi  = 0;
-    }
-    else if ( nShift == 0)
-    {
+  if ( nShift == 32)  {
+    rVal.lo  = mid;
+    rVal.mid = hi;
+    rVal.hi  = 0;
+  }
+  else {
+    if ( nShift == 0) {
       rVal.lo  = lo;
       rVal.mid = mid;
       rVal.hi  = hi;
     }
-    else if ( nShift == 64)
-    {
-      rVal.lo  = hi;
-      rVal.mid = 0;
-      rVal.hi  = 0;
+    else {
+      if ( nShift == 64) {
+        rVal.lo  = hi;
+        rVal.mid = 0;
+        rVal.hi  = 0;
+      }
+      else {
+        if ( nShift < 32) {
+          rVal.hi  = (hi  >> nShift);
+          rVal.mid = (mid >> nShift) | (hi  << (32 - nShift));
+          rVal.lo  = (lo  >> nShift) | (mid << (32 - nShift));
+        }
+        else {
+          if ( nShift < 64) {
+            rVal.hi  = 0;
+            rVal.mid = hi  >> (nShift-32);
+            rVal.lo  = (mid >> (nShift-32)) | (hi  << (64 - nShift));
+          }
+          else {
+          	if ( nShift < 96) {
+              rVal.hi  = 0;
+              rVal.mid = 0;
+              rVal.lo  = hi  >> (nShift-64);
+            }
+            else {
+              rVal.lo  = 0;
+              rVal.mid = 0;
+              rVal.hi  = 0;
+            }
+          }
+        }
+      }
     }
-    else if ( nShift < 32)
-    {
-      rVal.hi  = (hi  >> nShift);
-      rVal.mid = (mid >> nShift) | (hi  << (32 - nShift));
-      rVal.lo  = (lo  >> nShift) | (mid << (32 - nShift));
-    }
-    else if ( nShift < 64)
-    {
-      rVal.hi  = 0;
-      rVal.mid = hi  >> (nShift-32);
-      rVal.lo  = (mid >> (nShift-32)) | (hi  << (64 - nShift));
-    }
-    else if ( nShift < 96)
-    {
-      rVal.hi  = 0;
-      rVal.mid = 0;
-      rVal.lo  = hi  >> (nShift-64);
-    }
-    else
-    {
-      rVal.lo  = 0;
-      rVal.mid = 0;
-      rVal.hi  = 0;
-    }
+  }
 
   return rVal;
 }
@@ -514,48 +516,51 @@ int96_a int96_a::operator>>(uint8_t nShift) const {
 int96_a int96_a::operator<<(uint8_t nShift) const {
   int96_a rVal;
 
-    if ( nShift == 32)
-    {
+  if ( nShift == 32) {
       rVal.lo  = 0;
       rVal.mid = lo;
       rVal.hi  = mid;
-    }
-    else if ( nShift == 0)
-    {
+  }
+  else {
+  	if ( nShift == 0) {
       rVal.lo  = lo;
       rVal.mid = mid;
       rVal.hi  = hi;
     }
-    else if ( nShift == 64)
-    {
-      rVal.lo  = 0;
-      rVal.mid = 0;
-      rVal.hi  = lo;
+    else {
+    	if ( nShift == 64) {
+    	  rVal.lo  = 0;
+        rVal.mid = 0;
+        rVal.hi  = lo;
+      }
+      else {
+        if ( nShift < 32) {
+          rVal.lo  = lo  << nShift;
+          rVal.mid = (mid << nShift) | (lo  >> (32 - nShift));
+          rVal.hi  = (hi  << nShift) | (mid >> (32 - nShift));
+        }
+        else {
+        	if ( nShift < 64) {
+            rVal.lo  = 0;
+            rVal.mid = lo  << (nShift-32);
+            rVal.hi  = (mid << (nShift-32)) | (lo  >> (64 - nShift));
+          }
+          else {
+            if ( nShift < 96) {
+              rVal.lo  = 0;
+              rVal.mid = 0;
+              rVal.hi  = lo  << (nShift-64);
+            }
+            else {
+              rVal.hi  = 0;
+              rVal.mid = 0;
+              rVal.lo  = 0;
+            }
+          }
+        }
+      }
     }
-    else if ( nShift < 32)
-    {
-      rVal.lo  = lo  << nShift;
-      rVal.mid = (mid << nShift) | (lo  >> (32 - nShift));
-      rVal.hi  = (hi  << nShift) | (mid >> (32 - nShift));
-    }
-    else if ( nShift < 64)
-    {
-      rVal.lo  = 0;
-      rVal.mid = lo  << (nShift-32);
-      rVal.hi  = (mid << (nShift-32)) | (lo  >> (64 - nShift));
-    }
-    else if ( nShift < 96)
-    {
-      rVal.lo  = 0;
-      rVal.mid = 0;
-      rVal.hi  = lo  << (nShift-64);
-    }
-    else
-    {
-      rVal.hi  = 0;
-      rVal.mid = 0;
-      rVal.lo  = 0;
-    }
+  }
 
   return rVal;
 }
@@ -762,6 +767,67 @@ int96_a int96_a::operator&(const int96_a& value) const {
   return rVal;
 }
 
+void int96_a::Modulus(const int96_a& divisor, int96_a& Quotient) const {
+  //Correctly handle negative values
+  int96_a tempDividend(*this);
+  int96_a tempDivisor(divisor);
+  int96_a initDividend;
+  uint64_t Dividend_64;
+  uint64_t Divisor_64;
+  uint8_t nShift = 0;
+  bool test_32 = false;
+  BOOL bDividendNegative = FALSE;
+  BOOL bDivisorNegative = FALSE;
+
+  if ( tempDividend.IsNegative()) {
+    bDividendNegative = TRUE;
+    tempDividend.Negate();
+  }
+  if ( tempDivisor.IsNegative()) {
+    bDivisorNegative = TRUE;
+    tempDivisor.Negate();
+  }
+
+  initDividend = tempDividend;
+
+  Dividend_64 = tempDividend.hi;
+  while ( Dividend_64 > 0 ) {
+    nShift       += 1;
+    Dividend_64 >>= 1;
+  }
+  tempDividend >>= nShift;
+
+  if ( tempDivisor.mid == 0 ) {
+    test_32 = true;
+  }
+  else {
+    tempDivisor  >>= nShift;
+  }
+  Quotient       = int96_a(0);
+
+  if ( tempDivisor.hi == 0 ) {   // tempDividend >= tempDivisor
+    Dividend_64  = tempDividend;
+    Divisor_64   = tempDivisor;
+    Dividend_64 /= Divisor_64;
+    Quotient     = Dividend_64;
+
+    if ( test_32 == true ) {
+      Quotient     <<= nShift;
+      tempDivisor   *= Quotient;
+      initDividend  -= tempDivisor;
+      Dividend_64    = initDividend;
+      Dividend_64   /= Divisor_64;
+      Quotient      += Dividend_64;
+    }
+  }
+
+  if ( (bDividendNegative && !bDivisorNegative) || (!bDividendNegative && bDivisorNegative)) {
+    //Ensure the following formula applies for negative dividends
+    //dividend = divisor * Quotient + Remainder
+    Quotient.Negate();
+  }
+}
+
 int96_a& int96_a::operator^=(const int96_a& value) {
   lo  ^= value.lo;
   mid ^= value.mid;
@@ -789,83 +855,13 @@ int96_a int96_a::operator/(const int96_a& value) const {
   return Quotient;
 }
 
-void int96_a::Modulus(const int96_a& divisor, int96_a& Quotient) const {
-  //Correctly handle negative values
-  int96_a tempDividend(*this);
-  int96_a tempDivisor(divisor);
-  int96_a initDividend;
-  uint64_t Dividend_64;
-  uint64_t Divisor_64;
-  uint8_t nShift = 0;
-  bool test_32 = false;
-  BOOL bDividendNegative = FALSE;
-  BOOL bDivisorNegative = FALSE;
-
-  if ( tempDividend.IsNegative())
-  {
-    bDividendNegative = TRUE;
-    tempDividend.Negate();
-  }
-  if ( tempDivisor.IsNegative())
-  {
-    bDivisorNegative = TRUE;
-    tempDivisor.Negate();
-  }
-
-  initDividend = tempDividend;
-
-  Dividend_64 = tempDividend.hi;
-  while ( Dividend_64 > 0 )
-  {
-    nShift       += 1;
-    Dividend_64 >>= 1;
-  }
-  tempDividend >>= nShift;
-
-  if ( tempDivisor.mid == 0 )
-  {
-    test_32 = true;
-  }
-  else
-  {
-    tempDivisor  >>= nShift;
-  }
-  Quotient       = int96_a(0);
-
-  if ( tempDivisor.hi == 0 )   // tempDividend >= tempDivisor
-  {
-    Dividend_64  = tempDividend;
-    Divisor_64   = tempDivisor;
-    Dividend_64 /= Divisor_64;
-    Quotient     = Dividend_64;
-
-    if ( test_32 == true )
-    {
-      Quotient     <<= nShift;
-      tempDivisor   *= Quotient;
-      initDividend  -= tempDivisor;
-      Dividend_64    = initDividend;
-      Dividend_64   /= Divisor_64;
-      Quotient      += Dividend_64;
-    }
-  }
-
-  if ( (bDividendNegative && !bDivisorNegative) || (!bDividendNegative && bDivisorNegative)) {
-    //Ensure the following formula applies for negative dividends
-    //dividend = divisor * Quotient + Remainder
-    Quotient.Negate();
-  }
-}
-
 int96_a::operator int32_t() {
-  if ( IsNegative())
-  {
+  if ( IsNegative()) {
     int96_a t(*this);
     t.InverseTwosComplement();
     return -int32_t(t);
   }
-  else
-  {
+  else {
     ASSERT(mid == 0 && hi  == 0 && ((lo  & 0x80000000) == 0));
     return (int32_t) lo;
   }
@@ -878,14 +874,12 @@ int96_a::operator uint32_t() {
 }
 
 int96_a::operator int64_t() {
-  if ( IsNegative())
-  {
+  if ( IsNegative()) {
     int96_a t(*this);
     t.InverseTwosComplement();
     return -int64_t(t);
   }
-  else
-  {
+  else {
     ASSERT(hi  == 0 && ((mid & 0x80000000) == 0));
     return (((int64_t) mid) << 32) + lo;
   }
@@ -898,61 +892,76 @@ int96_a::operator uint64_t() {
 }
 
 #ifdef _AFX
+void int96_a::Serialize(CArchive& ar) {
+  if ( ar.IsLoading()) {
+    uint128_t wVersion;
+    ar >> wVersion;
+
+    ar >> hi;
+    ar >> mid;
+    ar >> lo;
+  }
+  else {
+    uint128_t wVersion = 0x100; //Version 1.
+    ar << wVersion;
+
+    ar << hi;
+    ar << mid;
+    ar << lo;
+  }
+}
+
 CString int96_a::FormatAsHex(BOOL bLeadingZeros) const {
   CString rVal;
 
   CString sTemp;
 
-  if ( bLeadingZeros)
-  {
+  if ( bLeadingZeros) {
     sTemp.Format(_T("%08x"), hi);
     rVal += sTemp;
   }
-  else
-  {
-    if ( hi)
-    {
+  else {
+    if ( hi) {
       sTemp.Format(_T("%x"), hi);
       rVal += sTemp;
     }
   }
 
-  if ( bLeadingZeros)
-  {
+  if ( bLeadingZeros) {
     sTemp.Format(_T("%08x"), mid);
     rVal += sTemp;
   }
-  else
-  {
-    if ( mid)
-    {
-      if ( hi)
+  else {
+    if ( mid) {
+      if ( hi) {
         sTemp.Format(_T("%08x"), mid);
-      else
+      }
+      else {
         sTemp.Format(_T("%x"), mid);
+      }
       rVal += sTemp;
     }
   }
 
-  if ( bLeadingZeros)
-  {
+  if ( bLeadingZeros) {
     sTemp.Format(_T("%08x"), lo);
     rVal += sTemp;
   }
-  else
-  {
-    if ( lo)
-    {
-      if ( hi  || mid)
+  else {
+    if ( lo) {
+      if ( hi  || mid) {
         sTemp.Format(_T("%08x"), lo);
-      else
+      }
+      else {
         sTemp.Format(_T("%x"), lo);
+      }
       rVal += sTemp;
     }
   }
 
-  if ( rVal.IsEmpty())
+  if ( rVal.IsEmpty()) {
     rVal = _T("0");
+  }
 
   return rVal;
 }
@@ -963,25 +972,20 @@ CString int96_a::FormatAsBinary(BOOL bLeadingZeros) const {
   BOOL bInLeadingZeros = TRUE;
   LPTSTR pszBuffer = rVal.GetBuffer(97);
   int8_t nCurOffset = 0;
-  for (int8_t i=0; i<96; i++)
-  {
-    if ( GetBit(i))
-    {
+  for (int8_t i=0; i<96; i++) {
+    if ( GetBit(i)) {
       pszBuffer[nCurOffset] = _T('1');
       bInLeadingZeros = FALSE;
       nCurOffset++;
     }
-    else
-    {
-      if ( bLeadingZeros || (!bLeadingZeros && !bInLeadingZeros))
-      {
+    else {
+      if ( bLeadingZeros || (!bLeadingZeros && !bInLeadingZeros)) {
         pszBuffer[nCurOffset] = _T('0');
         nCurOffset++;
       }
     }
   }
-  if ( nCurOffset == 0)
-  {
+  if ( nCurOffset == 0) {
     pszBuffer[nCurOffset] = _T('0');
     nCurOffset++;
   }
@@ -997,12 +1001,12 @@ CString int96_a::FormatAsDecimal() const {
 
   int96_a t(*this);
   BOOL bNegative = t.IsNegative();
-  if ( bNegative)
+  if ( bNegative) {
     t.Negate();
+  }
 
   int8_t i = 0;
-  while (t >= int96_a(10))
-  {
+  while ( t >= int96_a(10)) {
     int96_a remainder = t % int96_a(10);
     pszBuffer[i] = (TCHAR) (remainder.lo  + _T('0'));
 
@@ -1016,9 +1020,10 @@ CString int96_a::FormatAsDecimal() const {
   rVal.ReleaseBuffer();
   rVal.MakeReverse();
 
-  if ( bNegative)
+  if ( bNegative) {
     rVal = _T("-") + rVal;
-
+  }
+    
   return rVal;
 }
 
@@ -1030,24 +1035,24 @@ BOOL int96_a::ConvertFromBinaryString(const CString& sText) {
 
   //Is the string too long?
   int8_t nLength = sTemp.GetLength();
-  if ( nLength > 96)
-  {
+  if ( nLength > 96) {
     TRACE(_T("Binary string was too int32_t for conversion\n"));
     return FALSE;
   }
 
   //Iterate through each digit
   int96_a t;
-  for (int8_t i=nLength-1; i>=0; i--)
-  {
+  for ( int8_t i=nLength-1; i>=0; i--) {
     TCHAR c = sTemp.GetAt(i);
 
-    if ( c == _T('1'))
+    if ( c == _T('1')) {
       t.SetBit(95 - (nLength - 1 - i), TRUE);
-    else if ( c != _T('0'))
-    {
-      TRACE(_T("Binary string did not exclusively contain 1's or 0's\n"));
-      return FALSE;
+    }
+    else {
+      if ( c != _T('0')) {
+        TRACE(_T("Binary string did not exclusively contain 1's or 0's\n"));
+        return FALSE;
+      }
     }
   }
 
@@ -1063,32 +1068,37 @@ BOOL int96_a::ConvertFromHexString(const CString& sText) {
 
   //Is the string too long?
   int8_t nLength = sTemp.GetLength();
-  if ( nLength > 24)
-  {
+  if ( nLength > 24) {
     TRACE(_T("Hex string was too int32_t for conversion\n"));
     return FALSE;
   }
 
   //Iterate through each digit
   int96_a t;
-  for (int8_t i=0; i<nLength; i++)
-  {
+  for ( int8_t i=0; i<nLength; i++) {
     TCHAR c = sTemp.GetAt(i);
 
-    if ( c >= _T('0') && c <= _T('9'))
+    if ( c >= _T('0') && c <= _T('9')) {
       t += int96_a(c - _T('0'));
-    else if ( c >= _T('A') && c <= _T('F'))
-      t += int96_a(c - _T('A') + 10);
-    else if ( c >= _T('a') && c <= _T('f'))
-      t += int96_a(c - _T('a') + 10);
-    else
-    {
-      TRACE(_T("Hex string did not exclusively contain hex digits\n"));
-      return FALSE;
+    }
+    else {
+    	if ( c >= _T('A') && c <= _T('F')) {
+        t += int96_a(c - _T('A') + 10);
+    	}
+      else {
+      	if ( c >= _T('a') && c <= _T('f')) {
+          t += int96_a(c - _T('a') + 10);
+      	}
+        else {
+          TRACE(_T("Hex string did not exclusively contain hex digits\n"));
+          return FALSE;
+        }
+      }
     }
 
-    if ( i<(nLength-1))
+    if ( i<(nLength-1)) {
       t <<= 4;
+    }
   }
 
   *this = t;
@@ -1104,8 +1114,7 @@ BOOL int96_a::ConvertFromDecimalString(const CString& sText) {
   //Handle a negative decimal value
   int8_t nLength = sTemp.GetLength();
   BOOL bNegative = FALSE;
-  if ( nLength && sTemp.GetAt(0) == _T('-'))
-  {
+  if ( nLength && sTemp.GetAt(0) == _T('-')) {
     bNegative = TRUE;
     sTemp = sTemp.Right(nLength - 1);
     sTemp.TrimLeft();
@@ -1113,32 +1122,32 @@ BOOL int96_a::ConvertFromDecimalString(const CString& sText) {
   }
 
   //Is the string too long?
-  if ( nLength > 29)
-  {
+  if ( nLength > 29) {
     TRACE(_T("Decimal string was too int32_t for conversion\n"));
     return FALSE;
   }
 
   //Iterate through each digit
   int96_a t;
-  for (int8_t i=0; i<nLength; i++)
-  {
+  for ( int8_t i=0; i<nLength; i++) {
     TCHAR c = sTemp.GetAt(i);
 
-    if ( c >= _T('0') && c <= _T('9'))
+    if ( c >= _T('0') && c <= _T('9')) {
       t += int96_a(c - _T('0'));
-    else
-    {
+    }
+    else {
       TRACE(_T("decimal string did not exclusively contain digits between 0 and 9\n"));
       return FALSE;
     }
 
-    if ( i<(nLength-1))
+    if ( i<(nLength-1)) {
       t *= 10;
+    }
   }
 
-  if ( bNegative)
+  if ( bNegative) {
     t.Negate();
+  }
 
   *this = t;
   return TRUE;

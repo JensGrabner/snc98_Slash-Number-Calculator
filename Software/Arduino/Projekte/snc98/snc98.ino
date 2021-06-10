@@ -45,6 +45,7 @@
 	*********************************************************************
 
 */
+#include <Ratio32.h>
 
 #include <Arduino.h>
 
@@ -79,8 +80,6 @@ Adafruit_MCP9808 tempsensor = Adafruit_MCP9808();
 #include <string.h>
 #include <stdint.h>
 #include <stdlib.h>         // for itoa(); ltoa();
-// #include <math.h>           // for sqrtf();
-// #include <inttypes.h>
 
 #include <itoa_ljust.h>
 // https://github.com/JensGrabner/snc98_Slash-Number-Calculator/tree/master/Software/Arduino/libraries/itoa_ljust
@@ -136,10 +135,6 @@ char  display_string_itoa_[33];
 											 // 44 - atan Test 0.0001 .. 1.0000 Step +0.0001
 											 // 45 - atan Test 0.001  .. 10.000 Step +0.001
 											 // 46 - atan Test 0.3332 .. 0.7500 Step +0.00004 -- cordic Test
-											 // 47 - Test Reduce
-											 // 48 - Time_test Reduce_Number()  --  Valua from Test 46 + 27
-											 // 49 - Profiling Reduce_Number()
-											 // 50 - Reduce_Number() - Output internal Number
 											 // 51 - display_string
 											 // 52 - test exp2()
 											 // 53 - table log_tab[]
@@ -151,6 +146,7 @@ char  display_string_itoa_[33];
 											 // 59 - Test view 
 											 // 60 - Test input( DISP_C ) or input( DISP_F )
 											 // 61 - Test algorithm sqrt(e)
+											 // 62 - Reduce_Number( ) - odd-odd continued fraction
 
 #define sin_    3
 #define cos_    2
@@ -200,12 +196,12 @@ uint8_t PWM_Pin = PWM;
 #define Rx_1          10
 #define Tx_1          11
 #define On_Off_PIN    18
-boolean Power_on = true;
-boolean switch_Pos_0 = false;
+bool    Power_on = true;
+bool    switch_Pos_0 = false;
 
 #define Digit_Count   15
 
-static const uint8_t index_display[Digit_Count] = {               //   Standard
+constexpr uint8_t index_display[Digit_Count] = {               //   Standard
 //   0,  1,  2,  3, 14, 13,  4,  5,  6,  7, 23, 22, 21, 20, 19    //   old Project
 //   0,  1,  3,  6,  7, 10, 11, 13, 14, 15, 19, 20, 21, 22, 23    //
 //  14, 15, 19, 20, 21, 22, 23, 13, 11,  7, 10,  3,  6,  0,  1    // Main_CPU
@@ -281,41 +277,6 @@ uint32_t time_test     = 0;
 #define int15_max          32767     // = 2^15 - 1
 #define uint62_max 0x4000000000000000ULL  // 4611686018427387904 = 2^62
 
-/*
- * rational number "numerator / denominator"
- */
-struct Ratio_32{  //     0.3 ... 3 x 10^expo
-	 int8_t expo;        // <-- expo
-	int32_t num;         // <-- numerator
-	int32_t denom;       // <-- denominator
-	uint8_t op;          // <-- operation
-};
-
-struct Ratio_64{  //     0.3 ... 3 x 10^expo
-	int16_t expo;        // <-- expo
-	int64_t num;         // <-- numerator
-	int64_t denom;       // <-- denominator
-};
-
-struct Ratio_32_plus{  //     0.3 ... 3 x 10^expo
-	 int8_t expo;        // <-- expo
-	int32_t num;         // <-- numerator
-	int32_t denom;       // <-- denominator
-	uint8_t op;          // <-- operation
-	uint8_t op_priority; // <-- priority
-	uint8_t bracket;     // <-- bracket
-};
-
-struct Rational_32{    //     0.3 ... 3
-	uint32_t num;        // <-- numerator
-	uint32_t denom;      // <-- denominator
-};
-
-struct Rational_64{    //     0.3 ... 3
-	uint64_t num;        // <-- numerator
-	uint64_t denom;      // <-- denominator
-};
-
 Ratio_32       calc_32       = {0, int32_max, int32_max, 0};
 Ratio_32       calc_32_e     = {0, int32_max, int32_max, 0};
 Ratio_32       temp_32_e     = {0, int32_max, int32_max, 0};
@@ -370,7 +331,7 @@ int64_t num_test_64 = 0;
 #define expo_10_8      0x5F5E100UL   // 100000000
 #define expo_10_9     0x3B9ACA00UL   // 1000000000
 
-static const uint32_t expo_10[10] = {
+constexpr uint32_t expo_10[10] = {
 	expo_10_0, expo_10_1, expo_10_2, expo_10_3, expo_10_4,
 	expo_10_5, expo_10_6, expo_10_7, expo_10_8, expo_10_9 };
 
@@ -385,11 +346,11 @@ static const uint32_t expo_10[10] = {
 #define expo_10_18     0xDE0B6B3A7640000ULL   // 1000000000000000000
 #define expo_10_19    0x8AC7230489E80000ULL   // 10000000000000000000
 
-static const uint64_t expo_10_[10] = {
+constexpr uint64_t expo_10_[10] = {
 	expo_10_10, expo_10_11, expo_10_12, expo_10_13, expo_10_14,
 	expo_10_15, expo_10_16, expo_10_17, expo_10_18, expo_10_19 };
 
-static const uint8_t cordic_tab[] = {
+constexpr uint8_t cordic_tab[] = {
 	0x90, 0x3B, 0x58, 0xCE, 0x0A, 0xC3, 0x76, 0x9E, 0xCF,  //  0 - 4276394391812611791
 	0x81, 0xAF, 0x0E, 0xF3, 0xCA, 0xC5, 0x8D, 0xFA,        //  1 -  121332155204079098
 	0x80, 0x3D, 0x22, 0x50, 0xBF, 0xD7, 0x48, 0x32,        //  2 -   17207703790635058
@@ -426,70 +387,70 @@ static const uint8_t cordic_tab[] = {
 #define artand_1_3_expo            1
 #define artand_1_3_num     883496917
 #define artand_1_3_denom   479251082  // Fehler ..  5,52e-19
-static const Ratio_32 artand_1_3 = { artand_1_3_expo, artand_1_3_num, artand_1_3_denom, 0};
+constexpr Ratio_32 artand_1_3 = { artand_1_3_expo, artand_1_3_num, artand_1_3_denom, 0};
 
 // ---  artan_1_3()_Konstante  ---
 #define artan_1_3_expo            0
 #define artan_1_3_num     428408757
 #define artan_1_3_denom  1331493454  // Fehler ..  2,20e-19
-static const Ratio_32 artan_1_3 = { artan_1_3_expo, artan_1_3_num, artan_1_3_denom, 0};
+constexpr Ratio_32 artan_1_3 = { artan_1_3_expo, artan_1_3_num, artan_1_3_denom, 0};
 
 // ---  sqrt(10)_Konstante  ---
 #define sqrt_10_expo            0
 #define sqrt_10_num    1499219281
 #define sqrt_10_denom   474094764  // Fehler ..  7.03e-19
 
-static const Ratio_32 sqrt_10_plus  = {0, sqrt_10_num, sqrt_10_denom, 0};
-static const Ratio_32 sqrt_10_minus = {1, sqrt_10_denom, sqrt_10_num, 0};
+constexpr Ratio_32 sqrt_10_plus  = {0, sqrt_10_num, sqrt_10_denom, 0};
+constexpr Ratio_32 sqrt_10_minus = {1, sqrt_10_denom, sqrt_10_num, 0};
 
 // ---  exp2()_Konstante  ---
 #define num_exp2_1_32      671032160
 #define denum_exp2_1_32   2147302912  // 1/32
-static const Ratio_32 exp2_1_32   = { -1, num_exp2_1_32, denum_exp2_1_32, 0};
+constexpr Ratio_32 exp2_1_32   = { -1, num_exp2_1_32, denum_exp2_1_32, 0};
 
 #define num_exp2_0_1     2147302920
 #define denum_exp2_0_1   2147302920   // 1/1
-static const Ratio_32 exp2_0_1   = { 0, num_exp2_0_1, denum_exp2_0_1, 0};
+constexpr Ratio_32 exp2_0_1   = { 0, num_exp2_0_1, denum_exp2_0_1, 0};
 
 #define num_exp2_1_4      536825730
 #define denum_exp2_1_4   2147302920   // 1/4
-static const Ratio_32 exp2_1_4   = { 0, num_exp2_1_4, denum_exp2_1_4, 0};
+constexpr Ratio_32 exp2_1_4   = { 0, num_exp2_1_4, denum_exp2_1_4, 0};
 
 #define num_exp2__1_4     -536825730
 #define denum_exp2__1_4   2147302920   // -1/4
-static const Ratio_32 exp2__1_4   = { 0, num_exp2__1_4, denum_exp2__1_4, 0};
+constexpr Ratio_32 exp2__1_4   = { 0, num_exp2__1_4, denum_exp2__1_4, 0};
 
 #define num_exp2_1_2     1073651460
 #define denum_exp2_1_2   2147302920   // 1/2
-static const Ratio_32 exp2_1_2   = { 0, num_exp2_1_2, denum_exp2_1_2, 0};
-static const Ratio_32 exp2_1_2_div_x   = { 0, denum_exp2_1_2, num_exp2_1_2, 0};
+constexpr Ratio_32 exp2_1_2   = { 0, num_exp2_1_2, denum_exp2_1_2, 0};
+constexpr Ratio_32 exp2_1_2_div_x   = { 0, denum_exp2_1_2, num_exp2_1_2, 0};
 
 #define num_exp2_1_3      715767640
 #define denum_exp2_1_3   2147302920   // 1/3
-static const Ratio_32 exp2_1_3   = { 0, num_exp2_1_3, denum_exp2_1_3, 0};
+constexpr Ratio_32 exp2_1_3   = { 0, num_exp2_1_3, denum_exp2_1_3, 0};
 
 #define num_exp2__1_3     -715767640
 #define denum_exp2__1_3   2147302920   // - 1/3
-static const Ratio_32 exp2__1_3   = { 0, num_exp2__1_3, denum_exp2__1_3, 0};
+constexpr Ratio_32 exp2__1_3   = { 0, num_exp2__1_3, denum_exp2__1_3, 0};
 
 #define num_exp2_1_6     2147302920
 #define denum_exp2_1_6   1288381752   // 1/6
-static const Ratio_32 exp2_1_6   = { -1, num_exp2_1_6, denum_exp2_1_6, 0};
+constexpr Ratio_32 exp2_1_6   = { -1, num_exp2_1_6, denum_exp2_1_6, 0};
 
 // ---  log2()_Konstante  ---
 #define num_lb_to_e       497083768
 #define denum_lb_to_e     717140287   // Fehler .. -2,02-19
-static const Ratio_32  lb_to_e   = { 0, num_lb_to_e, denum_lb_to_e, 0};
+constexpr Ratio_32  lb_to_e   = { 0, num_lb_to_e, denum_lb_to_e, 0};
 
 // ---  log10()_Konstante  ---
 #define num_lb_to_10      579001193
 #define denum_lb_to_10   1923400330   // Fehler ..  2,09e-20
-static const Ratio_32 lb_to_10   = { 0, num_lb_to_10, denum_lb_to_10, 0};
+constexpr Ratio_32 lb_to_10   = { 0, num_lb_to_10, denum_lb_to_10, 0};
 
 // ---  ln_to_10_Konstante  --- 
 #define num_ln_to_10     1784326399
 #define denom_ln_to_10    774923109   // Fehler .. 2,956e-20
-static const Ratio_32 ln_to_10   = {0, num_ln_to_10, denom_ln_to_10, 0};
+constexpr Ratio_32 ln_to_10   = {0, num_ln_to_10, denom_ln_to_10, 0};
 
 // ---  log()_Konstante  ---
 #define int32_max_125   1717842336     // = int32_max / 1.25
@@ -499,11 +460,11 @@ static const Ratio_32 ln_to_10   = {0, num_ln_to_10, denom_ln_to_10, 0};
 #define denum_log5e8     220581553
 #define num_log1e9      -265961484
 #define denum_log1e9     128339561
-static const Ratio_32 mul_6_0   = { 1, int32_max_16, int32_max, 0};
-static const Ratio_32 __1e90    = { 90, int32_max, int32_max, 0};
-static const Ratio_32 min__1e90 = { 90, -int32_max, int32_max, 0};
-static const Ratio_32 log_1e0   = { 0, int32_max, int32_max, 0};
-static const Ratio_32 log__1e0  = { 0, -int32_max, int32_max, 0};
+constexpr Ratio_32 mul_6_0   = { 1, int32_max_16, int32_max, 0};
+constexpr Ratio_32 __1e90    = { 90, int32_max, int32_max, 0};
+constexpr Ratio_32 min__1e90 = { 90, -int32_max, int32_max, 0};
+constexpr Ratio_32 log_1e0   = { 0, int32_max, int32_max, 0};
+constexpr Ratio_32 log__1e0  = { 0, -int32_max, int32_max, 0};
 
 Ratio_32  temp_32_mul       = {0, int32_max, int32_max, 0};
 Ratio_32  temp_32_corr      = {0, int32_max, int32_max, 0};
@@ -515,13 +476,13 @@ Ratio_32  temp_32_corr_c    = {0, int32_max, int32_max, 0};
 #define expo_71             2
 #define num_71     1524585059
 #define denum_71   2147302900   // 71/100
-static const Ratio_32 test_71   = { expo_71, num_71, denum_71, 0};
+constexpr Ratio_32 test_71   = { expo_71, num_71, denum_71, 0};
 
 // --- sqrt(0.5)_Konstante  ---
 #define sqrt_0_5_expo           0
 #define sqrt_0_5_num   1311738121
 #define sqrt_0_5_denom 1855077841  // Fehler ..  1,5e-19
-static const Ratio_32 sqrt_0_5   = { 0, sqrt_0_5_num, sqrt_0_5_denom, 0};
+constexpr Ratio_32 sqrt_0_5   = { 0, sqrt_0_5_num, sqrt_0_5_denom, 0};
 
 // ---  cbrt(10)_Konstante  ---
 #define cbrt_10_expo            0
@@ -532,60 +493,60 @@ static const Ratio_32 sqrt_0_5   = { 0, sqrt_0_5_num, sqrt_0_5_denom, 0};
 #define cbrt_100_num    123186073
 #define cbrt_100_denom  265396349  // Fehler .. -8,3e-18
 
-static const Ratio_32 cbrt_10_plus   = { 0, cbrt_10_num, cbrt_10_denom, 0};
-static const Ratio_32 cbrt_100_plus  = { 1, cbrt_100_num, cbrt_100_denom, 0};
+constexpr Ratio_32 cbrt_10_plus   = { 0, cbrt_10_num, cbrt_10_denom, 0};
+constexpr Ratio_32 cbrt_100_plus  = { 1, cbrt_100_num, cbrt_100_denom, 0};
 
 // ---  circle_to cordic  ---  1 Grad  =  160978210179491618,6144888
 #define circle_to_expo               20
 #define circle_to_num         916970662  //
 #define circle_to_denom      1582289134  //
-static const Ratio_32  circle_to = {circle_to_expo, circle_to_num, circle_to_denom, 0};
+constexpr Ratio_32  circle_to = {circle_to_expo, circle_to_num, circle_to_denom, 0};
 
 // ---  circle_Konstante (circle) ---  360
 #define circle_expo                3
 #define circle_num         773029044  //
 #define circle_denom      2147302900  //
-static const Ratio_32  circle = {circle_expo, circle_num, circle_denom, 0};
-static const Ratio_32  circle_div_x = {-circle_expo, circle_denom, circle_num, 0};
+constexpr Ratio_32  circle = {circle_expo, circle_num, circle_denom, 0};
+constexpr Ratio_32  circle_div_x = {-circle_expo, circle_denom, circle_num, 0};
 
 // ---  circle_Konstante (circle) ---  180
 #define circle_2_expo                2
 #define circle_2_num        2147302800  //
 #define circle_2_denom      1192946000  //
-static const Ratio_32  circle_2 = {circle_2_expo, circle_2_num, circle_2_denom, 0};
+constexpr Ratio_32  circle_2 = {circle_2_expo, circle_2_num, circle_2_denom, 0};
 
 // ---  circle_Konstante (circle) ---  90
 #define circle_4_expo                2
 #define circle_4_num        1932572610  //
 #define circle_4_denom      2147302900  //
-static const Ratio_32  circle_4 = {circle_4_expo, circle_4_num, circle_4_denom, 0};
+constexpr Ratio_32  circle_4 = {circle_4_expo, circle_4_num, circle_4_denom, 0};
 
 // ---  Tau_Konstante (2_Pi) ---
 #define Tau_expo                1
 #define Tau_num        1068966896  //
 #define Tau_denom      1701313655  // Fehler .. -9,77e-19
-static const Ratio_32   Tau = {Tau_expo, Tau_num, Tau_denom, 0};
-static const Ratio_32   Tau_div_x = {-Tau_expo, Tau_denom, Tau_num, 0};
+constexpr Ratio_32   Tau = {Tau_expo, Tau_num, Tau_denom, 0};
+constexpr Ratio_32   Tau_div_x = {-Tau_expo, Tau_denom, Tau_num, 0};
 
 // ---  Pi_Konstante  ---
 #define Pi_expo                 0
 #define Pi_num         2137933792
 #define Pi_denom        680525462  // Fehler ..  -9,77e-19
-static const Ratio_32   Pi      = {Pi_expo, Pi_num, Pi_denom, 0};
-static const Ratio_32   Pi_neg  = {Pi_expo, -Pi_num, Pi_denom, 0};
+constexpr Ratio_32   Pi      = {Pi_expo, Pi_num, Pi_denom, 0};
+constexpr Ratio_32   Pi_neg  = {Pi_expo, -Pi_num, Pi_denom, 0};
 
 // ---  Pi_Konstante (Pi_2)  ---
 #define Pi_2_expo               0
 #define Pi_2_num       2137933792
 #define Pi_2_denom     1361050924  // Fehler ..  -9,77e-19
-static const Ratio_32  Pi_2 = {Pi_2_expo, Pi_2_num, Pi_2_denom, 0};
+constexpr Ratio_32  Pi_2 = {Pi_2_expo, Pi_2_num, Pi_2_denom, 0};
 
 // ---  e_Konstante  ---
 #define e_expo                  0
-#define e_num           848456353
-#define e_denom         312129649  // Fehler .. -6.03e-19
-static const Ratio_32  one_e = {e_expo, e_num, e_denom, 0};
-static const Ratio_32  one_e_div_x = {e_expo, e_denom, e_num, 0};
+#define e_num          1696912706
+#define e_denom         624259298  // Fehler .. -6.03e-19
+constexpr Ratio_32  one_e = {e_expo, e_num, e_denom, 0};
+constexpr Ratio_32  one_e_div_x = {e_expo, e_denom, e_num, 0};
 
 // http://www.luschny.de/math/factorial/approx/SimpleCases.html#AhighPrecisionApproximation
 // http://www.luschny.de/math/factorial/approx/
@@ -597,76 +558,69 @@ static const Ratio_32  one_e_div_x = {e_expo, e_denom, e_num, 0};
 // https://infogalactic.com/info/Factorial#Approximations_of_factorial
 // ---  fa_0_Konstante  ---     1/12
 #define fa_0_expo            -1 // 0,083333
-#define fa_0_num      865624250
-#define fa_0_denom   1038749100 //
-static const Ratio_32  fa_0 = {fa_0_expo, fa_0_num, fa_0_denom, 0};
+#define fa_0_num     1731248500
+#define fa_0_denom   2077498200 //
+constexpr Ratio_32  fa_0 = {fa_0_expo, fa_0_num, fa_0_denom, 0};
 
 // ---  fa_1_Konstante  ---     1/30
 #define fa_1_expo            -1 // 0,033333
-#define fa_1_num      346249700
-#define fa_1_denom   1038749100 //
-static const Ratio_32  fa_1 = {fa_1_expo, fa_1_num, fa_1_denom, 0};
+#define fa_1_num      692499400
+#define fa_1_denom   2077498200 //
+constexpr Ratio_32  fa_1 = {fa_1_expo, fa_1_num, fa_1_denom, 0};
 
 // ---  fa_2_Konstante  ---     53/210
 #define fa_2_expo            -1 // 0,252381
-#define fa_2_num     1038749120
-#define fa_2_denom    411579840 //
-static const Ratio_32  fa_2 = {fa_2_expo, fa_2_num, fa_2_denom, 0};
+#define fa_2_num     2077498240
+#define fa_2_denom    823159680 //
+constexpr Ratio_32  fa_2 = {fa_2_expo, fa_2_num, fa_2_denom, 0};
 
 // ---  fa_3_Konstante  ---     195/371
 #define fa_3_expo             0 // 0,525606
-#define fa_3_num      545973480
-#define fa_3_denom   1038749544
-static const Ratio_32  fa_3 = {fa_3_expo, fa_3_num, fa_3_denom, 0};
+#define fa_3_num     1091946960
+#define fa_3_denom   2077499088
+constexpr Ratio_32  fa_3 = {fa_3_expo, fa_3_num, fa_3_denom, 0};
 
 // ---  fa_4_Konstante  ---     22999/22737
 #define fa_4_expo             0 // 1,011523
-#define fa_4_num     1038749835
-#define fa_4_denom   1026916605
-static const Ratio_32  fa_4 = {fa_4_expo, fa_4_num, fa_4_denom, 0};
+#define fa_4_num     2077499670
+#define fa_4_denom   2053833210
+constexpr Ratio_32  fa_4 = {fa_4_expo, fa_4_num, fa_4_denom, 0};
 
 // ---  fa_5_Konstante  ---     29944523/19733142
 #define fa_5_expo             0 // 1,517474
-#define fa_5_num     1018113782
-#define fa_5_denom    670926828
-static const Ratio_32  fa_5 = {fa_5_expo, fa_5_num, fa_5_denom, 0};
+#define fa_5_num     2036227564
+#define fa_5_denom   1341853656
+constexpr Ratio_32  fa_5 = {fa_5_expo, fa_5_num, fa_5_denom, 0};
 
 // ---  fa_6_Konstante  ---     109535241009/48264275462
 //                              19976135/8802041      -> Fehler 1,037e-18
 #define fa_6_expo             0 // 2,269489
-#define fa_6_num     1038759020
-#define fa_6_denom    457706132
-static const Ratio_32  fa_6 = {fa_6_expo, fa_6_num, fa_6_denom, 0};
+#define fa_6_num     2077518040
+#define fa_6_denom    915412264
+constexpr Ratio_32  fa_6 = {fa_6_expo, fa_6_num, fa_6_denom, 0};
 
 // ---  fa_7_Konstante  ---     29404527905795295658/
 //                              9769214287853155785
 //                              527522494/175261453  -> Fehler  1,531e-18
 #define fa_7_expo             1 // 3,009917
-#define fa_7_num      263761247
-#define fa_7_denom    876307265
-static const Ratio_32  fa_7 = {fa_7_expo, fa_7_num, fa_7_denom, 0};
-/*
-// ---  fa_8_Konstante  ---     455377030420113432210116914702/
-//                              113084128923675014537885725485
-//                              1030983431/256024910 -> Fehler -4,644e-19
-#define fa_8_expo             0 // 4,026887
-#define fa_8_num     1030983431
-#define fa_8_denom    256024910
-static const Ratio_32  fa_8 = {fa_8_expo, fa_8_num, fa_8_denom, 0};
-*/
-static const Ratio_32 fa_x[] = { fa_7, fa_6, fa_5, fa_4, fa_3, fa_2, fa_1 };
+#define fa_7_num      527522494
+#define fa_7_denom   1752614530
+constexpr Ratio_32  fa_7 = {fa_7_expo, fa_7_num, fa_7_denom, 0};
+
+#define fa_x_max              7
+constexpr Ratio_32 fa_x[] = { fa_7, fa_6, fa_5, fa_4, fa_3, fa_2, fa_1 };
 
 // ---  fa_ln_2pi_2_Konstante  ---
 #define fa_ln_2pi_2_expo             0
 #define fa_ln_2pi_2_num     1474345081
 #define fa_ln_2pi_2_denom   1604400107 // Fehler .. +2,016e-19
-static const Ratio_32  fa_ln_2pi_2 = {fa_ln_2pi_2_expo, fa_ln_2pi_2_num, fa_ln_2pi_2_denom, 0};
+constexpr Ratio_32  fa_ln_2pi_2 = {fa_ln_2pi_2_expo, fa_ln_2pi_2_num, fa_ln_2pi_2_denom, 0};
 
 // ---  Null_no_Konstante  ---
 #define Null_no_expo            0
 #define Null_no_num             0
 #define Null_no_denom  2147302920  //
-static const Ratio_32 Null_no = {Null_no_expo, Null_no_num, Null_no_denom, 0};
+constexpr Ratio_32 Null_no = {Null_no_expo, Null_no_num, Null_no_denom, 0};
 
 char    expo_temp_str[]    = "#00";
 int8_t  expo_temp_8        =  1;   // atanh()
@@ -712,8 +666,8 @@ uint32_t calc_temp_u32   = 1;
  int16_t calc_temp_16_2  = 1;
  int16_t calc_temp_16_3  = 1;
 
- static const int16_t denom_aaa = 1000;
- static const int16_t denom_a_4 = 4;
+ constexpr int16_t denom_aaa = 1000;
+ constexpr int16_t denom_a_4 = 4;
 
 	int8_t  calc_temp_8_0  = 1;
 	int8_t  calc_temp_8_1  = 1;
@@ -746,7 +700,7 @@ Ratio_32_plus mem_stack_calc[mem_stack_max_c + 1] = {   // after calc
 #define to_deg           12
 #define to_rad           13
 
-static const Ratio_32 to_xx[14] = {
+constexpr Ratio_32 to_xx[14] = {
 	{ -1, 1250000000,  473176473, 0 },   // 0  7  ..  1 Liter =  (1 / 3,785411784) US-gal
 	{  1,  473176473, 1250000000, 0 },   // 1  3  ..  1 gallon [US] = 3,785411784 Liter
 	{  0,  565007021, 1245627260, 0 },   // 2  2  ..  1 lb = (1 / 2,2046226218488) kg
@@ -763,10 +717,10 @@ static const Ratio_32 to_xx[14] = {
 	{ -2, 1489429756,  853380389, 0 }    // 13  ..     to rad
 };
 
-static const char mem_str_1[]     = "##########111111111122222222223333333333";
-static const char mem_str_0[]     = "#123456789012345678901234567890123456789";
+constexpr char mem_str_1[]     = "##########111111111122222222223333333333";
+constexpr char mem_str_0[]     = "#123456789012345678901234567890123456789";
 																			 // 012345678
-static const char Error_String_txt[]   = "0IuX[U^Vx";
+constexpr char Error_String_txt[]   = "0IuX[U^Vx";
 
 uint8_t mem_extra_pointer  =   0;   // mem_extra  MR 0 .. MR 9
 uint8_t extra_test_13      =   0;
@@ -776,15 +730,15 @@ uint8_t fix_extra_test     =   5;   // FIX_2  ..  FIX8
 #define mem_extra_max         10    // mem_extra  MS 0 .. MS 9
 #define mem_extra_max_4       13    // mem_extra  MS 0 .. MS 9
 uint8_t to_extra_test      =   0;   // mem_extra  to_0 .. to_9
-boolean to_temperature     = false;
-boolean to_extra           = false;
-boolean to_extra_          = false;
-boolean expo_exchange      = false;
-boolean mem_exchange       = false;
-boolean mem_save           = false;
-boolean Mr_0_test          = false;
-boolean test_index         = true;
-boolean Test_to_Result     = true;
+bool    to_temperature     = false;
+bool    to_extra           = false;
+bool    to_extra_          = false;
+bool    expo_exchange      = false;
+bool    mem_exchange       = false;
+bool    mem_save           = false;
+bool    Mr_0_test          = false;
+bool    test_index         = true;
+bool    Test_to_Result     = true;
 
 Ratio_32 mem_extra_stack[ mem_extra_max_4 + 2 ] = {
 	{ expo_min_input, int32_max, int32_max, 0 },    // MR  0
@@ -819,14 +773,14 @@ Ratio_32 mem_extra_stack[ mem_extra_max_4 + 2 ] = {
 uint8_t led_bright_index = led_bright_start;
 uint16_t test_pwm = 173;
 
-static const uint16_t led_bright_plus[led_bright_max + 3] = {
+constexpr uint16_t led_bright_plus[led_bright_max + 3] = {
 	//                4     5    (6)    7     8     9     10
 	0, 76,  86, 104, 132,  173,  232,  331,  444,  579,  742,  937,  1023 };
 	//   10    18   28   41   59    99   113   135   163   195    86
 	//      8    10    13   18    40   14    22    28    32  -109
 	//         2     3    5   22   -26     8     6     4  -141
 
-static const uint16_t led_bright[led_bright_max + 3] = {
+constexpr uint16_t led_bright[led_bright_max + 3] = {
 	//               4     5    (6)    7     8     9     10
 	0, 48,  61, 81, 108,  146,  199,  290,  397,  527,  685,  873,  1023 };
 	//   13   20   27   38    53     91   107   130   158   188    150
@@ -847,8 +801,8 @@ static const uint16_t led_bright[led_bright_max + 3] = {
 
 uint8_t Countdown_view_end   = 0;
 #define Countdown_view_end_0  190  // 2 x 95 Hz .. 2 Sec
-boolean Countdown_view       = false;
-boolean is_view              = false;
+bool    Countdown_view       = false;
+bool    is_view              = false;
 uint8_t Countdown_OFF = 0;
 #define Countdown_Off_3 240   // 156   --  Start_Off
 #define Countdown_Off_2 160   // 135   --  Start
@@ -869,21 +823,21 @@ uint8_t index_TIME = 255;         // counter Time
 #define Time_LOW     263          // 263    t = (263 + 3/19) µs
 #define Time_HIGH    264          // 264  1/t = 3800 Hz
 
-boolean Display_rotate = false;
-boolean Memory_xch = false;
-volatile boolean Beep_on = false;
-volatile boolean Beep_on_off = false;
-volatile boolean Beep_on_off_temp = false;
+bool    Display_rotate = false;
+bool    Memory_xch = false;
+volatile bool    Beep_on = false;
+volatile bool    Beep_on_off = false;
+volatile bool    Beep_on_off_temp = false;
 volatile int8_t Beep_count = max_Beep_count;
 
-boolean Constant_arithmetic = false;
-boolean Found_constant = false;
-boolean First_operation = false;
-boolean Pendular_on = false;
+bool    Constant_arithmetic = false;
+bool    Found_constant = false;
+bool    First_operation = false;
+bool    Pendular_on = false;
 
 // uint16_t display_bright = led_bright_max;
 
-static const uint8_t led_font[count_ascii] = {
+constexpr uint8_t led_font[count_ascii] = {
 		0,  64,  68,  76,  92, 124, 125, 127, 111, 103,  99,  97,  96,  64,   0,   0,     //  ¦                ¦
 		0, 107,  34,   0, 109,  18,  97,   2,  70, 112,  92,  70,  12,  64, 128,  82,     //  ¦ !"#$%&'()*+,-./¦
 	 63,   6,  91,  79, 102, 109, 124,   7, 127, 103,   4,  20,  88,  72,  76,  83,     //  ¦0123456789:;<=>?¦
@@ -904,14 +858,14 @@ uint8_t display_b[Digit_Count + 1] = {
 	0
 };
 int8_t Digit = 0;
-boolean Digit_Test = false;
+bool    Digit_Test = false;
 
-boolean Rad_in_out = false;
+bool    Rad_in_out = false;
 																										// _123456789_123456789_123456789_1
 static char display_string[ ascii_count ]           = " -1.2345678##- 12.# # =.       " ;
-static const char string_end[ ascii_count ]         = " x-_Good  lUc k _ - x.         " ;
-static const char string_start[ ascii_count ]       = "  _########### ## # # #        " ;
-static const char display_string_888[ ascii_count ] = " 8.8.8.8.8.8.8.8.8.8.8.8.8.8.8." ;
+constexpr char string_end[ ascii_count ]         = " x-_Good  lUc k _ - x.         " ;
+constexpr char string_start[ ascii_count ]       = "  _########### ## # # #        " ;
+constexpr char display_string_888[ ascii_count ] = " 8.8.8.8.8.8.8.8.8.8.8.8.8.8.8." ;
 #define Plus_Minus           1
 #define Mantisse_0           2
 #define Mantisse_1           3
@@ -934,25 +888,25 @@ char char_test;               // 0.. 127
 
 uint8_t     index_mem = 255;  // 1..9  ... for MC (Memory's Clear)
 
-boolean     time_10ms = false;
+bool        time_10ms = false;
 uint8_t    index_10ms = 255;  // 0..13
 uint32_t   count_10ms = 0;
-boolean    time_100ms = false;
+bool       time_100ms = false;
 uint8_t   index_100ms = 255;  // 0..7
 uint32_t  count_100ms = 0;
-boolean   time_1000ms = false;
+bool      time_1000ms = false;
 uint32_t count_1000ms = 0;
-boolean   time_7500ms = false;
+bool      time_7500ms = false;
 uint8_t  index_7500ms = 255;  // 0..59
 
 uint8_t    index_5min = 255;  // 0..39
 #define    time_5min    39  // 39  5_min
 #define    pendel_3min  23  // 23  3_min
 
-boolean Init_expo = true;
-boolean Display_new = true;
-boolean Display_change = false;
-boolean Display_mode = false;
+bool    Init_expo = true;
+bool    Display_new = true;
+bool    Display_change = false;
+bool    Display_mode = false;
 #define Std_string_view  14  //
 #define Std_string_count  9  //
 static char Std_mode_string[ Std_string_view ] = " " ;
@@ -999,13 +953,13 @@ static char    Display_Memory_1[] = "  mmE]{F mFm=OUX}_F_^Om";
 static char    Display_Memory_0[] = "1 r__[zn=+Fc_V,_m_F-O^c";
 static char    Memory_p_min_m_d[] = "++-*,r_";
 
-boolean max_input = false;
-boolean Mantisse_change = false;
-boolean Expo_change = false;
-boolean No_change = false;
-boolean M_Plus_past = false;
-boolean Error_first = false;
-boolean Error_first_0 = false;
+bool    max_input = false;
+bool    Mantisse_change = false;
+bool    Expo_change = false;
+bool    No_change = false;
+bool    M_Plus_past = false;
+bool    Error_first = false;
+bool    Error_first_0 = false;
 
 #define First_Display            0
 #define Start_Mode               1
@@ -2400,759 +2354,6 @@ void Get_Mantisse() {          // " -1.2345678#- 1 5# 1 9."
 	Repeat_pos = 0;
 }
 
-Ratio_32 Reduce_Number( int8_t expo ) {
-	Ratio_32 Reduce;
-
-	uint16_t count_reduce;
-
-	uint64_t a_num_avg;
-	uint64_t a_denum_avg;
-
-	uint64_t x0_a_64_mul;
-	uint64_t x0_a_64_div;
-
-	boolean first_value;
-
-	uint64_t x0_a_64;
-	uint64_t x0_a_64_test;
-	uint64_t x0_a_64_corr;
-	uint64_t x0_a_64_max;
-
-	uint64_t x0_b_64;
-	uint64_t x0_b_64_test;
-	uint64_t x0_b_64_corr;
-	uint64_t x0_b_64_max;
-
-	uint64_t old_num_u64_a0;
-	uint64_t old_num_u64_b0;
-
-	uint64_t num_temp_u64_a;
-	uint64_t num_temp_u64_b;
-	uint64_t denom_temp_u64_a;
-	uint64_t denom_temp_u64_b;
-	
-	uint64_t a_num_[4];
-	uint64_t a_denum_[4];
-
-	uint64_t b_num_[4];
-	uint64_t b_denum_[4];
-
-	static const uint8_t _0 = 0;
-	static const uint8_t _1 = 1;
-	static const uint8_t _2 = 2;
-	static const uint8_t _3 = 3;
-
-	if ( Debug_Level == 48 ) {
-		time_test = micros();
-	}
-
-	Rational_32 a;
-	Rational_32 b;
-	Rational_64 a_64;
-	Rational_64 b_64;
-	int8_t   test_cmp_64 = 0;
-	int8_t   test_cmp_32 = 0;
-	int8_t   test_temp_8 = 0;
-
-	test_temp_8     =  1;
-
-	if ( Debug_Level == 20 ) {
-		itoa_(num_temp_u64, display_string_itoa_);
-		Serial.print(display_string_itoa_);
-		Serial.print(" / ");
-		itoa_(denom_temp_u64, display_string_itoa_);
-		Serial.println(display_string_itoa_);
-	}
-
-
-	if ( num_temp_u64 < denom_temp_u64 ) {
-		if ( Debug_Level == 49 ) {
-			 Serial.println("Red_Nbr_01");
-		}
-		test_temp_8     = -1;          // num_temp_u64 <--> denom_temp_u64
-		calc_temp_u64_0 = denom_temp_u64;
-		denom_temp_u64  = num_temp_u64;
-		num_temp_u64    = calc_temp_u64_0;
-	}
-
-	count_reduce = 0;
-	first_value  = false;
-
- /**
-	*  https://hg.python.org/cpython/file/3.5/Lib/fractions.py#l252
-	*  https://ffmpeg.org/doxygen/2.8/rational_8c_source.html#l00035
-	*  https://github.com/FFmpeg/FFmpeg/blob/master/libavutil/rational.c
-	*  http://link.springer.com/article/10.1007%2Fs00607-008-0013-8
-	*  https://math.boku.ac.at/udt/vol05/no2/3zhabitsk10-2.pdf  Page_5
-	*/
-
- /**
-	*  Thill M. - A more precise rounding algorithm for natural numbers.
-	*  .. Computing Jul 2008, Volume 82, Issue 2, pp 189–198
-	*  http://link.springer.com/article/10.1007/s00607-008-0006-7
-	*  =====
-	*  Thill M. - A more precise rounding algorithm for natural numbers.
-	*  .. Computing Sep 2008, Volume 82, Issue 4, pp 261–262
-	*  http://link.springer.com/article/10.1007/s00607-008-0013-8
-	*  http://link.springer.com/content/pdf/10.1007/s00607-008-0013-8.pdf
-	*/
-
-	num_temp_u64_a   = num_temp_u64;
-	denom_temp_u64_a = denom_temp_u64;
-	num_temp_u64_b   = num_temp_u64;
-	denom_temp_u64_b = denom_temp_u64;
-
-	a_num_[_1]   = 1;                     // p1
-	a_num_[_2]   = num_temp_u64_a;
-	a_num_[_2]  /= denom_temp_u64_a;      // p2
-
-	a_denum_[_1] = 0;                     // q1
-	a_denum_[_2] = 1;                     // q2
-
-	b_num_[_1]   = 1;                     // p1
-	b_num_[_2]   = num_temp_u64_b;
-	--b_num_[_2];
-	b_num_[_2]  /= denom_temp_u64_b;      // p2
-
-	++b_num_[_2];
-	b_denum_[_1] = 0;                     // q1
-	b_denum_[_2] = 1;                     // q2
-
-	old_num_u64_a0    = num_temp_u64_a;
-	num_temp_u64_a    = denom_temp_u64_a;
-	denom_temp_u64_a  = old_num_u64_a0;
-	denom_temp_u64_a -= a_num_[_2] * num_temp_u64_a;
-
-	x0_a_64  = num_temp_u64_a;
-	x0_a_64 /= denom_temp_u64_a;
-	if ( denom_temp_u64_a == 0 ) {
-		if ( Debug_Level == 49 ) {
-			 Serial.println("Red_Nbr_04");
-		}
-		x0_a_64  = 1;
-		first_value = true;
-		old_num_u64_a0 = 0;    // break out
-	}
-
-	old_num_u64_b0    = num_temp_u64_b;
-	num_temp_u64_b    = denom_temp_u64_b;
-	denom_temp_u64_b  = b_num_[_2] * num_temp_u64_b;
-	denom_temp_u64_b -= old_num_u64_b0;
-
-		x0_b_64  = num_temp_u64_b;
-	--x0_b_64;
-		x0_b_64 /= denom_temp_u64_b;    // p2
-	if ( denom_temp_u64_b == 0 ) {
-		if ( Debug_Level == 49 ) {
-			 Serial.println("Red_Nbr_05");
-		}
-		x0_b_64 = 0;
-	}
-	++x0_b_64;
-
-	a_num_[_3]    = a_num_[_1];
-	a_num_[_3]   += a_num_[_2] * x0_a_64;
-	a_denum_[_3]  = a_denum_[_1];
-	a_denum_[_3] += a_denum_[_2] * x0_a_64;
-
-	b_num_[_3]    = b_num_[_2] * x0_b_64;
-	b_num_[_3]   -= b_num_[_1];
-	b_denum_[_3]  = b_denum_[_2] * x0_b_64;
-	b_denum_[_3] -= b_denum_[_1];
-
-	++count_reduce;
-
-	if ( Debug_Level == 20 ) {
-		x0_a_32 = x0_a_64;
-		Serial.print("__x0_a_32_");
-		Serial.print(count_reduce);
-		Serial.print(" = ");
-		Serial.println(x0_a_32);
-		x0_a_32 = a_num_[_3];
-		Serial.print(x0_a_32);
-		Serial.print(" / ");
-		x0_a_32 = a_denum_[_3];
-		Serial.println(x0_a_32);
-	}
-
-	if ( a_num_[_3] > int32_max ) {
-		if ( Debug_Level == 49 ) {
-			 Serial.println("Red_Nbr_06");
-		}
-		x0_a_64_mul  = expo_test_000;
-		x0_a_64_mul /= a_num_[_3];
-		a_num_[_3]     *= x0_a_64_mul;
-		a_denum_[_3]   *= x0_a_64_mul;
-		x0_a_64_div  = a_num_[_3];
-		x0_a_64_div /= int32_max;
-		a_num_[_3]     += x0_a_64_div / 2;
-		a_num_[_3]     /= x0_a_64_div;
-		a_denum_[_3]   += x0_a_64_div / 2;
-		a_denum_[_3]   /= x0_a_64_div;
-		--a_num_[_3];
-		--a_denum_[_3];
-
-		a.num   = a_num_[_3];
-		a.denom = a_denum_[_3];
-		b.num   = a_num_[_2];
-		b.denom = a_denum_[_2];
-
-		if ( Debug_Level == 15 ) {
-			x0_a_32 = a_num_[_3];
-			Serial.print(x0_a_32);
-			Serial.print(" / ");
-			x0_a_32 = a_denum_[_3];
-			Serial.println(x0_a_32);
-		}
-		old_num_u64_a0 = 0;    // break out
-	}
-
-	if ( Debug_Level == 20 ) {
-		x0_b_32 = x0_b_64;
-		Serial.print("__x0_b_32_");
-		Serial.print(count_reduce);
-		Serial.print(" = ");
-		Serial.println(x0_b_32);
-		x0_a_32 = b_num_[_3];
-		Serial.print(x0_a_32);
-		Serial.print(" / ");
-		x0_a_32 = b_denum_[_3];
-		Serial.println(x0_a_32);
-	}
-
-	if ( denom_temp_u64 == 0 ) {
-		if ( Debug_Level == 49 ) {
-			 Serial.println("Red_Nbr_07");
-		}
-		a.num   = 0;
-		a.denom = int32_max;
-	}
-	else {
-		while ( old_num_u64_a0 > 0 ) {
-
-			++count_reduce;
-
-			if ( Debug_Level == 22 ) {
-				Serial.print("count_reduce 0 = ");
-				Serial.println(count_reduce);
-			}
-
-			a_num_[_0]   = a_num_[_1];
-			a_num_[_1]   = a_num_[_2];
-			a_num_[_2]   = a_num_[_3];
-			a_denum_[_0] = a_denum_[_1];
-			a_denum_[_1] = a_denum_[_2];
-			a_denum_[_2] = a_denum_[_3];
-
-			b_num_[_0]   = b_num_[_1];
-			b_num_[_1]   = b_num_[_2];
-			b_num_[_2]   = b_num_[_3];
-			b_denum_[_0] = b_denum_[_1];
-			b_denum_[_1] = b_denum_[_2];
-			b_denum_[_2] = b_denum_[_3];
-		 
-			old_num_u64_a0    = denom_temp_u64_a;
-			denom_temp_u64_a  = num_temp_u64_a;
-			denom_temp_u64_a -= x0_a_64 * old_num_u64_a0;
-			num_temp_u64_a    = old_num_u64_a0;
-
-			old_num_u64_b0    = denom_temp_u64_b;
-			denom_temp_u64_b  = x0_b_64 * old_num_u64_b0;
-			denom_temp_u64_b -= num_temp_u64_b;
-			num_temp_u64_b    = old_num_u64_b0;
-
-				x0_a_64_test = x0_a_64;
-				x0_a_64  = num_temp_u64_a;
-				x0_a_64 /= denom_temp_u64_a;
-			if ( denom_temp_u64_a == 0 ) {
-				if ( Debug_Level == 49 ) {
-					Serial.println("Red_Nbr_08");
-				}
-				x0_a_64  = 1;
-				old_num_u64_a0 = 0;    // break out
-			}
-	
-			if ( Debug_Level == 50 ) {
-				x0_a_32 =  x0_a_64;
-				Serial.print(" ");
-				if (x0_a_32 < 100000) {
-					Serial.print("0");
-				}
-				if (x0_a_32 < 10000) {
-					Serial.print("0");
-				}
-				if (x0_a_32 < 1000) {
-					Serial.print("0");
-				}
-				if (x0_a_32 < 100) {
-					Serial.print("0");
-				}
-				if (x0_a_32 < 10) {
-					Serial.print("0");
-				}
-				Serial.println(x0_a_32);
-			}
-
-				x0_b_64_test = x0_b_64;
-				x0_b_64  = num_temp_u64_b;
-			--x0_b_64;
-				x0_b_64 /= denom_temp_u64_b;    // p2
-			if ( denom_temp_u64_b == 0 ) {
-				if ( Debug_Level == 49 ) {
-					Serial.println("Red_Nbr_09");
-				}
-				x0_b_64  = 0;
-				old_num_u64_a0 = 0;    // break out
-			}
-			++x0_b_64;
-
-			if ( Debug_Level == 50 ) {
-				x0_b_32 =  x0_b_64;
-				Serial.print(" ");
-				if (x0_b_32 < 100000) {
-					Serial.print("0");
-				}
-				if (x0_b_32 < 10000) {
-					Serial.print("0");
-				}
-				if (x0_b_32 < 1000) {
-					Serial.print("0");
-				}
-				if (x0_b_32 < 100) {
-					Serial.print("0");
-				}
-				if (x0_b_32 < 10) {
-					Serial.print("0");
-				}
-				Serial.println(x0_b_32);
-			}
-
-			if ( a_num_[_3] >= int32_max ) {
-				x0_a_64  = int32_max;
-				x0_a_64 -= a_num_[_1];
-				x0_a_64 /= a_num_[_2];
-			}
-
-			if ( b_num_[_3] >= int32_max ) {
-				x0_b_64  = int32_max;
-				x0_b_64 -= b_num_[_1];
-				x0_b_64 /= b_num_[_2];
-			}      
-
-			a_num_[_3]    = a_num_[_1];
-			a_num_[_3]   += a_num_[_2] * x0_a_64;
-			a_denum_[_3]  = a_denum_[_1];
-			a_denum_[_3] += a_denum_[_2] * x0_a_64;
-
-			b_num_[_3]    = b_num_[_2] * x0_b_64;
-			b_num_[_3]   -= b_num_[_1];
-			b_denum_[_3]  = b_denum_[_2] * x0_b_64;
-			b_denum_[_3] -= b_denum_[_1];
-
-			if ( Debug_Level == 20 ) {
-				x0_a_32 = x0_a_64;
-				Serial.print("__x0_a_32_");
-				Serial.print(count_reduce);
-				Serial.print(" = ");
-				Serial.println(x0_a_32);
-				x0_a_32 = a_num_[_2];
-				Serial.print(x0_a_32);
-				Serial.print(" / ");
-				x0_a_32 = a_denum_[_2];
-				Serial.println(x0_a_32);
-			}
-			if ( Debug_Level == 20 ) {
-				x0_b_32 = x0_b_64;
-				Serial.print("__x0_b_32_");
-				Serial.print(count_reduce);
-				Serial.print(" = ");
-				Serial.println(x0_b_32);
-				x0_b_32 = b_num_[_2];
-				Serial.print(x0_b_32);
-				Serial.print(" / ");
-				x0_b_32 = b_denum_[_2];
-				Serial.println(x0_b_32);
-			}
-
-			if ( denom_temp_u64_a == 0 ) {
-				if ( Debug_Level == 49 ) {
-					Serial.println("Red_Nbr_10");
-				}
-				a.num   = a_num_[_2];
-				a.denom = a_denum_[_2];
-				b.num   = a_num_[_1];
-				b.denom = a_denum_[_1];
-			}
-
-			if ( denom_temp_u64_b == 0 ) {
-				if ( Debug_Level == 49 ) {
-					Serial.println("Red_Nbr_11");
-				}
-				a.num   = b_num_[_2];
-				a.denom = b_denum_[_2];
-				b.num   = b_num_[_1];
-				b.denom = b_denum_[_1];
-			}
-
-			if ( b_num_[_3] >= int32_max ) {
-				if ( Debug_Level == 49 ) {
-					Serial.println("Red_Nbr_12");
-				}
-
-				if ( x0_b_64 == 0 ) {
-					if ( Debug_Level == 20 ) {
-						Serial.print("-> x0_b_64 == 0 <- b2_num = ");
-						x0_b_32 = b_num_[_2];
-						Serial.println(x0_b_32);
-					}
-					if ( Debug_Level == 49 ) {
-						Serial.println("Red_Nbr_15");
-					}
-					x0_b_64_corr  = int32_max;
-					x0_b_64_corr *= x0_b_64_test;
-					x0_b_64_corr /= b_num_[_2];
-					if ( Debug_Level == 20 ) {
-						Serial.print("x0_b_64_corr = ");
-						x0_b_32 = x0_b_64_corr;
-						Serial.println(x0_b_32);
-						Serial.print("b1_num = ");
-						x0_b_32 = b_num_[_1];
-						Serial.println(x0_b_32);
-						Serial.print("count_reduce = ");
-						Serial.println(count_reduce);
-					}
-
-					if ( x0_b_64_corr > 8 ) {
-						if ( count_reduce > 2 ) {
-							if ( Debug_Level == 49 ) {
-								Serial.println("Red_Nbr_16");
-							}
-							b_num_[_3]    = b_num_[_1] * x0_b_64_corr;
-							b_num_[_3]   -= b_num_[_0];
-							b_denum_[_3]  = b_denum_[_1] * x0_b_64_corr;
-							b_denum_[_3] -= b_denum_[_0];
-						}
-						else {
-							if ( Debug_Level == 49 ) {
-								Serial.println("Red_Nbr_17");
-							}
-							b_num_[_3]   = b_num_[_1];
-							b_denum_[_3] = b_denum_[_1];
-						}
-					}
-					else {
-						if ( Debug_Level == 49 ) {
-							Serial.println("Red_Nbr_18");
-						}
-						b_num_[_3]   = b_num_[_2];
-						b_denum_[_3] = b_denum_[_2];
-					}
-
-					a.num   = b_num_[_3];
-					a.denom = b_denum_[_3];
-					b.num   = b_num_[_2];
-					b.denom = b_denum_[_2];
-				}
-				else {
-					if ( Debug_Level == 47 ) {
-					 /*
-						Serial.println("-> x0_b_64_max > int32_max <-");
-						Serial.print("x0_b_64 = ");
-						x0_b_32 = x0_b_64;
-						Serial.println(x0_b_32);
-					 */
-					 Serial.println("_");
-					}
-					if ( Debug_Level == 49 ) {
-						Serial.println("Red_Nbr_19");
-					}
-					a.num   = b_num_[_1];
-					a.denom = b_denum_[_1];
-					b.num   = b_num_[_0];
-					b.denom = b_denum_[_0];
-
-					if ( b_num_[_2] < int32_max ) {
-						if ( b_num_[_2] > b_num_[_1] ) {
-							if ( Debug_Level == 49 ) {
-								Serial.println("Red_Nbr_20");
-							}
-							a.num   = b_num_[_2];
-							a.denom = b_denum_[_2];
-							b.num   = b_num_[_1];
-							b.denom = b_denum_[_1];
-						}
-					}
-				}
-
-				if ( Debug_Level == 20 ) {
-					// x0_b_32 = x0_b_64;
-					// Serial.print("__--x0_b_32 = ");
-					// Serial.println(x0_b_32);
-					x0_b_32 = b_num_[_1];
-					Serial.print(x0_b_32);
-					Serial.print(" b1 / b1 ");
-					x0_b_32 = b_denum_[_1];
-					Serial.println(x0_b_32);
-					x0_b_32 = b_num_[_2];
-					Serial.print(x0_b_32);
-					Serial.print(" b2 / b2 ");
-					x0_b_32 = b_denum_[_2];
-					Serial.println(x0_b_32);
-				}
-
-				old_num_u64_a0 = 0;    // break out
-			}
-
-			if ( a_num_[_3] >= int32_max ) {
-				if ( Debug_Level == 49 ) {
-					Serial.println("Red_Nbr_21");
-				}
-
-				if ( x0_a_64 == 0 ) {
-					if ( Debug_Level == 49 ) {
-						Serial.println("Red_Nbr_24");
-					}
-					if ( Debug_Level == 20 ) {
-						Serial.print("-> x0_a_64 == 0 <- a2_num = ");
-						x0_a_32 = a_num_[_2];
-						Serial.println(x0_a_32);
-					}
-						x0_a_64_corr  = int32_max;
-						x0_a_64_corr *= x0_a_64_test;
-						x0_a_64_corr /= a_num_[_2];
-					--x0_a_64_corr;
-					if ( Debug_Level == 20 ) {
-						Serial.print("x0_a_64_corr = ");
-						x0_a_32 = x0_a_64_corr;
-						Serial.println(x0_a_32);
-						Serial.print("a1_num = ");
-						x0_a_32 = a_num_[_1];
-						Serial.println(x0_a_32);
-						Serial.print("count_reduce = ");
-						Serial.println(count_reduce);
-					}
-
-					if ( x0_a_64_corr > 8 ) {
-						if ( count_reduce > 2 ) {
-							if ( Debug_Level == 49 ) {
-								Serial.println("Red_Nbr_25");
-							}
-							a_num_[_3]    = a_num_[_1] * x0_a_64_corr;
-							a_num_[_3]   += a_num_[_0];
-							a_denum_[_3]  = a_denum_[_1] * x0_a_64_corr;
-							a_denum_[_3] += a_denum_[_0];
-						}
-						else {
-							if ( Debug_Level == 49 ) {
-								Serial.println("Red_Nbr_26");
-							}
-							a_num_[_3]   = a_num_[_1];
-							a_denum_[_3] = a_denum_[_1];
-						}
-					}
-					else {
-						if ( Debug_Level == 49 ) {
-							Serial.println("Red_Nbr_27");
-						}
-						a_num_[_3]   = a_num_[_2];
-						a_denum_[_3] = a_denum_[_2];
-					}
-
-					a.num   = a_num_[_3];
-					a.denom = a_denum_[_3];
-					b.num   = a_num_[_2];
-					b.denom = a_denum_[_2];
-				}
-				else {
-					if ( Debug_Level == 49 ) {
-						Serial.println("Red_Nbr_28");
-					}
-					a_num_avg    = a_num_[_1] * a_denum_[_2];
-					a_num_avg   += a_denum_[_1] * a_num_[_2];
-					a_denum_avg  = a_denum_[_1] * a_denum_[_2];
-					a_denum_avg *= 2;
-					a_num_avg   *= a_denum_[_3];
-					a_denum_avg *= a_num_[_3];
-
-					if ( a_num_avg >= a_denum_avg ) {
-						if ( Debug_Level == 20 ) {
-							Serial.println("-> x0_a_64_max > int32_max <-");
-							Serial.print(" x0_a_64 = ");
-							x0_a_32 =  x0_a_64;
-							Serial.println(x0_a_32);
-						}
-						if ( Debug_Level == 49 ) {
-							Serial.println("Red_Nbr_29");
-						}
-						a.num   = a_num_[_1];
-						a.denom = a_denum_[_1];
-						b.num   = a_num_[_0];
-						b.denom = a_denum_[_0];
-
-						if ( a_num_[_2] < int32_max ) {
-							if ( a_num_[_2] > a_num_[_1] ) {
-								if ( Debug_Level == 49 ) {
-									Serial.println("Red_Nbr_30");
-								}
-								a.num   = a_num_[_2];
-								a.denom = a_denum_[_2];
-								b.num   = a_num_[_1];
-								b.denom = a_denum_[_1];
-							}
-						}
-					}
-					else {
-						if ( Debug_Level == 20 ) {
-							Serial.println("-> x0_a_64_max <= int32_max <-");
-							Serial.print("x0_a_64_max = ");
-							x0_a_32 = x0_a_64_max;
-							Serial.println(x0_a_32);
-						}
-						if ( Debug_Level == 49 ) {
-							Serial.println("Red_Nbr_31");
-						}
-						if ( old_num_u64_a0 == 0 ) {
-							if ( Debug_Level == 49 ) {
-								Serial.println("Red_Nbr_32");
-							}
-							b.num   = a.num;
-							b.denom = a.denom;
-						}
-						else {
-							if ( Debug_Level == 49 ) {
-								Serial.println("Red_Nbr_33");
-							}
-							b.num   = a_num_[_1];
-							b.denom = a_denum_[_1];
-						}
-						a.num   = a_num_[_2];
-						a.denom = a_denum_[_2];
-					}
-				}
-
-				if ( Debug_Level == 20 ) {
-					// x0_b_32 = x0_b_64;
-					// Serial.print("__--x0_b_32 = ");
-					// Serial.println(x0_b_32);
-					x0_b_32 = a_num_[_1];
-					Serial.print(x0_b_32);
-					Serial.print(" a1 / a1 ");
-					x0_b_32 = a_denum_[_1];
-					Serial.println(x0_b_32);
-					x0_b_32 = a_num_[_2];
-					Serial.print(x0_b_32);
-					Serial.print(" a2 / a2 ");
-					x0_b_32 = a_denum_[_2];
-					Serial.println(x0_b_32);
-				}
-
-				old_num_u64_a0 = 0;    // break out
-			}
-		}
-	}
-
-	if ( first_value == true ) {
-		if ( Debug_Level == 49 ) {
-			Serial.println("Red_Nbr_34");
-		}
-		first_value = false;
-		a.num   = b_num_[_2];
-		a.denom = b_denum_[_2];
-		b.num   = b_num_[_1];
-		b.denom = b_denum_[_1];
-	}
-
-	if ( Debug_Level == 22 ) {
-		a_64.num    = expo_10_4;
-		a_64.num   *= a.num;
-		a_64.denom  = expo_10_4;
-		a_64.denom *= a.denom;
-		b_64.num    = expo_10_4;
-		b_64.num   *= b.num;
-		b_64.denom  = expo_10_4;
-		b_64.denom *= b.denom;
-		test_cmp_64 = compare(b_64, a_64);
-	}
-
-	test_cmp_32 = compare(b, a);
-
-	if ( Debug_Level == 22 ) {
-		Serial.print(b.num);
-		Serial.print("  _  /  _  ");
-		Serial.print(b.denom);
-		if ( test_cmp_32 == 0 ) {
-			Serial.print("   =");
-		}
-		if ( test_cmp_32 < 0 ) {
-			Serial.print("   <");
-		}
-		if ( test_cmp_32 > 0 ) {
-			Serial.print("   >");
-		}
-		if ( test_cmp_64 == 0 ) {
-			Serial.println("   =");
-		}
-		if ( test_cmp_64 < 0 ) {
-			Serial.println("   <");
-		}
-		if ( test_cmp_64 > 0 ) {
-			Serial.println("   >");
-		}
-		Serial.print(a.num);
-		Serial.print(" a_b / a_b ");
-		Serial.println(a.denom);
-	}
-
-	if ( test_cmp_32 > 0 ) {
-		if ( Debug_Level == 49 ) {
-			Serial.println("Red_Nbr_35");
-		}
-		a = compare_extra(a, b);
-	}
-
-	if ( test_cmp_32 < 0 ) {
-		if ( Debug_Level == 49 ) {
-			Serial.println("Red_Nbr_36");
-		}
-		a = compare_extra(b, a);
-	}
-
-	num_temp_u32   = a.num;
-	denom_temp_u32 = a.denom;
-
-	if ( test_temp_8 < 0 ) {
-		if ( Debug_Level == 49 ) {
-			Serial.println("Red_Nbr_37");
-		}
-		num_temp_u32   = a.denom;  // Tausch
-		denom_temp_u32 = a.num;    // Tausch
-	}
-
-	Expand_Number();
-	if ( (count_wait % 5) == 4 ) {
-		display_b[12] = led_font[(count % 12) + 1];
-		++count;
-		Display_change = true;
-	}
-	++count_wait;
-
-	if ( Debug_Level == 48 ) {
-		 Serial.print(micros() - time_test);
-		 Serial.print("  ");
-		 Serial.println(count_reduce);
-	}
-
-	Reduce.expo  = expo;
-	Reduce.num   = num_temp_u32;
-	Reduce.denom = denom_temp_u32;
-
-	if ( Reduce.num == 0 ) {
-		Reduce.expo = 0;
-	}
-
-	return Reduce;
-}
-
 Ratio_32 input( int8_t chk ) {
 	// tempsensor.wake();   // wake up, ready to read!
 	// uint8_t t_8 = tempsensor.getResolution()
@@ -3640,7 +2841,7 @@ void Expand_Reduce_add() {
 				Serial.println(x0_a_32);
 			}
 
-			temp_32       = Reduce_Number( temp_32.expo );        // reduce
+			temp_32      = Reduce_Number( temp_32.expo, num_temp_u64, denom_temp_u64 );
 			temp_32.num  *= test_signum_8;
 		}
 		else {
@@ -3685,7 +2886,7 @@ Ratio_32 div_u32(Ratio_32 a, uint32_t denom_x) {
 		++temp_32.expo;
 	}
 										 // num_temp_u64 ,  denom_temp_u64
-	temp_32      = Reduce_Number( temp_32.expo );   // reduce
+	temp_32      = Reduce_Number( temp_32.expo, num_temp_u64, denom_temp_u64 );
 	temp_32.num *= test_signum_8;
 
 	return temp_32;
@@ -3753,7 +2954,7 @@ Ratio_32 mul_spezial(Ratio_32 a, Ratio_32 b, uint64_t corr) {
 		temp_32.expo = -115;
 	}
 
-	temp_32      = Reduce_Number( temp_32.expo );   // reduce
+	temp_32      = Reduce_Number( temp_32.expo, num_temp_u64, denom_temp_u64 );
 	temp_32.num *= test_signum_8;
 
 	return temp_32;
@@ -3830,7 +3031,7 @@ Ratio_32 mul(Ratio_32 a, Ratio_32 b) {
 		temp_32.expo = -115;
 	}
 
-	temp_32      = Reduce_Number( temp_32.expo );   // reduce
+	temp_32      = Reduce_Number( temp_32.expo, num_temp_u64, denom_temp_u64 );
 	temp_32.num *= test_signum_8;
 
 	return temp_32;
@@ -3970,52 +3171,6 @@ Ratio_32 add_mul_spezial(Ratio_32 a, Ratio_32 b, Ratio_32 c, int8_t d) {
 	return add( a, mul(b, c), d );
 }
 
-Ratio_32 div_x(Ratio_32 a) {
-	temp_32.expo = -a.expo;
-
-	if ( a.num < 0 ) {
-		a.num   *= -1;
-		a.denom *= -1;
-	}
-	temp_32.num   = a.denom;
-	temp_32.denom = a.num;
-
-	return temp_32;
-}
-
-Ratio_32 div_x_spezial(Ratio_32 a) {
-	temp_32.expo = a.expo;
-	if ( a.num > 0 ) {
-		temp_32.num   = a.denom;
-		temp_32.denom = a.num;
-	}
-	else {
-		temp_32.num   = -a.denom;
-		temp_32.denom = -a.num;
-	}
-	return temp_32;
-}
-
-Ratio_32 min_x(Ratio_32 a) {
-	temp_32.expo = a.expo;
-	if ( a.denom < 0 ) {
-		temp_32.num   = a.num;
-		temp_32.denom = -a.denom;
-	}
-	else {
-		temp_32.num   = -a.num;
-		temp_32.denom = a.denom;
-	}
-	return temp_32;
-}
-
-Ratio_32 abs_x(Ratio_32 a) {
-	temp_32.expo  = a.expo;
-	temp_32.num   = abs(a.num);
-	temp_32.denom = abs(a.denom);
-	return temp_32;
-}
-
 Ratio_32 floor_(Ratio_32 a, int8_t expo_test) {
 // floor_(x) returns the largest integer n such that n <= x
 	denom_temp_u64  = a.denom;
@@ -4035,7 +3190,8 @@ Ratio_32 floor_(Ratio_32 a, int8_t expo_test) {
 			if ( a.num < 0 ) {
 				a.denom = 5;
 			}
-			 a.num   = 7;
+			
+			a.num   = 7;
 			return a;
 		}
 	}
@@ -4089,11 +3245,6 @@ Ratio_32 floor_(Ratio_32 a, int8_t expo_test) {
 	return temp_32;
 }
 
-Ratio_32 clone(Ratio_32 a) {
-	// Creates a copy of the actual Fraction object
-	return a;
-}
-
 Ratio_32 frac(Ratio_32 a) {
 // returns the fractional part of x
 	temp_32 = floor_(a, 8);
@@ -4101,180 +3252,6 @@ Ratio_32 frac(Ratio_32 a) {
 		return temp_32;
 	}
 	return add( a, temp_32, -1 );
-}
-
-int8_t compare(Ratio_32 a, Ratio_32 b) {
-	uint64_t test_a = abs(a.num);
-	uint64_t test_b = abs(b.num);
-	int8_t   comp = 0;
-
-	test_a *= b.denom;
-	test_b *= a.denom;
-
-	if ( a.expo > b.expo ) {
-		return  1;
-	}
-
-	if ( a.expo < b.expo ) {
-		return -1;
-	}
-
-	if ( test_a > test_b ) {
-		return 1;
-	}
-
-	if ( test_a < test_b ) {
-		return -1;
-	}
-
-	return comp;
-}
-int8_t compare(Rational_32 a, Rational_32 b) {
-	uint64_t test_a = a.num;
-	uint64_t test_b = b.num;
-	int8_t   comp = 0;
-
-	test_a *= b.denom;
-	test_b *= a.denom;
-
-	if ( test_a > test_b ) {
-		return 1;
-	}
-
-	if ( test_a < test_b ) {
-		return -1;
-	}
-
-	return comp;
-}
-int8_t compare(Rational_64 a, Rational_64 b) {
-		int8_t comp    = 0;
-	uint64_t test_a  = 0;  // Factor
-	uint64_t test_b  = 0;   // Factor
-	uint32_t test_print = 0;
-
-	while ( comp == 0 ) {
-		test_a  = a.num;  // Factor
-		test_a /= a.denom;
-		test_b  = b.num;   // Factor
-		test_b /= b.denom;
-
-		if ( test_a > test_b ) {
-			return 1;
-		}
-
-		if ( test_a < test_b ) {
-			return -1;
-		}
-
-		test_a *= a.denom;
-		a.num  -= test_a;
-
-		if ( a.num == 0 ) {
-			if ( Debug_Level == 22 ) {
-				test_print = a.denom;
-				 Serial.print("  --> a_denom ");
-				Serial.print(test_print);
-				test_print = b.denom;
-				 Serial.print("  --> b_denom ");
-				Serial.println(test_print);
-			 }
-
-			if ( a.denom > b.denom ) {
-				return 1;
-			}
-
-			if ( a.denom < b.denom ) {
-				return -1;
-			}
-
-			return comp;
-		}
-
-		test_b *= b.denom;
-		b.num  -= test_b;
-
-		test_a  = a.denom;  // Factor
-		test_a /= a.num;
-		test_b  = b.denom;   // Factor
-		test_b /= b.num;
-
-		if ( test_a > test_b ) {
-			return -1;
-		}
-
-		if ( test_a < test_b ) {
-			comp = 1;
-			return comp;
-		}
-
-		test_a  *= a.num;
-		a.denom -= test_a;
-
-		if ( a.denom == 0 ) {
-			if ( Debug_Level == 22 ) {
-				test_print = a.num;
-				 Serial.print("  --> a_num ");
-				Serial.print(test_print);
-				test_print = b.num;
-				 Serial.print("  --> b_num ");
-				Serial.println(test_print);
-			 }
-
-			if ( a.num > b.num ) {
-				comp = -1;
-				return comp;
-			}
-
-			if ( a.num < b.num ) {
-				comp = 1;
-				return comp;
-			}
-
-			return comp;
-		}
-
-		test_b  *= b.num;
-		b.denom -= test_b;
-	}
-	return comp;
-}
-
-Rational_32 compare_extra(Rational_32 a, Rational_32 b) {
-	Rational_64 calc;
-	Rational_64 input;
-	int8_t comp = 0;
-	uint64_t test = 0;
-
-	input.num   = num_temp_u64;
-	input.denom = denom_temp_u64;
-
-	calc.num  = a.num;
-	calc.num *= b.denom;
-	test      = b.num;
-	test     *= a.denom;
-	calc.num += test;
-
-	calc.denom  = a.denom;
-	calc.denom *= b.denom;
-	calc.denom *= 2;
-
-	comp = compare(calc, input);
-
-	if ( comp > 0 ) {
-		return a;
-	}
-
-	if ( comp < 0 ) {
-		return b;
-	}
-
-	if ( a.num > b.num ) {
-		return a;
-	}
-	else {
-		return b;
-	}
 }
 
 void calc_stack(uint8_t count_stack) {
@@ -4430,26 +3407,26 @@ void calc_stack(uint8_t count_stack) {
 	}
 }
 
-// Finds the integer square root of a positive number
+// integer square root of a positive number
 // http://ww1.microchip.com/downloads/en/AppNotes/91040a.pdf
-// https://gist.github.com/foobaz/3287f153d125277eefea
 uint32_t sqrt(uint64_t num) {
-  uint32_t res = 0;
-  uint32_t add = 0x80000000;  // 'additional' bit is in position 31
-  uint32_t temp;
-  uint64_t quad;
-  while ( add > 0 ) {  // 32x test and shift
-    temp  = res | add;
+  uint32_t res   = 0;    // result
+  uint32_t add   = 0x1ULL << 31; // 'additional' bit is in position 31
+  uint32_t temp;         // 'A'
+  uint64_t quad;         // 'A^2'
+
+  while ( add > 0 ) {    // 32x test and shift right
+    temp  = res + add;
     quad  = temp;
     quad *= temp;
-    if ( num >= quad ) {
+    if ( num >= quad ) { 
       res = temp;
     }
-    add >>= 1;  // shift right the 'additional' bit 
+    add >>= 1;           // shift right the 'additional' bit 
   }
   return res;
-} // end sqrt()
-// -->  40 Zeilen
+}
+
 Ratio_32 sqrt(Ratio_32 a) {
 	if ( a.num == 0 ) {
 		return a;
@@ -4473,7 +3450,7 @@ Ratio_32 sqrt(Ratio_32 a) {
 	num_temp_u64   += denom_temp_u64 * denom_temp_u64;
 	denom_temp_u64 *= abs(a.denom);
 	denom_temp_u64 *= 2;
-	temp_32 = Reduce_Number( a.expo );
+	temp_32 = Reduce_Number( a.expo, num_temp_u64, denom_temp_u64 );
 
 	if ( a.expo < 4 ) {
 		temp_32.expo += 110;
@@ -4501,7 +3478,6 @@ Ratio_32 sqrt(Ratio_32 a) {
 }
 // -->  53 Zeilen
 Ratio_32 cbrt(Ratio_32 a) {
-	int8_t test = 0;
 	if ( a.num == 0 ) {
 		return a;
 	}
@@ -4513,7 +3489,7 @@ Ratio_32 cbrt(Ratio_32 a) {
 	a_num_calc   *= temp_32_b2.denom;
 	a_num_calc   *= temp_32_b2.denom;
 
-	a_num_calc.cbrt(a_num_calc);
+	a_num_calc.icbrt(a_num_calc);
 	temp_32_b2.num = a_num_calc.lo;
 
 	temp_32_b2.expo  = a.expo;
@@ -4553,11 +3529,6 @@ Ratio_32 cbrt(Ratio_32 a) {
 	return temp_32_b2;
 }
 
-Ratio_32 neg(Ratio_32 a) {
-  a.num *= -1;
-  return a;
-}
-
 Ratio_32 factorial(Ratio_32 a) {
 /*
  * The following function, abgam() is based on a continued fraction numerical
@@ -4582,7 +3553,7 @@ Ratio_32 factorial(Ratio_32 a) {
   Ratio_32  temp_32_fac     = {1, int32_max_16, int32_max, 0}; // 6
   Ratio_32  temp_32_fac_sin = {1, int32_max_16, int32_max, 0}; // 6
 	
-	boolean input_near_null = false; //     -1.000 < input < 0.000
+	bool    input_near_null = false; //     -1.000 < input < 0.000
 	
 	if ( test > 0 ) { //  input > abs(71)
 		a.denom = 4; // Error_String('[');
@@ -4644,7 +3615,7 @@ Ratio_32 factorial(Ratio_32 a) {
 
 		temp_32_mul = clone( temp_32_fac );
 
-		for ( uint8_t index = 0; index < 7; index += 1 ) {
+		for ( uint8_t index = 0; index < fa_x_max; index += 1 ) {
 			temp_32_mul = add_mul_spezial(temp_32_fac, fa_x[index], div_x( temp_32_mul ), 1 );
 		}
 
@@ -4679,9 +3650,9 @@ Ratio_32 factorial(Ratio_32 a) {
 	  }
 	  temp_32_fac_sin = sin( temp_32_mul );	  
 
-	  temp_32_mul = factorial( neg( add( a, exp2_0_1, 1 ) ) );
+	  temp_32_mul = factorial( min_x( add( a, exp2_0_1, 1 ) ) );
 
-	  return mul( div_x( mul( a, mul( temp_32_fac_sin , temp_32_mul ) ) ), Pi_neg );
+	  return mul( Pi_neg, div_x( mul( a, mul( temp_32_fac_sin , temp_32_mul ) ) ) );
 	}
 }
 
@@ -5138,7 +4109,7 @@ Ratio_32 cordic(int8_t function) {
 		}
 	}
 
-	temp_32_corr_a = Reduce_Number( temp_32_corr_a.expo );
+	temp_32_corr_a = Reduce_Number( temp_32_corr_a.expo, num_temp_u64, denom_temp_u64 );
 
 	if ( function == sin_ ) {
 		if ( cordic_test < 0 ) {
@@ -5343,7 +4314,7 @@ Ratio_32 tan(Ratio_32 a) {
 
 Ratio_32 atan(Ratio_32 a) {
 cordic_test = 0;
-boolean reverse = false;
+bool    reverse = false;
 
 	if ( a.num == 0 ) {
 		return a;
@@ -5489,7 +4460,7 @@ Ratio_32 atanh(Ratio_32 a) {
 	}
 	num_temp_u64 *= 3;
 
-	temp_32 = Reduce_Number( expo_temp_8 );   // reduce
+	temp_32 = Reduce_Number( expo_temp_8, num_temp_u64, denom_temp_u64 );
 
 	temp_32_exp = mul( loge( temp_32 ), exp2_1_2 );
 	if ( a.num < 0 ) {
@@ -5641,7 +4612,7 @@ Ratio_32 exp(Ratio_32 a) {
 	num_temp_u64    = temp_x_0;
 	denom_temp_u64  = temp_denom;
 		
-	temp_32_log = Reduce_Number( 0 );
+	temp_32_log = Reduce_Number( 0, num_temp_u64, denom_temp_u64 );
 	
 	while ( count_x > 0 ) {
 		count_x -= 1;
@@ -5814,7 +4785,6 @@ Ratio_32 log2(Ratio_32 a) {
 	          log2_add.lo      = 0;	
 
 	int8_t    test_signum_log  = 0;
-	int8_t    test_signum_temp = 0;
 	int8_t    test_temp_8      = 0;
 	
   int96_a   log2_num;
@@ -5888,11 +4858,7 @@ Ratio_32 log2(Ratio_32 a) {
 		}
 			
 		if ( a.num > a.denom ) {   // 1.0 .. 2.0
-			test_signum_temp =  1;
 			a = div_x( a );
-		}
-		if ( a.denom > a.num ) {   // 0.5 .. 1.0 
-			test_signum_temp = -1;
 		}
 		
     if ( abs( test_temp_8 ) == 1 ) {
@@ -6055,7 +5021,7 @@ Ratio_32 log2(Ratio_32 a) {
 			temp_32_log.expo  = 0;
 		}
 		else {
-			temp_32_log = Reduce_Number( log2_expo );
+			temp_32_log = Reduce_Number( log2_expo, num_temp_u64, denom_temp_u64 );
 		}
 	
 		if ( test_signum_log < 0 ) {
@@ -6664,26 +5630,28 @@ void Test_all_function() {
 
 			temp_32_cbrt.num   = num_temp_u32;
 			temp_32_cbrt.denom = denom_temp_u32;
-	   /*
+	   
 			Serial.print(temp_32_cbrt.num);
 			Serial.print("  ");
 			Serial.print(temp_32_cbrt.denom);
 			Serial.print("  ");
 			Serial.print(temp_32_cbrt.expo);
-		 */
+		 
 		 
 		//	if ( (index % 300) != 0 )  {
+		 
 	  		Serial.print(index);
 	  		Serial.print("  ");
      
 		  	test_32 = factorial(temp_32_cbrt);
-
+     
 	  		Serial.print(test_32.num);
 	  		Serial.print("  ");
 		  	Serial.print(test_32.denom);
 	  		Serial.print("  ");
 	  		Serial.print(test_32.expo);
 	  		Serial.println(" -> ");
+	   
 		//  }
 		}
 		test_index = false;
@@ -7085,7 +6053,7 @@ void Test_all_function() {
 
 				num_temp_u64 = num_temp_u64_x;
 				denom_temp_u64 = denom_temp_u64_x;
-				calc_32 = Reduce_Number( index_expo );   // reduce
+				calc_32 = Reduce_Number( index_expo, num_temp_u64, denom_temp_u64 );
 
 				Serial.print(calc_32.num);
 				Serial.print("  ");
@@ -7370,169 +6338,6 @@ void Test_all_function() {
 		time_diff = time_end - time_start;
 		Serial.print("Time: ");
 		Serial.println(time_diff);
-	}
-	if ( Debug_Level == 48 ) {
-	 /*     // Debug_Level == 46
-		for ( uint16_t index = 8330; index < 18751; index += 1 ) {  // 8330
-			num_temp_u32   = index;
-			denom_temp_u32 = 25000;
-			temp_32_cbrt.expo = 0;
-			Expand_Number();
-
-			temp_32_cbrt.num   = num_temp_u32;
-			temp_32_cbrt.denom = denom_temp_u32;
-
-			temp_32_xxx = atan( temp_32_cbrt );
-		}
-				// Debug_Level == 27
-		for ( int32_t index = 10; index <= 10000; index += 1 ) {
-			calc_32.expo = 0;
-			num_temp_u32 = index;
-			denom_temp_u32 = 10;
-			if ( num_temp_u32 > denom_temp_u32 ) {
-				gcd_temp_32 = num_temp_u32 / denom_temp_u32;
-				while ( gcd_temp_32 > 2 ) {
-					++calc_32.expo;
-					gcd_temp_32    /= 10;
-					denom_temp_u32 *= 10;
-				}
-			}
-			else {
-				gcd_temp_32 = denom_temp_u32 / num_temp_u32;
-				while ( gcd_temp_32 > 2 ) {
-					--calc_32.expo;
-					gcd_temp_32    /= 10;
-					num_temp_u32   *= 10;
-				}
-			}
-			Expand_Number();
-
-			calc_32.num = num_temp_u32;
-			calc_32.denom = denom_temp_u32;
-
-			test_32 = cbrt(calc_32);
-		}
-	 */
-
-		for ( uint16_t index = 0; index <= 14200; index += 1 ) {
-			temp_32_cbrt.expo = 0;
-			num_temp_u32   = index;
-			denom_temp_u32 = 200;
-			if ( num_temp_u32 < 6 ) {
-				num_temp_u32 *= 10;
-				--temp_32_cbrt.expo;
-			}
-			if ( num_temp_u32 < 60 ) {
-				num_temp_u32 *= 10;
-				--temp_32_cbrt.expo;
-			}
-			if ( num_temp_u32 > 600 ) {
-				denom_temp_u32 *= 10;
-				++temp_32_cbrt.expo;
-			}
-			if ( num_temp_u32 > 6000 ) {
-				denom_temp_u32 *= 10;
-				++temp_32_cbrt.expo;
-			}
-			Expand_Number();
-
-			temp_32_cbrt.num   = num_temp_u32;
-			temp_32_cbrt.denom = denom_temp_u32;
-
-			temp_32_xxx = factorial(temp_32_cbrt);
-		}
-	 
-		test_index = false;
-	}
-	if ( Debug_Level == 49 ) {
-	 /* // sqrt
-		for ( int32_t index = 100; index <= 10000; index += 1 ) {
-			calc_32.expo = 0;
-			num_temp_u32 = index;
-			denom_temp_u32 = 100;
-			if ( num_temp_u32 > denom_temp_u32 ) {
-				gcd_temp_32 = num_temp_u32 / denom_temp_u32;
-				while ( gcd_temp_32 > 2 ) {
-					++calc_32.expo;
-					gcd_temp_32    /= 10;
-					denom_temp_u32 *= 10;
-				}
-			}
-			else {
-				gcd_temp_32 = denom_temp_u32 / num_temp_u32;
-				while ( gcd_temp_32 > 2 ) {
-					--calc_32.expo;
-					gcd_temp_32  /= 10;
-					num_temp_u32 *= 10;
-				}
-			}
-			Expand_Number();
-
-			calc_32.num = num_temp_u32;
-			calc_32.denom = denom_temp_u32;
-
-			test_32 = sqrt(calc_32);
-
-		}
-		test_index = false;
-	 */
-	 /* // qbrt
-		for ( int32_t index = 10; index <= 10000; index += 1 ) {
-			calc_32.expo = 0;
-			num_temp_u32 = index;
-			denom_temp_u32 = 10;
-			if ( num_temp_u32 > denom_temp_u32 ) {
-				gcd_temp_32 = num_temp_u32 / denom_temp_u32;
-				while ( gcd_temp_32 > 2 ) {
-					++calc_32.expo;
-					gcd_temp_32    /= 10;
-					denom_temp_u32 *= 10;
-				}
-			}
-			else {
-				gcd_temp_32 = denom_temp_u32 / num_temp_u32;
-				while ( gcd_temp_32 > 2 ) {
-					--calc_32.expo;
-					gcd_temp_32  /= 10;
-					num_temp_u32 *= 10;
-				}
-			}
-			Expand_Number();
-
-			calc_32.num = num_temp_u32;
-			calc_32.denom = denom_temp_u32;
-
-			test_32 = cbrt(calc_32);
-		}
-	 */
-		num_temp_u32_   =   1;
-		denom_temp_u32_ = 200;
-		for ( uint16_t index = 0; index <= 14200; index += 10 ) {
-			temp_32_cbrt.expo = 0;
-			num_temp_u32   = num_temp_u32_;
-			num_temp_u32  *= index;
-			denom_temp_u32 = denom_temp_u32_;
-			if ( num_temp_u32 > 300 ) {
-				denom_temp_u32 *= 10;
-				++temp_32_cbrt.expo;
-			}
-			if ( num_temp_u32 > 3000 ) {
-				denom_temp_u32 *= 10;
-				++temp_32_cbrt.expo;
-			}
-			Expand_Number();
-
-			temp_32_cbrt.num   = num_temp_u32;
-			temp_32_cbrt.denom = denom_temp_u32;
-
-			if ( index == 0 ) {
-				temp_32_cbrt.num  = temp_32_cbrt.denom;
-				temp_32_cbrt.expo = -20;
-			}
-
-			temp_32_xxx = factorial(temp_32_cbrt);
-		}
-		test_index = false;
 	}
 }
 
@@ -9085,7 +7890,7 @@ void Display_Memory_x( uint8_t Mem_Display ) {
 	Mem_Display_old = Mem_Display;
 }
 
-boolean Test_buffer = false;
+bool    Test_buffer = false;
 uint8_t Number_of_buffer = 0;
 // Create a RingBufCPP object designed to hold a Max_Buffer of Switch_down
 RingBufCPP < uint32_t, Max_Buffer > q;
