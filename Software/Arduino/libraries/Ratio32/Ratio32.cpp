@@ -5,10 +5,23 @@
 
 ///////////////////////////////// Includes //////////////////////////////////
 
+#include <stdint.h>
+#include <stdlib.h> 
+#include <Arduino.h>
 #include <Ratio32.h>
 
 ///////////////////////////////// Definition //////////////////////////////////
 
+extern Ratio_32 exp2_1_2       = { 0, num_exp2_1_2, denum_exp2_1_2, 0};
+extern Ratio_32 exp2_1_2_div_x = { 0, denum_exp2_1_2, num_exp2_1_2, 0};
+
+uint32_t expo_10[10] = {
+	expo_10_0, expo_10_1, expo_10_2, expo_10_3, expo_10_4,
+	expo_10_5, expo_10_6, expo_10_7, expo_10_8, expo_10_9 };
+
+uint64_t expo_10_[10] = {
+	expo_10_10, expo_10_11, expo_10_12, expo_10_13, expo_10_14,
+	expo_10_15, expo_10_16, expo_10_17, expo_10_18, expo_10_19 };
 
 //////////////////////////////// Implementation /////////////////////////////
 
@@ -238,7 +251,7 @@ R_uint32 compare_extra(R_uint32 a, R_uint32 b, uint64_t num_u64, uint64_t denom_
 	}
 }
 
-Ratio_32 Reduce_Number(int8_t expo, uint64_t num_u64, uint64_t denom_u64) {
+Ratio_32 Reduce_Number(uint64_t num_u64, uint64_t denom_u64, int8_t expo) {
  /*
   * https://dspace.library.uu.nl/bitstream/handle/1874/325967/Ramanujan.pdf
   * Page 4  a(1) = 1; a(2) = -1; a(3) = 1; a(4) = -1; a(5) = 1; ...
@@ -297,10 +310,14 @@ Ratio_32 Reduce_Number(int8_t expo, uint64_t num_u64, uint64_t denom_u64) {
 		Serial.println(" === ");
 	}
  */
-	if ( denom_u64 == num_u64 ) {
+	Reduce.denom = int32_max;
+	if ( num_u64 == denom_u64 ) {
 		Reduce.num   = int32_max;
-		Reduce.denom = int32_max;
-	
+		return Reduce;	
+	}
+	if ( num_u64 == 0 ) {
+		Reduce.num   = 0;
+		Reduce.expo  = 0;
 		return Reduce;	
 	}
 
@@ -333,96 +350,105 @@ Ratio_32 Reduce_Number(int8_t expo, uint64_t num_u64, uint64_t denom_u64) {
 		Serial.println(display_string_itoa_);
 	}
  */
-	while ( calc == true ) {
-		g_x    = denom_u64;
-		g_x   /= num_u64;
+	if ( denom_u64 > UINT16_MAX ) {
+		while ( calc == true ) {
+			g_x    = denom_u64;
+			g_x   /= num_u64;
 
-		temp_u64  = num_u64;
+			temp_u64  = num_u64;
 
-		if ( (count % 2) == 0 ) {
-			g_x     += 1;
-			num_u64 *= g_x;
-			num_u64 -= denom_u64;
+			if ( (count % 2) == 0 ) {
+				g_x     += 1;
+				num_u64 *= g_x;
+				num_u64 -= denom_u64;
+				denom_x[ (count % 4) ]  = denom_x[ ((count - 1) % 4) ];
+				denom_x[ (count % 4) ] *= g_x;
+				denom_x[ (count % 4) ] += denom_x[ ((count - 2) % 4) ];
+			}
+			else {
+				temp_m_u64  = num_u64;
+				temp_m_u64 *= g_x;
+				num_u64     = denom_u64;
+				num_u64    -= temp_m_u64;
+			}
+
+			num_x[ (count % 4) ]    = num_x[ ((count - 1) % 4) ];
+			num_x[ (count % 4) ]   *= g_x;
 			denom_x[ (count % 4) ]  = denom_x[ ((count - 1) % 4) ];
 			denom_x[ (count % 4) ] *= g_x;
-			denom_x[ (count % 4) ] += denom_x[ ((count - 2) % 4) ];
-		}
-		else {
-			temp_m_u64  = num_u64;
-			temp_m_u64 *= g_x;
-			num_u64     = denom_u64;
-			num_u64    -= temp_m_u64;
-		}
+			if ( (count % 2) == 0 ) {
+				num_x[ (count % 4) ]   += num_x[ ((count - 2) % 4) ];
+				denom_x[ (count % 4) ] += denom_x[ ((count - 2) % 4) ];
+			}
+			else {
+				num_x[ (count % 4) ]   -= num_x[ ((count - 2) % 4) ];
+				denom_x[ (count % 4) ] -= denom_x[ ((count - 2) % 4) ];
+			}
 
-		num_x[ (count % 4) ]    = num_x[ ((count - 1) % 4) ];
-		num_x[ (count % 4) ]   *= g_x;
-		denom_x[ (count % 4) ]  = denom_x[ ((count - 1) % 4) ];
-		denom_x[ (count % 4) ] *= g_x;
-		if ( (count % 2) == 0 ) {
-			num_x[ (count % 4) ]   += num_x[ ((count - 2) % 4) ];
-			denom_x[ (count % 4) ] += denom_x[ ((count - 2) % 4) ];
-		}
-		else {
-			num_x[ (count % 4) ]   -= num_x[ ((count - 2) % 4) ];
-			denom_x[ (count % 4) ] -= denom_x[ ((count - 2) % 4) ];
-		}
+			denom_u64 = temp_u64;
+	   /*
+			if ( Debug_Level == 62 ) {
+				itoa_(num_x[ (count % 4) ], display_string_itoa_);
+				Serial.print(display_string_itoa_);
+				Serial.print(" / ");
+				itoa_(denom_x[ (count % 4) ], display_string_itoa_);
+				Serial.println(display_string_itoa_);
+				Serial.print("g = ");
+				itoa_(g_x, display_string_itoa_);
+				Serial.println(display_string_itoa_);
+				itoa_(num_u64, display_string_itoa_);
+				Serial.print(display_string_itoa_);
+				Serial.print(" / ");
+				itoa_(denom_u64, display_string_itoa_);
+				Serial.println(display_string_itoa_);
+			}
+	   */
+			if ( g_x > test_max ) {
+				calc   = false;
+			}
 
-		denom_u64 = temp_u64;
-   /*
-		if ( Debug_Level == 62 ) {
-			itoa_(num_x[ (count % 4) ], display_string_itoa_);
-			Serial.print(display_string_itoa_);
-			Serial.print(" / ");
-			itoa_(denom_x[ (count % 4) ], display_string_itoa_);
-			Serial.println(display_string_itoa_);
-			Serial.print("g = ");
-			itoa_(g_x, display_string_itoa_);
-			Serial.println(display_string_itoa_);
-			itoa_(num_u64, display_string_itoa_);
-			Serial.print(display_string_itoa_);
-			Serial.print(" / ");
-			itoa_(denom_u64, display_string_itoa_);
-			Serial.println(display_string_itoa_);
-		}
-   */
-		if ( g_x > test_max ) {
-			calc   = false;
-		}
+			if ( count > count_x ) {
+				calc   = false;
+			}
 
-		if ( count > count_x ) {
-			calc   = false;
-		}
+			if ( denom_x[ (count % 4) ] > test_max ) {
+				count_x   = count;
+			}
 
-		if ( denom_x[ (count % 4) ] > test_max ) {
-			count_x   = count;
-		}
-
-		if ( num_u64 == 0 ) {
-			calc   = false;
-		}
-		count += 1;
-	}
-	count -= 1;
-	
-	// Serial.println(count);
-
-	for ( uint8_t ind_a = 0; ind_a < 4; ind_a += 1 ) {
-		if ( denom_x[ (count % 4) ] < test_max ) {
-			num_i32    = num_x[ (count % 4) ];
-			denom_i32  = denom_x[ (count % 4) ];
-			ind_a      = 4;
+			if ( num_u64 == 0 ) {
+				calc   = false;
+			}
+			count += 1;
 		}
 		count -= 1;
+
+		for ( uint8_t ind_a = 0; ind_a < 4; ind_a += 1 ) {
+			if ( denom_x[ (count % 4) ] < test_max ) {
+				num_i32    = num_x[ (count % 4) ];
+				denom_i32  = denom_x[ (count % 4) ];
+				ind_a      = 4;
+			}
+			count -= 1;
+		}
+	}
+	else {
+		num_i32    = num_u64;
+		denom_i32  = denom_u64;
 	}
 
 	test_max  /= denom_i32;
-		
+	
 	num_i32   *= test_max;
 	denom_i32 *= test_max;
-
+ /*
+	if ( num_u64 > 0 ) {
+		Serial.println(count + 1);
+	}
+ */
 	if ( test_1_2_4 > 0 ) {
 		Reduce.num   = denom_i32;
 		Reduce.denom = num_i32;
+
 		if ( test_1_2_4 > 1 ) {
 			Reduce.num  *= 2;
 		}
@@ -444,5 +470,259 @@ Ratio_32 Reduce_Number(int8_t expo, uint64_t num_u64, uint64_t denom_u64) {
 	}
  */	
 	return Reduce;	
+}
+
+Ratio_32 to_Ratio_32(Ratio_64 input) {
+	int8_t    test_signum = 0;
+	uint64_t  num_u64     = abs(input.num);
+	uint64_t  denom_u64   = abs(input.denom);
+	Ratio_32  test_32_x   = {0, 0, int32_max, 0};
+	
+	if ( input.num > 0 ) {
+		test_signum =  1;
+	}
+	if ( input.num < 0 ) {
+		test_signum = -1;
+	}
+
+	if ( test_signum == 0 ) {
+		return test_32_x;
+	}
+	
+	if ( num_u64 > denom_u64 ) {
+		if ( (num_u64 / denom_u64) > 2 ) {
+			if ( denom_u64 < expo_test_0a ) {
+				denom_u64   *= 10;
+			}
+			else {
+				num_u64     /= 2;
+				denom_u64   *= 5;
+			}
+			input.expo += 1;
+		}
+	}
+	else {
+		if ( (denom_u64 / num_u64) > 2 ) {
+			if ( num_u64 < expo_test_0a ) {
+				num_u64   *= 10;
+			}
+			else {
+				num_u64   *= 5;
+				denom_u64 /= 2;
+			}
+			input.expo -= 1;
+		}
+	}
+
+	if ( input.expo >  115 ) {
+		input.expo =  115;
+	}
+	if ( input.expo < -115 ) {
+		input.expo = -115;
+	}
+
+	test_32_x      = Reduce_Number(num_u64, denom_u64, input.expo);
+	test_32_x.num *= test_signum;
+
+	return test_32_x;
+}
+
+Ratio_32 to_Ratio_32(uint16_t input) {
+	  int8_t  expo      = 0;
+	uint64_t  num_u64   = input;
+	uint64_t  denom_u64 = 1;
+	
+	// num_u64 > denom_u64
+	while ( num_u64 > (3 * denom_u64) ) {  // 3.0 .. 10.0 
+		denom_u64 *= 10;
+		expo      += 1;
+	}
+	  
+	return Reduce_Number(num_u64, denom_u64, expo);
+}
+
+Ratio_32 to_Ratio_32(uint16_t input, int8_t expo) {
+	uint64_t  num_u64   = input;
+	uint64_t  denom_u64 = 1;
+	
+	// num_u64 > denom_u64
+	while ( num_u64 > (3 * denom_u64) ) {  // 3.0 .. 10.0 
+		denom_u64 *= 10;
+		expo      += 1;
+	}
+	  
+	return Reduce_Number(num_u64, denom_u64, expo);
+}
+
+Ratio_32 mul(Ratio_32 a, Ratio_32 b) {
+	Ratio_64 temp_64   = {a.expo, a.num, a.denom};
+	
+	if ( a.num == 0 ) {
+		return a;
+	}
+	if ( b.num == 0 ) {
+		return b;
+	}
+	if ( a.expo == 0 ) {
+		if ( a.num == a.denom ) {   // a = 1.000
+			return b;
+		}
+	}
+	if ( b.expo == 0 ) {
+		if ( b.num == b.denom ) {   // b = 1.000
+			return a;
+		}
+	}
+
+	temp_64.expo  += b.expo;
+	temp_64.num   *= b.num;
+	temp_64.denom *= b.denom;
+
+	return to_Ratio_32(temp_64);
+}
+
+Ratio_32 add(Ratio_32 a, Ratio_32 b, int8_t c) {
+	int8_t    test_signum_a = 0;
+	int8_t    test_signum_b = 0;
+	int8_t    test_signum_d = 1;
+	int16_t   expo_temp_16  = 0;
+	uint64_t  denom_test_u64;
+  uint64_t  num_temp_u64   = 1;
+  uint64_t  denom_temp_u64 = 1;
+  int64_t   calc_temp_64_a;
+   int64_t  calc_temp_64_b;
+  uint64_t  calc_temp_64_b_abs;
+  uint64_t  calc_temp_64_c_abs;
+   int64_t  calc_temp_64_d;
+	Ratio_32  temp_32;
+	Ratio_64  temp_64;
+
+	if ( c < 0 ) {
+		b = min_x( b );
+		c *= -1;
+	}
+	if ( c > 2 ) {
+		if ( c < 9 ) {
+			b = div_x( b );
+		}
+		c /= 3;
+	}
+
+	if ( a.num > 0 ) {
+		test_signum_a =  1;
+	}
+	if ( a.num < 0 ) {
+		test_signum_a = -1;
+	}
+
+	if ( b.num > 0 ) {
+		test_signum_b =  1;
+	}
+	if ( b.num < 0 ) {
+		test_signum_b = -1;
+	}
+
+	if ( test_signum_b == 0 ) {
+		b.expo = a.expo;
+	}
+	if ( test_signum_a == 0 ) {
+		a.expo = b.expo;
+	}
+
+	expo_temp_16    = a.expo;
+	expo_temp_16   -= b.expo;
+
+	if ( expo_temp_16 > 18  ) {
+		if ( c == 2 ) {
+			return mul( a, exp2_1_2 );
+		}
+		return a;
+	}
+	if ( expo_temp_16 < -18  ) {
+		if ( c == 2 ) {
+			return mul( b, exp2_1_2 );
+		}
+		return b;
+	}
+
+	if ( expo_temp_16 >= 0 ) {
+		calc_temp_64_a   = a.num;
+		calc_temp_64_a  *= b.denom;
+		calc_temp_64_b   = b.num;
+		calc_temp_64_b  *= a.denom;
+		temp_64.expo     = a.expo;
+		if ( c == 3 ) {
+			calc_temp_64_b /= 2;
+		}
+	}
+	else {
+		calc_temp_64_b   = a.num;
+		calc_temp_64_b  *= b.denom;
+		calc_temp_64_a   = b.num;
+		calc_temp_64_a  *= a.denom;
+		temp_64.expo     = b.expo;
+		expo_temp_16    *= -1;
+		if ( c == 3 ) {
+			calc_temp_64_a /= 2;
+		}
+	}
+
+	calc_temp_64_c_abs  = abs(a.denom);
+	calc_temp_64_c_abs *= abs(b.denom);
+	calc_temp_64_b_abs  = abs(calc_temp_64_b);
+	
+	if ( c == 3 ) {
+		calc_temp_64_c_abs += calc_temp_64_c_abs / 2;
+	}
+	else {
+		calc_temp_64_c_abs *= c;
+	}
+
+	if ( expo_temp_16 >  0 ) {
+		if ( expo_temp_16 <  10 ) {
+			calc_temp_64_b_abs += (expo_10[expo_temp_16] / 2);
+			calc_temp_64_b_abs /= expo_10[expo_temp_16];
+		}
+		else {
+			calc_temp_64_b_abs += (expo_10_[expo_temp_16 - 10] / 2);
+			calc_temp_64_b_abs /= expo_10_[expo_temp_16 - 10];
+		}
+	}
+
+	if ( calc_temp_64_b < 0 ) {
+		calc_temp_64_b  = calc_temp_64_b_abs;
+		calc_temp_64_b *= -1;
+	}
+	else {
+		calc_temp_64_b  = calc_temp_64_b_abs;
+	}
+
+	calc_temp_64_d  = calc_temp_64_a;
+	calc_temp_64_d += calc_temp_64_b;
+
+	if ( calc_temp_64_d < 0 ) {
+		test_signum_d = -1;
+	}
+
+	num_temp_u64    = abs(calc_temp_64_d);  // max:  9223372036854775807
+
+	denom_temp_u64  = calc_temp_64_c_abs;
+	denom_test_u64  = denom_temp_u64;
+	denom_test_u64 /= 5;
+
+	if ( num_temp_u64 > 0 ) {
+		while ( num_temp_u64 < denom_test_u64 ) {
+			num_temp_u64 *= 10;
+			--temp_64.expo;
+		}
+	}
+
+	temp_64.num   = num_temp_u64;
+	temp_64.denom = denom_temp_u64;
+	temp_64.num  *= test_signum_d;
+		
+	temp_32       = to_Ratio_32(temp_64);
+	temp_32.op    = a.op;   // Spezial for Temperature
+	return temp_32;
 }
 
