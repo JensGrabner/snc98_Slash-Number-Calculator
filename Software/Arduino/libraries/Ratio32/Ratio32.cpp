@@ -10,10 +10,35 @@
 #include <Arduino.h>
 #include <Ratio32.h>
 
+#include <itoa_ljust.h>
+// https://github.com/JensGrabner/snc98_Slash-Number-Calculator/tree/master/Software/Arduino/libraries/itoa_ljust
+char  display_string_itoa_r[33];
+
 ///////////////////////////////// Definition //////////////////////////////////
 
-extern Ratio_32 exp2_1_2       = { 0, num_exp2_1_2, denum_exp2_1_2, 0};
-extern Ratio_32 exp2_1_2_div_x = { 0, denum_exp2_1_2, num_exp2_1_2, 0};
+#define Debug_Level  0 //  0 - not Debug
+										   // 58 - Test exp()
+											 // 61 - Test algorithm sqrt(e)
+										   // 62 - Reduce_Number( ) - odd-odd continued fraction
+
+
+Ratio_32 exp2_1_2       = {0, num_exp2_1_2, denum_exp2_1_2, 0};
+Ratio_32 exp2_1_2_div_x = {0, denum_exp2_1_2, num_exp2_1_2, 0};
+
+// ---  log2()_Konstante  ---
+Ratio_32  lb_to_e     = {0, num_lb_to_e, denum_lb_to_e, 0};
+
+// ---  log10()_Konstante  ---
+Ratio_32  lb_to_10    = {0, num_lb_to_10, denum_lb_to_10, 0};
+
+// ---  Null_no_Konstante  ---
+Ratio_32  Null_no     = {Null_no_expo, Null_no_num, Null_no_denom, 0};
+
+// ---  ln_to_10_Konstante  --- 
+Ratio_32  ln_to_10    = {0, num_ln_to_10, denom_ln_to_10, 0};
+
+// ---  e_Konstante  ---
+Ratio_32  one_e       = {e_expo, e_num, e_denom, 0};
 
 uint32_t expo_10[10] = {
 	expo_10_0, expo_10_1, expo_10_2, expo_10_3, expo_10_4,
@@ -22,6 +47,34 @@ uint32_t expo_10[10] = {
 uint64_t expo_10_[10] = {
 	expo_10_10, expo_10_11, expo_10_12, expo_10_13, expo_10_14,
 	expo_10_15, expo_10_16, expo_10_17, expo_10_18, expo_10_19 };
+
+Ratio_32 cbrt_10_plus   = { 0, cbrt_10_num, cbrt_10_denom, 0};
+Ratio_32 cbrt_100_plus  = { 1, cbrt_100_num, cbrt_100_denom, 0};
+
+Ratio_32 sqrt_10_plus  = {0, sqrt_10_num, sqrt_10_denom, 0};
+Ratio_32 sqrt_10_minus = {1, sqrt_10_denom, sqrt_10_num, 0};
+
+Ratio_32 test_71 = { expo_71, num_71, denum_71, 0};
+
+Ratio_32 Pi_neg  = {Pi_expo, -Pi_num, Pi_denom, 0};
+
+Ratio_32 log_1e0 = { 0, int32_max, int32_max, 0};
+Ratio_32 mul_6_0 = { 1, int32_max_16, int32_max, 0};
+
+Ratio_32 fa_0 = {fa_0_expo, fa_0_num, fa_0_denom, 0};
+Ratio_32 fa_1 = {fa_1_expo, fa_1_num, fa_1_denom, 0};
+Ratio_32 fa_2 = {fa_2_expo, fa_2_num, fa_2_denom, 0};
+Ratio_32 fa_3 = {fa_3_expo, fa_3_num, fa_3_denom, 0};
+Ratio_32 fa_4 = {fa_4_expo, fa_4_num, fa_4_denom, 0};
+Ratio_32 fa_5 = {fa_5_expo, fa_5_num, fa_5_denom, 0};
+Ratio_32 fa_6 = {fa_6_expo, fa_6_num, fa_6_denom, 0};
+Ratio_32 fa_7 = {fa_7_expo, fa_7_num, fa_7_denom, 0};
+
+Ratio_32 fa_x[fa_x_max] = { fa_7, fa_6, fa_5, fa_4, fa_3, fa_2, fa_1 };
+
+Ratio_32  fa_ln_2pi_2 = {fa_ln_2pi_2_expo, fa_ln_2pi_2_num, fa_ln_2pi_2_denom, 0};
+
+Ratio_32 exp2_0_1     = { 0, num_exp2_0_1, denum_exp2_0_1, 0};
 
 //////////////////////////////// Implementation /////////////////////////////
 
@@ -253,18 +306,22 @@ R_uint32 compare_extra(R_uint32 a, R_uint32 b, uint64_t num_u64, uint64_t denom_
 
 Ratio_32 Reduce_Number(uint64_t num_u64, uint64_t denom_u64, int8_t expo) {
  /*
-  * https://dspace.library.uu.nl/bitstream/handle/1874/325967/Ramanujan.pdf
-  * Page 4  a(1) = 1; a(2) = -1; a(3) = 1; a(4) = -1; a(5) = 1; ...
-  * "odd-odd continued fraction" - Rieger 
+	*  https://www.math.tamu.edu/~dhensley/DajaniHensleyKraaikampMasarotto2012.pdf
+	*  https://www.impan.pl/shop/publication/transaction/download/product/82112
+  */
+ /*
+	*  https://dspace.library.uu.nl/bitstream/handle/1874/325967/Ramanujan.pdf
+	*  Page 4  a(1) = 1; a(2) = -1; a(3) = 1; a(4) = -1; a(5) = 1; ...
+	*  "odd-odd continued fraction" - Rieger 
   * 
-  * https://faculty.math.illinois.edu/~emerrim2/smp.pdf
-  * Page 4 and 5 "even continued fraction"
+	*  https://faculty.math.illinois.edu/~emerrim2/smp.pdf
+	*  Page 4 and 5 "even continued fraction"
   *
-  * https://www.asc.ohio-state.edu/merriman.72/slides/MerrimanExpandingDynamics.pdf
-  * http://eventos.cmm.uchile.cl/sdynamics20207/wp-content/uploads/sites/110/2020/12/MerrimanExpandingDynamics.pdf
-  * https://www.ideals.illinois.edu/bitstream/handle/2142/105632/MERRIMAN-DISSERTATION-2019.pdf
+	*  https://www.asc.ohio-state.edu/merriman.72/slides/MerrimanExpandingDynamics.pdf
+	*  http://eventos.cmm.uchile.cl/sdynamics20207/wp-content/uploads/sites/110/2020/12/MerrimanExpandingDynamics.pdf
+	*  https://www.ideals.illinois.edu/bitstream/handle/2142/105632/MERRIMAN-DISSERTATION-2019.pdf
   *
-  * https://www.math.leidenuniv.nl/scripties/masarotto.pdf
+	*  https://www.math.leidenuniv.nl/scripties/masarotto.pdf
   */
  /*
 	*  https://hg.python.org/cpython/file/3.5/Lib/fractions.py#l252
@@ -284,47 +341,61 @@ Ratio_32 Reduce_Number(uint64_t num_u64, uint64_t denom_u64, int8_t expo) {
 	*  http://link.springer.com/content/pdf/10.1007/s00607-008-0013-8.pdf
 	*/
 	Ratio_32 Reduce;
-	uint32_t test_max   = int32_max;
+	uint32_t test_max    = int32_max;
 
-	int32_t  num_i32    = 0;
-	int32_t  denom_i32  = 0;
+	int32_t  num_i32     = 0;
+	int32_t  denom_i32   = 0;
 
-	int8_t   test_1_2_4 = 0;
-	uint64_t temp_u64   = 0;
-	uint64_t temp_m_u64 = 0;
-	bool     calc       = true;
-	uint8_t  count      = 2;
-	uint8_t  count_x    = 200;
-	uint64_t g_x        = 0;
-	uint64_t num_x[4]   = {1, 0, 1, 0};
-	uint64_t denom_x[4] = {0, 1, 0, 1};
+	int8_t   test_1_2_4  = 0;
+	uint64_t temp_u64    = 0;
+	uint64_t temp_m_u64  = 0;
+	bool     calc        = true;
+	uint8_t  count       = 2;
+	uint8_t  count_x     = 200;
+	uint64_t g_x         = 0;
+	uint64_t num_x[4]    = {1, 0, 1, 0};
+	uint64_t denom_x[4]  = {0, 1, 0, 1};
 	
-	Reduce.expo  = expo;
- /*
+	Reduce.expo = expo;
+
 	if ( Debug_Level == 62 ) {
-		itoa_(num_u64, display_string_itoa_);
-		Serial.print(display_string_itoa_);
+		itoa_(num_u64, display_string_itoa_r);
+		Serial.print(display_string_itoa_r);
 		Serial.print(" / ");
-		itoa_(denom_u64, display_string_itoa_);
-		Serial.println(display_string_itoa_);
-		Serial.println(" === ");
+		itoa_(denom_u64, display_string_itoa_r);
+		Serial.print(display_string_itoa_r);
+		Serial.print(" === ");
 	}
- */
+
 	Reduce.denom = int32_max;
 	if ( num_u64 == denom_u64 ) {
 		Reduce.num   = int32_max;
+
+		if ( Debug_Level == 62 ) {
+			Serial.print(Reduce.num);
+			Serial.print(" / ");
+			Serial.println(Reduce.denom);
+		}
+	
 		return Reduce;	
 	}
 	if ( num_u64 == 0 ) {
 		Reduce.num   = 0;
 		Reduce.expo  = 0;
-		return Reduce;	
-	}
 
-	if ( denom_u64 > num_u64 ) {
+		if ( Debug_Level == 62 ) {
+			Serial.print(Reduce.num);
+			Serial.print(" / ");
+			Serial.println(Reduce.denom);
+		}
+	
+		return Reduce;	
+	} 
+
+ 	if ( denom_u64 > num_u64 ) {
 		test_1_2_4 = -1;                            // 0.5  .. 1.0
 		if ( (denom_u64 - num_u64) > num_u64 ) {    // 0.25 .. 0.5
-			test_1_2_4  = -2;
+			test_1_2_4 *= 2;
 			num_u64    *= 2;
 			test_max   /= 2;
 		}
@@ -333,7 +404,7 @@ Ratio_32 Reduce_Number(uint64_t num_u64, uint64_t denom_u64, int8_t expo) {
 	if ( num_u64 > denom_u64 ) {
 		test_1_2_4 = 1;                             // 1.0 .. 2.0
 		if ( (num_u64 - denom_u64) > denom_u64 ) {  // 2.0 .. 4.0 
-			test_1_2_4  = 2;
+			test_1_2_4 *= 2;
 			denom_u64  *= 2;
 			test_max   /= 2;
 		}
@@ -343,11 +414,11 @@ Ratio_32 Reduce_Number(uint64_t num_u64, uint64_t denom_u64, int8_t expo) {
 	}
  /*
 	if ( Debug_Level == 62 ) {
-		itoa_(num_u64, display_string_itoa_);
-		Serial.print(display_string_itoa_);
+		itoa_(num_u64, display_string_itoa_r);
+		Serial.print(display_string_itoa_r);
 		Serial.print(" / ");
-		itoa_(denom_u64, display_string_itoa_);
-		Serial.println(display_string_itoa_);
+		itoa_(denom_u64, display_string_itoa_r);
+		Serial.println(display_string_itoa_r);
 	}
  */
 	if ( denom_u64 > UINT16_MAX ) {
@@ -388,19 +459,19 @@ Ratio_32 Reduce_Number(uint64_t num_u64, uint64_t denom_u64, int8_t expo) {
 			denom_u64 = temp_u64;
 	   /*
 			if ( Debug_Level == 62 ) {
-				itoa_(num_x[ (count % 4) ], display_string_itoa_);
-				Serial.print(display_string_itoa_);
+				itoa_(num_x[ (count % 4) ], display_string_itoa_r);
+				Serial.print(display_string_itoa_r);
 				Serial.print(" / ");
-				itoa_(denom_x[ (count % 4) ], display_string_itoa_);
-				Serial.println(display_string_itoa_);
+				itoa_(denom_x[ (count % 4) ], display_string_itoa_r);
+				Serial.println(display_string_itoa_r);
 				Serial.print("g = ");
-				itoa_(g_x, display_string_itoa_);
-				Serial.println(display_string_itoa_);
-				itoa_(num_u64, display_string_itoa_);
-				Serial.print(display_string_itoa_);
+				itoa_(g_x, display_string_itoa_r);
+				Serial.println(display_string_itoa_r);
+				itoa_(num_u64, display_string_itoa_r);
+				Serial.print(display_string_itoa_r);
 				Serial.print(" / ");
-				itoa_(denom_u64, display_string_itoa_);
-				Serial.println(display_string_itoa_);
+				itoa_(denom_u64, display_string_itoa_r);
+				Serial.println(display_string_itoa_r);
 			}
 	   */
 			if ( g_x > test_max ) {
@@ -440,11 +511,7 @@ Ratio_32 Reduce_Number(uint64_t num_u64, uint64_t denom_u64, int8_t expo) {
 	
 	num_i32   *= test_max;
 	denom_i32 *= test_max;
- /*
-	if ( num_u64 > 0 ) {
-		Serial.println(count + 1);
-	}
- */
+
 	if ( test_1_2_4 > 0 ) {
 		Reduce.num   = denom_i32;
 		Reduce.denom = num_i32;
@@ -461,14 +528,13 @@ Ratio_32 Reduce_Number(uint64_t num_u64, uint64_t denom_u64, int8_t expo) {
 			Reduce.denom  *= 2;
 		}
 	}
- /*
+ 
 	if ( Debug_Level == 62 ) {
 		Serial.print(Reduce.num);
 		Serial.print(" / ");
 		Serial.println(Reduce.denom);
-		Serial.println("=====");
 	}
- */	
+ 	
 	return Reduce;	
 }
 
@@ -507,8 +573,8 @@ Ratio_32 to_Ratio_32(Ratio_64 input) {
 				num_u64   *= 10;
 			}
 			else {
-				num_u64   *= 5;
 				denom_u64 /= 2;
+				num_u64   *= 5;
 			}
 			input.expo -= 1;
 		}
@@ -527,6 +593,16 @@ Ratio_32 to_Ratio_32(Ratio_64 input) {
 	return test_32_x;
 }
 
+Ratio_32 to_Ratio_32(int16_t input) {
+	uint16_t input_a = abs(input);
+
+	if ( input < 0 ) {
+		return min_x( to_Ratio_32(input_a) );
+	}
+		
+	return to_Ratio_32(input_a);
+}
+
 Ratio_32 to_Ratio_32(uint16_t input) {
 	  int8_t  expo      = 0;
 	uint64_t  num_u64   = input;
@@ -539,6 +615,16 @@ Ratio_32 to_Ratio_32(uint16_t input) {
 	}
 	  
 	return Reduce_Number(num_u64, denom_u64, expo);
+}
+
+Ratio_32 to_Ratio_32(int16_t input, int8_t expo) {
+	uint16_t input_a = abs(input);
+
+	if ( input < 0 ) {
+		return min_x( to_Ratio_32(input_a, expo) );
+	}
+		
+	return to_Ratio_32(input_a, expo);
 }
 
 Ratio_32 to_Ratio_32(uint16_t input, int8_t expo) {
@@ -582,14 +668,14 @@ Ratio_32 mul(Ratio_32 a, Ratio_32 b) {
 }
 
 Ratio_32 add(Ratio_32 a, Ratio_32 b, int8_t c) {
-	int8_t    test_signum_a = 0;
-	int8_t    test_signum_b = 0;
-	int8_t    test_signum_d = 1;
-	int16_t   expo_temp_16  = 0;
+	  int8_t  test_signum_a = 0;
+	  int8_t  test_signum_b = 0;
+	  int8_t  test_signum_d = 1;
+	 int16_t  expo_temp_16  = 0;
 	uint64_t  denom_test_u64;
   uint64_t  num_temp_u64   = 1;
   uint64_t  denom_temp_u64 = 1;
-  int64_t   calc_temp_64_a;
+   int64_t  calc_temp_64_a;
    int64_t  calc_temp_64_b;
   uint64_t  calc_temp_64_b_abs;
   uint64_t  calc_temp_64_c_abs;
@@ -598,8 +684,8 @@ Ratio_32 add(Ratio_32 a, Ratio_32 b, int8_t c) {
 	Ratio_64  temp_64;
 
 	if ( c < 0 ) {
-		b = min_x( b );
-		c *= -1;
+		b.num *= -1;
+		c     *= -1;
 	}
 	if ( c > 2 ) {
 		if ( c < 9 ) {
@@ -717,12 +803,751 @@ Ratio_32 add(Ratio_32 a, Ratio_32 b, int8_t c) {
 		}
 	}
 
-	temp_64.num   = num_temp_u64;
-	temp_64.denom = denom_temp_u64;
-	temp_64.num  *= test_signum_d;
+	temp_64.num    = num_temp_u64;
+	temp_64.denom  = denom_temp_u64;
+	temp_64.num   *= test_signum_d;
 		
 	temp_32       = to_Ratio_32(temp_64);
 	temp_32.op    = a.op;   // Spezial for Temperature
 	return temp_32;
+}
+
+Ratio_32 square(Ratio_32 a) {
+	return mul(a, a);
+}
+
+Ratio_32 cubic(Ratio_32 a) {
+	return mul(a, square(a));
+}
+
+Ratio_32 loge(Ratio_32 a) {
+	if ( a.num > 0 ) {
+		return mul( lb_to_e, log2(a) );
+	}
+	else {
+		a.denom = 2; // Error_String('u');  input <= 0
+		return a;
+	}
+}
+
+Ratio_32 log10(Ratio_32 a) {
+	if ( a.num > 0 ) {
+		return mul( lb_to_10, log2(a) );
+	}
+	else {
+		a.denom = 2; // Error_String('u');  input <= 0
+		return a;
+	}
+}
+
+Ratio_32 log2(Ratio_32 a) {
+  Ratio_32  temp_32_log = {0, int32_max, int32_max, 0};
+  uint64_t  num_temp_u64    = 1;
+  uint64_t  denom_temp_u64  = 1;
+
+  int96_a   temp_num;
+            temp_num.hi   = 2147483647;  // 2^95 - 1
+	          temp_num.mid  = 4294967295; //  
+	          temp_num.lo   = 4294967295;	
+
+  int96_a   temp_denom;
+            temp_denom.hi    = 0;
+	          temp_denom.mid   = 0;
+	          temp_denom.lo    = 0;	
+
+  int96_a   log2_denom;
+            log2_denom.hi    = 0;
+	          log2_denom.mid   = 0; //  
+	          log2_denom.lo    = 0;	
+
+  int96_a   log2_sum;         // 
+            log2_sum.hi      = 0;
+	          log2_sum.mid     = 0; //  
+	          log2_sum.lo      = 0;	
+
+  int96_a   log2_sum_2;         // 
+            log2_sum_2.hi    = 0;
+	          log2_sum_2.mid   = 0; //  
+	          log2_sum_2.lo    = 0;	
+
+  int96_a   log2_add;          // 1.0, 0.5, 0.25, 0.125 ..
+            log2_add.hi      = 1;
+	          log2_add.mid     = 0; //  
+	          log2_add.lo      = 0;	
+
+	int8_t    test_signum_log  = 0;
+	int8_t    test_temp_8      = 0;
+	
+  int96_a   log2_num;
+            log2_num.hi      = 3; // log2(10) = 3,32192809488736234787032
+	          log2_num.mid     = 1382670639; //   3,32192809488736234775413  -3,498e-20
+	          log2_num.lo      = 879635447;
+  
+	int32_t   log2_denom_x     = 1;
+	int8_t    log2_expo        = 0;
+
+	if ( a.num > 0 ) {
+		if ( a.expo > 0 ) {
+			test_signum_log =  1;
+		}
+		if ( a.expo < 0 ) {
+			test_signum_log = -1;
+			a = div_x( a );
+		}
+		
+		if ( a.expo == 0 ) {
+			if ( a.num == a.denom ) { //  input = 1.000
+				return Null_no;
+			}
+			if ( a.num < a.denom ) { //   input = 0.300 .. 1.000
+				test_signum_log = -1;
+				a = div_x( a );
+			}
+		}
+
+		log2_num *= a.expo;
+		
+		if ( a.num > a.denom ) {
+			test_temp_8 =  1;                        // 1.0 .. 2.0
+			if ( (a.num - a.denom) >= a.denom ) {
+				log2_num    += log2_add;
+				a.denom     *= 2;
+				if ( a.num == a.denom ) {
+					test_temp_8  =  2;	                 // 2.0 .. 4.0			
+				}
+			}
+		}
+		if ( a.denom > a.num ) {
+			test_temp_8   = -1;                      // 0.5 .. 1.0  
+			if ( (a.denom - a.num) >= a.num ) {
+				log2_num    -= log2_add;
+				a.num       *= 2;
+				if ( a.denom == a.num ) {
+					test_temp_8  = -2;                   // 0.25 .. 0.5				
+					if ( test_signum_log == 0 ) {
+						test_signum_log = -1;
+						log2_num        = log2_add;
+					}
+				} 
+			}
+		}
+		if ( a.expo > 29 ) {
+			log2_denom_x   = 100;
+			log2_expo      = 2;
+		}	
+		else {
+			if ( a.expo > 2 ) {
+				log2_denom_x   = 10;
+				log2_expo      = 1;
+			}
+		}
+			
+		if ( a.num > a.denom ) {   // 1.0 .. 2.0
+			a = div_x( a );
+		}
+		
+    if ( abs( test_temp_8 ) == 1 ) {
+    	temp_num     /= a.denom;   // mul
+    	temp_denom    = temp_num;  // mul
+    	
+    	temp_num     *= a.num;
+    	temp_denom   *= a.denom;
+
+			for ( uint8_t index_b = 0; index_b < 64; index_b += 1 ) {
+				
+				temp_num.mul_div95(temp_num, temp_num);
+				temp_denom.mul_div95(temp_denom, temp_denom);
+
+				animation(30, 24);  // from .. snc98.ino
+
+				log2_add /= 2;
+				
+				if ( (temp_denom.hi - temp_num.hi) > temp_num.hi ) {
+					temp_num  *= 2;
+					log2_sum  += log2_add;
+				}
+			}		
+		}
+		
+		log2_denom.hi   = log2_denom_x;
+		log2_denom.mid  = 0; //  
+		log2_denom.lo   = 0;	
+		
+		if ( test_temp_8 == 1 ) {
+			log2_num += log2_sum;
+		}
+
+		if ( test_temp_8 == -1 ) {
+			log2_num -= log2_sum;			
+		}
+	
+		while ( log2_num.hi == 0 ) {
+			log2_num    *= 10;
+			log2_add    *= 10;
+			log2_expo   -= 1;
+
+			if ( log2_num.hi > 3 ) {  // 3.99 .. 0.4
+				log2_denom  *= 10;
+				log2_expo   += 1;				
+			}
+		}		
+  
+		while ( log2_add.lo > 1 ) {
+			log2_add /= 2;
+
+			if ( temp_denom.hi < 1073741824 ) {
+				temp_num    *= 2;
+				temp_denom  *= 2;
+			}
+
+			temp_num.mul_div95(temp_num, temp_num);
+			temp_denom.mul_div95(temp_denom, temp_denom);
+			
+			animation(30, 24);  // from .. snc98.ino
+			
+			if ( (temp_denom.hi - temp_num.hi) > temp_num.hi ) {
+				temp_num   *= 2;
+				log2_sum_2 += log2_add;
+			}
+		}		
+		
+		if ( test_temp_8 == 1 ) {
+			log2_num += log2_sum_2;
+		}
+
+		if ( test_temp_8 == -1 ) {
+			log2_num -= log2_sum_2;			
+		}
+		
+		while ( log2_num.hi > 0 ) {
+			log2_num    /= 2;
+			log2_denom  /= 2;
+		}
+
+ 		log2_num    /= 2;
+		log2_denom  /= 2;
+
+		if ( (log2_num.mid / log2_denom.mid) > 2 ) {
+			log2_num    /= 2;
+			log2_denom  *= 5;
+			log2_expo   += 1; 
+		}
+
+		num_temp_u64   = log2_num;
+	  denom_temp_u64 = log2_denom;
+		
+		if ( num_temp_u64 == 0 ) {
+			temp_32_log.num   = 0;
+			temp_32_log.denom = int32_max;
+			temp_32_log.expo  = 0;
+		}
+		else {
+			temp_32_log = Reduce_Number( num_temp_u64, denom_temp_u64, log2_expo );
+		}
+	
+		if ( test_signum_log < 0 ) {
+			temp_32_log.num *= -1;
+		}
+
+		return temp_32_log;
+	}
+	else {
+		a.denom = 2;  // Error_String('u');  input <= 0
+		return a;
+	}
+}
+
+Ratio_32 exp(Ratio_32 a) {
+  Ratio_32  temp_32_log     = a;
+  Ratio_32  log_1e0         = {0, int32_max, int32_max, 0};
+  uint64_t  num_temp_u64    = 1;
+  uint64_t  denom_temp_u64  = 1;
+	int8_t    test_signum_log = 0;
+	int8_t    count_x         = 0;  // 0 .. 8  - input > 1.00
+	int8_t    count_y         = 0;  // 0 .. 33 - integer
+
+  int96_a   temp_x_0;           // Summe  
+            temp_x_0.hi   = 0;
+	          temp_x_0.mid  = 0;
+	          temp_x_0.lo   = 0;	
+
+  int96_a   temp_x_1;           // x^1
+            temp_x_1.hi   = 0;
+	          temp_x_1.mid  = 0;
+	          temp_x_1.lo   = 0;	
+
+  int96_a   temp_denom;
+            temp_denom.hi   = 0;
+	          temp_denom.mid  = 0;
+	          temp_denom.lo   = 0;	
+
+	if ( a.num > 0 ) {
+		test_signum_log =  1;
+		if ( a.expo > 2 ) {        //  input >=  300
+			a.expo =  115;
+			return a;
+		}
+	}
+ 
+	if ( a.num < 0 ) {
+		a.num *= -1;
+		return div_x( exp( a ));
+	}
+ 
+	if ( test_signum_log == 0 ) { //  input = 0.000
+		return log_1e0;
+	}
+
+	if ( a.expo < -11 ) {         //  input = 0.000
+		return log_1e0;
+	}
+
+	if ( a.expo == 0 ) {          //  input = 1.000
+		if ( a.num == a.denom ) {
+			return one_e;
+		}
+	}
+	
+  temp_x_1    = a.num;  
+  temp_denom  = a.denom;
+
+  while ( temp_32_log.expo > 0 ) {
+  	temp_32_log.expo  -= 1;
+  	temp_x_1          *= 10;
+  }
+
+	count_y   = temp_32_log.expo;
+	count_y  *= 3;
+	count_y  += 33;
+	
+	if ( temp_32_log.expo == 0 ) {
+		while ( temp_x_1 > temp_denom ) {
+			count_x    += 1;
+			temp_denom *= 2;
+		}
+	}
+	
+	while ( temp_32_log.expo < 0 ) {
+		temp_32_log.expo += 1;
+		temp_denom *= 10;
+	}
+	
+	temp_denom <<= count_y;
+	
+	temp_x_0     = temp_denom;
+	temp_x_0    += temp_x_1;
+
+	while ( temp_x_0.hi < 1073741824 ) {
+		temp_x_0    *= 2;
+		temp_x_1    *= 2;
+		temp_denom  *= 2;
+	}
+ /*
+	if ( Debug_Level == 58 ) {
+		itoa_(temp_x_0, display_string_itoa_r);
+		Serial.println(display_string_itoa_r);
+		itoa_(temp_x_1, display_string_itoa_r);
+		Serial.println(display_string_itoa_r);
+		itoa_(temp_denom, display_string_itoa_r);
+		Serial.println(display_string_itoa_r);
+		Serial.println("------");
+	}
+ */
+	temp_x_0.mul_div95(temp_denom, temp_x_0);
+	temp_x_1.mul_div95(temp_x_1, temp_x_1);
+	temp_denom.mul_div95(temp_denom, temp_denom);
+
+	temp_x_1  /= 2;
+	temp_x_0  += temp_x_1;
+	
+	while ( count_y > 0 ) {
+		count_y -= 1;
+		
+		if ( temp_x_0.hi < 1073741824 ) {
+			temp_x_0    *= 2;
+			temp_denom  *= 2;
+		}
+		
+		temp_x_0.mul_div95(temp_x_0, temp_x_0);
+		temp_denom.mul_div95(temp_denom, temp_denom);
+
+		animation(20, 14);  // from .. snc98.ino
+	}	
+
+	while ( temp_x_0.hi > 0 ) {
+		temp_x_0    /= 2;
+		temp_denom  /= 2;
+		animation(20, 14);  // from .. snc98.ino
+	}
+	temp_x_0    /= 2;
+	temp_denom  /= 2;
+ /*
+	if ( Debug_Level == 58 ) {
+		itoa_(temp_x_0, display_string_itoa_r);
+		Serial.println(display_string_itoa_r);
+		itoa_(temp_denom, display_string_itoa_r);
+		Serial.println(display_string_itoa_r);
+		Serial.println("------");
+	}
+ */
+	num_temp_u64    = temp_x_0;
+	denom_temp_u64  = temp_denom;
+		
+	temp_32_log = Reduce_Number( num_temp_u64, denom_temp_u64, 0 );
+	
+	while ( count_x > 0 ) {
+		count_x -= 1;
+		temp_32_log = square( temp_32_log );
+	}
+
+	return temp_32_log;
+}
+
+Ratio_32 exp2(Ratio_32 a) {
+	return exp( mul( a, lb_to_e ));
+}
+
+Ratio_32 exp10(Ratio_32 a) {
+	return exp( mul( a, ln_to_10 ));
+}
+
+Ratio_32 frac(Ratio_32 a) {
+// returns the fractional part of x
+	Ratio_32 temp_32       = floor_(a, 8);
+	if ( temp_32.denom < 9 ) {
+		return temp_32;
+	}
+	return add( a, temp_32, -1 );
+}
+
+Ratio_32 floor_(Ratio_32 a, int8_t expo_test) {
+// floor_(x) returns the largest integer n such that n <= x
+	int8_t    test_signum_8   = 0;
+	uint64_t  denom_temp_u64  = a.denom;
+	uint32_t  num_temp_u32    = 1;
+	uint64_t  num_temp_u64    = 1;
+	Ratio_64  temp_64         = {0, int32_max, int32_max};
+	Ratio_32  temp_32;
+	          temp_32.expo    = a.expo;
+
+	if ( a.expo > expo_test ) {
+		a.denom = 6;
+		if ( a.num < 0 ) {
+			a.denom = 5;
+		}
+		a.num   = 7;
+		return a;
+	}
+	if ( a.expo == expo_test ) {
+		if (abs(a.num) >= abs(a.denom)) {
+			a.denom = 6;
+			if ( a.num < 0 ) {
+				a.denom = 5;
+			}
+			
+			a.num   = 7;
+			return a;
+		}
+	}
+
+	if ( a.num > 0 ) {
+		test_signum_8 = 1;
+		num_temp_u64  = a.num;
+	}
+	else {
+		test_signum_8 = -1;
+		num_temp_u64  = -a.num;
+	}
+
+	if ( a.expo == 0 ) {
+		if ( denom_temp_u64 > num_temp_u64) {
+			temp_32.num   = int32_max;
+			temp_32.num  *= test_signum_8;
+			temp_32.denom = int32_max;
+			temp_32.expo  = expo_min_input;
+			return temp_32;
+		}
+	}
+
+	if ( a.expo < 0 ) {
+		temp_32.num   = int32_max;
+		temp_32.num  *= test_signum_8;
+		temp_32.denom = int32_max;
+		temp_32.expo  = expo_min_input;
+		return temp_32;
+	}
+
+	num_temp_u64 *= expo_10[temp_32.expo];
+	temp_64.num   = num_temp_u64;
+	temp_64.num  /= denom_temp_u64;
+
+	temp_32.num   = temp_64.num;
+	temp_32.denom = expo_10[temp_32.expo];
+
+	num_temp_u32  = int32_max;
+	if ( temp_32.num > temp_32.denom ) {
+		num_temp_u32 /= temp_32.num;
+	}
+	else {
+		num_temp_u32 /= temp_32.denom;
+	}
+
+	temp_32.num   *= num_temp_u32;     // Expand Number
+	temp_32.num   *= test_signum_8;
+	temp_32.denom *= num_temp_u32;     // Expand Number
+
+	return temp_32;
+}
+
+Ratio_32 add_mul_spezial(Ratio_32 a, Ratio_32 b, Ratio_32 c, int8_t d) {
+	return add( a, mul(b, c), d );
+}
+
+// integer square root of a positive number
+// http://ww1.microchip.com/downloads/en/AppNotes/91040a.pdf
+uint32_t sqrt(uint64_t num) {
+  uint32_t res   = 0;    // result
+  uint32_t add   = 0x1ULL << 31; // 'additional' bit is in position 31
+  uint32_t temp;         // 'A'
+  uint64_t quad;         // 'A^2'
+
+  while ( add > 0 ) {    // 32x test and shift right
+    temp  = res + add;
+    quad  = temp;
+    quad *= temp;
+    if ( num >= quad ) { 
+      res = temp;
+    }
+    add >>= 1;           // shift right the 'additional' bit 
+  }
+  return res;
+}
+
+Ratio_32 sqrt(Ratio_32 a) {
+  Ratio_32  temp_32 = {0, int32_max, int32_max, 0};
+  
+  if ( a.num == 0 ) {
+		return a;
+	}
+
+	uint64_t num_temp_u64   = abs(a.num);
+	num_temp_u64           *= abs(a.denom);
+	uint32_t calc_temp_u32  = sqrt(num_temp_u64);
+ 
+	if ( Debug_Level == 61 ) {
+		Serial.print(a.num);
+		Serial.print(" / ");
+		Serial.println(a.denom);
+		itoa_(num_temp_u64, display_string_itoa_r);
+		Serial.print(display_string_itoa_r);
+		Serial.print("  ");
+		Serial.println(calc_temp_u32);
+	}
+
+	uint64_t denom_temp_u64 = calc_temp_u32;
+	num_temp_u64   += denom_temp_u64 * denom_temp_u64;
+	denom_temp_u64 *= abs(a.denom);
+	denom_temp_u64 *= 2;
+	temp_32 = Reduce_Number( num_temp_u64, denom_temp_u64, a.expo );
+
+	if ( a.expo < 4 ) {
+		temp_32.expo += 110;
+	}
+
+	if ( (temp_32.expo % 2) == 1 ) {
+		if ( abs(a.num) > abs(a.denom) ) {
+			temp_32 = mul(temp_32, sqrt_10_minus);
+		}
+		else {
+			temp_32 = mul(temp_32, sqrt_10_plus);
+		}
+	}
+
+	temp_32.expo /= 2;
+	if ( a.expo < 4 ) {
+		temp_32.expo -= 55;
+	}
+
+	if ( a.num < 0 ) {
+		 temp_32.num  *= -1;
+	}
+	return temp_32;
+}
+
+Ratio_32 cbrt(Ratio_32 a) {
+  Ratio_32  temp_32_b2 = abs_x(a);;
+  
+	if ( a.num == 0 ) {
+		return a;
+	}
+
+	int96_a a_num_calc   = temp_32_b2.num;
+
+	a_num_calc   *= temp_32_b2.denom;
+	a_num_calc   *= temp_32_b2.denom;
+
+	a_num_calc.icbrt(a_num_calc);
+	temp_32_b2.num = a_num_calc.lo;
+
+	temp_32_b2.expo  = a.expo;
+	--temp_32_b2.expo;
+
+	if ( a.expo < 5 ) {
+		temp_32_b2.expo += 111;  // 111 = 3 * 37
+	}
+
+	temp_32_b2.expo /= 3;
+	if ( a.expo < 5 ) {
+		temp_32_b2.expo -= 37;
+	}
+
+	switch (uint8_t(a.expo + 111) % 3) {
+
+		case 0:
+			++temp_32_b2.expo;
+			break;
+
+		case 1:
+			temp_32_b2 = mul( temp_32_b2, cbrt_10_plus );  // 2,15^3 =  10.0
+			break;
+
+		case 2:
+			temp_32_b2 = mul( temp_32_b2, cbrt_100_plus ); // 4,64^3 = 100.0
+			break;
+	}
+ 
+  Ratio_32  temp_32_b1 = square( temp_32_b2 );                      
+	temp_32_b2 = add_mul_spezial( temp_32_b2, abs_x(a), div_x(temp_32_b1), 9 );  // = (2a + b ) / 3
+ 
+	if (a.num < 0) {
+		temp_32_b2.num *= -1;
+	}
+	return temp_32_b2;
+}
+
+Ratio_32 factorial(Ratio_32 a) {
+/*
+ * The following function, abgam() is based on a continued fraction numerical
+ * method found in Abremowitz and Stegun, Handbook of Mathematical Functions
+ *
+ * http://www.realtimerendering.com/resources/GraphicsGems/gemsiii/sqfinal.c
+ *
+ * https://infogalactic.com/info/Factorial#Approximations_of_factorial
+ *
+ * info --> http://dx.doi.org/10.3247/sl2math08.005
+ * 2008_MTH_Nemes_GammaApproximationUpdate.pdf .. Formula (4.1)
+ * http://www.luschny.de/math/factorial/approx/SimpleCases.html#AhighPrecisionApproximation
+ * http://www.luschny.de/math/factorial/approx/Approximations%20for%20the%20Factorial%20Function.pdf  page 8
+ *
+ * https://www2.eecs.berkeley.edu/Pubs/TechRpts/1979/ERL-m-79-71.pdf
+ */
+	uint8_t   fac_test    = 10;
+	uint8_t   fac_count   = 10;
+	 int8_t   test        = compare( a, test_71 );
+
+  Ratio_32  temp_32_mul_a   = {0, int32_max, int32_max, 0};
+  Ratio_32  temp_32_fac     = {1, int32_max_16, int32_max, 0}; // 6
+  Ratio_32  temp_32_fac_sin = {1, int32_max_16, int32_max, 0}; // 6
+  
+  Ratio_32  temp_32_corr_b   = {0, int32_max, int32_max, 0};
+  Ratio_32  temp_32_corr     = {0, int32_max, int32_max, 0};
+  Ratio_32  temp_32_corr_0_1 = {0, int32_max, int32_max, 0};
+  Ratio_32  temp_32_mul      = {0, int32_max, int32_max, 0};
+	
+	uint64_t num_temp_u64      = 1;
+
+	bool    input_near_null = false; //     -1.000 < input < 0.000
+	
+	if ( test > 0 ) { //  input > abs(71)
+		a.denom = 4; // Error_String('[');
+		return a;
+	}
+
+	if ( a.expo == 0 ) { //  input = 1.000 or 0.000
+		if ( (a.num == a.denom) || (a.num == 0) ) {
+			return log_1e0;
+		}
+	}
+
+	if ( a.num < 0 ) {
+		a = add( a, log_1e0, 1 );
+		if ( a.num > 0 ) {
+			input_near_null = true;
+			temp_32_corr_b  = div_x( a );
+		}
+	}
+
+	if ( a.num > 0 ) {		
+
+		temp_32_corr     = clone( log_1e0 );
+		temp_32_corr_0_1 = clone( log_1e0 );
+		if ( a.expo < 0 ) {
+			a                = add( a, log_1e0, 1 );
+			temp_32_corr_0_1 = div_x( a );
+		}
+
+		num_temp_u64    = 0;
+		if ( a.expo >= 0 ) {
+			num_temp_u64   = abs(a.num);
+			num_temp_u64  *= expo_10[a.expo];
+			num_temp_u64  /= abs(a.denom);
+		}
+		fac_test   = num_temp_u64;
+		fac_count  = num_temp_u64;
+
+		temp_32_fac      = add( a, log_1e0, 1 );
+		if ( fac_test < 6 ) {
+			while ( fac_count < 6 ) {
+				++fac_count;
+				temp_32_corr = mul( temp_32_fac, temp_32_corr );
+				temp_32_fac  = add( temp_32_fac, log_1e0, 1 );
+			}
+			temp_32_corr = div_x( temp_32_corr );
+			a = add( mul_6_0, frac(a), 1 );
+		}
+
+		while ( fac_test > 66 ) {
+			temp_32_corr_0_1 = mul( a, temp_32_corr_0_1 );
+			a                = add( a, log_1e0, -1 );
+			--fac_test;
+			if ( fac_test == 66 ) {
+				temp_32_fac    = add( a, log_1e0, 1 );
+			}
+		}
+
+		temp_32_mul = clone( temp_32_fac );
+
+		for ( uint8_t index = 0; index < fa_x_max; index += 1 ) {
+			temp_32_mul = add_mul_spezial( temp_32_fac, fa_x[index], div_x( temp_32_mul ), 1 );
+		}
+
+		temp_32_mul   = mul( fa_0, div_x( temp_32_mul ) );
+		temp_32_mul_a = add( a, exp2_1_2, 1 );
+		temp_32_mul   = add( temp_32_mul, add_mul_spezial( min_x(temp_32_fac), temp_32_mul_a, loge(temp_32_fac), 1 ), 1 );
+		temp_32_mul   = exp( add( temp_32_mul, fa_ln_2pi_2, 1 ));
+
+		temp_32_mul = mul( temp_32_mul, temp_32_corr );
+		temp_32_mul = mul( temp_32_mul, temp_32_corr_0_1 );
+
+		if ( input_near_null == true ) {
+			return mul( temp_32_mul, temp_32_corr_b );
+		}
+		else {
+			return temp_32_mul;
+		}
+	}
+	else {
+		temp_32_mul = frac( a );
+    if ( (temp_32_mul.expo == -90) || (temp_32_mul.num == 0) ) {
+			a.denom = 4; // Error_String('[');
+		  return a;
+    }
+
+	  temp_32_fac_sin = sin_r( a );	  
+
+	  temp_32_mul = factorial( min_x( add( a, exp2_0_1, 1 ) ) );
+
+	  return mul( Pi_neg, div_x( mul( a, mul( temp_32_fac_sin , temp_32_mul ) ) ) );
+	}
 }
 

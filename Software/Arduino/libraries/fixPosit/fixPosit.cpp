@@ -1,0 +1,88 @@
+// Copyright (c) 2021 Jens Grabner
+// Email: jens@grabner-online.org
+// https://github.com/JensGrabner/snc98_Slash-Number-Calculator/tree/master/Software/Arduino/libraries/decPosit
+
+
+///////////////////////////////// Includes //////////////////////////////////
+
+#include <stdint.h>
+#include <stdlib.h> 
+#include <Arduino.h>
+#include <decPosit.h>
+
+#include <itoa_ljust.h>
+// https://github.com/JensGrabner/snc98_Slash-Number-Calculator/tree/master/Software/Arduino/libraries/itoa_ljust
+char  display_string_itoa_d[33];
+
+///////////////////////////////// Definition //////////////////////////////////
+
+#define Debug_Level  0 //  0 - not Debug
+										   // 58 - Test exp()
+											 // 61 - Test algorithm sqrt(e)
+										   // 62 - Reduce_Number( ) - odd-odd continued fraction
+										   // 63 - Test decPosit_8
+
+//////////////////////////////// Implementation /////////////////////////////
+
+R_int8 to_Ratio_8(decPosit_8 input) {
+	uint8_t num[64] = {
+		100, 100, 100, 100, 100, 80, 80, 80, 80, 60, 60, 60, 60, 60, 60, 60,
+		 60,  60,  60,  60,  60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60,
+		 60,  60,  60,  60,  60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 60,
+		 60,  60,  60,  60,  60, 60, 60, 60, 60, 60, 60, 60, 60, 60, 64, 64};
+
+	uint8_t denum[64] = {
+		100,  99,  98,  97,  96, 76, 75, 74, 73, 54, 53, 52, 51, 50, 49, 48,
+		 47,  46,  45,  44,  43, 42, 41, 40, 39, 38, 37, 36, 35, 34, 33, 32,
+	   31,  30,  29,  28,  27, 26, 25, 24, 23, 22, 21, 20, 19, 18, 17, 16,
+		 15,  14,  13,  12,  11, 10,  9,  8,  7,  6,  5,  4,  3,  2,  1,  0};
+	
+	bool x_high = false;
+	
+	 int8_t  number        = input;
+	uint8_t  part          = input >> 6;;
+	 int8_t  regime_temp   = 0;
+	uint8_t  fraction_temp = 0;
+	
+	R_int8  output{0, 0};
+
+	if ( Debug_Level == 63 ) {
+		Serial.print(number);
+		Serial.println("  ");		
+	}
+
+	switch (part) {
+		case 2:
+		  x_high = true;
+		case 3:
+		  regime_temp  = number;
+		  regime_temp *= -1;
+		  regime_temp -= 65;
+		  break;
+
+		case 1:
+		  x_high = true;
+		case 0:
+			regime_temp  = -63;
+			regime_temp += number;
+			break;
+	}
+	fraction_temp  = abs(regime_temp);
+
+	if ( fraction_temp < 64 ) {
+		if ( x_high == true ) {
+			output.num   = num[fraction_temp];
+			output.denom = denum[fraction_temp];
+		}
+		else {
+			output.num   = denum[fraction_temp];
+			output.denom = num[fraction_temp];
+		}
+	}
+
+	if ( number < 0 ) {
+		output.num *= -1;
+	}
+
+	return output;
+}

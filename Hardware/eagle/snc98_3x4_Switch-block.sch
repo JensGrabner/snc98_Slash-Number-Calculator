@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="yes"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="yes" altdistance="0.05" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -26834,6 +26834,8 @@ LETTER landscape</description>
 <wire x1="6" y1="-5" x2="5" y2="-6" width="0.2032" layer="51" curve="-90"/>
 <wire x1="-5" y1="-6" x2="-6" y2="-5" width="0.2032" layer="51" curve="-90"/>
 <wire x1="-2.19" y1="-1" x2="-2.19" y2="1" width="0.2032" layer="51"/>
+<wire x1="2.286" y1="-1" x2="2.286" y2="1" width="0.2032" layer="21"/>
+<wire x1="-4.826" y1="-1" x2="-4.826" y2="1" width="0.2032" layer="21"/>
 <smd name="P$1" x="7.1" y="-2.5" dx="2.3" dy="2.4" layer="1" roundness="20"/>
 <smd name="P$2" x="-7.1" y="-2.5" dx="2.3" dy="2.4" layer="1" roundness="20"/>
 <smd name="P$3" x="7.1" y="2.5" dx="2.3" dy="2.4" layer="1" roundness="20"/>
@@ -26844,9 +26846,9 @@ LETTER landscape</description>
 <pad name="P$14" x="-6.25" y="2.5" drill="1.2" shape="long" rot="R90"/>
 <pad name="P$15" x="0" y="-6.9" drill="1" shape="long"/>
 <pad name="P$21" x="3.2512" y="-2.2479" drill="1" shape="long" rot="R90"/>
-<pad name="P$22" x="-3.2512" y="-2.2479" drill="1" shape="long" rot="R90"/>
+<pad name="P$22" x="-4.0132" y="-2.2479" drill="1" shape="long" rot="R90"/>
 <pad name="P$23" x="3.2512" y="2.2479" drill="1" shape="long" rot="R90"/>
-<pad name="P$24" x="-3.2512" y="2.2479" drill="1" shape="long" rot="R90"/>
+<pad name="P$24" x="-3.7592" y="2.2479" drill="1" shape="long" rot="R90"/>
 <text x="-3.2" y="7" size="1.27" layer="25">&gt;NAME</text>
 <text x="-3" y="-8.1" size="1.27" layer="27">&gt;VALUE</text>
 <text x="-3.2" y="7" size="1.27" layer="25">&gt;NAME</text>
@@ -26855,8 +26857,6 @@ LETTER landscape</description>
 <hole x="0" y="-4.5" drill="1.6"/>
 <hole x="0" y="4.5" drill="1.6"/>
 <hole x="0" y="-4.5" drill="1.6"/>
-<wire x1="2.286" y1="-1" x2="2.286" y2="1" width="0.2032" layer="21"/>
-<wire x1="-4.826" y1="-1" x2="-4.826" y2="1" width="0.2032" layer="21"/>
 </package>
 </packages>
 <symbols>
@@ -33577,16 +33577,6 @@ Source: http://www.vishay.com/docs/10129/hpc0201a.pdf</description>
 <attribute name="MPN" value="SD103CW-7-F"/>
 <attribute name="OC_FARNELL" value="2306221"/>
 </part>
-<part name="R23" library="rcl" deviceset="R-EU_" device="0204/5" value="27k">
-<attribute name="MF" value=""/>
-<attribute name="MPN" value=""/>
-<attribute name="OC_FARNELL" value="unknown"/>
-</part>
-<part name="R24" library="rcl" deviceset="R-EU_" device="0204/5" value="6k8">
-<attribute name="MF" value=""/>
-<attribute name="MPN" value=""/>
-<attribute name="OC_FARNELL" value="unknown"/>
-</part>
 <part name="C10" library="rcl" deviceset="C-EU" device="C1206K" value="15n">
 <attribute name="MF" value=""/>
 <attribute name="MPN" value=""/>
@@ -33594,16 +33584,6 @@ Source: http://www.vishay.com/docs/10129/hpc0201a.pdf</description>
 <attribute name="TME_EU" value="CC0805KRX7R9153"/>
 </part>
 <part name="GND12" library="SparkFun" deviceset="GND" device=""/>
-<part name="R25" library="rcl" deviceset="R-EU_" device="0204/5" value="27k">
-<attribute name="MF" value=""/>
-<attribute name="MPN" value=""/>
-<attribute name="OC_FARNELL" value="unknown"/>
-</part>
-<part name="R26" library="rcl" deviceset="R-EU_" device="0204/5" value="6k8">
-<attribute name="MF" value=""/>
-<attribute name="MPN" value=""/>
-<attribute name="OC_FARNELL" value="unknown"/>
-</part>
 <part name="C11" library="rcl" deviceset="C-EU" device="C1206K" value="15n">
 <attribute name="MF" value=""/>
 <attribute name="MPN" value=""/>
@@ -33611,16 +33591,6 @@ Source: http://www.vishay.com/docs/10129/hpc0201a.pdf</description>
 <attribute name="TME_EU" value="CC0805KRX7R9153"/>
 </part>
 <part name="GND13" library="SparkFun" deviceset="GND" device=""/>
-<part name="R27" library="rcl" deviceset="R-EU_" device="0204/5" value="27k">
-<attribute name="MF" value=""/>
-<attribute name="MPN" value=""/>
-<attribute name="OC_FARNELL" value="unknown"/>
-</part>
-<part name="R28" library="rcl" deviceset="R-EU_" device="0204/5" value="6k8">
-<attribute name="MF" value=""/>
-<attribute name="MPN" value=""/>
-<attribute name="OC_FARNELL" value="unknown"/>
-</part>
 <part name="C12" library="rcl" deviceset="C-EU" device="C1206K" value="15n">
 <attribute name="MF" value=""/>
 <attribute name="MPN" value=""/>
@@ -33628,43 +33598,7 @@ Source: http://www.vishay.com/docs/10129/hpc0201a.pdf</description>
 <attribute name="TME_EU" value="CC0805KRX7R9153"/>
 </part>
 <part name="GND14" library="SparkFun" deviceset="GND" device=""/>
-<part name="R1" library="rcl" deviceset="R-EU_" device="R1206" value="6k8">
-<attribute name="MF" value=""/>
-<attribute name="MPN" value=""/>
-<attribute name="OC_FARNELL" value="unknown"/>
-</part>
-<part name="R2" library="rcl" deviceset="R-EU_" device="R1206" value="6k8">
-<attribute name="MF" value=""/>
-<attribute name="MPN" value=""/>
-<attribute name="OC_FARNELL" value="unknown"/>
-</part>
-<part name="R3" library="rcl" deviceset="R-EU_" device="R1206" value="6k8">
-<attribute name="MF" value=""/>
-<attribute name="MPN" value=""/>
-<attribute name="OC_FARNELL" value="unknown"/>
-</part>
-<part name="R4" library="rcl" deviceset="R-EU_" device="R1206" value="27k">
-<attribute name="MF" value=""/>
-<attribute name="MPN" value=""/>
-<attribute name="OC_FARNELL" value="unknown"/>
-</part>
-<part name="R5" library="rcl" deviceset="R-EU_" device="R1206" value="27k">
-<attribute name="MF" value=""/>
-<attribute name="MPN" value=""/>
-<attribute name="OC_FARNELL" value="unknown"/>
-</part>
-<part name="R6" library="rcl" deviceset="R-EU_" device="R1206" value="27k">
-<attribute name="MF" value=""/>
-<attribute name="MPN" value=""/>
-<attribute name="OC_FARNELL" value="unknown"/>
-</part>
 <part name="R33" library="rcl" deviceset="R-EU_" device="M0805" value="6k8">
-<attribute name="MF" value=""/>
-<attribute name="MPN" value=""/>
-<attribute name="OC_FARNELL" value="unknown"/>
-<attribute name="TME_EU" value="RC0805FR-076K8"/>
-</part>
-<part name="R7" library="rcl" deviceset="R-EU_" device="M0805" value="6k8">
 <attribute name="MF" value=""/>
 <attribute name="MPN" value=""/>
 <attribute name="OC_FARNELL" value="unknown"/>
@@ -33675,12 +33609,6 @@ Source: http://www.vishay.com/docs/10129/hpc0201a.pdf</description>
 <attribute name="MPN" value=""/>
 <attribute name="OC_FARNELL" value="unknown"/>
 <attribute name="TME_EU" value="RC0805FR-076K8"/>
-</part>
-<part name="R9" library="rcl" deviceset="R-EU_" device="M0805" value="27k">
-<attribute name="MF" value=""/>
-<attribute name="MPN" value=""/>
-<attribute name="OC_FARNELL" value="unknown"/>
-<attribute name="TME_EU" value="RC0805FR-0727K"/>
 </part>
 <part name="R10" library="rcl" deviceset="R-EU_" device="M0805" value="27k">
 <attribute name="MF" value=""/>
@@ -33754,6 +33682,18 @@ Source: http://www.vishay.com/docs/10129/hpc0201a.pdf</description>
 <attribute name="MPN" value="SD103CW-7-F"/>
 <attribute name="OC_FARNELL" value="2306221"/>
 </part>
+<part name="R1" library="rcl" deviceset="R-EU_" device="M0805" value="6k8">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+<attribute name="TME_EU" value="RC0805FR-076K8"/>
+</part>
+<part name="R12" library="rcl" deviceset="R-EU_" device="M0805" value="27k">
+<attribute name="MF" value=""/>
+<attribute name="MPN" value=""/>
+<attribute name="OC_FARNELL" value="unknown"/>
+<attribute name="TME_EU" value="RC0805FR-0727K"/>
+</part>
 </parts>
 <sheets>
 <sheet>
@@ -33770,6 +33710,7 @@ Source: http://www.vishay.com/docs/10129/hpc0201a.pdf</description>
 <text x="228.6" y="80.01" size="1.6764" layer="91" ratio="12" rot="R90" align="bottom-center">BAS70-06</text>
 <text x="196.85" y="81.28" size="1.6764" layer="91" ratio="12" rot="R90" align="bottom-center">BAS70-06</text>
 <text x="165.1" y="81.28" size="1.6764" layer="91" ratio="12" rot="R90" align="bottom-center">BAS70-06</text>
+<text x="15.24" y="38.1" size="1.6764" layer="91" ratio="12">Switches: https://de.aliexpress.com/item/32534955696.html</text>
 </plain>
 <instances>
 <instance part="FRAME1" gate="G$1" x="0" y="0"/>
@@ -33987,16 +33928,6 @@ Source: http://www.vishay.com/docs/10129/hpc0201a.pdf</description>
 <attribute name="MF" x="171.45" y="114.3" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MPN" x="171.45" y="114.3" size="1.016" layer="96" align="bottom-center" display="off"/>
 </instance>
-<instance part="R23" gate="G$1" x="121.92" y="165.1" rot="R90">
-<attribute name="OC_FARNELL" x="121.92" y="165.1" size="1.016" layer="96" align="bottom-center" display="off"/>
-<attribute name="MF" x="121.92" y="165.1" size="1.016" layer="96" align="bottom-center" display="off"/>
-<attribute name="MPN" x="121.92" y="165.1" size="1.016" layer="96" align="bottom-center" display="off"/>
-</instance>
-<instance part="R24" gate="G$1" x="111.76" y="154.94">
-<attribute name="OC_FARNELL" x="111.76" y="154.94" size="1.016" layer="96" align="bottom-center" display="off"/>
-<attribute name="MF" x="111.76" y="154.94" size="1.016" layer="96" align="bottom-center" display="off"/>
-<attribute name="MPN" x="111.76" y="154.94" size="1.016" layer="96" align="bottom-center" display="off"/>
-</instance>
 <instance part="C10" gate="G$1" x="121.92" y="149.86">
 <attribute name="OC_FARNELL" x="121.92" y="149.86" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MF" x="121.92" y="149.86" size="1.016" layer="96" align="bottom-center" display="off"/>
@@ -34005,16 +33936,6 @@ Source: http://www.vishay.com/docs/10129/hpc0201a.pdf</description>
 </instance>
 <instance part="GND12" gate="1" x="121.92" y="139.7" smashed="yes">
 <attribute name="VALUE" x="119.38" y="137.16" size="1.778" layer="96"/>
-</instance>
-<instance part="R25" gate="G$1" x="121.92" y="118.11" rot="R90">
-<attribute name="OC_FARNELL" x="121.92" y="118.11" size="1.016" layer="96" align="bottom-center" display="off"/>
-<attribute name="MF" x="121.92" y="118.11" size="1.016" layer="96" align="bottom-center" display="off"/>
-<attribute name="MPN" x="121.92" y="118.11" size="1.016" layer="96" align="bottom-center" display="off"/>
-</instance>
-<instance part="R26" gate="G$1" x="111.76" y="107.95">
-<attribute name="OC_FARNELL" x="111.76" y="107.95" size="1.016" layer="96" align="bottom-center" display="off"/>
-<attribute name="MF" x="111.76" y="107.95" size="1.016" layer="96" align="bottom-center" display="off"/>
-<attribute name="MPN" x="111.76" y="107.95" size="1.016" layer="96" align="bottom-center" display="off"/>
 </instance>
 <instance part="C11" gate="G$1" x="121.92" y="102.87">
 <attribute name="OC_FARNELL" x="121.92" y="102.87" size="1.016" layer="96" align="bottom-center" display="off"/>
@@ -34025,16 +33946,6 @@ Source: http://www.vishay.com/docs/10129/hpc0201a.pdf</description>
 <instance part="GND13" gate="1" x="121.92" y="92.71" smashed="yes">
 <attribute name="VALUE" x="119.38" y="90.17" size="1.778" layer="96"/>
 </instance>
-<instance part="R27" gate="G$1" x="121.92" y="71.12" rot="R90">
-<attribute name="OC_FARNELL" x="121.92" y="71.12" size="1.016" layer="96" align="bottom-center" display="off"/>
-<attribute name="MF" x="121.92" y="71.12" size="1.016" layer="96" align="bottom-center" display="off"/>
-<attribute name="MPN" x="121.92" y="71.12" size="1.016" layer="96" align="bottom-center" display="off"/>
-</instance>
-<instance part="R28" gate="G$1" x="111.76" y="60.96">
-<attribute name="OC_FARNELL" x="111.76" y="60.96" size="1.016" layer="96" align="bottom-center" display="off"/>
-<attribute name="MF" x="111.76" y="60.96" size="1.016" layer="96" align="bottom-center" display="off"/>
-<attribute name="MPN" x="111.76" y="60.96" size="1.016" layer="96" align="bottom-center" display="off"/>
-</instance>
 <instance part="C12" gate="G$1" x="121.92" y="55.88">
 <attribute name="OC_FARNELL" x="121.92" y="55.88" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MF" x="121.92" y="55.88" size="1.016" layer="96" align="bottom-center" display="off"/>
@@ -34044,59 +33955,17 @@ Source: http://www.vishay.com/docs/10129/hpc0201a.pdf</description>
 <instance part="GND14" gate="1" x="121.92" y="45.72" smashed="yes">
 <attribute name="VALUE" x="119.38" y="43.18" size="1.778" layer="96"/>
 </instance>
-<instance part="R1" gate="G$1" x="111.76" y="146.05">
-<attribute name="OC_FARNELL" x="111.76" y="146.05" size="1.016" layer="96" align="bottom-center" display="off"/>
-<attribute name="MF" x="111.76" y="146.05" size="1.016" layer="96" align="bottom-center" display="off"/>
-<attribute name="MPN" x="111.76" y="146.05" size="1.016" layer="96" align="bottom-center" display="off"/>
-</instance>
-<instance part="R2" gate="G$1" x="111.76" y="99.06">
-<attribute name="OC_FARNELL" x="111.76" y="99.06" size="1.016" layer="96" align="bottom-center" display="off"/>
-<attribute name="MF" x="111.76" y="99.06" size="1.016" layer="96" align="bottom-center" display="off"/>
-<attribute name="MPN" x="111.76" y="99.06" size="1.016" layer="96" align="bottom-center" display="off"/>
-</instance>
-<instance part="R3" gate="G$1" x="111.76" y="50.8">
-<attribute name="OC_FARNELL" x="111.76" y="50.8" size="1.016" layer="96" align="bottom-center" display="off"/>
-<attribute name="MF" x="111.76" y="50.8" size="1.016" layer="96" align="bottom-center" display="off"/>
-<attribute name="MPN" x="111.76" y="50.8" size="1.016" layer="96" align="bottom-center" display="off"/>
-</instance>
-<instance part="R4" gate="G$1" x="113.03" y="165.1" rot="R90">
-<attribute name="OC_FARNELL" x="113.03" y="165.1" size="1.016" layer="96" align="bottom-center" display="off"/>
-<attribute name="MF" x="113.03" y="165.1" size="1.016" layer="96" align="bottom-center" display="off"/>
-<attribute name="MPN" x="113.03" y="165.1" size="1.016" layer="96" align="bottom-center" display="off"/>
-</instance>
-<instance part="R5" gate="G$1" x="113.03" y="118.11" rot="R90">
-<attribute name="OC_FARNELL" x="113.03" y="118.11" size="1.016" layer="96" align="bottom-center" display="off"/>
-<attribute name="MF" x="113.03" y="118.11" size="1.016" layer="96" align="bottom-center" display="off"/>
-<attribute name="MPN" x="113.03" y="118.11" size="1.016" layer="96" align="bottom-center" display="off"/>
-</instance>
-<instance part="R6" gate="G$1" x="113.03" y="71.12" rot="R90">
-<attribute name="OC_FARNELL" x="113.03" y="71.12" size="1.016" layer="96" align="bottom-center" display="off"/>
-<attribute name="MF" x="113.03" y="71.12" size="1.016" layer="96" align="bottom-center" display="off"/>
-<attribute name="MPN" x="113.03" y="71.12" size="1.016" layer="96" align="bottom-center" display="off"/>
-</instance>
 <instance part="R33" gate="G$1" x="111.76" y="137.16">
 <attribute name="OC_FARNELL" x="111.76" y="137.16" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MF" x="111.76" y="137.16" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MPN" x="111.76" y="137.16" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="TME_EU" x="111.76" y="137.16" size="1.016" layer="96" align="bottom-center" display="off"/>
 </instance>
-<instance part="R7" gate="G$1" x="111.76" y="90.17">
-<attribute name="OC_FARNELL" x="111.76" y="90.17" size="1.016" layer="96" align="bottom-center" display="off"/>
-<attribute name="MF" x="111.76" y="90.17" size="1.016" layer="96" align="bottom-center" display="off"/>
-<attribute name="MPN" x="111.76" y="90.17" size="1.016" layer="96" align="bottom-center" display="off"/>
-<attribute name="TME_EU" x="111.76" y="90.17" size="1.016" layer="96" align="bottom-center" display="off"/>
-</instance>
 <instance part="R8" gate="G$1" x="111.76" y="41.91">
 <attribute name="OC_FARNELL" x="111.76" y="41.91" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MF" x="111.76" y="41.91" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MPN" x="111.76" y="41.91" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="TME_EU" x="111.76" y="41.91" size="1.016" layer="96" align="bottom-center" display="off"/>
-</instance>
-<instance part="R9" gate="G$1" x="104.14" y="165.1" rot="R90">
-<attribute name="OC_FARNELL" x="104.14" y="165.1" size="1.016" layer="96" rot="R90" align="bottom-center" display="off"/>
-<attribute name="MF" x="104.14" y="165.1" size="1.016" layer="96" rot="R90" align="bottom-center" display="off"/>
-<attribute name="MPN" x="104.14" y="165.1" size="1.016" layer="96" rot="R90" align="bottom-center" display="off"/>
-<attribute name="TME_EU" x="104.14" y="165.1" size="1.016" layer="96" rot="R90" align="bottom-center" display="off"/>
 </instance>
 <instance part="R10" gate="G$1" x="104.14" y="118.11" rot="R90">
 <attribute name="OC_FARNELL" x="104.14" y="118.11" size="1.016" layer="96" rot="R90" align="bottom-center" display="off"/>
@@ -34169,6 +34038,18 @@ Source: http://www.vishay.com/docs/10129/hpc0201a.pdf</description>
 <attribute name="OC_FARNELL" x="234.95" y="64.77" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MF" x="234.95" y="64.77" size="1.016" layer="96" align="bottom-center" display="off"/>
 <attribute name="MPN" x="234.95" y="64.77" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="R1" gate="G$1" x="111.76" y="99.06">
+<attribute name="OC_FARNELL" x="111.76" y="99.06" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MF" x="111.76" y="99.06" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="MPN" x="111.76" y="99.06" size="1.016" layer="96" align="bottom-center" display="off"/>
+<attribute name="TME_EU" x="111.76" y="99.06" size="1.016" layer="96" align="bottom-center" display="off"/>
+</instance>
+<instance part="R12" gate="G$1" x="104.14" y="166.37" rot="R90">
+<attribute name="OC_FARNELL" x="104.14" y="166.37" size="1.016" layer="96" rot="R90" align="bottom-center" display="off"/>
+<attribute name="MF" x="104.14" y="166.37" size="1.016" layer="96" rot="R90" align="bottom-center" display="off"/>
+<attribute name="MPN" x="104.14" y="166.37" size="1.016" layer="96" rot="R90" align="bottom-center" display="off"/>
+<attribute name="TME_EU" x="104.14" y="166.37" size="1.016" layer="96" rot="R90" align="bottom-center" display="off"/>
 </instance>
 </instances>
 <busses>
@@ -34490,10 +34371,8 @@ Source: http://www.vishay.com/docs/10129/hpc0201a.pdf</description>
 <label x="45.72" y="153.67" size="1.778" layer="95"/>
 </segment>
 <segment>
-<pinref part="R27" gate="G$1" pin="1"/>
 <pinref part="C12" gate="G$1" pin="1"/>
 <wire x1="121.92" y1="66.04" x2="121.92" y2="64.77" width="0.1524" layer="91"/>
-<pinref part="R28" gate="G$1" pin="2"/>
 <wire x1="121.92" y1="64.77" x2="121.92" y2="60.96" width="0.1524" layer="91"/>
 <wire x1="121.92" y1="60.96" x2="121.92" y2="58.42" width="0.1524" layer="91"/>
 <wire x1="116.84" y1="60.96" x2="118.11" y2="60.96" width="0.1524" layer="91"/>
@@ -34501,11 +34380,9 @@ Source: http://www.vishay.com/docs/10129/hpc0201a.pdf</description>
 <wire x1="118.11" y1="60.96" x2="121.92" y2="60.96" width="0.1524" layer="91"/>
 <wire x1="121.92" y1="60.96" x2="130.81" y2="60.96" width="0.1524" layer="91"/>
 <label x="128.27" y="62.23" size="1.778" layer="95"/>
-<pinref part="R3" gate="G$1" pin="2"/>
 <wire x1="116.84" y1="50.8" x2="118.11" y2="50.8" width="0.1524" layer="91"/>
 <wire x1="118.11" y1="50.8" x2="118.11" y2="60.96" width="0.1524" layer="91"/>
 <junction x="118.11" y="60.96"/>
-<pinref part="R6" gate="G$1" pin="1"/>
 <wire x1="113.03" y1="66.04" x2="113.03" y2="64.77" width="0.1524" layer="91"/>
 <wire x1="113.03" y1="64.77" x2="121.92" y2="64.77" width="0.1524" layer="91"/>
 <junction x="121.92" y="64.77"/>
@@ -34652,10 +34529,8 @@ Source: http://www.vishay.com/docs/10129/hpc0201a.pdf</description>
 <label x="45.72" y="149.86" size="1.778" layer="95"/>
 </segment>
 <segment>
-<pinref part="R25" gate="G$1" pin="1"/>
 <pinref part="C11" gate="G$1" pin="1"/>
 <wire x1="121.92" y1="113.03" x2="121.92" y2="111.76" width="0.1524" layer="91"/>
-<pinref part="R26" gate="G$1" pin="2"/>
 <wire x1="121.92" y1="111.76" x2="121.92" y2="107.95" width="0.1524" layer="91"/>
 <wire x1="121.92" y1="107.95" x2="121.92" y2="105.41" width="0.1524" layer="91"/>
 <wire x1="116.84" y1="107.95" x2="118.11" y2="107.95" width="0.1524" layer="91"/>
@@ -34663,15 +34538,12 @@ Source: http://www.vishay.com/docs/10129/hpc0201a.pdf</description>
 <wire x1="118.11" y1="107.95" x2="121.92" y2="107.95" width="0.1524" layer="91"/>
 <wire x1="121.92" y1="107.95" x2="130.81" y2="107.95" width="0.1524" layer="91"/>
 <label x="128.27" y="109.22" size="1.778" layer="95"/>
-<pinref part="R2" gate="G$1" pin="2"/>
 <wire x1="116.84" y1="99.06" x2="118.11" y2="99.06" width="0.1524" layer="91"/>
 <wire x1="118.11" y1="99.06" x2="118.11" y2="107.95" width="0.1524" layer="91"/>
 <junction x="118.11" y="107.95"/>
-<pinref part="R5" gate="G$1" pin="1"/>
 <wire x1="113.03" y1="113.03" x2="113.03" y2="111.76" width="0.1524" layer="91"/>
 <wire x1="113.03" y1="111.76" x2="121.92" y2="111.76" width="0.1524" layer="91"/>
 <junction x="121.92" y="111.76"/>
-<pinref part="R7" gate="G$1" pin="2"/>
 <wire x1="116.84" y1="90.17" x2="118.11" y2="90.17" width="0.1524" layer="91"/>
 <wire x1="118.11" y1="90.17" x2="118.11" y2="99.06" width="0.1524" layer="91"/>
 <junction x="118.11" y="99.06"/>
@@ -34679,6 +34551,7 @@ Source: http://www.vishay.com/docs/10129/hpc0201a.pdf</description>
 <wire x1="113.03" y1="111.76" x2="104.14" y2="111.76" width="0.1524" layer="91"/>
 <wire x1="104.14" y1="111.76" x2="104.14" y2="113.03" width="0.1524" layer="91"/>
 <junction x="113.03" y="111.76"/>
+<pinref part="R1" gate="G$1" pin="2"/>
 </segment>
 </net>
 <net name="N$30" class="0">
@@ -34733,10 +34606,8 @@ Source: http://www.vishay.com/docs/10129/hpc0201a.pdf</description>
 <label x="45.72" y="146.05" size="1.778" layer="95"/>
 </segment>
 <segment>
-<pinref part="R23" gate="G$1" pin="1"/>
 <pinref part="C10" gate="G$1" pin="1"/>
 <wire x1="121.92" y1="160.02" x2="121.92" y2="158.75" width="0.1524" layer="91"/>
-<pinref part="R24" gate="G$1" pin="2"/>
 <wire x1="121.92" y1="158.75" x2="121.92" y2="154.94" width="0.1524" layer="91"/>
 <wire x1="121.92" y1="154.94" x2="121.92" y2="152.4" width="0.1524" layer="91"/>
 <wire x1="116.84" y1="154.94" x2="118.11" y2="154.94" width="0.1524" layer="91"/>
@@ -34744,11 +34615,9 @@ Source: http://www.vishay.com/docs/10129/hpc0201a.pdf</description>
 <wire x1="118.11" y1="154.94" x2="121.92" y2="154.94" width="0.1524" layer="91"/>
 <wire x1="121.92" y1="154.94" x2="130.81" y2="154.94" width="0.1524" layer="91"/>
 <label x="128.27" y="156.21" size="1.778" layer="95"/>
-<pinref part="R1" gate="G$1" pin="2"/>
 <wire x1="116.84" y1="146.05" x2="118.11" y2="146.05" width="0.1524" layer="91"/>
 <wire x1="118.11" y1="146.05" x2="118.11" y2="154.94" width="0.1524" layer="91"/>
 <junction x="118.11" y="154.94"/>
-<pinref part="R4" gate="G$1" pin="1"/>
 <wire x1="113.03" y1="160.02" x2="113.03" y2="158.75" width="0.1524" layer="91"/>
 <wire x1="113.03" y1="158.75" x2="121.92" y2="158.75" width="0.1524" layer="91"/>
 <junction x="121.92" y="158.75"/>
@@ -34756,10 +34625,11 @@ Source: http://www.vishay.com/docs/10129/hpc0201a.pdf</description>
 <wire x1="116.84" y1="137.16" x2="118.11" y2="137.16" width="0.1524" layer="91"/>
 <wire x1="118.11" y1="137.16" x2="118.11" y2="146.05" width="0.1524" layer="91"/>
 <junction x="118.11" y="146.05"/>
-<pinref part="R9" gate="G$1" pin="1"/>
 <wire x1="113.03" y1="158.75" x2="104.14" y2="158.75" width="0.1524" layer="91"/>
-<wire x1="104.14" y1="158.75" x2="104.14" y2="160.02" width="0.1524" layer="91"/>
 <junction x="113.03" y="158.75"/>
+<pinref part="R12" gate="G$1" pin="1"/>
+<wire x1="104.14" y1="161.29" x2="104.14" y2="158.75" width="0.1524" layer="91"/>
+<label x="104.14" y="160.02" size="1.778" layer="95" rot="R180"/>
 </segment>
 </net>
 <net name="N$6" class="0">
@@ -34783,25 +34653,22 @@ Source: http://www.vishay.com/docs/10129/hpc0201a.pdf</description>
 <segment>
 <wire x1="113.03" y1="172.72" x2="121.92" y2="172.72" width="0.1524" layer="91"/>
 <label x="124.46" y="173.99" size="1.778" layer="95"/>
-<pinref part="R23" gate="G$1" pin="2"/>
 <wire x1="121.92" y1="172.72" x2="129.54" y2="172.72" width="0.1524" layer="91"/>
 <wire x1="121.92" y1="170.18" x2="121.92" y2="172.72" width="0.1524" layer="91"/>
 <junction x="121.92" y="172.72"/>
-<pinref part="R4" gate="G$1" pin="2"/>
 <wire x1="113.03" y1="170.18" x2="113.03" y2="172.72" width="0.1524" layer="91"/>
-<pinref part="R9" gate="G$1" pin="2"/>
 <wire x1="113.03" y1="172.72" x2="104.14" y2="172.72" width="0.1524" layer="91"/>
-<wire x1="104.14" y1="172.72" x2="104.14" y2="170.18" width="0.1524" layer="91"/>
+<wire x1="104.14" y1="172.72" x2="104.14" y2="171.45" width="0.1524" layer="91"/>
 <junction x="113.03" y="172.72"/>
+<pinref part="R12" gate="G$1" pin="2"/>
+<label x="104.14" y="170.18" size="1.778" layer="95" rot="R180"/>
 </segment>
 <segment>
 <wire x1="113.03" y1="125.73" x2="121.92" y2="125.73" width="0.1524" layer="91"/>
 <label x="124.46" y="127" size="1.778" layer="95"/>
-<pinref part="R25" gate="G$1" pin="2"/>
 <wire x1="121.92" y1="125.73" x2="129.54" y2="125.73" width="0.1524" layer="91"/>
 <wire x1="121.92" y1="123.19" x2="121.92" y2="125.73" width="0.1524" layer="91"/>
 <junction x="121.92" y="125.73"/>
-<pinref part="R5" gate="G$1" pin="2"/>
 <wire x1="113.03" y1="123.19" x2="113.03" y2="125.73" width="0.1524" layer="91"/>
 <pinref part="R10" gate="G$1" pin="2"/>
 <wire x1="113.03" y1="125.73" x2="104.14" y2="125.73" width="0.1524" layer="91"/>
@@ -34811,11 +34678,9 @@ Source: http://www.vishay.com/docs/10129/hpc0201a.pdf</description>
 <segment>
 <wire x1="113.03" y1="78.74" x2="121.92" y2="78.74" width="0.1524" layer="91"/>
 <label x="124.46" y="80.01" size="1.778" layer="95"/>
-<pinref part="R27" gate="G$1" pin="2"/>
 <wire x1="121.92" y1="78.74" x2="129.54" y2="78.74" width="0.1524" layer="91"/>
 <wire x1="121.92" y1="76.2" x2="121.92" y2="78.74" width="0.1524" layer="91"/>
 <junction x="121.92" y="78.74"/>
-<pinref part="R6" gate="G$1" pin="2"/>
 <wire x1="113.03" y1="76.2" x2="113.03" y2="78.74" width="0.1524" layer="91"/>
 <pinref part="R11" gate="G$1" pin="2"/>
 <wire x1="113.03" y1="78.74" x2="102.87" y2="78.74" width="0.1524" layer="91"/>
@@ -34831,10 +34696,8 @@ Source: http://www.vishay.com/docs/10129/hpc0201a.pdf</description>
 </net>
 <net name="A_1" class="0">
 <segment>
-<pinref part="R24" gate="G$1" pin="1"/>
 <wire x1="106.68" y1="154.94" x2="105.41" y2="154.94" width="0.1524" layer="91"/>
 <label x="100.33" y="156.21" size="1.778" layer="95"/>
-<pinref part="R1" gate="G$1" pin="1"/>
 <wire x1="105.41" y1="154.94" x2="99.06" y2="154.94" width="0.1524" layer="91"/>
 <wire x1="106.68" y1="146.05" x2="105.41" y2="146.05" width="0.1524" layer="91"/>
 <wire x1="105.41" y1="146.05" x2="105.41" y2="154.94" width="0.1524" layer="91"/>
@@ -34885,18 +34748,16 @@ Source: http://www.vishay.com/docs/10129/hpc0201a.pdf</description>
 </net>
 <net name="A_2" class="0">
 <segment>
-<pinref part="R26" gate="G$1" pin="1"/>
 <wire x1="106.68" y1="107.95" x2="105.41" y2="107.95" width="0.1524" layer="91"/>
 <label x="100.33" y="109.22" size="1.778" layer="95"/>
-<pinref part="R2" gate="G$1" pin="1"/>
 <wire x1="105.41" y1="107.95" x2="99.06" y2="107.95" width="0.1524" layer="91"/>
 <wire x1="106.68" y1="99.06" x2="105.41" y2="99.06" width="0.1524" layer="91"/>
 <wire x1="105.41" y1="99.06" x2="105.41" y2="107.95" width="0.1524" layer="91"/>
 <junction x="105.41" y="107.95"/>
-<pinref part="R7" gate="G$1" pin="1"/>
 <wire x1="106.68" y1="90.17" x2="105.41" y2="90.17" width="0.1524" layer="91"/>
 <wire x1="105.41" y1="90.17" x2="105.41" y2="99.06" width="0.1524" layer="91"/>
 <junction x="105.41" y="99.06"/>
+<pinref part="R1" gate="G$1" pin="1"/>
 </segment>
 <segment>
 <wire x1="207.01" y1="124.46" x2="207.01" y2="137.16" width="0.1524" layer="91"/>
@@ -34939,10 +34800,8 @@ Source: http://www.vishay.com/docs/10129/hpc0201a.pdf</description>
 </net>
 <net name="A_3" class="0">
 <segment>
-<pinref part="R28" gate="G$1" pin="1"/>
 <wire x1="106.68" y1="60.96" x2="105.41" y2="60.96" width="0.1524" layer="91"/>
 <label x="100.33" y="62.23" size="1.778" layer="95"/>
-<pinref part="R3" gate="G$1" pin="1"/>
 <wire x1="105.41" y1="60.96" x2="99.06" y2="60.96" width="0.1524" layer="91"/>
 <wire x1="106.68" y1="50.8" x2="105.41" y2="50.8" width="0.1524" layer="91"/>
 <wire x1="105.41" y1="50.8" x2="105.41" y2="60.96" width="0.1524" layer="91"/>
@@ -35008,7 +34867,6 @@ Source: http://www.vishay.com/docs/10129/hpc0201a.pdf</description>
 <approved hash="101,1,15.24,72.39,H8,MOUNT,,,,"/>
 <approved hash="101,1,15.24,59.69,H9,MOUNT,,,,"/>
 <approved hash="101,1,15.24,46.99,H10,MOUNT,,,,"/>
-<approved hash="113,1,28.3887,165.777,JP1,,,,,"/>
 </errors>
 </schematic>
 </drawing>

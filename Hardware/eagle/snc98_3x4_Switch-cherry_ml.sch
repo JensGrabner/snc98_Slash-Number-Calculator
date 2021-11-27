@@ -6,7 +6,7 @@
 <setting alwaysvectorfont="yes"/>
 <setting verticaltext="up"/>
 </settings>
-<grid distance="50" unitdist="mil" unit="mil" style="lines" multiple="1" display="yes" altdistance="0.05" altunitdist="inch" altunit="inch"/>
+<grid distance="0.1" unitdist="inch" unit="inch" style="lines" multiple="1" display="no" altdistance="0.01" altunitdist="inch" altunit="inch"/>
 <layers>
 <layer number="1" name="Top" color="4" fill="1" visible="no" active="no"/>
 <layer number="2" name="Route2" color="1" fill="3" visible="no" active="no"/>
@@ -33310,6 +33310,153 @@ Source: &lt;a href="http://switches-sensors.zf.com/wp-content/blogs.dir/7/2012/0
 </deviceset>
 </devicesets>
 </library>
+<library name="cherry">
+<packages>
+<package name="CHERRY_MX">
+<description>Cherry keymodule MX
+Default shape</description>
+<wire x1="-6.6" y1="7.8" x2="-2.8" y2="7.8" width="0.127" layer="20"/>
+<wire x1="2.8" y1="7.8" x2="6.6" y2="7.8" width="0.127" layer="20"/>
+<wire x1="7.8" y1="6.6" x2="7.8" y2="6" width="0.127" layer="20"/>
+<wire x1="7.8" y1="-6" x2="7.8" y2="-6.6" width="0.127" layer="20"/>
+<wire x1="6.6" y1="-7.8" x2="2.8" y2="-7.8" width="0.127" layer="20"/>
+<wire x1="-2.8" y1="-7.8" x2="-6.6" y2="-7.8" width="0.127" layer="20"/>
+<wire x1="-7.8" y1="-6.6" x2="-7.8" y2="-6" width="0.127" layer="20"/>
+<wire x1="-7.8" y1="6" x2="-7.8" y2="6.6" width="0.127" layer="20"/>
+<wire x1="-3.9" y1="2.6" x2="3.9" y2="2.6" width="0.127" layer="51"/>
+<wire x1="3.9" y1="2.6" x2="3.9" y2="-2.6" width="0.127" layer="51"/>
+<wire x1="3.9" y1="-2.6" x2="-3.9" y2="-2.6" width="0.127" layer="51"/>
+<wire x1="-3.9" y1="-2.6" x2="-3.9" y2="2.6" width="0.127" layer="51"/>
+<wire x1="-2.3" y1="0.3" x2="-2.1" y2="0.3" width="0.127" layer="51"/>
+<wire x1="-2.1" y1="0.3" x2="-0.4" y2="0.3" width="0.127" layer="51"/>
+<wire x1="-0.4" y1="0.3" x2="-0.4" y2="0.5" width="0.127" layer="51"/>
+<wire x1="-0.4" y1="0.5" x2="-0.4" y2="1.9" width="0.127" layer="51"/>
+<wire x1="-0.4" y1="1.9" x2="0.4" y2="1.9" width="0.127" layer="51"/>
+<wire x1="0.4" y1="1.9" x2="0.4" y2="0.5" width="0.127" layer="51"/>
+<wire x1="0.4" y1="0.5" x2="0.4" y2="0.3" width="0.127" layer="51"/>
+<wire x1="0.4" y1="0.3" x2="2.1" y2="0.3" width="0.127" layer="51"/>
+<wire x1="2.1" y1="0.3" x2="2.3" y2="0.3" width="0.127" layer="51"/>
+<wire x1="2.3" y1="0.3" x2="2.3" y2="-0.3" width="0.127" layer="51"/>
+<wire x1="2.3" y1="-0.3" x2="2.1" y2="-0.3" width="0.127" layer="51"/>
+<wire x1="2.1" y1="-0.3" x2="0.4" y2="-0.3" width="0.127" layer="51"/>
+<wire x1="0.4" y1="-0.3" x2="0.4" y2="-0.5" width="0.127" layer="51"/>
+<wire x1="0.4" y1="-0.5" x2="0.4" y2="-1.9" width="0.127" layer="51"/>
+<wire x1="0.4" y1="-1.9" x2="-0.4" y2="-1.9" width="0.127" layer="51"/>
+<wire x1="-0.4" y1="-1.9" x2="-0.4" y2="-0.5" width="0.127" layer="51"/>
+<wire x1="-0.4" y1="-0.5" x2="-0.4" y2="-0.3" width="0.127" layer="51"/>
+<wire x1="-0.4" y1="-0.3" x2="-2.2" y2="-0.3" width="0.127" layer="51"/>
+<wire x1="-2.2" y1="-0.3" x2="-2.3" y2="-0.3" width="0.127" layer="51"/>
+<wire x1="-2.3" y1="-0.3" x2="-2.3" y2="0.3" width="0.127" layer="51"/>
+<wire x1="-2.1" y1="0.3" x2="-1.9" y2="0.5" width="0.127" layer="51"/>
+<wire x1="-1.9" y1="0.5" x2="-0.4" y2="0.5" width="0.127" layer="51"/>
+<wire x1="-2.2" y1="-0.3" x2="-2" y2="-0.5" width="0.127" layer="51"/>
+<wire x1="-2" y1="-0.5" x2="-0.4" y2="-0.5" width="0.127" layer="51"/>
+<wire x1="0.4" y1="0.5" x2="1.9" y2="0.5" width="0.127" layer="51"/>
+<wire x1="0.4" y1="-0.5" x2="1.9" y2="-0.5" width="0.127" layer="51"/>
+<wire x1="1.9" y1="-0.5" x2="2.1" y2="-0.3" width="0.127" layer="51"/>
+<wire x1="2.1" y1="0.3" x2="1.9" y2="0.5" width="0.127" layer="51"/>
+<wire x1="-3.6" y1="-2.3" x2="-3.6" y2="2.3" width="0.127" layer="51"/>
+<wire x1="-3.6" y1="2.3" x2="3.6" y2="2.3" width="0.127" layer="51"/>
+<wire x1="3.6" y1="2.3" x2="3.6" y2="-2.3" width="0.127" layer="51"/>
+<wire x1="3.6" y1="-2.3" x2="-3.6" y2="-2.3" width="0.127" layer="51"/>
+<wire x1="-7.2" y1="3.3" x2="-6" y2="3.3" width="0.127" layer="51"/>
+<wire x1="-6" y1="3.3" x2="-4.6" y2="3.3" width="0.127" layer="51"/>
+<wire x1="-4.6" y1="3.3" x2="-4.6" y2="6.2" width="0.127" layer="51"/>
+<wire x1="-4.6" y1="6.2" x2="-4.6" y2="7.2" width="0.127" layer="51"/>
+<wire x1="-6.6" y1="7.2" x2="-2.8" y2="7.2" width="0.127" layer="20"/>
+<wire x1="-2.8" y1="7.2" x2="-1" y2="7.2" width="0.127" layer="20"/>
+<wire x1="-1" y1="7.2" x2="1" y2="7.2" width="0.127" layer="20"/>
+<wire x1="1" y1="7.2" x2="2.8" y2="7.2" width="0.127" layer="20"/>
+<wire x1="2.8" y1="7.2" x2="6.6" y2="7.2" width="0.127" layer="20"/>
+<wire x1="7.2" y1="6.6" x2="7.2" y2="6" width="0.127" layer="20"/>
+<wire x1="7.2" y1="6" x2="7.2" y2="-6" width="0.127" layer="20"/>
+<wire x1="7.2" y1="-6" x2="7.2" y2="-6.6" width="0.127" layer="20"/>
+<wire x1="6.6" y1="-7.2" x2="2.8" y2="-7.2" width="0.127" layer="20"/>
+<wire x1="2.8" y1="-7.2" x2="1" y2="-7.2" width="0.127" layer="20"/>
+<wire x1="1" y1="-7.2" x2="-1" y2="-7.2" width="0.127" layer="20"/>
+<wire x1="-1" y1="-7.2" x2="-2.8" y2="-7.2" width="0.127" layer="20"/>
+<wire x1="-2.8" y1="-7.2" x2="-6.6" y2="-7.2" width="0.127" layer="20"/>
+<wire x1="-7.2" y1="-6.6" x2="-7.2" y2="-6" width="0.127" layer="20"/>
+<wire x1="-7.2" y1="-6" x2="-7.2" y2="6" width="0.127" layer="20"/>
+<wire x1="-7.2" y1="6" x2="-7.2" y2="6.6" width="0.127" layer="20"/>
+<wire x1="-4.6" y1="-7.2" x2="-4.6" y2="-6.2" width="0.127" layer="51"/>
+<wire x1="-4.6" y1="-6.2" x2="-4.6" y2="-3.3" width="0.127" layer="51"/>
+<wire x1="-7.2" y1="-3.3" x2="-6" y2="-3.3" width="0.127" layer="51"/>
+<wire x1="-6" y1="-3.3" x2="-4.6" y2="-3.3" width="0.127" layer="51"/>
+<wire x1="4.6" y1="-3.3" x2="6" y2="-3.3" width="0.127" layer="51"/>
+<wire x1="6" y1="-3.3" x2="7.2" y2="-3.3" width="0.127" layer="51"/>
+<wire x1="4.6" y1="-7.2" x2="4.6" y2="-6.2" width="0.127" layer="51"/>
+<wire x1="4.6" y1="-6.2" x2="4.6" y2="-3.3" width="0.127" layer="51"/>
+<wire x1="4.6" y1="3.3" x2="6" y2="3.3" width="0.127" layer="51"/>
+<wire x1="6" y1="3.3" x2="7.2" y2="3.3" width="0.127" layer="51"/>
+<wire x1="4.6" y1="3.3" x2="4.6" y2="6.2" width="0.127" layer="51"/>
+<wire x1="4.6" y1="6.2" x2="4.6" y2="7.2" width="0.127" layer="51"/>
+<wire x1="-6" y1="3.3" x2="-6" y2="6.2" width="0.127" layer="51"/>
+<wire x1="-6" y1="6.2" x2="-4.6" y2="6.2" width="0.127" layer="51"/>
+<wire x1="6" y1="3.3" x2="6" y2="6.2" width="0.127" layer="51"/>
+<wire x1="4.6" y1="6.2" x2="6" y2="6.2" width="0.127" layer="51"/>
+<wire x1="6" y1="-6.2" x2="6" y2="-3.3" width="0.127" layer="51"/>
+<wire x1="4.6" y1="-6.2" x2="6" y2="-6.2" width="0.127" layer="51"/>
+<wire x1="-6" y1="-6.2" x2="-6" y2="-3.3" width="0.127" layer="51"/>
+<wire x1="-6" y1="-6.2" x2="-4.6" y2="-6.2" width="0.127" layer="51"/>
+<wire x1="1" y1="-8.2" x2="-1" y2="-8.2" width="0.127" layer="20"/>
+<wire x1="-1" y1="-7.2" x2="-1" y2="-8.2" width="0.127" layer="20"/>
+<wire x1="1" y1="-7.2" x2="1" y2="-8.2" width="0.127" layer="20"/>
+<wire x1="-1" y1="8.2" x2="-1" y2="7.2" width="0.127" layer="20"/>
+<wire x1="1" y1="8.2" x2="1" y2="7.2" width="0.127" layer="20"/>
+<wire x1="1" y1="8.2" x2="-1" y2="8.2" width="0.127" layer="20"/>
+<wire x1="-7.2" y1="-6" x2="-7.8" y2="-6" width="0.127" layer="20"/>
+<wire x1="7.2" y1="6" x2="7.8" y2="6" width="0.127" layer="20"/>
+<wire x1="7.2" y1="-6" x2="7.8" y2="-6" width="0.127" layer="20"/>
+<wire x1="-2.8" y1="-7.2" x2="-2.8" y2="-7.8" width="0.127" layer="20"/>
+<wire x1="2.8" y1="-7.2" x2="2.8" y2="-7.8" width="0.127" layer="20"/>
+<wire x1="-7.8" y1="-6.6" x2="-6.6" y2="-7.8" width="0.127" layer="20" curve="90"/>
+<wire x1="6.6" y1="-7.8" x2="7.8" y2="-6.6" width="0.127" layer="20" curve="90"/>
+<wire x1="7.8" y1="6.6" x2="6.6" y2="7.8" width="0.127" layer="20" curve="90"/>
+<wire x1="-6.6" y1="7.8" x2="-7.8" y2="6.6" width="0.127" layer="20" curve="90"/>
+<wire x1="-6.6" y1="7.2" x2="-7.2" y2="6.6" width="0.127" layer="20" curve="90"/>
+<wire x1="7.2" y1="6.6" x2="6.6" y2="7.2" width="0.127" layer="20" curve="90"/>
+<wire x1="6.6" y1="-7.2" x2="7.2" y2="-6.6" width="0.127" layer="20" curve="90"/>
+<wire x1="-7.2" y1="-6.6" x2="-6.6" y2="-7.2" width="0.127" layer="20" curve="90"/>
+<wire x1="-7.2" y1="6" x2="-7.8" y2="6" width="0.127" layer="20"/>
+<wire x1="-2.8" y1="7.8" x2="-2.8" y2="7.2" width="0.127" layer="20"/>
+<wire x1="2.8" y1="7.8" x2="2.8" y2="7.2" width="0.127" layer="20"/>
+<wire x1="0" y1="-3.1" x2="0" y2="-6.7" width="0.127" layer="51" curve="180"/>
+<wire x1="0" y1="-3.1" x2="0" y2="-6.7" width="0.127" layer="51" curve="-180"/>
+<wire x1="-1" y1="-7.2" x2="-1" y2="-6.4" width="0.127" layer="51"/>
+<wire x1="1" y1="-6.4" x2="1" y2="-7.2" width="0.127" layer="51"/>
+<wire x1="-1.5" y1="-3.9" x2="-3.6" y2="-3.9" width="0.127" layer="51"/>
+<wire x1="3.6" y1="-3.9" x2="1.5" y2="-3.9" width="0.127" layer="51"/>
+<wire x1="-3.6" y1="-3.9" x2="-4" y2="-4.3" width="0.127" layer="51" curve="90"/>
+<wire x1="4" y1="-4.3" x2="3.6" y2="-3.9" width="0.127" layer="51" curve="90"/>
+<wire x1="-4" y1="-6.8" x2="-3.6" y2="-7.2" width="0.127" layer="51" curve="90"/>
+<wire x1="3.6" y1="-7.2" x2="4" y2="-6.8" width="0.127" layer="51" curve="90"/>
+<wire x1="4" y1="-4.3" x2="4" y2="-6.8" width="0.127" layer="51"/>
+<wire x1="-4" y1="-4.3" x2="-4" y2="-6.8" width="0.127" layer="51"/>
+<pad name="S1" x="-2.54" y="6.35" drill="1.5" diameter="2.54"/>
+<pad name="S2" x="2.54" y="6.35" drill="1.5" diameter="2.54"/>
+<text x="-7.62" y="8.89" size="1.27" layer="25">&gt;NAME</text>
+<text x="-7.62" y="-10.16" size="1.27" layer="25">&gt;VALUE</text>
+<hole x="0" y="0" drill="4.1"/>
+<pad name="S3" x="0" y="-6.35" drill="1.5" diameter="2.54"/>
+</package>
+</packages>
+<symbols>
+</symbols>
+<devicesets>
+<deviceset name="CHERRY_MX_2">
+<gates>
+</gates>
+<devices>
+<device name="" package="CHERRY_MX">
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+</devicesets>
+</library>
 </libraries>
 <attributes>
 </attributes>
@@ -33662,6 +33809,8 @@ Source: &lt;a href="http://switches-sensors.zf.com/wp-content/blogs.dir/7/2012/0
 <part name="S10" library="ML1A-11JW" deviceset="ML1A-11JW" device=""/>
 <part name="S11" library="ML1A-11JW" deviceset="ML1A-11JW" device=""/>
 <part name="S12" library="ML1A-11JW" deviceset="ML1A-11JW" device=""/>
+<part name="U$1" library="cherry" deviceset="CHERRY_MX_2" device=""/>
+<part name="U$2" library="cherry" deviceset="CHERRY_MX_2" device=""/>
 </parts>
 <sheets>
 <sheet>
@@ -34915,7 +35064,6 @@ Source: &lt;a href="http://switches-sensors.zf.com/wp-content/blogs.dir/7/2012/0
 <approved hash="101,1,15.24,72.39,H8,MOUNT,,,,"/>
 <approved hash="101,1,15.24,59.69,H9,MOUNT,,,,"/>
 <approved hash="101,1,15.24,46.99,H10,MOUNT,,,,"/>
-<approved hash="113,1,28.3887,165.777,JP1,,,,,"/>
 </errors>
 </schematic>
 </drawing>
