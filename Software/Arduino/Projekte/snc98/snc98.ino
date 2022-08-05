@@ -1,6 +1,6 @@
 /**********************************************************************
 
-	 Project:   snc98 - Slash Number Calculator
+	 Project: xx snc98 - Slash Number Calculator
 
 	 MIT License
 
@@ -49,7 +49,7 @@
 
 #include <string.h>
 #include <stdint.h>
-#include <stdlib.h>         // for itoa(); ltoa();
+#include <stdlib.h>  // for itoa(); ltoa();
 
 #include <Arduino.h>
 
@@ -61,8 +61,10 @@
 #include <pins_arduino.h>  // ..\avr\variants\standard\pins_arduino.h
 // https://github.com/MCUdude/MightyCore
 
+#define MCP9808_I2CADDR_DEFAULT 0x18
 #include <Wire.h>
 #include <Adafruit_MCP9808.h>
+// version=1.1.2
 // https://github.com/adafruit/Adafruit_MCP9808_Library
 // Create the MCP9808 temperature sensor object
 Adafruit_MCP9808 tempsensor = Adafruit_MCP9808();
@@ -86,13 +88,17 @@ Adafruit_MCP9808 tempsensor = Adafruit_MCP9808();
 // https://github.com/JensGrabner/snc98_Slash-Number-Calculator/tree/master/Software/Arduino/libraries/itoa_ljust
 char  display_string_itoa_[33];
 
-#include <TimerOne.h>
+#include <TimerOne.h>// version=1.0.0
 // https://github.com/PaulStoffregen/TimerOne
-
+// https://downloads.arduino.cc/libraries/github.com/khoih-prog/megaAVR_TimerInterrupt-1.0.0.zip
+// folder: C:\Users\jens\Documents\Arduino\libraries\TimerOne
+// TimerOne at version 1.1
+// https://github.com/PaulStoffregen/TimerOne
+// version=1.0.0
 // #include <OneWireHub.h>
 // https://github.com/orgua/OneWireHub
 
-#define Debug_Level  0 //  0 - not Debug
+#define Debug_Level 18  //  0 - not Debug
 											 //  1 - Test intern 1ms - Task by 100 ms
 											 //  2 - Test intern 1ms - Task by 1000 ms
 											 //  3 - Test Switch "=" up / down (analog)
@@ -146,6 +152,7 @@ char  display_string_itoa_[33];
 											 // 60 - Test input( DISP_C ) or input( DISP_F )
 											 // 61 - Test algorithm sqrt(e)
 											 // 62 - Reduce_Number( ) - odd-odd continued fraction
+											 // 63 - BitBool_test
 
 #define sin_    3
 #define cos_    2
@@ -180,17 +187,17 @@ uint8_t Std_mode           =  1;  //  ( xx ) implement  "Sci_mode"
 #define PWM    13      //     Sanguino  Pin 12 --> Pin 4 (PD4)
 #define PWM_s  12      //
 uint8_t PWM_Pin = PWM;
-
+/*
 #define SDA    17      //     Pin 17
 #define SCL    16      //     Pin 16
-
+*/
 #define A_0    A7      //  A7   Pin A0
 #define A_1    A6      //  A6   Pin A1
 #define A_2    A5      //  A5   Pin A2
 
-#define Out_A  A3      //  A3   Pin A4
-#define Out_B  A2      //  A2   Pin A5
-#define Out_C  A1      //  A1   Pin A6
+#define Out_A  27      //  A3   Pout A3
+#define Out_B  26      //  A2   Pout A2
+#define Out_C  25      //  A1   Pout A1
 
 #define Rx_1          10
 #define Tx_1          11
@@ -199,7 +206,7 @@ bool    Power_on = true;
 bool    switch_Pos_0 = false;
 
 #define Digit_Count   15
-
+constexpr uint8_t _i2caddr = 0x18;  // Adafruit_MCP9808 default adress
 constexpr uint8_t index_display[Digit_Count] = {               //   Standard
 //   0,  1,  2,  3, 14, 13,  4,  5,  6,  7, 23, 22, 21, 20, 19    //   old Project
 //   0,  1,  3,  6,  7, 10, 11, 13, 14, 15, 19, 20, 21, 22, 23    //
@@ -700,8 +707,8 @@ constexpr Ratio_32 to_xx[14] = {
 	{ -2, 2145264442,  844592300, 0 },   // 5  4  ..  to mm
 	{  2,  844592300, 2145264442, 0 },   // 6  6  ..  to mil
 	{  0, 1334375000, 2147468400, 0 },   // 7  0  ..  to Miles
-	{  0, 1191813600, 2145264480, 0 },   // 8  1  ..  to Â°C  5 / 9
-	{  0, 2145264480, 1191813600, 0 },   // 9  9  ..  to Â°F  9 / 5
+	{  0, 1191813600, 2145264480, 0 },   // 8  1  ..  to °C  5 / 9
+	{  0, 2145264480, 1191813600, 0 },   // 9  9  ..  to °F  9 / 5
 	{  1,-2145264480, 1206711270, 0 },   // 10  ..     -160 / 9
 	{  1, 2145264480,  670395150, 0 },   // 11  ..        32
 	{  2,  853380389, 1489429756, 0 },   // 12  ..     to deg    Fehler -1,003e-19
@@ -811,7 +818,7 @@ volatile uint8_t index_i = 0;     // count _=_ output
 volatile  int8_t index_j = 0;     // count _=_ output
 uint8_t index_pendel_a = 0;       // 0 .. 189
 uint8_t index_TIME = 255;         // counter Time
-#define Time_LOW     263          // 263    t = (263 + 3/19) Âµs
+#define Time_LOW     263          // 263    t = (263 + 3/19) µs
 #define Time_HIGH    264          // 264  1/t = 3800 Hz
 
 bool    Display_rotate = false;
@@ -829,13 +836,14 @@ bool    Pendular_on = false;
 // uint16_t display_bright = led_bright_max;
 
 constexpr uint8_t led_font[count_ascii] = {
-		0,  64,  68,  76,  92, 124, 125, 127, 111, 103,  99,  97,  96,  64,   0,   0,     //  Â¦                Â¦
-		0, 107,  34,   0, 109,  18,  97,   2,  70, 112,  92,  70,  12,  64, 128,  82,     //  Â¦ !"#$%&'()*+,-./Â¦
-	 63,   6,  91,  79, 102, 109, 124,   7, 127, 103,   4,  20,  88,  72,  76,  83,     //  Â¦0123456789:;<=>?Â¦
-	123, 119, 127,  57,  15, 121, 113,  61, 118,  48,  30, 122,  56,  85,  55,  99,     //  Â¦@ABCDEFGHIJKLMNOÂ¦
-	 83, 103,  49,  45,   7,  28,  42,  60,  73, 110,  27,  57, 100,  15,  35,   8,     //  Â¦PQRSTUVWXYZ[\]^_Â¦
-	 32,  95, 124,  88,  94, 123,  43, 111, 116,  16,  14, 120,  24,  21,  84,  92,     //  Â¦`abcdefghijklmnoÂ¦
-	 83,  53,  80, 108,  70,  29,  43, 106,   1, 102,   3,  24,  29,   5,   1,  54};    //  Â¦pqrstuvwxyz{|}~ Â¦
+		0,  64,  68,  76,  92, 124, 125, 127, 111, 103,  99,  97,  96,  64,   0,   0,     //  ¦                ¦
+		0, 107,  34,   0, 109,  18,  97,   2,  70, 112,  92,  70,  12,  64, 128,  82,     //  ¦ !"#$%&'()*+,-./¦
+	 63,   6,  91,  79, 102, 109, 124,   7, 127, 103,   4,  20,  88,  72,  76,  83,     //  ¦0123456789:;<=>?¦
+	123, 119, 127,  57,  15, 121, 113,  61, 118,  48,  30, 122,  56,  85,  55,  99,     //  ¦@ABCDEFGHIJKLMNO¦
+	 83, 103,  49,  45,   7,  28,  42,  60,  73, 110,  27,  57, 100,  15,  35,   8,     //  ¦PQRSTUVWXYZ[\]^_¦
+	 32,  95, 124,  88,  94, 123,  43, 111, 116,  16,  14, 120,  24,  21,  84,  92,     //  ¦`abcdefghijklmno¦
+	 83,  53,  80, 108,  70,  29,  43, 106,   1, 102,   3,  24,  29,   5,   1,  54};    //  ¦pqrstuvwxyz{|}~ ¦
+
 
 uint8_t count_led[8] = {      // 1 .. 7
 	0
@@ -901,9 +909,9 @@ bool    Display_mode = false;
 #define Std_string_view  14  //
 #define Std_string_count  9  //
 static char Std_mode_string[ Std_string_view ] = " " ;
-
-uint8_t Cursor_pos = 2;       //
-uint8_t Point_pos = 0;        //
+// Display_Status_old
+volatile uint8_t Cursor_pos = 2 ;       //
+volatile uint8_t Point_pos = 0;        //
 uint8_t Repeat_pos = 0;       //
 uint8_t Null_count = 0;       //
 uint8_t Expo_count_temp = 0;
@@ -924,19 +932,57 @@ uint8_t Switch_Code_old = 0;
 uint8_t Switch_Test = 0;
 uint8_t Start_mem = 0;
 uint8_t Mem_Display_old = 0;
-uint8_t Display_Status_new = 0;    // Switch up / down
-uint8_t Display_Status_old = 0;
-uint8_t Display_Status_mem = 0;    // 1, 2, 3, 4
+volatile uint8_t Display_Status_old = 0;
+
+Display_Status_old[0] = false;   // ( "0" ) Create a bit reference to first bit.
+Display_Status_old[1] = false;  // ( "." )
+Display_Status_old[2] = false;  // ( "+/-" )
+Display_Status_old[3] = false;  // ( "EE" )
+Display_Status_old[4] = false;  // ( "FN" )
+Display_Status_old[5] = false;  // ( "=" )
+Display_Status_old[6] = false;  // ( "M+" )
+Display_Status_old[7] = false;  // ( "+ - x /" )
+
+volatile uint8_t Display_Status_new = 0;    // Switch up / down
+
+Display_Status_new[0] = false;   // ( "0" ) Create a bit reference to first bit.
+Display_Status_new[1] = false;  // ( "." )
+Display_Status_new[2] = false;  // ( "+/-" )
+Display_Status_new[3] = false;  // ( "EE" )
+Display_Status_new[4] = false;  // ( "FN" )
+Display_Status_new[5] = false;  // ( "=" )
+Display_Status_new[6] = false;  // ( "M+" )
+Display_Status_new[7] = false;  // ( "+ - x /" )
+
+volatile uint8_t Display_Status = 0;
+volatile uint8_t Display_Status_test = 0;
+volatile uint8_t Display_Status_mem = 0;    // 1, 2, 3, 4
+
+Display_Status_mem[0] = false;   // ( "0" ) Create a bit reference to first bit.
+Display_Status_mem[1] = false;  // ( "." )
+Display_Status_mem[2] = false;  // ( "+/-" )
+Display_Status_mem[3] = false;  // ( "EE" )
+Display_Status_mem[4] = false;  // ( "FN" )
+Display_Status_mem[5] = false;  // ( "=" )
+Display_Status_mem[6] = false;  // ( "M+" )
+Display_Status_mem[7] = false;  // ( "+ - x /" )
+
+// BitBool at version 1.2.0
 // https://github.com/Chris--A
-// https://github.com/Chris--A/BitBool#reference-a-single-bit-of-another-object-or-bitbool---
-auto bit_0 = toBitRef( Display_Status_new, 0 );  // ( "0" ) Create a bit reference to first bit.
-auto bit_1 = toBitRef( Display_Status_new, 1 );  // ( "." )
-auto bit_2 = toBitRef( Display_Status_new, 2 );  // ( "+/-" )
-auto bit_3 = toBitRef( Display_Status_new, 3 );  // ( "EE" )
-auto bit_4 = toBitRef( Display_Status_new, 4 );  // ( "FN" )
-auto bit_5 = toBitRef( Display_Status_new, 5 );  // ( "=" )
-auto bit_6 = toBitRef( Display_Status_new, 6 );  // ( "M+" )
-// auto bit_7 = toBitRef( Display_Status_new, 7 );  // ( "+ - x /" )
+// https://github.com/Chris--A/BitBool#reference-a-si 
+
+
+volatile BitBool< 8 > Display_Status_96{ 96 };
+// volatile BitBool< 8 > Display_Status_new{ 0 };
+
+Display_Status_new[0] = false;   // ( "0" ) Create a bit reference to first bit.
+Display_Status_new[1] = false;  // ( "." )
+Display_Status_new[2] = false;  // ( "+/-" )
+Display_Status_new[3] = false;  // ( "EE" )
+Display_Status_new[4] = false;  // ( "FN" )
+Display_Status_new[5] = false;  // ( "=" )
+Display_Status_new[6] = false;  // ( "M+" )
+Display_Status_new[7] = false;  // ( "+ - x /" )
 
 // uint8_t Display_Memory = 0;    // 0 .. 12
 																	 //01234567890123456789012
@@ -981,7 +1027,7 @@ char Pointer_memory = '_';
 
 int16_t display_expo = 0;
 int64_t display_big = 1;
-int32_t display_number = 1;
+volatile uint32_t display_number = 1;
 #define digit_count_max 8
 int16_t display_expo_mod = 0;
 
@@ -1993,8 +2039,8 @@ void Clear_String() {   // String loeschen -- Eingabe Mantisse
 		display_string[MR_point] = '.';
 	}
 
-	Cursor_pos = 2;
-	Point_pos = 0;
+//	Cursor_pos = 2;
+//	Point_pos = 0;
 	Repeat_pos = 0;
 	Number_count = 0;
 	Zero_count = 0;
@@ -2332,11 +2378,11 @@ void Get_Mantisse() {          // " -1.2345678#- 1 5# 1 9."
 }
 
 Ratio_32 input( int8_t chk ) {
-	// tempsensor.wake();   // wake up, ready to read!
-	// uint8_t t_8 = tempsensor.getResolution()
+	tempsensor.wake();   // wake up, ready to read!
+	uint8_t t_8 = tempsensor.getResolution();
   Ratio_32 temp = Null_no;
 	uint16_t t = tempsensor.read16(MCP9808_REG_AMBIENT_TEMP);
-	// tempsensor.shutdown_wake(1); // shutdown MSP9808 - power consumption ~0.1 mikro Ampere, stops temperature sampling
+	tempsensor.shutdown_wake(1); // shutdown MSP9808 - power consumption ~0.1 mikro Ampere, stops temperature sampling
 
 	if ( Debug_Level == 60 ) {
 		Serial.print("uint16_t t_16: ");
@@ -2382,10 +2428,9 @@ Ratio_32 input( int8_t chk ) {
 	}
 
   if ( chk == DISP_F ) {
-  	return add_mul_spezial( to_xx[ 11 ], to_xx[ 9 ], temp, 1 );
+  	temp = add_mul_spezial( to_xx[ 11 ], to_xx[ 9 ], temp, 1 );
   }
-
- 	return temp;
+  return temp;
 }
 
 void Expand_Number() {
@@ -2478,7 +2523,11 @@ void Display_Number(Ratio_32 Display_Input) {
 	--display_big;
 	display_number = display_big / Display_Input.denom;
 
-	if (abs(display_number) == expo_10[display_digit_abs]) {
+  if( display_number < 0 ){
+  	display_number *= -1;
+  }
+
+	if (expo_10[display_digit_abs] == display_number) {
 		display_number = expo_10[display_digit_abs - 1];
 		++display_expo;
 	}
@@ -2494,9 +2543,10 @@ void Display_Number(Ratio_32 Display_Input) {
 	strcpy(display_string, Temp_char);
 	strcpy(Temp_char, " ");
 
-	if (display_number >= 0) {
-		strcat(Temp_char, display_string);
-		strcpy(display_string, Temp_char);
+	if (display_number > 0) {
+		display_string[1] = ' ';
+	//	strcat(Temp_char, display_string);
+	//	strcpy(display_string, Temp_char);
 	}
 	else {
 		display_string[1] = '-';
@@ -2689,7 +2739,7 @@ void Display_Off() {
 	display_string[Operation]       = 'o';
 	display_string[Operation_point] = ' ';
 	display_string[Rad_point]       = ' ';
-	Display_Memory_x( 18 );
+        Display_Memory_x( 18 );
 	Display_new = true;
 }
 
@@ -4770,7 +4820,7 @@ void add_operation_to_mem( uint8_t deep_step, char op_add ) {
 							}
 						}
 						if ( display_string[Memory_1] != 'O' ) {
-							Display_Memory_x( 25 );
+							// Display_Memory_x( 25 );
 						}
 					}
 					else {
@@ -5133,9 +5183,9 @@ void Test_all_function() {
 			Serial.println(temp_32_cbrt.expo);
 		*/ 
 		 
-		//	if ( (index % 100) != 0 )  {
-		//    Serial.print("_"); 
-		//    Serial.println(index);
+			if ( (index % 100) != 0 )  {
+		    Serial.print("_"); 
+		    Serial.println(index);
 	           
 		  	test_32 = factorial(temp_32_cbrt);
      
@@ -5146,7 +5196,7 @@ void Test_all_function() {
 	  		Serial.print(test_32.expo);
 	  		Serial.println(" -> ");
 	    
-		//  }
+		  }
 		}
 		test_index = false;
 		time_end = millis();
@@ -5836,6 +5886,13 @@ void Test_all_function() {
 }
 
 void Test_Switch_up_down() {
+	if ( Debug_Level == 63 ) {
+		Serial.print("BitBool_test_1  ");
+		Display_Status = 0;
+		
+		Serial.println(Display_Status);
+	}			
+
 	if ( Switch_down < Switch_old ) {
 			Switch_delta  = Switch_old;
 			Switch_delta -= Switch_down;
@@ -5843,32 +5900,48 @@ void Test_Switch_up_down() {
 			switch (Switch_delta) {   // change  -->   Display_Status_new
 
 				case 1:
-					bit_3 = 0;           //     "EE"       Write to the bit.
-					if ( bit_5 == 1 ) {
-						bit_6 = 1;         //     "M+"
-						Display_Status_mem = 1;           //     "+"
+					Display_Status_new[3] = 0; //       "EE"       Write to the bit.
+					if ( Display_Status_new[5] == 1 ) {  //     "=" 
+						Display_Status_new[6] = 1;        //     "M+"
+						Display_Status_mem[2] = 1;           //     "+/-"
 					}
+					if ( Debug_Level == 63 ) {
+						Serial.print("BitBool_test_2  ");
+						Serial.println(Display_Status);
+					}			
 					break;
 
 				case 2:
-					bit_4 = 0;           //     "FN"       Write to the bit.
-					if ( bit_5 == 1 ) {
-						bit_6 = 1;         //     "M+"
-						Display_Status_mem = 1;           //     "+"
+					Display_Status_new[4] = 0;           //     "FN"       Write to the bit.
+					if ( Display_Status_new[5] == 1 ) {
+						Display_Status_new[6] = 1;         //     "M+"
+						Display_Status_mem[2] = 1;           //     "+/-"
 					}
+					if ( Debug_Level == 63 ) {
+						Serial.print("BitBool_test_3  ");
+						Serial.println(Display_Status);
+					}			
 					break;
 
 				case 4:
-					bit_5 = 0;           //     "="        Write to the bit.
+					Display_Status_new[5] = 0;           //     "="        Write to the bit.
+					if ( Debug_Level == 63 ) {
+						Serial.print("BitBool_test_4  ");
+						Serial.println(Display_Status);
+					}			
 					break;
 
 				case 3:
 				case 5:
 				case 6:
 				case 7:
-					bit_3 = 0;           //     "EE"       Write to the bit.
-					bit_4 = 0;           //     "FN"       Write to the bit.
-					bit_5 = 0;           //     "="        Write to the bit.
+					Display_Status_new[3] = 0;           //     "EE"       Write to the bit.
+					Display_Status_new[4] = 0;           //     "FN"       Write to the bit.
+					Display_Status_new[5] = 0;           //     "="        Write to the bit.
+					if ( Debug_Level == 63 ) {
+						Serial.print("BitBool_test_5  ");
+						Serial.println(Display_Status);
+					}			
 					break;
 
 				case 2048:       //     _)_
@@ -5877,37 +5950,53 @@ void Test_Switch_up_down() {
 				case 128:        //     _x_				
 				case 256:        //     _/_
 				case 1024:       //     _(_
-					if ( bit_5 == 1 ) {
-						bit_4 = 0;
-						bit_6 = 1;
+					if ( Display_Status_new[5] == 1 ) {
+						Display_Status_new[4] = 0;
+						Display_Status_new[6] = 1;
 					}
+					if ( Debug_Level == 63 ) {
+						Serial.print("BitBool_test_6  ");
+						Serial.println(Display_Status);
+					}			
 					break;
 
 				case 4096:             //  1
-					bit_0 = 0;           //     "0"        Write to the bit.
+					Display_Status_new[0] = 0;           //     "0"        Write to the bit.
 					if ( Display_Status_old == 25 ) {
 						Mr_0_test = true;
 						mem_extra_test = 0;
 					}
-					if ( bit_5 == 1 ) {
-						bit_6 = 1;         //     "M+"
+					if ( Display_Status_new[5] == 1 ) {
+						Display_Status_new[6] = 1;         //     "M+"
 					}
+					if ( Debug_Level == 63 ) {
+						Serial.print("BitBool_test_7  ");
+						Serial.println(Display_Status);
+					}			
 					break;
 
 				case 16384:            //  4
-					bit_2 = 0;           //     "+/-"      Write to the bit.
-					if ( bit_5 == 1 ) {
-						bit_6 = 1;         //     "M+"
+					Display_Status_new[2] = 0;           //     "+/-"      Write to the bit.
+					if ( Display_Status_new[5] == 1 ) {
+						Display_Status_new[6] = 1;         //     "M+"
 					}
+					if ( Debug_Level == 63 ) {
+						Serial.print("BitBool_test_8  ");
+						Serial.println(Display_Status);
+					}			
 					break;
 
 				case 12288:            //  3
 				case 20480:            //  5
 				case 24576:            //  6
 				case 28672:            //  7
-					bit_0 = 0;           //     "0"        Write to the bit.
-					bit_1 = 0;           //     "."        Write to the bit.
-					bit_2 = 0;           //     "+/-"      Write to the bit.
+					Display_Status_new[0] = 0;           //     "0"        Write to the bit.
+					Display_Status_new[1] = 0;           //     "."        Write to the bit.
+					Display_Status_new[2] = 0;           //     "+/-"      Write to the bit.
+					if ( Debug_Level == 63 ) {
+						Serial.print("BitBool_test_9  ");
+						Serial.println(Display_Status);
+					}			
 					break;
 
 				case 8:                //   "1/x"
@@ -5917,13 +6006,17 @@ void Test_Switch_up_down() {
 					break;
 
 				case 8192:             //  2
-					bit_1 = 0;           //     "."        Write to the bit.
+					Display_Status_new[1] = 0;           //     "."        Write to the bit.
 					if ( Display_Status_old == 10 ) {
 						Display_Status_old = Display_Status_new;
 					}
-					if ( bit_5 == 1 ) {
-						bit_6 = 1;         //     "M+"
+					if ( Display_Status_new[1] == 1 ) {
+						Display_Status_new[6] = 1;         //     "M+"
 					}
+					if ( Debug_Level == 63 ) {
+						Serial.print("BitBool_test_10  ");
+						Serial.println(Display_Status);
+					}			
 					break;
 
 				default:
@@ -5940,6 +6033,10 @@ void Test_Switch_up_down() {
 						case 48:         // MS
 						case 64:         // M_plus
 							Display_Status_old = Display_Status_new;
+					if ( Debug_Level == 63 ) {
+						Serial.print("BitBool_test_11  ");
+						Serial.println(Display_Status);
+					}			
 							break;
 					}
 					break;
@@ -5961,10 +6058,14 @@ void Test_Switch_up_down() {
 					break;
 
 				case 4:          //    _=_
-					bit_5 = 1;           //     "="        Write to the bit.
-					if ( bit_6 == 0 ) {
+					Display_Status_new[5] = 1;           //     "="        Write to the bit.
+					if ( Display_Status_new[6] == 0 ) {  //     "M+"
 						Switch_Code = 61;
 					}
+					if ( Debug_Level == 63 ) {
+						Serial.print("BitBool_test_12  ");
+						Serial.println(Display_Status);
+					}			
 					break;
 
 				case 7:          //   "EE" + "FN"  + "="  three Switch pressed
@@ -6060,86 +6161,138 @@ void Test_Switch_up_down() {
 			switch (Switch_delta) {   // change  -->   Display_Status_new
 
 				case 1:
-					bit_3 = 1;           //     "EE"       Write to the bit.
+					Display_Status_new[3] = 1;           //     "EE"       Write to the bit.
+					if ( Debug_Level == 63 ) {
+						Serial.print("BitBool_test_13  ");
+						Serial.println(Display_Status);
+					}			
 					break;
 
 				case 2:
-					bit_4 = 1;           //     "FN"       Write to the bit.
+					Display_Status_new[4] = 1;           //     "FN"       Write to the bit.
 					break;
 
 				case 4:
-					if ( bit_3 == 1 ) {
-						bit_5 = 1;           //     "="        Write to the bit.
+					if ( Display_Status_new[3] == 1 ) {  //      "EE"
+						Display_Status_new[0] = 1;           //     "="        Write to the bit.
 					}
-					if ( bit_4 == 1 ) {
-						bit_5 = 1;           //     "="        Write to the bit.
+					if ( Display_Status_new[4] == 1 ) {   //     "FN"
+						Display_Status_new[5] = 1;          //     "="        Write to the bit.
 					}
 					if ( Start_input == Display_Result ) {
-						bit_5 = 1;           //     "="        Write to the bit.
+						Display_Status_new[5] = 1;           //     "="        Write to the bit.
 					}
+					if ( Debug_Level == 63 ) {
+						Serial.print("BitBool_test_14  ");
+						Serial.println(Display_Status);
+					}			
 					break;
 
 				case 3:
-					bit_3 = 1;           //     "EE"       Write to the bit.
-					bit_4 = 1;           //     "FN"       Write to the bit.
+					Display_Status_new[3] = 1;           //     "EE"       Write to the bit.
+					Display_Status_new[4] = 1;           //     "FN"       Write to the bit.
+					if ( Debug_Level == 63 ) {
+						Serial.print("BitBool_test_15  ");
+						Serial.println(Display_Status);
+					}			
 					break;
 
 				case 6:
-					bit_4 = 1;           //     "FN"       Write to the bit.
-					bit_5 = 1;           //     "="        Write to the bit.
+					Display_Status_new[4] = 1;           //     "FN"       Write to the bit.
+					Display_Status_new[5] = 1;           //     "="        Write to the bit.
+					if ( Debug_Level == 63 ) {
+						Serial.print("BitBool_test_16  ");
+						Serial.println(Display_Status);
+					}			
 					break;
 
 				case 5:
-					bit_3 = 1;           //     "EE"       Write to the bit.
-					bit_5 = 1;           //     "="        Write to the bit.
+					Display_Status_new[3] = 1;           //     "EE"       Write to the bit.
+					Display_Status_new[5] = 1;           //      "="        Write to the bit.
+					if ( Debug_Level == 63 ) {
+						Serial.print("BitBool_test_17  ");
+						Serial.println(Display_Status);
+					}			
 					break;
 
 				case 7:
-					bit_3 = 1;           //     "EE"       Write to the bit.
-					bit_4 = 1;           //     "FN"       Write to the bit.
-					bit_5 = 1;           //     "="        Write to the bit.
+					Display_Status_new[3] = 1;           //     "EE"       Write to the bit.
+					Display_Status_new[4] = 1;           //     "FN"       Write to the bit.
+					Display_Status_new[5] = 1;           //     "="        Write to the bit.
+					if ( Debug_Level == 63 ) {
+						Serial.print("BitBool_test_18  ");
+						Serial.println(Display_Status);
+					}			
 					break;
 
 				case 4096:             //  1
 					if ( Display_Status_new == 0 ) {
 						Switch_Code = 48; //     _0_
 					}
-					bit_0 = 1;           //     "0"         Write to the bit.
+					Display_Status_new[0] = 1;           //     "0"         Write to the bit.
+					if ( Debug_Level == 63 ) {
+						Serial.print("BitBool_test_19  ");
+						Serial.println(Display_Status);
+					}			
 					break;
 
 				case 8192:             //  2
 					if ( Display_Status_new == 0 ) {
 						Switch_Code = 46; //     _._
 					}
-					bit_1 = 1;           //     "."         Write to the bit.
+					Display_Status_new[1] = 1;           //     "."         Write to the bit.
+					if ( Debug_Level == 63 ) {
+						Serial.print("BitBool_test_20  ");
+						Serial.println(Display_Status);
+					}			
 					break;
 
 				case 16384:            //  4
 					if ( Display_Status_new == 0 ) {
 						Switch_Code = 35; //     _+/-_
 					}
-					bit_2 = 1;           //     "+/-"       Write to the bit.
+					Display_Status_new[2] = 1;           //     "+/-"       Write to the bit.
+					if ( Debug_Level == 63 ) {
+						Serial.print("BitBool_test_21  ");
+						Serial.println(Display_Status);
+					}			
 					break;
 
 				case 12288:            //  3
-					bit_0 = 1;           //     "0"         Write to the bit.
-					bit_1 = 1;           //     "."         Write to the bit.
+					Display_Status_new[0] = 1;           //     "0"         Write to the bit.
+					Display_Status_new[1] = 1;           //     "."         Write to the bit.
+					if ( Debug_Level == 63 ) {
+						Serial.print("BitBool_test_22  ");
+						Serial.println(Display_Status);
+					}			
 					break;
 
 				case 24576:            //  6
-					bit_1 = 1;           //     "."         Write to the bit.
-					bit_2 = 1;           //     "+/-"       Write to the bit.
+					Display_Status_new[1] = 1;           //     "."         Write to the bit.
+					Display_Status_new[2] = 1;           //     "+/-"       Write to the bit.
+					if ( Debug_Level == 63 ) {
+						Serial.print("BitBool_test_23  ");
+						Serial.println(Display_Status);
+					}			
 					break;
 
 				case 20480:            //  5
-					bit_0 = 1;           //     "0"         Write to the bit.
-					bit_2 = 1;           //     "+/-"       Write to the bit.
+					Display_Status_new[0] = 1;           //     "0"         Write to the bit.
+					Display_Status_new[2] = 1;           //     "+/-"       Write to the bit.
+					if ( Debug_Level == 63 ) {
+						Serial.print("BitBool_test_24  ");
+						Serial.println(Display_Status);
+					}			
 					break;
 
 				case 28672:            //  7
-					bit_0 = 1;           //     "0"         Write to the bit.
-					bit_1 = 1;           //     "."         Write to the bit.
-					bit_2 = 1;           //     "+/-"       Write to the bit.
+					Display_Status_new[0] = 1;           //     "0"         Write to the bit.
+					Display_Status_new[1] = 1;           //     "."         Write to the bit.
+					Display_Status_new[2] = 1;           //     "+/-"       Write to the bit.
+					if ( Debug_Level == 63 ) {
+						Serial.print("BitBool_test_25  ");
+						Serial.println(Display_Status_new);
+					}			
 					break;
 
 				case 32768:       //   1
@@ -6703,8 +6856,12 @@ void Test_Switch_up_down() {
 						case 32:
 						case 96:
 							Switch_Code = 108;  //           new   _M_()_
-							bit_4 = 1;
-							bit_6 = 0;
+							Display_Status_new[4] = 1;
+							Display_Status_new[6] = 0;         //     "M+"
+							if ( Debug_Level == 63 ) {
+								Serial.print("BitBool_test_26  ");
+								Serial.println(Display_Status);
+							}			
 							break;
 					}
 					break;
@@ -6796,8 +6953,12 @@ void Test_Switch_up_down() {
 						case 32:
 						case 96:
 							Switch_Code = 106;   //           new   M/()
-							bit_4 = 1;
-							bit_6 = 0;
+							Display_Status_new[4] = 1;
+							Display_Status_new[6] = 0;
+							if ( Debug_Level == 63 ) {
+								Serial.print("BitBool_test_27  ");
+								Serial.println(Display_Status);
+							}			
 							break;
 					}
 					break;
@@ -6820,8 +6981,12 @@ void Test_Switch_up_down() {
 						case 32:
 						case 96:
 							Switch_Code = 105;   //           new   Mx()
-							bit_4 = 1;
-							bit_6 = 0;
+							Display_Status_new[4] = 1;
+							Display_Status_new[6] = 0;
+							if ( Debug_Level == 63 ) {
+								Serial.print("BitBool_test_28  ");
+								Serial.println(Display_Status);
+					}			
 							break;
 
 						case 24:
@@ -6887,8 +7052,12 @@ void Test_Switch_up_down() {
 						case 32:
 						case 96:
 							Switch_Code = 104;  //           new   M-()
-							bit_4 = 1;
-							bit_6 = 0;
+							Display_Status_new[4] = 1;
+							Display_Status_new[6] = 0;
+							if ( Debug_Level == 63 ) {
+								Serial.print("BitBool_test_29  ");
+								Serial.println(Display_Status);
+							}			
 							break;
 					}
 					break;
@@ -6916,8 +7085,12 @@ void Test_Switch_up_down() {
 						case 32:
 						case 96:
 							Switch_Code = 103;  //           new   M+()
-							bit_4 = 1;
-							bit_6 = 0;
+							Display_Status_new[4] = 1;
+							Display_Status_new[6] = 0;
+							if ( Debug_Level == 63 ) {
+								Serial.print("BitBool_test_30  ");
+								Serial.println(Display_Status);
+							}			
 							break;
 					}
 					break;
@@ -6950,7 +7123,11 @@ void Test_Switch_up_down() {
 
 			if ( Start_input > Input_Operation_0 ) {
 				if ( Start_input < Input_Operation_5 ) {
-					bit_5 = 0;
+					Display_Status_new[5] = 0;
+					if ( Debug_Level == 31 ) {
+						Serial.print("BitBool_test_1  ");
+						Serial.println(Display_Status);
+					}			
 				}
 			}			
 
@@ -6991,8 +7168,7 @@ void Mantisse_add_strg_eins() {
 }
 
 void Beep__on() {
-	if ( Display_Status_new != 96 ) {
-		Display_new = true;
+	if ( Display_Status_new == Display_Status_96 ) {
 		if ( Beep_on == false ) {
 			Beep_on = true;
 			Beep_count = max_Beep_count;
@@ -7002,6 +7178,9 @@ void Beep__on() {
 				Beep_count = max_Beep_count;
 			}
 		}
+	}
+	else {
+		Display_new = true;
 	}
 	if ( Debug_Level == 17 ) {
 		Serial.println("Beep__on");
@@ -7311,7 +7490,7 @@ void Mem_plus_minus_mul_div() {
 			display_string[Memory_1] = Display_Memory_1[9];  // m;
 			display_string[Memory_0] = '0' + mem_extra_test;
 	
-			Display_Memory_x( 23 );
+			// Display_Memory_x( 23 );
 		}
 		else {
 			mem_pointer     = 1;
@@ -7387,6 +7566,7 @@ void Display_Memory_x( uint8_t Mem_Display ) {
 bool    Test_buffer = false;
 uint8_t Number_of_buffer = 0;
 // Create a RingBufCPP object designed to hold a Max_Buffer of Switch_down
+// RingBufCPP at version 1.1
 RingBufCPP < uint32_t, Max_Buffer > q;
 
 // Define various ADC prescaler
@@ -7399,10 +7579,10 @@ static const unsigned char PS_128 = (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);
 void setup() {
 
 	// pinMode(On_Off_PIN, INPUT_PULLUP);
-	/*
+/*
 	pinMode(On_Off_PIN, OUTPUT);
 	digitalWrite(On_Off_PIN, LOW);
-	*/
+*/
 	// Initialize the digital pin as an output.
 	// Pin 13 has an LED connected on most Arduino boards
 
@@ -7450,19 +7630,20 @@ void setup() {
 	pinMode(Beep_m, INPUT_PULLUP); // Pin A3
 	pinMode(Beep_p, INPUT_PULLUP); // Pin A7
 
-	pinMode(Out_A, OUTPUT);        // Pin A4
+	pinMode(Out_A, OUTPUT);        // Pin A3
 	digitalWrite(Out_A, LOW);
-	pinMode(Out_B, OUTPUT);        // Pin A5
+	pinMode(Out_B, OUTPUT);        // Pin A2
 	digitalWrite(Out_B, LOW);
-	pinMode (Out_C, OUTPUT);       // Pin A6
+	pinMode (Out_C, OUTPUT);       // Pin A1
 	digitalWrite(Out_C, LOW);
 
 	analogReference(EXTERNAL);
 
 	Timer1.initialize(Time_LOW);  // sets timer1 to a period of 263 microseconds
 	TCCR1A |= (1 << COM1B1) | (1 << COM1B0);  // inverting mode for Pin OC1B --> D4
-	Timer1.attachInterrupt( timerIsr );  // attach the service routine here
+	Timer1.attachInterrupt(timer_Isr);  // attach the service routine here
 	Timer1.pwm(PWM_Pin, led_bright[led_bright_index]);  // duty cycle goes from 0 to 1023
+	interrupts();                      // Ermöglichen von Interrupts
 
 	// start serial port at 115200 bps and wait for port to open:
 	if ( Debug_Level > 0 ) {
@@ -7494,10 +7675,10 @@ void setup() {
 
   tempsensor.setResolution(3); // sets the resolution mode of reading, the modes are defined in the table bellow:
   // Mode Resolution SampleTime
-  //  0    0.5Â°C       30 ms
-  //  1    0.25Â°C      65 ms
-  //  2    0.125Â°C     130 ms
-  //  3    0.0625Â°C    250 ms
+  //  0    0.5°C       30 ms
+  //  1    0.25°C      65 ms
+  //  2    0.125°C     130 ms
+  //  3    0.0625°C    250 ms
 }
 
 // the loop routine runs over and over again forever:
@@ -10092,7 +10273,11 @@ void loop() {
 				}
 			
 				if ( Start_input == Display_Result ) {
-					if ( bit_6 == 0 ) {
+					if ( Debug_Level == 63 ) {
+						Serial.print("BitBool_test_39  ");
+						Serial.println(Display_Status);
+					}			
+					if ( Display_Status_new[6] == 0 ) {
 						Display_Memory_x( 8 );
 						if ( mem_plus_test > 0 ) {
 							display_string[Memory_1] = Display_Memory_1[3];      // MS
@@ -10107,7 +10292,11 @@ void loop() {
 				}
 
 				if ( Start_input == Input_Mantisse ) {
-					if ( bit_6 == 0 ) {
+					if ( Debug_Level == 63 ) {
+						Serial.print("BitBool_test_40  ");
+						Serial.println(Display_Status_new);
+					}			
+					if ( Display_Status_new[6] == 0 ) { //      "M+"
 						Display_Memory_x( 19 );
 					}
 				}
@@ -10137,11 +10326,13 @@ void loop() {
 	}
 }
 
+volatile uint16_t temp_pwm;
+
 /// --------------------------
 /// Timer ISR Timer Routine
 /// --------------------------
-void timerIsr() {
-uint16_t temp_pwm = test_pwm;
+void timer_Isr() {
+        temp_pwm = test_pwm;
 
 	++index_Switch;
 	++index_TIME;

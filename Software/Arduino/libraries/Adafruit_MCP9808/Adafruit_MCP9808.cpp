@@ -1,4 +1,4 @@
-readTempC/*!
+/*!
  *  @file Adafruit_MCP9808.cpp
  *
  *  @mainpage Adafruit MCP9808 I2C Temp Sensor
@@ -26,21 +26,8 @@ readTempC/*!
  *
  *     v1.0 - First release
  */
- 
-
-#if ARDUINO >= 100
-#include "Arduino.h"
-#else
-#include "WProgram.h"
-#endif
-
-#ifdef __AVR_ATtiny85__
-#include "TinyWireM.h"
-#define Wire TinyWireM
-#else
-#include <Wire.h>
-#endif
-
+#define MCP9808_I2CADDR_DEFAULT 0x18
+constexpr uint8_t _i2caddr = 0x18;  // Adafruit_MCP9808 default adress
 
 #include "Adafruit_MCP9808.h"
 
@@ -55,9 +42,7 @@ Adafruit_MCP9808::Adafruit_MCP9808() {}
  *    @return True if initialization was successful, otherwise false.
  */
 bool Adafruit_MCP9808::begin(TwoWire *theWire) {
-  _wire = theWire;
-  _i2caddr = MCP9808_I2CADDR_DEFAULT;
-  return init();
+  return begin(MCP9808_I2CADDR_DEFAULT, theWire);
 }
 
 /*!
@@ -65,11 +50,8 @@ bool Adafruit_MCP9808::begin(TwoWire *theWire) {
  *    @param  addr
  *    @return True if initialization was successful, otherwise false.
  */
-bool Adafruit_MCP9808::begin(uint8_t addr) {
-  _i2caddr = addr;
-  _wire = &Wire;
-  return init();
-}
+
+bool Adafruit_MCP9808::begin(uint8_t addr) { return begin(addr, &Wire); }
 
 /*!
  *    @brief  Setups the HW
@@ -78,8 +60,11 @@ bool Adafruit_MCP9808::begin(uint8_t addr) {
  *    @return True if initialization was successful, otherwise false.
  */
 bool Adafruit_MCP9808::begin(uint8_t addr, TwoWire *theWire) {
-  _i2caddr = addr;
-  _wire = theWire;
+  if (i2c_dev) {
+    delete i2c_dev;
+  }
+  i2c_dev = new Adafruit_I2CDevice(_i2caddr, theWire);
+
   return init();
 }
 
@@ -87,18 +72,16 @@ bool Adafruit_MCP9808::begin(uint8_t addr, TwoWire *theWire) {
  *    @brief  Setups the HW with default address
  *    @return True if initialization was successful, otherwise false.
  */
-bool Adafruit_MCP9808::begin() {
-  _i2caddr = MCP9808_I2CADDR_DEFAULT;
-  _wire = &Wire;
-  return init();
-}
+bool Adafruit_MCP9808::begin() { return begin(MCP9808_I2CADDR_DEFAULT, &Wire); }
 
 /*!
  *    @brief  init function
  *    @return True if initialization was successful, otherwise false.
  */
 bool Adafruit_MCP9808::init() {
-  _wire->begin();
+  if (!i2c_dev->begin()) {
+    return false;
+  }
 
   if (read16(MCP9808_REG_MANUF_ID) != 0x0054)
     return false;
@@ -121,7 +104,7 @@ float Adafruit_MCP9808::readTempC() {
   if (t != 0xFFFF) {
     temp = t & 0x0FFF;
     temp /= 16.0;
-    if (t & 0x1000) 
+    if (t & 0x1000)
       temp -= 256;
   }
 
@@ -138,7 +121,7 @@ float Adafruit_MCP9808::readTempF() {
   uint16_t t = read16(MCP9808_REG_AMBIENT_TEMP);
 
   if (t != 0xFFFF) {
-    temp  = t & 0x0FFF;
+    temp = t & 0x0FFF;
     temp /= 16.0;
     if (t & 0x1000)
       temp -= 256;
@@ -176,7 +159,7 @@ void Adafruit_MCP9808::shutdown() { shutdown_wake(true); }
  */
 void Adafruit_MCP9808::wake() {
   shutdown_wake(false);
-  delay(250);
+  delay(260);
 }
 
 /*!
@@ -201,11 +184,10 @@ void Adafruit_MCP9808::setResolution(uint8_t value) {
  *    @param  value
  */
 void Adafruit_MCP9808::write16(uint8_t reg, uint16_t value) {
-  _wire->beginTransmission(_i2caddr);
-  _wire->write((uint8_t)reg);
-  _wire->write(value >> 8);
-  _wire->write(value & 0xFF);
-  _wire->endTransmission();
+  Adafruit_BusIO_Register reg16 =
+      Adafruit_BusIO_Register(i2c_dev, reg, 2, MSBFIRST);
+
+  reg16.write(value);
 }
 
 /*!
@@ -214,21 +196,10 @@ void Adafruit_MCP9808::write16(uint8_t reg, uint16_t value) {
  *    @return value
  */
 uint16_t Adafruit_MCP9808::read16(uint8_t reg) {
-  uint16_t val = 0xFFFF;
-  uint8_t state;
+  Adafruit_BusIO_Register reg16 =
+      Adafruit_BusIO_Register(i2c_dev, reg, 2, MSBFIRST);
 
-  _wire->beginTransmission(_i2caddr);
-  _wire->write((uint8_t)reg);
-  state = _wire->endTransmission();
-
-  if (state == 0) {
-    _wire->requestFrom((uint8_t)_i2caddr, (uint8_t)2);
-    val = _wire->read();
-    val <<= 8;
-    val |= _wire->read();
-  }
-
-  return val;
+  return reg16.read();
 }
 
 /*!
@@ -237,10 +208,9 @@ uint16_t Adafruit_MCP9808::read16(uint8_t reg) {
  *    @param  value
  */
 void Adafruit_MCP9808::write8(uint8_t reg, uint8_t value) {
-  _wire->beginTransmission(_i2caddr);
-  _wire->write((uint8_t)reg);
-  _wire->write(value);
-  _wire->endTransmission();
+  Adafruit_BusIO_Register reg8 = Adafruit_BusIO_Register(i2c_dev, reg, 1);
+
+  reg8.write(value);
 }
 
 /*!
@@ -249,17 +219,53 @@ void Adafruit_MCP9808::write8(uint8_t reg, uint8_t value) {
  *    @return value
  */
 uint8_t Adafruit_MCP9808::read8(uint8_t reg) {
-  uint8_t val = 0xFF;
-  uint8_t state;
+  Adafruit_BusIO_Register reg8 = Adafruit_BusIO_Register(i2c_dev, reg, 1);
 
-  _wire->beginTransmission(_i2caddr);
-  _wire->write((uint8_t)reg);
-  state = _wire->endTransmission();
-
-  if (state == 0) {
-    _wire->requestFrom((uint8_t)_i2caddr, (uint8_t)1);
-    val = _wire->read();
-  }
-
-  return val;
+  return reg8.read();
 }
+
+/**************************************************************************/
+/*!
+    @brief  Gets the pressure sensor and temperature values as sensor events
+
+    @param  temp Sensor event object that will be populated with temp data
+    @returns True
+*/
+/**************************************************************************/
+bool Adafruit_MCP9808::getEvent(sensors_event_t *temp) {
+  uint32_t t = millis();
+
+  // use helpers to fill in the events
+  memset(temp, 0, sizeof(sensors_event_t));
+  temp->version = sizeof(sensors_event_t);
+  temp->sensor_id = _sensorID;
+  temp->type = SENSOR_TYPE_AMBIENT_TEMPERATURE;
+  temp->timestamp = t;
+  temp->temperature = readTempC();
+  return true;
+}
+
+/**************************************************************************/
+/*!
+    @brief  Gets the overall sensor_t data including the type, range and
+   resulution
+    @param  sensor Pointer to Adafruit_Sensor sensor_t object that will be
+   filled with sensor type data
+*/
+/**************************************************************************/
+void Adafruit_MCP9808::getSensor(sensor_t *sensor) {
+  /* Clear the sensor_t object */
+  memset(sensor, 0, sizeof(sensor_t));
+
+  /* Insert the sensor name in the fixed length char array */
+  strncpy(sensor->name, "MCP9808", sizeof(sensor->name) - 1);
+  sensor->name[sizeof(sensor->name) - 1] = 0;
+  sensor->version = 1;
+  sensor->sensor_id = 0x18;
+  sensor->type = SENSOR_TYPE_AMBIENT_TEMPERATURE;
+  sensor->min_delay = 0;
+  sensor->max_value = 100.0;
+  sensor->min_value = -20.0;
+  sensor->resolution = 0.0625;
+}
+/*******************************************************/
